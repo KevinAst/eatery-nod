@@ -7,6 +7,7 @@ class App extends React.Component {
     return (
       <View style={styles.container}>
         <Text>Initial eatery-nod template!!!</Text>
+        <Text>Mod 1</Text>
       </View>
     );
   }

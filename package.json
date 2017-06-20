@@ -3,6 +3,10 @@
   "version": "0.1.0",
   "description": "A Date Night Random Restaurant Selector (my first react-native mobile app)",
   "main": "main.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/KevinAst/eatery-nod.git"
+  },
   "keywords": [
     "react-native",
     "mobile-app",
@@ -13,8 +17,16 @@
   "license": "MIT",
   "homepage": "https://github.com/KevinAst/eatery-nod",
   "dependencies": {
+    "@expo/vector-icons": "^5.0.0",
+    "action-u": "^0.2.0",
+    "astx-redux-util": "^1.0.0",
     "expo": "17.0.0",
+    "firebase": "^4.1.2",
+    "native-base": "^2.1.5",
     "react": "16.0.0-alpha.6",
-    "react-native": "https://github.com/expo/react-native/archive/sdk-17.0.0.tar.gz"
+    "react-native": "https://github.com/expo/react-native/archive/sdk-17.0.0.tar.gz",
+    "redux": "^3.7.0",
+    "redux-logic": "^0.12.1",
+    "rxjs": "^5.4.1"
   }
 }
