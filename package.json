@@ -1,10 +1,11 @@
 {
   "name": "eatery-nod",
-  "version": "0.0.0",
-  "description": "Hello Expo!",
-  "author": null,
-  "private": true,
+  "version": "0.1.0",
+  "description": "A Date Night Random Restaurant Selector (my first react-native mobile app)",
   "main": "main.js",
+  "author": "Kevin J. Bridges <kevinast@gmail.com> (https://github.com/KevinAst)",
+  "license": "MIT",
+  "homepage": "https://github.com/KevinAst/eatery-nod",
   "dependencies": {
     "expo": "17.0.0",
     "react": "16.0.0-alpha.6",

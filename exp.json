@@ -1,21 +1,21 @@
 {
-  "name": "eatery-nod",
-  "description": "An empty new project",
-  "slug": "eatery-nod",
-  "privacy": "public",
-  "sdkVersion": "17.0.0",
-  "version": "1.0.0",
-  "orientation": "portrait",
-  "primaryColor": "#cccccc",
-  "icon": "./assets/icons/app.png",
+  "name":                "eatery-nod",
+  "description":         "A Date Night Random Restaurant Selector (my first react-native mobile app)",
+  "slug":                "eatery-nod",
+  "privacy":             "public",
+  "sdkVersion":          "17.0.0",
+  "version":             "0.1.0",
+  "orientation":         "portrait",
+  "primaryColor":        "#cccccc",
+  "icon":                "./assets/icons/eatery.png",
   "loading": {
-    "icon": "./assets/icons/loading.png",
-    "hideExponentText": false
+    "icon":              "./assets/icons/eatery.png",
+    "hideExponentText":  false
   },
   "packagerOpts": {
-    "assetExts": ["ttf", "mp4"]
+    "assetExts":         ["ttf", "mp4"]
   },
   "ios": {
-    "supportsTablet": true
+    "supportsTablet":    true
   }
 }

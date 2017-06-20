@@ -1,12 +1,12 @@
-import Expo from 'expo';
+import Expo  from 'expo';
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import {StyleSheet, Text, View} from 'react-native';
 
 class App extends React.Component {
   render() {
     return (
       <View style={styles.container}>
-        <Text>Open up main.js to start working on your app!</Text>
+        <Text>Initial eatery-nod template!!!</Text>
       </View>
     );
   }
