@@ -3,6 +3,12 @@
   "version": "0.1.0",
   "description": "A Date Night Random Restaurant Selector (my first react-native mobile app)",
   "main": "main.js",
+  "keywords": [
+    "react-native",
+    "mobile-app",
+    "geeku",
+    "astx"
+  ],
   "author": "Kevin J. Bridges <kevinast@gmail.com> (https://github.com/KevinAst)",
   "license": "MIT",
   "homepage": "https://github.com/KevinAst/eatery-nod",
