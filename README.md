@@ -8,6 +8,6 @@ eatery-nod is my first
 [react-native](https://facebook.github.io/react-native/) mobile app,
 using [Expo](https://expo.io/).
 
-<p style="font-weight: bold; font-style: italic; color: red; background-color: yellow;">
-Currently it is a work-in-progress.
-</p>
+```diff
++ Currently it is a work-in-progress.
+```
