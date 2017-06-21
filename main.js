@@ -1,22 +1,22 @@
-import Expo            from 'expo';
-import React           from 'react';
-import {Provider}      from 'react-redux';
-import createAppStore  from './src/startup/createAppStore';
-import App             from './src/comp/App';
+import Expo             from 'expo';
+import React            from 'react';
+import {Provider}       from 'react-redux';
+import createAppStore   from './src/startup/createAppStore';
+import AppScreenRouter  from './src/comp/AppScreenRouter';
 
 
 // create our top-level redux appStore
 const appStore = createAppStore();
 
 // wire up redux in our top-level root component
-const rootComponent = <Provider store={appStore}>
-                        <App/>
-                      </Provider>;
+const rootComponent = () => <Provider store={appStore}>
+                              <AppScreenRouter/>
+                            </Provider>;
 
-// run our app
-Expo.registerRootComponent(App);
+// launch our app
+Expo.registerRootComponent(rootComponent);
 
-// ?? just for fun
+// ?? TEMP: just for fun
 appStore.dispatch({
   type: 'TEST_ACTION',
   payload: {
