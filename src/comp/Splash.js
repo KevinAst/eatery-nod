@@ -1,6 +1,7 @@
-import React    from 'react';
-import RN       from 'react-native';
-import * as NB  from 'native-base';
+import React        from 'react';
+import RN           from 'react-native';
+import * as NB      from 'native-base';
+import commonStyles from './commonStyles';
 
 /**
  * Splash Screen when there is nothing else to display.
@@ -11,7 +12,7 @@ import * as NB  from 'native-base';
  */
 export default function Splash() {
   return (
-    <NB.Container style={styles.container}>
+    <NB.Container style={commonStyles.container}>
       <NB.Header>
         <NB.Body>
           <NB.Title>Eatery Nod</NB.Title>
@@ -25,9 +26,3 @@ export default function Splash() {
     </NB.Container>
   );
 }
-
-const styles = {
-  container: {
-    paddingTop: 24, // prevent overlay of device NavBar (at least on Android)
-  },
-};

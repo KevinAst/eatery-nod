@@ -1,10 +1,11 @@
-import React     from 'react';
-import {connect} from 'react-redux'
-import * as nb   from 'native-base';
+import React        from 'react';
+import {connect}    from 'react-redux'
+import * as nb      from 'native-base';
+import commonStyles from './commonStyles';
 
 const ListView = (p) => {
   return (
-    <nb.Container style={styles.container}>
+    <nb.Container style={commonStyles.container}>
       <nb.Header>
         <nb.Left>
           <nb.Button transparent>
@@ -28,13 +29,6 @@ const ListView = (p) => {
       </nb.Footer>
     </nb.Container>
   );
-};
-
-
-const styles = {
-  container: {
-    paddingTop: 24, // prevent overlay of device NavBar (at least on Android)
-  },
 };
 
 export default connect(

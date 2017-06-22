@@ -1,7 +1,7 @@
 import Expo              from 'expo';
 import React             from 'react';
 import {connect}         from 'react-redux';
-import {LayoutAnimation} from 'react-native';
+import RN                from 'react-native';
 import Splash            from './Splash';
 import SignIn            from './SignIn';
 import ListView          from './ListView';
@@ -35,7 +35,7 @@ class AppScreenRouter extends React.Component {
   componentWillUpdate() {
     // LayoutAnimation has to be done JUST before a state change
     // ... the reason it is done here
-    LayoutAnimation.configureNext(appAnimationConfig);
+    RN.LayoutAnimation.configureNext(appAnimationConfig);
   }
 
   /**
@@ -73,16 +73,16 @@ class AppScreenRouter extends React.Component {
 const appAnimationConfig = { // modified LayoutAnimation.Presets.spring
   duration:        500, // WAS: 700 (tone it down just a bit)
   create: {
-    type:          LayoutAnimation.Types.linear,
-    property:      LayoutAnimation.Properties.opacity,
+    type:          RN.LayoutAnimation.Types.linear,
+    property:      RN.LayoutAnimation.Properties.opacity,
   },
   update: {
-    type:          LayoutAnimation.Types.spring,
+    type:          RN.LayoutAnimation.Types.spring,
     springDamping: 0.4,
   },
   delete: {
-    type:          LayoutAnimation.Types.linear,
-    property:      LayoutAnimation.Properties.opacity,
+    type:          RN.LayoutAnimation.Types.linear,
+    property:      RN.LayoutAnimation.Properties.opacity,
   },
 };
 
