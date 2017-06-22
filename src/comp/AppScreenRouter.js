@@ -2,6 +2,7 @@ import Expo              from 'expo';
 import React             from 'react';
 import {connect}         from 'react-redux';
 import {LayoutAnimation} from 'react-native';
+import Splash            from './Splash';
 import SignIn            from './SignIn';
 import ListView          from './ListView';
 
@@ -37,16 +38,24 @@ class AppScreenRouter extends React.Component {
     LayoutAnimation.configureNext(appAnimationConfig);
   }
 
+  /**
+   * This rendor() method contains our simplistic router/navigator
+   * functionality, based on app-level redux state!
+   */
   render() {
     const p = this.props;
 
-    // here is our simple router functionality
-    if (!this.state.isReady)    return <Expo.AppLoading/>; // initially use AppLoading till our async resources are available
-    if (!p.appState.user)       return <SignIn/>;
+    // use Expo.AppLoading till our async resources are available
+    // ... because it uses NO yet-to-be-loaded fonts
+    if (!this.state.isReady)
+      return <Expo.AppLoading/>;
 
-    return <ListView/>; // ?? more
+    if (!p.appState.user)
+      return <SignIn/>;
 
-    return <Splash/>; // fallback to something
+    return <ListView/>; // ?? more logic
+
+    return <Splash/>; // ?? fallback to something
   }
 
 }
