@@ -1,9 +1,12 @@
 import Expo             from 'expo';
 import React            from 'react';
 import {Provider}       from 'react-redux';
+import platformSetup    from './src/startup/platformSetup';
 import createAppStore   from './src/startup/createAppStore';
 import AppScreenRouter  from './src/comp/AppScreenRouter';
 
+// perform platform-specific setup (i.e. iOS/Android)
+platformSetup();
 
 // create our top-level redux appStore
 const appStore = createAppStore();

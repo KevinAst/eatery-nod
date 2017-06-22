@@ -1,8 +1,9 @@
-import Expo      from 'expo';
-import React     from 'react';
-import {connect} from 'react-redux';
-import SignIn    from './SignIn';
-import ListView  from './ListView';
+import Expo              from 'expo';
+import React             from 'react';
+import {connect}         from 'react-redux';
+import {LayoutAnimation} from 'react-native';
+import SignIn            from './SignIn';
+import ListView          from './ListView';
 
 /**
  * A simple top-level router/navigator that is driven by our app-level
@@ -30,6 +31,12 @@ class AppScreenRouter extends React.Component {
     });
   }
 
+  componentWillUpdate() {
+    // LayoutAnimation has to be done JUST before a state change
+    // ... the reason it is done here
+    LayoutAnimation.configureNext(appAnimationConfig);
+  }
+
   render() {
     const p = this.props;
 
@@ -43,6 +50,32 @@ class AppScreenRouter extends React.Component {
   }
 
 }
+
+// define our own animation characteristics (very close to spring)
+// NOTE: LayoutAnimation.Presets options include: easeInEaseOut, linear, spring
+//       ex: LayoutAnimation.configureNext(LayoutAnimation.Presets.spring);
+// NOTE: For more info, see:
+//       - doc:
+//         https://facebook.github.io/react-native/docs/layoutanimation.html
+//       - article: 
+//         https://medium.com/@Jpoliachik/react-native-s-layoutanimation-is-awesome-4a4d317afd3e
+//       - code: 
+//         https://github.com/facebook/react-native/blob/master/Libraries/LayoutAnimation/LayoutAnimation.js
+const appAnimationConfig = { // modified LayoutAnimation.Presets.spring
+  duration:        500, // WAS: 700 (tone it down just a bit)
+  create: {
+    type:          LayoutAnimation.Types.linear,
+    property:      LayoutAnimation.Properties.opacity,
+  },
+  update: {
+    type:          LayoutAnimation.Types.spring,
+    springDamping: 0.4,
+  },
+  delete: {
+    type:          LayoutAnimation.Types.linear,
+    property:      LayoutAnimation.Properties.opacity,
+  },
+};
 
 export default connect(
   state => { // mapStateToProps
