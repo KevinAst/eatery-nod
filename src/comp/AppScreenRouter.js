@@ -1,10 +1,10 @@
-import Expo              from 'expo';
-import React             from 'react';
-import {connect}         from 'react-redux';
-import RN                from 'react-native';
-import Splash            from './Splash';
-import SignIn            from './SignIn';
-import ListView          from './ListView';
+import Expo          from 'expo';
+import React         from 'react';
+import {connect}     from 'react-redux';
+import RN            from 'react-native';
+import SplashScreen  from './SplashScreen';
+import SignInScreen  from './SignInScreen';
+import ListScreen    from './ListScreen';
 
 /**
  * A simple top-level router/navigator that is driven by our app-level
@@ -51,11 +51,11 @@ class AppScreenRouter extends React.Component {
       return <Expo.AppLoading/>;
 
     if (!p.appState.user)
-      return <SignIn/>;
+      return <SignInScreen/>;
 
-    return <ListView/>; // ?? more logic
+    return <ListScreen/>; // ?? more logic
 
-    return <Splash/>; // ?? fallback to something
+    return <SplashScreen/>; // ?? fallback to something
   }
 
 }

@@ -3,7 +3,10 @@ import {connect}    from 'react-redux'
 import * as nb      from 'native-base';
 import commonStyles from './commonStyles';
 
-const SignIn = (p) => {
+/**
+ * SignInScreen, managing sign-in credentials.
+ */
+function SignInScreen(p) {
   return (
     <nb.Container style={commonStyles.container}>
       <nb.Header>
@@ -45,4 +48,4 @@ export default connect(
       signedIn: ()=> dispatch({type: 'login.success'}),
     };
   }
-)(SignIn);
+)(SignInScreen);

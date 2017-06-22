@@ -3,7 +3,10 @@ import {connect}    from 'react-redux'
 import * as nb      from 'native-base';
 import commonStyles from './commonStyles';
 
-const ListView = (p) => {
+/**
+ * ListScreen displaying a set of eateries (possibly filtered).
+ */
+function ListScreen(p) {
   return (
     <nb.Container style={commonStyles.container}>
       <nb.Header>
@@ -36,4 +39,4 @@ export default connect(
     return {
       appState: state // ?? temp
     };
-  })(ListView);
+  })(ListScreen);

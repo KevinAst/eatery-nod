@@ -4,13 +4,13 @@ import * as NB      from 'native-base';
 import commonStyles from './commonStyles';
 
 /**
- * Splash Screen when there is nothing else to display.
+ * SplashScreen used when there is nothing else to display.
  *
  * NOTE: Because this screen contains text which uses native-base
- *       fonts, it cannot be displayed on initial entry ... in this
+ *       fonts, it cannot be displayed on initial entry.  In this
  *       case use the <Expo.AppLoading/> component.
  */
-export default function Splash() {
+export default function SplashScreen() {
   return (
     <NB.Container style={commonStyles.container}>
       <NB.Header>
