@@ -1,4 +1,4 @@
-import {UIManager} from 'react-native';
+import RN from 'react-native';
 
 /**
  * Expose function to perform platform-specific setup (i.e. iOS/Android).
@@ -6,6 +6,6 @@ import {UIManager} from 'react-native';
 export default function platformSetup() {
 
   // setting UIManager Flag in order to get LayoutAnimation work on android!
-  UIManager.setLayoutAnimationEnabledExperimental && UIManager.setLayoutAnimationEnabledExperimental(true);
+  RN.UIManager.setLayoutAnimationEnabledExperimental && RN.UIManager.setLayoutAnimationEnabledExperimental(true);
 
 }
