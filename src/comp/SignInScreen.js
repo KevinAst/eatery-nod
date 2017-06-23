@@ -22,7 +22,7 @@ function SignInScreen(p) {
       </nb.Header>
       <nb.Content>
         <nb.Text>Sign in please!</nb.Text>
-        <nb.Button success onPress={p.signedIn}>
+        <nb.Button light rounded onPress={p.signedIn}>
           <nb.Text>Sign In</nb.Text>
         </nb.Button>
       </nb.Content>
