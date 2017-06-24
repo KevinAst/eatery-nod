@@ -34,7 +34,7 @@ export const systemBootstrapComplete = createLogic({
   type: String(actions.system.bootstrap.complete),
   
   process({getState, action, api}, dispatch, done) {
-    // start our app - process kicks off with our authorization process
+    // start our app - by kicking off our authorization process
     dispatch( actions.auth.bootstrap() );
     done();
   },
