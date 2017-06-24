@@ -9,6 +9,7 @@ import handleUnexpectedError from '../util/handleUnexpectedError';
  */
 export default createLogic({
 
+  name: 'communicateUnexpectedErrors',
   type: [/\.fail$/,                // ... from app async '*.fail' actions
          'UNHANDLED_LOGIC_ERROR'], // ... from redux-logic error handler
   

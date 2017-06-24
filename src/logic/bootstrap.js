@@ -5,8 +5,9 @@ import actions        from '../actions';
  * Monitor system bootstrap process, loading device reources needed to
  * run our system.
  */
-export const systemBootstrap = createLogic({
+export const loadDeviceResources = createLogic({
 
+  name: 'bootstrap.loadDeviceResources',
   type: String(actions.system.bootstrap),
   
   process({getState, action, api}, dispatch, done) {
@@ -29,8 +30,9 @@ export const systemBootstrap = createLogic({
  * Monitor system bootstrap completion, starting our app's
  * authorization process.
  */
-export const systemBootstrapComplete = createLogic({
+export const startAppAuthProcess = createLogic({
 
+  name: 'bootstrap.startAppAuthProcess',
   type: String(actions.system.bootstrap.complete),
   
   process({getState, action, api}, dispatch, done) {
@@ -45,6 +47,6 @@ export const systemBootstrapComplete = createLogic({
 //       acumulated (see index.js).
 //       ... while the named exports (above) support easy unit testing :-)
 export default bootstrap = [
-  systemBootstrap,
-  systemBootstrapComplete,
+  loadDeviceResources,
+  startAppAuthProcess,
 ];

@@ -8,6 +8,7 @@ import {createLogic}  from 'redux-logic';
  */
 export default createLogic({
 
+  name: 'logActions',
   type: '*',
 
   transform({getState, action}, next) {
