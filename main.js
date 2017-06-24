@@ -3,27 +3,20 @@ import React            from 'react';
 import {Provider}       from 'react-redux';
 import platformSetup    from './src/startup/platformSetup';
 import createAppStore   from './src/startup/createAppStore';
-import AppScreenRouter  from './src/comp/AppScreenRouter';
+import AppRouter        from './src/AppRouter';
+import actions          from './src/actions';
 
-// perform platform-specific setup (i.e. iOS/Android)
+// platform-specific setup (iOS/Android)
 platformSetup();
 
-// create our top-level redux appStore
+// create our top-level redux appStore and register our redux-logic
 const appStore = createAppStore();
 
-// wire up redux in our top-level root component
-const rootComponent = () => <Provider store={appStore}>
-                              <AppScreenRouter/>
-                            </Provider>;
+// register our app to Expo (wiring up redux)
+const appComp = () => <Provider store={appStore}>
+                        <AppRouter/>
+                      </Provider>;
+Expo.registerRootComponent(appComp);
 
-// launch our app
-Expo.registerRootComponent(rootComponent);
-
-// ?? TEMP: just for fun
-appStore.dispatch({
-  type: 'TEST_ACTION',
-  payload: {
-    one: 1,
-    two: 2
-  }
-});
+// bootstrap our app processes (a swift kick to get the ball rolling)
+appStore.dispatch( actions.system.bootstrap() );

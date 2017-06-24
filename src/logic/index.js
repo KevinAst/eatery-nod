@@ -2,6 +2,7 @@ import { createLogic } from 'redux-logic';
 
 import communicateUnexpectedErrors from './communicateUnexpectedErrors';
 import logActions                  from './logActions';
+import bootstrap                   from './bootstrap';
 
 //***
 //*** accumulation of all app logic
@@ -14,5 +15,6 @@ export default [
   // log all dispatched actions ...
   logActions,
 
-  // ?? more
+  // bootstrap startup processes
+  ...bootstrap,
 ];

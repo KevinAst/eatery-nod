@@ -1,21 +1,17 @@
 import * as Redux     from 'redux';
-import {reducerHash}  from 'astx-redux-util';
-
-// ?? L8TR
-// ? import userMsg      from './appState.userMsg';
-// ? import itemsView,   * as fromItemsView   from './appState.itemsView';
-// ? import filters,     * as fromFilters     from './appState.filters';
-// ? import editSelCrit, * as fromEditSelCrit from './appState.editSelCrit';
+import {reducerHash}  from 'astx-redux-util'; // ?? eventually don't need
+import systemReady    from './systemReady';
 
 // ***
 // *** our app's top-level reducer
 // ***
 
-// ?? crude start
+// ?? crude start ... trash this when formally defined
 const user = reducerHash({
   "login.success":  (state, action) => "valid-uid",
 }, null); // initialState
 
+// ?? crude start ... trash this when formally defined
 const eateries = reducerHash({
   "eateries.loaded":  (state, action) => (
     { // all restaurants (from simulated DB)
@@ -48,6 +44,7 @@ const eateries = reducerHash({
 }, null); // initialState
 
 export default appState = Redux.combineReducers({
+  systemReady,
   user,
   eateries,
 });

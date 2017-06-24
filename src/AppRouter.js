@@ -2,35 +2,21 @@ import Expo          from 'expo';
 import React         from 'react';
 import {connect}     from 'react-redux';
 import RN            from 'react-native';
-import SplashScreen  from './SplashScreen';
-import SignInScreen  from './SignInScreen';
-import ListScreen    from './ListScreen';
+import isString      from 'lodash.isstring';
+import SplashScreen  from './comp/SplashScreen';
+import FatalScreen   from './comp/FatalScreen';
+import SignInScreen  from './comp/SignInScreen';
+import ListScreen    from './comp/ListScreen';
+
 
 /**
- * A simple top-level router/navigator that is driven by our app-level
- * redux state!
+ * Our top-level App component that serves as a simple
+ * router/navigator, driven by our app-level redux state!
  *
- * NOTE: We use class component to expose life-cycle methods, to
- *       asynchronously load various system resources (like Expo fonts).
+ * NOTE: We use class component to have access to needed life-cycle
+ *       methods.
  */
-class AppScreenRouter extends React.Component {
-
-  // internal indication of whether system resources have been loaded
-  state = {
-    isReady: false,
-  };
-
-  componentWillMount() {
-    // async load of resources needed prior to rendering our App
-    // ... NativeBase uses these custom fonts
-    Expo.Font.loadAsync({
-      'Roboto':        require('native-base/Fonts/Roboto.ttf'),
-      'Roboto_medium': require('native-base/Fonts/Roboto_medium.ttf'),
-    })
-    .then(() => {
-      this.setState({isReady: true});
-    });
-  }
+class AppRouter extends React.Component {
 
   componentWillUpdate() {
     // LayoutAnimation has to be done JUST before a state change
@@ -39,17 +25,22 @@ class AppScreenRouter extends React.Component {
   }
 
   /**
-   * This rendor() method contains our simplistic router/navigator
-   * functionality, based on app-level redux state!
+   * This rendor() method is essentially our router/navigator, based
+   * on simple app-level redux state!
    */
   render() {
     const p = this.props;
 
-    // use Expo.AppLoading till our async resources are available
+    // initally promote Expo.AppLoading untill our system resources are available
     // ... because it uses NO yet-to-be-loaded fonts
-    if (!this.state.isReady)
+    if (!p.systemReady)
       return <Expo.AppLoading/>;
 
+    // if our system could NOT initialized, we cannot continue
+    if (isString(p.systemReady))
+      return <FatalScreen msg={p.systemReady}/>
+
+    // ??? current working point!
     if (!p.appState.user)
       return <SignInScreen/>;
 
@@ -59,6 +50,16 @@ class AppScreenRouter extends React.Component {
   }
 
 }
+
+export default connect(
+  appState => { // mapStateToProps
+    return {
+      appState, // ?? crude for now, eventually delete this
+      systemReady:  appState.systemReady,
+    };
+  })(AppRouter);
+
+
 
 // define our own animation characteristics (very close to spring)
 // NOTE: LayoutAnimation.Presets options include: easeInEaseOut, linear, spring
@@ -85,10 +86,3 @@ const appAnimationConfig = { // modified LayoutAnimation.Presets.spring
     property:      RN.LayoutAnimation.Properties.opacity,
   },
 };
-
-export default connect(
-  state => { // mapStateToProps
-    return {
-      appState: state // ?? crude for now
-    };
-  })(AppScreenRouter);

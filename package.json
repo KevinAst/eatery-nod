@@ -22,6 +22,7 @@
     "astx-redux-util": "^1.0.0",
     "expo": "17.0.0",
     "firebase": "^4.1.2",
+    "lodash.isstring": "^4.0.1",
     "native-base": "^2.1.5",
     "react": "16.0.0-alpha.6",
     "react-native": "https://github.com/expo/react-native/archive/sdk-17.0.0.tar.gz",

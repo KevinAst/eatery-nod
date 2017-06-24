@@ -31,7 +31,7 @@ export default function handleUnexpectedError(err) {
 
     // log the details of the error (with traceback) for tech review
     const userMsg = `Your data is "out of date" ${attemptingTo}`;
-    console.error(userMsg, err); // ?? temp
+    console.error(userMsg, err); // ?? temp ... BAD: console.error() shows on device in "red screen of death"
     
     // create/return action providing user communication
     return { type: 'ERROR', err }; // ?? TEMP ... RETROFIT
@@ -58,7 +58,7 @@ export default function handleUnexpectedError(err) {
 
     // log the details of the error (with traceback) for tech review
     const userMsg = `An unexpected error occurred ${attemptingTo}`;
-    console.error(userMsg, err); // ?? temp
+    console.error(userMsg, err); // ?? temp ... BAD: console.error() shows on device in "red screen of death"
     
     // create/return action providing user communication
     return { type: 'ERROR', err }; // ?? TEMP ... RETROFIT

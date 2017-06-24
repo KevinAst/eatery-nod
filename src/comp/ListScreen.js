@@ -35,8 +35,8 @@ function ListScreen(p) {
 };
 
 export default connect(
-  state => { // mapStateToProps
+  appState => { // mapStateToProps
     return {
-      appState: state // ?? temp
+      appState: appState, // ?? temp
     };
   })(ListScreen);

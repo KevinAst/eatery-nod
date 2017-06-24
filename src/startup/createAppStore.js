@@ -1,8 +1,8 @@
 import * as Redux                from 'redux';
-import appState                  from '../state/appState';
+import appState                  from '../appState';
 import { createLogicMiddleware } from 'redux-logic';
 import logic                     from '../logic';
-//import api                     from '../../shared/api'; // L8TR
+import api                       from '../api';
 
 /**
  * Create our top-level redux appStore, WITH our registered redux-logic.
@@ -19,11 +19,10 @@ import logic                     from '../logic';
 export default function createAppStore() {
   
   // accumulate all our logic modules (redux-logic)
-  const logicMiddleware = createLogicMiddleware(logic);
-                                                // L8TR:
-                                                // ? { // injected dependancies
-                                                // ?   api
-                                                // ? });
+  const logicMiddleware = createLogicMiddleware(logic,
+                                                { // injected dependancies
+                                                  api
+                                                });
 
   // define our Redux app-wide store, WITH our middleware registration
   const appStore = Redux.createStore(appState, // our app-wide redux reducer
