@@ -1,8 +1,10 @@
-import * as Redux                from 'redux';
-import appState                  from '../appState';
-import { createLogicMiddleware } from 'redux-logic';
-import logic                     from '../logic';
-import api                       from '../api';
+import {applyMiddleware,
+        compose,
+        createStore}           from 'redux';
+import {createLogicMiddleware} from 'redux-logic';
+import appState                from '../appState';
+import logic                   from '../logic';
+import api                     from '../api';
 
 /**
  * Create our top-level redux appStore, WITH our registered redux-logic.
@@ -25,8 +27,8 @@ export default function createAppStore() {
                                                 });
 
   // define our Redux app-wide store, WITH our middleware registration
-  const appStore = Redux.createStore(appState, // our app-wide redux reducer
-                                     Redux.compose(Redux.applyMiddleware(logicMiddleware))); // redux-logic middleware
+  const appStore = createStore(appState, // our app-wide redux reducer
+                               compose(applyMiddleware(logicMiddleware))); // redux-logic middleware
 
   return appStore;
 }

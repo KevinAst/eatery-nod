@@ -1,4 +1,4 @@
-import React      from 'react';
+// import React      from 'react'; ?? don't think is needed
 // import actions    from '../actions'; ?? not defined yet
 // import Alert      from '../comp/Alert'; ?? NO NO NO
 

@@ -1,5 +1,3 @@
-import { createLogic } from 'redux-logic';
-
 import communicateUnexpectedErrors from './communicateUnexpectedErrors';
 import logActions                  from './logActions';
 import bootstrap                   from './bootstrap';

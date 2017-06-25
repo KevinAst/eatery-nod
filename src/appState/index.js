@@ -1,6 +1,7 @@
-import * as Redux     from 'redux';
-import {reducerHash}  from 'astx-redux-util'; // ?? eventually don't need
-import systemReady    from './systemReady';
+import {combineReducers}  from 'redux';
+import {reducerHash}      from 'astx-redux-util'; // ?? eventually don't need
+import systemReady        from './systemReady';
+
 
 // ***
 // *** our app's top-level reducer
@@ -43,7 +44,7 @@ const eateries = reducerHash({
   )
 }, null); // initialState
 
-export default appState = Redux.combineReducers({
+export default appState = combineReducers({
   systemReady,
   user,
   eateries,

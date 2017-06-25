@@ -1,6 +1,11 @@
 import React        from 'react';
-import RN           from 'react-native';
-import * as NB      from 'native-base';
+import {Image}      from 'react-native';
+import {Body,
+        Container,
+        Content,
+        Header,
+        Spinner,
+        Title}      from 'native-base';
 import commonStyles from './commonStyles';
 
 /**
@@ -12,17 +17,17 @@ import commonStyles from './commonStyles';
  */
 export default function SplashScreen() {
   return (
-    <NB.Container style={commonStyles.container}>
-      <NB.Header>
-        <NB.Body>
-          <NB.Title>Eatery Nod</NB.Title>
-        </NB.Body>
-      </NB.Header>
-      <NB.Content contentContainerStyle={{flex: 1, alignItems: 'center', justifyContent:'center'}}>
-        <RN.Image style={{width: 100, height: 100}}
-                  source={require('../../assets/icons/eatery.png')}/>
-        <NB.Spinner color='blue'/>
-      </NB.Content>
-    </NB.Container>
+    <Container style={commonStyles.container}>
+      <Header>
+        <Body>
+          <Title>Eatery Nod</Title>
+        </Body>
+      </Header>
+      <Content contentContainerStyle={{flex: 1, alignItems: 'center', justifyContent:'center'}}>
+        <Image style={{width: 100, height: 100}}
+               source={require('../../assets/icons/eatery.png')}/>
+        <Spinner color='blue'/>
+      </Content>
+    </Container>
   );
 }

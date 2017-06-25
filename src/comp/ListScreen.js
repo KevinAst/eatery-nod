@@ -1,6 +1,17 @@
 import React        from 'react';
 import {connect}    from 'react-redux'
-import * as nb      from 'native-base';
+import {Body,
+        Button,
+        Container,
+        Content,
+        Footer,
+        FooterTab,
+        Header,
+        Icon,
+        Left,
+        Right,
+        Text,
+        Title}      from 'native-base';
 import commonStyles from './commonStyles';
 
 /**
@@ -8,29 +19,29 @@ import commonStyles from './commonStyles';
  */
 function ListScreen(p) {
   return (
-    <nb.Container style={commonStyles.container}>
-      <nb.Header>
-        <nb.Left>
-          <nb.Button transparent>
-            <nb.Icon name='menu'/>
-          </nb.Button>
-        </nb.Left>
-        <nb.Body>
-          <nb.Title>List View</nb.Title>
-        </nb.Body>
-        <nb.Right/>
-      </nb.Header>
-      <nb.Content>
-        <nb.Text>Signed in as: {p.appState.user} ... Yee Haa!</nb.Text>
-      </nb.Content>
-      <nb.Footer>
-        <nb.FooterTab>
-          <nb.Button full>
-            <nb.Title>List View Footer</nb.Title>
-          </nb.Button>
-        </nb.FooterTab>
-      </nb.Footer>
-    </nb.Container>
+    <Container style={commonStyles.container}>
+      <Header>
+        <Left>
+          <Button transparent>
+            <Icon name='menu'/>
+          </Button>
+        </Left>
+        <Body>
+          <Title>List View</Title>
+        </Body>
+        <Right/>
+      </Header>
+      <Content>
+        <Text>Signed in as: {p.appState.user} ... Yee Haa!</Text>
+      </Content>
+      <Footer>
+        <FooterTab>
+          <Button full>
+            <Title>List View Footer</Title>
+          </Button>
+        </FooterTab>
+      </Footer>
+    </Container>
   );
 };
 
