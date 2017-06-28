@@ -6,8 +6,7 @@ import isString      from 'lodash.isstring';
 import SplashScreen  from './comp/SplashScreen';
 import FatalScreen   from './comp/FatalScreen';
 import SignInScreen  from './comp/SignInScreen';
-import ListScreen    from './comp/ListScreen';
-
+// import ListScreen    from './comp/ListScreen';
 
 /**
  * Our top-level App component that serves as a simple
@@ -31,22 +30,38 @@ class AppRouter extends React.Component {
   render() {
     const p = this.props;
 
+    /* eslint-disable curly */
+
     // initally promote Expo.AppLoading untill our system resources are available
     // ... because it uses NO yet-to-be-loaded fonts
     if (!p.systemReady)
       return <Expo.AppLoading/>;
 
     // if our system could NOT initialized, we cannot continue
+    // ... systemReady will contain an error msg string on initialization failure
     if (isString(p.systemReady))
-      return <FatalScreen msg={p.systemReady}/>
+      return <FatalScreen msg={p.systemReady}/>;
+
+    // display interactive SignIn, when form is active
+    // ?? this is truely NOT needed if we get our act together
+    // ?? that means I don't have to maintain deviceCredentials of 'NONE'
+    // ??? KEY: this is causing some render() issue when applied
+    // ? if (p.deviceCredentials === 'NONE') { // ?? unsure WHY is this needed (if our multiple dispatches operate in succession
+    // ?   console.log(`??? ROUTE: SignInScreen 111 (deviceCredentials is NONE) ... deviceCredentials/signInForm: `, p.deviceCredentials, p.signInForm);
+    // ?   return <SignInScreen/>;
+    // ? }
+    // ??? ABOVE WAS CAUSING A RENDER ERROR that WAS NOT REPORTED ... was due to redux-logic swallowing the error!
+    if (p.signInForm) { // ?? test
+      // console.log(`??? ROUTE: SignInScreen 222 (signInForm EXPANDED) ... deviceCredentials/signInForm: `, p.deviceCredentials, p.signInForm);
+      return <SignInScreen/>;
+    }
 
     // ??? current working point!
-    if (!p.appState.user)
-      return <SignInScreen/>;
 
-    return <ListScreen/>; // ?? more logic
+    // return <ListScreen/>; // ?? more logic
 
-    return <SplashScreen/>; // ?? fallback to something
+    // fallback is our SplashScreen
+    return <SplashScreen/>;
   }
 
 }
@@ -54,8 +69,9 @@ class AppRouter extends React.Component {
 export default connect(
   appState => { // mapStateToProps
     return {
-      appState, // ?? crude for now, eventually delete this
-      systemReady:  appState.systemReady,
+      systemReady:       appState.systemReady,
+   // deviceCredentials: appState.auth.deviceCredentials, // ?? do we need this?
+      signInForm:        appState.auth.signInForm,
     };
   })(AppRouter);
 

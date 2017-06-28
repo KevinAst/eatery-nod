@@ -1,5 +1,5 @@
 import React        from 'react';
-import {connect}    from 'react-redux'
+import {connect}    from 'react-redux';
 import {Body,
         Button,
         Container,
@@ -8,6 +8,7 @@ import {Body,
         FooterTab,
         Header,
         Icon,
+        Input,
         Left,
         Right,
         Text,
@@ -23,7 +24,7 @@ function SignInScreen(p) {
       <Header>
         <Left>
           <Button transparent>
-            <Icon name='menu'/>
+            <Icon name="menu"/>
           </Button>
         </Left>
         <Body>
@@ -33,6 +34,10 @@ function SignInScreen(p) {
       </Header>
       <Content>
         <Text>Sign in please!</Text>
+{/*?? */}
+        <Input placeholder="Email"
+               value={p.email}/>
+
         <Button light rounded onPress={p.signedIn}>
           <Text>Sign In</Text>
         </Button>
@@ -46,17 +51,17 @@ function SignInScreen(p) {
       </Footer>
     </Container>
   );
-};
+}
 
 export default connect(
   appState => {    // mapStateToProps
     return {
-      appState: appState, // ?? temp
+      email: appState.auth.signInForm.email,
     };
   },
   dispatch => { // mapDispatchToProps
     return {
-      signedIn: ()=> dispatch({type: 'login.success'}),
+      signedIn: () => dispatch({type: 'do_some_SignIn'}),
     };
   }
 )(SignInScreen);

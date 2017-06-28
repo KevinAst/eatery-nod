@@ -1,5 +1,5 @@
 import React        from 'react';
-import {connect}    from 'react-redux'
+import {connect}    from 'react-redux';
 import {Body,
         Button,
         Container,
@@ -23,7 +23,7 @@ function ListScreen(p) {
       <Header>
         <Left>
           <Button transparent>
-            <Icon name='menu'/>
+            <Icon name="menu"/>
           </Button>
         </Left>
         <Body>
@@ -32,7 +32,7 @@ function ListScreen(p) {
         <Right/>
       </Header>
       <Content>
-        <Text>Signed in as: {p.appState.user} ... Yee Haa!</Text>
+        <Text>Signed in as: TBD ... Yee Haa!</Text>
       </Content>
       <Footer>
         <FooterTab>
@@ -43,11 +43,11 @@ function ListScreen(p) {
       </Footer>
     </Container>
   );
-};
+}
 
 export default connect(
   appState => { // mapStateToProps
     return {
-      appState: appState, // ?? temp
+      appState, // ?? temp
     };
   })(ListScreen);

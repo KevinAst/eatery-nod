@@ -1,6 +1,6 @@
 import {generateActions} from 'action-u';
 
-export default system = generateActions.root({
+export default generateActions.root({
   system: {
     bootstrap: {   // system.bootstrap(): Action
                    // > bootstrap system resources
@@ -15,7 +15,7 @@ export default system = generateActions.root({
                    // > system resourses are NOT available - app CANNOT start
                    //   INTENT: #byLogic, #forLogic, #forReducer
                    actionMeta: {
-                     traits: ['err']
+                     traits: ['err'],
                    },
       },
     },

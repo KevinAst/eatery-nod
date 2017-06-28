@@ -1,7 +1,7 @@
 import {reducerHash}  from 'astx-redux-util';
 import actions        from '../actions';
 
-export default systemReady = reducerHash({
+export default reducerHash({
 
   [actions.system.bootstrap.complete]: (state, action) => true,
 

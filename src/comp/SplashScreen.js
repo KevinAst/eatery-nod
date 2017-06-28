@@ -25,8 +25,8 @@ export default function SplashScreen() {
       </Header>
       <Content contentContainerStyle={{flex: 1, alignItems: 'center', justifyContent:'center'}}>
         <Image style={{width: 100, height: 100}}
-               source={require('../../assets/icons/eatery.png')}/>
-        <Spinner color='blue'/>
+               source={require("../../assets/icons/eatery.png")}/>
+        <Spinner color="blue"/>
       </Content>
     </Container>
   );

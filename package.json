@@ -16,6 +16,9 @@
   "author": "Kevin J. Bridges <kevinast@gmail.com> (https://github.com/KevinAst)",
   "license": "MIT",
   "homepage": "https://github.com/KevinAst/eatery-nod",
+  "scripts": {
+    "lint": "echo '*** Verify code quality (lint):' && eslint src"
+  },
   "dependencies": {
     "@expo/vector-icons": "^5.0.0",
     "action-u": "^0.2.0",
@@ -28,7 +31,16 @@
     "react-native": "https://github.com/expo/react-native/archive/sdk-17.0.0.tar.gz",
     "react-redux": "^5.0.5",
     "redux": "^3.7.0",
-    "redux-logic": "^0.12.1",
+    "redux-logic": "github:jeffbski/redux-logic#prevent-hiding-next-error",
     "rxjs": "^5.4.1"
+  },
+  "devDependencies": {
+    "babel-eslint": "^7.2.3",
+    "eslint": "^4.1.1",
+    "eslint-config-expo": "^5.1.3",
+    "eslint-plugin-babel": "^4.1.1",
+    "eslint-plugin-flowtype": "^2.34.0",
+    "eslint-plugin-import": "^2.6.0",
+    "eslint-plugin-react": "^7.1.0"
   }
 }

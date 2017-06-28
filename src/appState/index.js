@@ -1,16 +1,12 @@
 import {combineReducers}  from 'redux';
 import {reducerHash}      from 'astx-redux-util'; // ?? eventually don't need
 import systemReady        from './systemReady';
+import auth               from './auth';
 
 
 // ***
 // *** our app's top-level reducer
 // ***
-
-// ?? crude start ... trash this when formally defined
-const user = reducerHash({
-  "login.success":  (state, action) => "valid-uid",
-}, null); // initialState
 
 // ?? crude start ... trash this when formally defined
 const eateries = reducerHash({
@@ -41,11 +37,11 @@ const eateries = reducerHash({
         numVisits:   12,
       },
     }
-  )
+  ),
 }, null); // initialState
 
-export default appState = combineReducers({
+export default combineReducers({
   systemReady,
-  user,
+  auth,
   eateries,
 });

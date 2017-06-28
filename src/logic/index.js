@@ -1,6 +1,7 @@
 import communicateUnexpectedErrors from './communicateUnexpectedErrors';
 import logActions                  from './logActions';
 import bootstrap                   from './bootstrap';
+import auth                        from './auth';
 
 //***
 //*** accumulation of all app logic
@@ -15,4 +16,7 @@ export default [
 
   // bootstrap startup processes
   ...bootstrap,
+
+  // authorization processes
+  ...auth,
 ];

@@ -41,9 +41,9 @@ export default function FatalScreen({msg}) {
 }
 
 FatalScreen.propTypes = {
-  msg: PropTypes.string.isRequired
+  msg: PropTypes.string.isRequired,
 };
 
 FatalScreen.defaultProps = {
-  msg: 'A problem has occurred.'
+  msg: 'A problem has occurred.',
 };

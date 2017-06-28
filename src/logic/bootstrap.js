@@ -43,10 +43,9 @@ export const startAppAuthProcess = createLogic({
 
 });
 
-// NOTE: This default array export allows all logic modules to be easily
-//       acumulated (see index.js).
-//       ... while the named exports (above) support easy unit testing :-)
-export default bootstrap = [
+// promote all logic (accumulated in index.js)
+// ... named exports (above) are used by unit tests :-)
+export default [
   loadDeviceResources,
   startAppAuthProcess,
 ];
