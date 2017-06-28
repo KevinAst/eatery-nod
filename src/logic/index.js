@@ -1,18 +1,14 @@
-import communicateUnexpectedErrors from './communicateUnexpectedErrors';
-import logActions                  from './logActions';
-import bootstrap                   from './bootstrap';
-import auth                        from './auth';
+import diag       from './diag';
+import bootstrap  from './bootstrap';
+import auth       from './auth';
 
 //***
 //*** accumulation of all app logic
 //***
 
 export default [
-  // handle dispatch-based unexpected errors ...
-  communicateUnexpectedErrors,
-
-  // log all dispatched actions ...
-  logActions,
+  // diagnostics (error handling, logging actions, etc.)
+  ...diag,
 
   // bootstrap startup processes
   ...bootstrap,
