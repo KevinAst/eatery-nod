@@ -1,5 +1,4 @@
 import {createLogic}  from 'redux-logic';
-import actions        from '../actions'; // ?? needed
 import handleUnexpectedError from '../util/handleUnexpectedError';
 
 /**

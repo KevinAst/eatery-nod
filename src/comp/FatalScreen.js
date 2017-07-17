@@ -1,10 +1,10 @@
 import React        from 'react';
-import {Image}      from 'react-native';
 import {Body,
         Container,
         Content,
         Header,
         Icon,
+        Image,
         Text,
         Title}      from 'native-base';
 import PropTypes    from 'prop-types';

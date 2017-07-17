@@ -51,8 +51,7 @@ class AppRouter extends React.Component {
     // ?   return <SignInScreen/>;
     // ? }
     // ??? ABOVE WAS CAUSING A RENDER ERROR that WAS NOT REPORTED ... was due to redux-logic swallowing the error!
-    if (p.signInForm) { // ?? test
-      // console.log(`??? ROUTE: SignInScreen 222 (signInForm EXPANDED) ... deviceCredentials/signInForm: `, p.deviceCredentials, p.signInForm);
+    if (p.signInForm) {
       return <SignInScreen/>;
     }
 
@@ -61,6 +60,7 @@ class AppRouter extends React.Component {
     // return <ListScreen/>; // ?? more logic
 
     // fallback is our SplashScreen
+    console.log(`?? <AppRouter> fallback to SpashScreen ... appState: `, p.appState);
     return <SplashScreen/>;
   }
 
@@ -69,6 +69,7 @@ class AppRouter extends React.Component {
 export default connect(
   appState => { // mapStateToProps
     return {
+      appState, // ?? very temporary
       systemReady:       appState.systemReady,
    // deviceCredentials: appState.auth.deviceCredentials, // ?? do we need this?
       signInForm:        appState.auth.signInForm,

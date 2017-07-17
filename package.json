@@ -17,7 +17,13 @@
   "license": "MIT",
   "homepage": "https://github.com/KevinAst/eatery-nod",
   "scripts": {
-    "lint": "echo '*** Verify code quality (lint):' && eslint src"
+    "start":      "npm run test:watch",
+    "lint":       "echo '*** Verify code quality (lint):' && eslint src",
+    "test":       "jest",
+    "test:watch": "npm run test -- --watch"
+  },
+  "jest": {
+    "preset": "jest-expo"
   },
   "dependencies": {
     "@expo/vector-icons": "^5.0.0",
@@ -25,14 +31,16 @@
     "astx-redux-util": "^1.0.0",
     "expo": "17.0.0",
     "firebase": "^4.1.2",
+    "lodash.isfunction": "^3.0.8",
     "lodash.isstring": "^4.0.1",
     "native-base": "^2.1.5",
     "react": "16.0.0-alpha.6",
     "react-native": "https://github.com/expo/react-native/archive/sdk-17.0.0.tar.gz",
     "react-redux": "^5.0.5",
     "redux": "^3.7.0",
-    "redux-logic": "github:jeffbski/redux-logic#prevent-hiding-next-error",
-    "rxjs": "^5.4.1"
+    "redux-logic": "^0.12.2",
+    "rxjs": "^5.4.1",
+    "yup": "^0.21.3"
   },
   "devDependencies": {
     "babel-eslint": "^7.2.3",
@@ -41,6 +49,7 @@
     "eslint-plugin-babel": "^4.1.1",
     "eslint-plugin-flowtype": "^2.34.0",
     "eslint-plugin-import": "^2.6.0",
-    "eslint-plugin-react": "^7.1.0"
+    "eslint-plugin-react": "^7.1.0",
+    "jest-expo": "^18.0.0"
   }
 }

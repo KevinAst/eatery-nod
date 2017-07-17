@@ -1,4 +1,5 @@
 import {generateActions} from 'action-u';
+import signInFormMeta    from '../logic/signInFormMeta';
 
 export default generateActions.root({
   auth: {
@@ -40,15 +41,6 @@ export default generateActions.root({
       // ?? more sub-actions ... success/fail
     },
 
-    interactiveSignIn: { // auth.interactiveSignIn(email='', pass='', formMsg=''): Action
-                         // > initiate interactive SignIn form.
-                         //   NOTE: email/pass/formMsg optionally supplied on failed signIn() attempt from device credentials
-                         //   INTENT: #byUser, #byLogic, #forLogic, #forReducer ??
-                         actionMeta: {
-                           traits: ['email', 'pass', 'formMsg'],
-                           ratify: (email='', pass='', formMsg='') => [email, pass, formMsg],
-                         },
-      // ?? more sub-actions ... success/fail
-    },
+    interactiveSignIn: signInFormMeta.registrar.formActionGenesis(), // inject the standard SignIn form-based actions
   },
 });

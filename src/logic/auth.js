@@ -1,5 +1,7 @@
 import {createLogic}  from 'redux-logic';
+import signInFormMeta from './signInFormMeta';
 import actions        from '../actions';
+
 
 /**
  * Monitor authorization startup, fetching credentials stored on device (if any).
@@ -55,7 +57,7 @@ export const manualSignIn = createLogic({
   type: String(actions.auth.bootstrap.noDeviceCredentials),
 
   process({getState, action, api}, dispatch, done) {
-    dispatch( actions.auth.interactiveSignIn() );
+    dispatch( actions.auth.interactiveSignIn.open() );
     done();
   },
 
@@ -67,4 +69,5 @@ export default [
   checkDeviceCredentials,
   autoSignIn,
   manualSignIn,
+  ...signInFormMeta.registrar.formLogic(actions.auth.interactiveSignIn), // inject the standard SignIn form-based logic modules
 ];

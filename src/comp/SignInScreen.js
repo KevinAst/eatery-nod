@@ -1,24 +1,30 @@
 import React        from 'react';
 import {connect}    from 'react-redux';
+import PropTypes    from 'prop-types';
 import {Body,
         Button,
         Container,
         Content,
         Footer,
         FooterTab,
+        Form,
         Header,
         Icon,
-        Input,
         Left,
         Right,
         Text,
-        Title}      from 'native-base';
-import commonStyles from './commonStyles';
+        Title}        from 'native-base';
+import commonStyles   from './commonStyles';
+import actions        from '../actions';
+import signInFormMeta from '../logic/signInFormMeta';
+import ITextField     from '../util/iForms/comp/ITextField';
+
 
 /**
- * SignInScreen, managing sign-in credentials.
+ * SignInScreen: gather user sign-in credentials.
  */
-function SignInScreen(p) {
+function SignInScreen({signInForm}) {
+
   return (
     <Container style={commonStyles.container}>
       <Header>
@@ -33,14 +39,22 @@ function SignInScreen(p) {
         <Right/>
       </Header>
       <Content>
+       <Form>
         <Text>Sign in please!</Text>
-{/*?? */}
-        <Input placeholder="Email"
-               value={p.email}/>
 
-        <Button light rounded onPress={p.signedIn}>
+        <ITextField fieldName="email"
+                    iForm={signInForm}
+                    placeholder="jon.snow@gmail.com"
+                    keyboardType="email-address"/>
+
+        <ITextField fieldName="pass"
+                    iForm={signInForm}
+                    secureTextEntry/>
+
+        <Button light rounded onPress={signInForm.handleProcess}>
           <Text>Sign In</Text>
         </Button>
+       </Form>
       </Content>
       <Footer>
         <FooterTab>
@@ -53,15 +67,31 @@ function SignInScreen(p) {
   );
 }
 
+SignInScreen.propTypes = {
+  signInForm: PropTypes.object.isRequired,
+};
+
 export default connect(
-  appState => {    // mapStateToProps
+
+  // mapStateToProps()
+  (appState) => {
     return {
-      email: appState.auth.signInForm.email,
+      formState: signInFormMeta.selectFormState(appState),
     };
   },
-  dispatch => { // mapDispatchToProps
+
+  // mapDispatchToProps()
+  null,
+
+  // mergeProps()
+  (stateProps, dispatchProps, ownProps) => {
     return {
-      signedIn: () => dispatch({type: 'do_some_SignIn'}),
+      ...ownProps,
+    //...stateProps,    // unneeded (in this case) ... wonder: does this impact connect() optimization?
+    //...dispatchProps, // ditto
+      signInForm: signInFormMeta.IForm(stateProps.formState, 
+                                       actions.auth.interactiveSignIn,
+                                       dispatchProps.dispatch),
     };
   }
 )(SignInScreen);
