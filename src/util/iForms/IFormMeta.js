@@ -63,7 +63,7 @@ import verify         from '../verify';
 // ?? MORE PARAMS: mapDomainToForm=defFun, mapFormToDomain=defFun,
 export default function IFormMeta({formDesc,
                                    formSchema,
-                                   selectFormState,
+                                   selectFormState, // ?? rename to formStateSelector
                                    ...unknownArgs}={}) {
 
   // ***
@@ -157,8 +157,17 @@ export default function IFormMeta({formDesc,
 
       fieldChanged: { // fieldChanged(fieldName, value): Action
                       // > maintain controlled field state change (with validation)
+                      //   NOTE: IForm logic supplements action with validation msgs
                       actionMeta: {
                         traits: ['fieldName', 'value'],
+                      },
+      },
+
+      fieldTouched: { // fieldTouched(fieldName): Action
+                      // > maintain field touched status, impacting validation dynamic exposure
+                      //   NOTE: IForm logic supplements action with validation msgs
+                      actionMeta: {
+                        traits: ['fieldName'],
                       },
       },
 
@@ -166,6 +175,14 @@ export default function IFormMeta({formDesc,
                       // > process this form
                       actionMeta: {
                       },
+
+        reject: {     // reject(msgs): Action
+                      // > reject process action with supplied validation msgs
+                      actionMeta: {
+                        traits: ['msgs'],
+                      },
+        },
+
       },
 
       close: {        // close(): Action
@@ -177,6 +194,33 @@ export default function IFormMeta({formDesc,
     };
 
     return myFormActions;
+  }
+
+
+  const validationOptions = {
+    abortEarly: false, // return ALL errors
+  };
+
+  /**
+   * Validate the supplied values against our schema.
+   *
+   * @param {Object} values the set of values to validate (keyed by
+   * fieldName).
+   * 
+   * @return {promise} the async promise that resolves to msgs object
+   * (keyed by fieldName) containing validation messages for all
+   * fields.
+   */
+  function asyncValidate(values) {
+    return formSchema.validate(values, validationOptions)
+    .then( () => ({}) )  // empty msgs
+    .catch( yupErrs => { // transform all Yup errors into our msgs
+      const msgs = {};
+      yupErrs.inner.forEach(yupErr => {
+        msgs[yupErr.path] = yupErr.message;
+      });
+      return msgs;
+    });
   }
 
 
@@ -207,45 +251,73 @@ export default function IFormMeta({formDesc,
 
       createLogic({
         name: `validateFields for '${formDesc}' form`,
-        type: String(formActions.fieldChanged),
+        type: [ String(formActions.fieldChanged),
+                String(formActions.fieldTouched), ], // if fields have initial value (i.e. never changed) this will be the first time fields are validated
 
-        validate({getState, action, api}, allow, reject) { // ?? we could consider this a transform() with next(action) since we never reject()
+        validate({getState, action, api}, allow, reject) {
 
           // NOTE: action has: fieldName/value
 
           // locate our formState (from our appState)
-          // ??$$
-          const appState = getState(); // ??$$ KEY-QUESTION is this the top-level state, or intermediate state
-          //                                   ?? it has to be top-level, which means we need to know how to get from their to our form
-          //                                      ... prop a formLogic() function param: DESC: return the appropriate form state, given the top-level appState
-          //                                            getFormState ... (appState) => appState.auth.signInForm
-          //                                      ... usage:
-          //                                            const formState = getFormState(appState);
+          const formState = selectFormState( getState() );
 
-          // ? console.log(`?? iForm logic: validateFields, appState: `, appState);
+          // perform validation
+          // ... fieldChanged action has an updated value in action
+          const values = action.type === String(formActions.fieldChanged)
+                          ? {...formState.values, [action.fieldName]: action.value}
+                          : formState.values;
+          asyncValidate(values)
+          .then(msgs => {
 
-          // ??$$ perform validation
-          // -and-
-          // ?? supplement action with field-specific validation errors
-          //    ?? append on existing errors from: appState.auth.signInForm
-          // ? action.validationMsgs = {
-          // ?   [action.fieldName]: `msg here!`
-          // ? };
+            // retain overall form msg if any
+            if (formState.msgs.FORM) {
+              msgs.FORM = formState.msgs.FORM;
+            }
 
-          // ?? supplement action with validation errors, once form validation has been triggered
-          // ... typically by submit button
-          // ? if (appState.auth.signInForm.validationEnabled) {
-          // ? }
-          
-          // continue processing, supporting field updates, and visualizing any validation errors
-          allow(action);
+            // supplement our action with validation msgs
+            action.msgs = msgs;
+
+            // continue processing, supporting field updates, and visualizing any validation errors
+            allow(action);
+          });
+
+        },
+      }),
+
+
+      createLogic({
+        name: `process validation for '${formDesc}' form`,
+        type: String(formActions.process),
+
+        validate({getState, action, api}, allow, reject) {
+
+          // NOTE: action has: fieldName/value
+
+          // locate our formState (from our appState)
+          const formState = selectFormState( getState() );
+
+          // perform validation
+          asyncValidate(formState.values)
+            .then( msgs => {
+
+              // reject (via new action) when validation problems encountered
+              if (Object.keys(msgs).length > 0) { // ... validation problems
+
+                // inject form msg to further highlight validation issues
+                msgs.FORM = 'Please resolve the highlighted issues, and try again.';
+
+                // reject current process action by re-issuing a different process.reject action
+                allow( formActions.process.reject(msgs) );
+              }
+              else { // ... validation clean
+                allow(action);
+              }
+            });
 
         },
       }),
 
     ];
-
-    // ?? more logic
   }
 
 
@@ -278,10 +350,10 @@ export default function IFormMeta({formDesc,
    *        <fieldName2>: string,
    *      },
    *
-   *      msgs: {          // validation msgs (if any) ... initial: {} ???
-   *        FORM:          string, // msg spanning entire form ... null/non-exist for valid
-   *        <fieldName1>:  string, // null/non-exist for valid
-   *        <fieldName2>:  string, // null/non-exist for valid
+   *      msgs: {          // validation msgs (if any) ... initial: {}
+   *        FORM:          string, // msg spanning entire form ... non-exist for valid
+   *        <fieldName1>:  string, // non-exist for valid
+   *        <fieldName2>:  string, // non-exist for valid
    *      },
    *
    *      validating: {    // demarks which fields are being validated ... based on whether it has been touched by user (internal use only)
@@ -289,6 +361,8 @@ export default function IFormMeta({formDesc,
    *        <fieldName1>:  boolean,
    *        <fieldName2>:  boolean,
    *      },
+   *
+   *      inProcess: boolean, // is form being processed?
    *    }
    * ```
    */
@@ -303,7 +377,7 @@ export default function IFormMeta({formDesc,
     const myFormReducer = reducerHash({
 
       [formActions.open]: (state, action) => {
-        // ??$$ must interpret optional initial action props
+        // ?? must interpret optional initial action props
         return {
           labels,
           values: fieldNames.reduce( (values, fieldName) => {
@@ -312,19 +386,49 @@ export default function IFormMeta({formDesc,
           }, {}),
           msgs: {},
           validating: {},
+          inProcess: false,
         };
       },
 
       [formActions.fieldChanged]: (state, action) => {
 
         // carve out new container (supporing immutable state)
-        // ??$$ must interpret logic-injected action.msgs, and action.validating
         const newState = {...state};
 
         // merge new field value
-        newState.values = {...state.values, ...{[action.fieldName]: action.value}};
+        newState.values = {...state.values, [action.fieldName]: action.value};
+
+        // retain logic-injected validation msgs (within action)
+        newState.msgs = action.msgs;
 
         // that's all folks
+        return newState;
+      },
+
+      [formActions.fieldTouched]: (state, action) => {
+        if (state.validating[action.fieldName]) {
+          return state; // validating indicator already set
+        }
+        else {          // set our field validating indicator to true
+          const newState      = {...state};
+          newState.validating = {...state.validating, [action.fieldName]: true};
+          newState.msgs       = action.msgs; // also retain validation logic-injected msgs
+          return newState;
+        }
+      },
+
+      [formActions.process]: (state, action) => {
+        const newState      = {...state};
+        newState.inProcess  = true; // mark form as being processed
+        newState.validating = {...state.validating, FORM: true}; // mark entire form as being validated
+        newState.msgs       = {}; // clear validation msgs (form is clean)
+        return newState;
+      },
+
+      [formActions.process.reject]: (state, action) => {
+        const newState      = {...state};
+        newState.validating = {...state.validating, FORM: true}; // mark entire form as being validated
+        newState.msgs       = action.msgs; // retain validation logic-injected msgs
         return newState;
       },
 
@@ -390,8 +494,14 @@ export default function IFormMeta({formDesc,
    *   //       individual fields.
    *   isValidationExposed(fieldName='FORM'): boolean
    *
+   *   // is form being processed?
+   *   inProcess(): boolean
+   *
    *   // Service an IForm field value change.
    *   handleFieldChanged(fieldName, value): void
+   *
+   *   // Service an IForm field touched.
+   *   handleFieldTouched(fieldName): void
    *
    *   // Service an IForm process request.
    *   handleProcess(): void
@@ -407,11 +517,15 @@ export default function IFormMeta({formDesc,
 
     // validate parameters
     const check = verify.prefix('IFormMeta.IForm() parameter violation: ');
-    check(formState,            'formState is required'); // ?? can we somehow determine if the invoker supplied a missmatched formState?
-    check(formActions,          'formActions is required');
+    check(formState,                            'formState is required');
+    check(formState.labels,                     'invalid formState - does NOT conform to the IForm state');
+    check(formState.labels.FORM===formDesc,     `miss-matched formState - expecting ${formDesc} but received ${formState.labels.FORM}`);
+
+    check(formActions,                          'formActions is required');
     check(isFunction(formActions.fieldChanged), 'invalid formActions (expecting an iForm action-u ActionNode)'); // duck type check
-    check(dispatch,             'dispatch is required');
-    check(isFunction(dispatch), 'invalid dispatch (expecting a function)');
+
+    check(dispatch,                             'dispatch is required');
+    check(isFunction(dispatch),                 'invalid dispatch (expecting a function)');
 
     /**
      * @return {string} the label of the supplied field (or form when
@@ -437,18 +551,8 @@ export default function IFormMeta({formDesc,
      */
     function isValid(fieldName='FORM') {
       return fieldName==='FORM'
-               ? Object.keys(formState.msgs).reduce( (valid, key) => valid && (formState.msgs[key] ? false : true), true)
+               ? Object.keys(formState.msgs).length === 0
                : formState.msgs[fieldName] ? false : true;
-      // ?? option 2 (above is a bit cryptic)
-      // ? if (fieldName==='FORM') {
-      // ?   for (const key in formState.msgs) {
-      // ?     if (formState.msgs[key]) {
-      // ?       return false;
-      // ?     }
-      // ?   }
-      // ?   return true;
-      // ? }
-      // ? return formState.msgs[fieldName] ? false : true;
     }
 
     /**
@@ -487,11 +591,28 @@ export default function IFormMeta({formDesc,
     }
 
     /**
+     * Is form being processed?
+     *
+     * @return {boolean} 
+     */
+    function inProcess() {
+      return formState.inProcess;
+    }
+
+
+
+    /**
      * Service an IForm field value change.
      */
     function handleFieldChanged(fieldName, value) {
-      // console.log(`?? fieldChanged action emitted FROM IForm ... YEAH!`);
       dispatch( formActions.fieldChanged(fieldName, value) );
+    }
+
+    /**
+     * Service an IForm field touch.
+     */
+    function handleFieldTouched(fieldName) {
+      dispatch( formActions.fieldTouched(fieldName) );
     }
 
     /**
@@ -516,7 +637,9 @@ export default function IFormMeta({formDesc,
       getMsg,
       getExposedMsg,
       isValidationExposed,
+      inProcess,
       handleFieldChanged,
+      handleFieldTouched,
       handleProcess,
       handleClose,
     };

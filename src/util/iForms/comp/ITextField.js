@@ -62,6 +62,7 @@ export default function ITextField({fieldName, iForm, ...inputExtraProps}) {
         <Label>{fieldLabel}</Label>
         <Input value={fieldValue}
                onChangeText={(txt) => iForm.handleFieldChanged(fieldName, txt)}
+               onEndEditing={()    => iForm.handleFieldTouched(fieldName)}
                {...inputExtraProps}/>
         {iconDom}
       </Item>

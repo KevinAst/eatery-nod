@@ -12,6 +12,7 @@ import {Body,
         Icon,
         Left,
         Right,
+        Spinner,
         Text,
         Title}        from 'native-base';
 import commonStyles   from './commonStyles';
@@ -54,6 +55,13 @@ function SignInScreen({signInForm}) {
         <Button light rounded onPress={signInForm.handleProcess}>
           <Text>Sign In</Text>
         </Button>
+
+        {/* form msg  */}
+        <Text style={{color:'red'}}>{signInForm.getMsg()}</Text>
+
+        {/* inProcess spinner  */}
+        {signInForm.inProcess() && <Spinner color="blue"/>}
+
        </Form>
       </Content>
       <Footer>

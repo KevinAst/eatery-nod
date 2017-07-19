@@ -63,11 +63,33 @@ export const manualSignIn = createLogic({
 
 });
 
+
+/**
+ * Process SignIn from form.
+ */
+export const processSignIn = createLogic({
+
+  name: 'auth.processSignIn',
+  type: String(actions.auth.interactiveSignIn.process),
+
+  process({getState, action, api}, dispatch, done) {
+    // ?? eventually, do our work ... for now just close dialog
+    setTimeout(() => {
+      dispatch( actions.auth.interactiveSignIn.close() );
+      done();
+    }, 2000); 
+  },
+
+});
+
 // promote all logic (accumulated in index.js)
 // ... named exports (above) are used by unit tests :-)
 export default [
   checkDeviceCredentials,
   autoSignIn,
   manualSignIn,
+
+  // signIn logic (NOTE: form logic just be registered BEFORE app-specific logic)
   ...signInFormMeta.registrar.formLogic(actions.auth.interactiveSignIn), // inject the standard SignIn form-based logic modules
+  processSignIn,
 ];
