@@ -109,16 +109,15 @@ export default function IFormMeta({formDesc,
   /**
    * Promote the auto-generated action creators required by self's
    * iForm.
-   *
-   * @param {string} formRootActionType the root action type for self's iForm.
-   * ??## consider this: 
-   *      - only needed to qualify parameter validation
-   *      - currently qualifing with self's formDesc (and we may be even bypass this validation)
    * 
-   * @param {ActionGenesis} [additionalActions] any app-specific
-   * additional action creators to suplement the auto-generated form
-   * actions.
-   * ??## consider this (if needed)
+   * ?? implement this (very simple implementation, if no validation ... appInjectedFormActions={})
+   * @param {ActionGenesis} [appInjectedFormActions] optionally
+   * specify app-specific action creators to suplement the
+   * auto-generated formActions.  This is typically used to introduce
+   * fail/complete actions that are spawned out of app-specific logic
+   * modules.  NOTE: the formAction root can even become an action
+   * creator by promoting a top-level actionMeta node in this
+   * structure.
    * 
    * @return {ActionGenesis} the auto-generated action creators
    * required by self's iForm.  This is an action-u ActionGenesis
@@ -127,10 +126,16 @@ export default function IFormMeta({formDesc,
    * defined:
    * ```
    *    ${formActionGenesis}: {
-   *      open() ... activate form processing
-   *      fieldChanged(fieldName, value): ... maintain controlled field state change (with validation)
-   *      ?more-here
-   *      ?appSpecificActions() ... defined via supplied additionalActions param
+   *      open()                         ... activate the form state, initiating form processing ?? refine to include initialization parameters/settings
+   *      fieldChanged(fieldName, value) ... maintain controlled field state change (with validation)
+   *                                         NOTE: IForm logic supplements action with validation msgs
+   *      fieldTouched(fieldName)        ... maintain field touched status, impacting validation dynamic exposure
+   *                                         NOTE: IForm logic supplements action with validation msgs
+   *      process()                      ... process this form
+   *        reject(msgs)                 ... reject process action with supplied validation msgs
+   *      close()                        ... close this form
+   *
+   *      ...appSpecificActions()        ... app-specific action creators supplementing the auto-generated formActions
    *    }
    * ```
    */
@@ -150,7 +155,7 @@ export default function IFormMeta({formDesc,
     const myFormActions = {
 
       open: {         // open(??): Action ?? refine this to include initialization parameters/settings
-                      // > activate form processing
+                      // > activate the form state, initiating form processing
                       actionMeta: {
                       },
       },
