@@ -1,5 +1,5 @@
 import Yup        from 'yup';
-import IFormMeta  from '../util/iForms/IFormMeta';
+import IFormMeta  from '../../util/iForms/IFormMeta';
 
 export default IFormMeta({
   formDesc:  'Sign In',

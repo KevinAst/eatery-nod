@@ -1,5 +1,5 @@
 import {generateActions} from 'action-u';
-import signInFormMeta    from '../logic/signInFormMeta';
+import signInFormMeta    from '../logic/iForms/signInFormMeta';
 
 export default generateActions.root({
   auth: {

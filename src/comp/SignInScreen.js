@@ -17,7 +17,7 @@ import {Body,
         Title}        from 'native-base';
 import commonStyles   from './commonStyles';
 import actions        from '../actions';
-import signInFormMeta from '../logic/signInFormMeta';
+import signInFormMeta from '../logic/iForms/signInFormMeta';
 import ITextField     from '../util/iForms/comp/ITextField';
 
 

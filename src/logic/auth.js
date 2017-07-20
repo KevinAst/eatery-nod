@@ -1,5 +1,5 @@
 import {createLogic}  from 'redux-logic';
-import signInFormMeta from './signInFormMeta';
+import signInFormMeta from './iForms/signInFormMeta';
 import actions        from '../actions';
 
 
