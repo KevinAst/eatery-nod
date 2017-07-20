@@ -35,7 +35,7 @@ function SignInScreen({signInForm}) {
           </Button>
         </Left>
         <Body>
-          <Title>Sign In</Title>
+          <Title>{signInForm.getLabel()}</Title>
         </Body>
         <Right/>
       </Header>
