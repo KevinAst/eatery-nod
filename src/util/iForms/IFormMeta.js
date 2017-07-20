@@ -33,6 +33,14 @@ import verify         from '../verify';
  * @param {ObjectSchema} namedArgs.formSchema the Yup Schema object defining
  * form fields, labels, and validation characteristics.
  *
+ * @param {function} namedArgs.formActionsSelector a selector function
+ * that promotes our specific formActions.  While this uses a selector
+ * pattern, it is used in conjunction with our actions NOT our state.
+ * This is needed to avoid cyclic dependencies in the startup
+ * bootstrap process (because BOTH actions and IFormMeta instances are
+ * created in-line).
+ * API: () => formActions
+ *
  * @param {function} namedArgs.formStateSelector a selector function
  * that promotes our specific formState, given the top-level appState.
  * API: (appState) => formState
@@ -63,6 +71,7 @@ import verify         from '../verify';
 // ?? MORE PARAMS: mapDomainToForm=defFun, mapFormToDomain=defFun,
 export default function IFormMeta({formDesc,
                                    formSchema,
+                                   formActionsSelector,
                                    formStateSelector,
                                    ...unknownArgs}={}) {
 
@@ -77,6 +86,9 @@ export default function IFormMeta({formDesc,
 
   check(formSchema,          'formSchema is required');
   check(formSchema.validate, 'invalid formSchema (expecting a Yup Schema)'); // duck type check
+
+  check(formActionsSelector,             'formActionsSelector is required');
+  check(isFunction(formActionsSelector), 'invalid formActionsSelector (expecting a function)');
 
   check(formStateSelector,             'formStateSelector is required');
   check(isFunction(formStateSelector), 'invalid formStateSelector (expecting a function)');
@@ -111,6 +123,7 @@ export default function IFormMeta({formDesc,
    * iForm.
    * 
    * ?? implement this (very simple implementation, if no validation ... appInjectedFormActions={})
+   *
    * @param {ActionGenesis} [appInjectedFormActions] optionally
    * specify app-specific action creators to suplement the
    * auto-generated formActions.  This is typically used to introduce
@@ -237,27 +250,21 @@ export default function IFormMeta({formDesc,
    * Promote the redux-logic modules that orchestrates various iForm
    * characteristics, such as validation.
    *
-   * @param {ActionNode} formActions the set of action creators (an
-   * action-u structure) supporting self's iForm.
-   * 
    * @return {logic[]} the redux-logic modules that perform low-level
    * iForm business logic (such as validation).  This should be
    * registered to the redux-logic process.
    */
-  function formLogic(formActions) {
+  function formLogic() {
 
-    // validate parameters
-    const check = verify.prefix('IFormMeta.formLogic() parameter violation: ');
-    check(formActions,          'formActions is required');
-    check(isFunction(formActions.fieldChanged), 'invalid formActions (expecting an iForm action-u ActionNode)'); // duck type check
+    const formActions = formActionsSelector();
 
     // promote our iForm logic[]
     return [
 
       createLogic({
         name: `validateFields for '${formDesc}' form`,
-        type: [ String(formActions.fieldChanged),
-                String(formActions.fieldTouched), ], // if fields have initial value (i.e. never changed) this will be the first time fields are validated
+        type: [String(formActions.fieldChanged),
+               String(formActions.fieldTouched)], // if fields have initial value (i.e. never changed) this will be the first time fields are validated
 
         validate({getState, action, api}, allow, reject) {
 
@@ -334,9 +341,6 @@ export default function IFormMeta({formDesc,
   /**
    * Promote the auto-generated reducer required by self's iForm, that
    * maintains our form's redux state.
-   *
-   * @param {ActionNode} formActions the set of action creators (an
-   * action-u structure) supporting self's iForm.
    * 
    * @return {function} the reducer that maintains our iForm redux
    * state.  This reducer is to be registered in the redux state
@@ -371,12 +375,9 @@ export default function IFormMeta({formDesc,
    *    }
    * ```
    */
-  function formReducer(formActions) {
+  function formReducer() {
 
-    // validate parameters
-    const check = verify.prefix('IFormMeta.formReducer() parameter violation: ');
-    check(formActions,          'formActions is required');
-    check(isFunction(formActions.fieldChanged), 'invalid formActions (expecting an iForm action-u ActionNode)'); // duck type check
+    const formActions = formActionsSelector();
 
     // generate our reducer function
     const myFormReducer = reducerHash({
@@ -458,9 +459,6 @@ export default function IFormMeta({formDesc,
    * @param {ReduxState} formState the redux form state supporting
    * self's form.
    *
-   * @param {ActionNode} formActions the set of action creators (an
-   * action-u structure) supporting self's IForm.
-   *
    * @param {function} dispatch the redux dispatch function, supporting
    * self's handlers.
    * 
@@ -516,7 +514,7 @@ export default function IFormMeta({formDesc,
    * }
    * ```
    */
-  function IForm(formState, formActions, dispatch) {
+  function IForm(formState, dispatch) {
 
     // ?? consider caching last instance only ... an optimization when injected by connect()
 
@@ -526,11 +524,11 @@ export default function IFormMeta({formDesc,
     check(formState.labels,                     'invalid formState - does NOT conform to the IForm state');
     check(formState.labels.FORM===formDesc,     `miss-matched formState - expecting ${formDesc} but received ${formState.labels.FORM}`);
 
-    check(formActions,                          'formActions is required');
-    check(isFunction(formActions.fieldChanged), 'invalid formActions (expecting an iForm action-u ActionNode)'); // duck type check
-
     check(dispatch,                             'dispatch is required');
     check(isFunction(dispatch),                 'invalid dispatch (expecting a function)');
+
+    const formActions = formActionsSelector();
+
 
     /**
      * @return {string} the label of the supplied field (or form when
@@ -557,7 +555,7 @@ export default function IFormMeta({formDesc,
     function isValid(fieldName='FORM') {
       return fieldName==='FORM'
                ? Object.keys(formState.msgs).length === 0
-               : formState.msgs[fieldName] ? false : true;
+               : formState.msgs[fieldName] ? false : true; // eslint-disable-line no-unneeded-ternary
     }
 
     /**

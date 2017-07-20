@@ -5,6 +5,7 @@
     "space-infix-ops":               "off",  // allow any infix spacing ... ex: i+1
     "no-trailing-spaces":            "off",  // allow any spacing ... geeze
     "arrow-spacing":                 "off",  // allow any around arrow function ... =>
+    "newline-per-chained-call":      "off",  // allow chained calls without new line
     "no-whitespace-before-property": "off",  // allow spacing before property
   }
 }

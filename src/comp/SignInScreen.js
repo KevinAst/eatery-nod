@@ -16,7 +16,6 @@ import {Body,
         Text,
         Title}        from 'native-base';
 import commonStyles   from './commonStyles';
-import actions        from '../actions';
 import signInFormMeta from '../logic/iForms/signInFormMeta';
 import ITextField     from '../util/iForms/comp/ITextField';
 
@@ -98,7 +97,6 @@ export default connect(
     //...stateProps,    // unneeded (in this case) ... wonder: does this impact connect() optimization?
     //...dispatchProps, // ditto
       signInForm: signInFormMeta.IForm(stateProps.formState, 
-                                       actions.auth.interactiveSignIn,
                                        dispatchProps.dispatch),
     };
   }

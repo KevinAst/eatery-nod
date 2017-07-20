@@ -90,6 +90,6 @@ export default [
   manualSignIn,
 
   // signIn logic (NOTE: form logic just be registered BEFORE app-specific logic)
-  ...signInFormMeta.registrar.formLogic(actions.auth.interactiveSignIn), // inject the standard SignIn form-based logic modules
+  ...signInFormMeta.registrar.formLogic(), // inject the standard SignIn form-based logic modules
   processSignIn,
 ];
