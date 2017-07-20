@@ -33,7 +33,7 @@ import verify         from '../verify';
  * @param {ObjectSchema} namedArgs.formSchema the Yup Schema object defining
  * form fields, labels, and validation characteristics.
  *
- * @param {function} namedArgs.selectFormState a selector function
+ * @param {function} namedArgs.formStateSelector a selector function
  * that promotes our specific formState, given the top-level appState.
  * API: (appState) => formState
  *
@@ -53,7 +53,7 @@ import verify         from '../verify';
  *    }
  * 
  *    // the selector that promotes self's specific formState, given the top-level appState
- *    selectFormState(appState): formState
+ *    formStateSelector(appState): formState
  *
  *    // create an IForm helper object, providing convenience accessors/handlers, avoiding direct formState interpretation
  *    IForm(formState, dispatch): Object
@@ -63,7 +63,7 @@ import verify         from '../verify';
 // ?? MORE PARAMS: mapDomainToForm=defFun, mapFormToDomain=defFun,
 export default function IFormMeta({formDesc,
                                    formSchema,
-                                   selectFormState, // ?? rename to formStateSelector
+                                   formStateSelector,
                                    ...unknownArgs}={}) {
 
   // ***
@@ -78,8 +78,8 @@ export default function IFormMeta({formDesc,
   check(formSchema,          'formSchema is required');
   check(formSchema.validate, 'invalid formSchema (expecting a Yup Schema)'); // duck type check
 
-  check(selectFormState,             'selectFormState is required');
-  check(isFunction(selectFormState), 'invalid selectFormState (expecting a function)');
+  check(formStateSelector,             'formStateSelector is required');
+  check(isFunction(formStateSelector), 'invalid formStateSelector (expecting a function)');
 
   const unknownArgKeys = Object.keys(unknownArgs);
   check(unknownArgKeys.length===0,  `unrecognized named parameter(s): ${unknownArgKeys}`);
@@ -264,7 +264,7 @@ export default function IFormMeta({formDesc,
           // NOTE: action has: fieldName/value
 
           // locate our formState (from our appState)
-          const formState = selectFormState( getState() );
+          const formState = formStateSelector( getState() );
 
           // perform validation
           // ... fieldChanged action has an updated value in action
@@ -299,7 +299,7 @@ export default function IFormMeta({formDesc,
           // NOTE: action has: fieldName/value
 
           // locate our formState (from our appState)
-          const formState = selectFormState( getState() );
+          const formState = formStateSelector( getState() );
 
           // perform validation
           asyncValidate(formState.values)
@@ -662,7 +662,7 @@ export default function IFormMeta({formDesc,
       formLogic,
       formReducer,
     },
-    selectFormState,
+    formStateSelector,
     IForm,
   };
 

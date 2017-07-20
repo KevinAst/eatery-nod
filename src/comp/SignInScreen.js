@@ -84,7 +84,7 @@ export default connect(
   // mapStateToProps()
   (appState) => {
     return {
-      formState: signInFormMeta.selectFormState(appState),
+      formState: signInFormMeta.formStateSelector(appState),
     };
   },
 

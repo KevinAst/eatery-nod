@@ -14,7 +14,7 @@ describe('IFormMeta tests', () => {
     website: Yup.string().url(),
   });
 
-  const selectFormState = (appState) => 'FAKE_formState';
+  const formStateSelector = (appState) => 'FAKE_formState';
 
 
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -40,14 +40,14 @@ describe('IFormMeta tests', () => {
       expect(()=>IFormMeta({formDesc, formSchema:'bad'})).toThrow(/invalid formSchema/);
     });
 
-    test('selectFormState parameter required', () => {
-      // ERROR EX: IFormMeta() parameter violation: selectFormState is required
-      expect(()=>IFormMeta({formDesc, formSchema})).toThrow(/selectFormState.*required/);
+    test('formStateSelector parameter required', () => {
+      // ERROR EX: IFormMeta() parameter violation: formStateSelector is required
+      expect(()=>IFormMeta({formDesc, formSchema})).toThrow(/formStateSelector.*required/);
     });
     
-    test('invalid selectFormState parameter', () => {
-      // ERROR EX: IFormMeta() parameter violation: invalid selectFormState (expecting a function)
-      expect(()=>IFormMeta({formDesc, formSchema, selectFormState:'bad'})).toThrow(/invalid selectFormState/);
+    test('invalid formStateSelector parameter', () => {
+      // ERROR EX: IFormMeta() parameter violation: invalid formStateSelector (expecting a function)
+      expect(()=>IFormMeta({formDesc, formSchema, formStateSelector:'bad'})).toThrow(/invalid formStateSelector/);
     });
 
     
@@ -55,7 +55,7 @@ describe('IFormMeta tests', () => {
       // ERROR EX: IFormMeta() parameter violation: unrecognized named parameter(s): badParm1,badParm2
       expect(()=>IFormMeta({formDesc, 
                             formSchema,
-                            selectFormState,
+                            formStateSelector,
                             badParm1:'bad',
                             badParm2:'really bad'}))
         .toThrow(/unrecognized.*badParm1.*badParm2/);
@@ -68,7 +68,7 @@ describe('IFormMeta tests', () => {
     
     test('valid parameters', () => {
       expect.assertions(1);
-      IFormMeta({formDesc, formSchema, selectFormState});
+      IFormMeta({formDesc, formSchema, formStateSelector});
       expect(1).toBe(1);
     });
 
@@ -78,7 +78,7 @@ describe('IFormMeta tests', () => {
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   describe('test auto generated action creators', () => {
 
-    const signInMetaForm = IFormMeta({formDesc, formSchema, selectFormState});
+    const signInMetaForm = IFormMeta({formDesc, formSchema, formStateSelector});
     
     const actions = generateActions({
       auth: {
