@@ -121,8 +121,6 @@ export default function IFormMeta({formDesc,
   /**
    * Promote the auto-generated action creators required by self's
    * iForm.
-   * 
-   * ?? implement this (very simple implementation, if no validation ... appInjectedFormActions={})
    *
    * @param {ActionGenesis} [appInjectedFormActions] optionally
    * specify app-specific action creators to suplement the
@@ -135,8 +133,8 @@ export default function IFormMeta({formDesc,
    * @return {ActionGenesis} the auto-generated action creators
    * required by self's iForm.  This is an action-u ActionGenesis
    * sub-structure that is to be injected into the action-u
-   * generateActions() process.  The following action creators are
-   * defined:
+   * generateActions() process.  The following standard iForm actions
+   * are defined:
    * ```
    *    ${formActionGenesis}: {
    *      open()                         ... activate the form state, initiating form processing ?? refine to include initialization parameters/settings
@@ -152,7 +150,7 @@ export default function IFormMeta({formDesc,
    *    }
    * ```
    */
-  function formActionGenesis() {
+  function formActionGenesis(appInjectedFormActions={}) {
 
     // NOTE: As an optimization, we bypass detailed action creator validation
     //       because it is a controlled invocation (by IForm components).
@@ -165,6 +163,7 @@ export default function IFormMeta({formDesc,
     //               return [fieldName, value];
     //             },
 
+    // define our base auto-generated action creators
     const myFormActions = {
 
       open: {         // open(??): Action ?? refine this to include initialization parameters/settings
@@ -211,6 +210,14 @@ export default function IFormMeta({formDesc,
 
     };
 
+    // inject any app-specific actions creators
+    const check = verify.prefix('IFormMeta.formActionGenesis(): invalid appInjectedFormActions parameter ... ');
+    for (const action in appInjectedFormActions) {
+      check(myFormActions[action], `${action} action is reserved as one of the auto-generated iForm actions.`);
+      myFormActions[action] = appInjectedFormActions[action];
+    }
+
+    // beam me up Scotty!
     return myFormActions;
   }
 
