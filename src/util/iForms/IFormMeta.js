@@ -280,7 +280,14 @@ export default function IFormMeta({formDesc,
           // locate our formState (from our appState)
           const formState = formStateSelector( getState() );
 
-          // perform validation
+          // no-op when form is inProcess
+          // ... this is a foolproof catch if the UI fails to prevent these actions from firing
+          if (formState.inProcess) {
+            reject();
+            return;
+          }
+
+          // perform field validation
           // ... fieldChanged action has an updated value in action
           const values = action.type === String(formActions.fieldChanged)
                           ? {...formState.values, [action.fieldName]: action.value}
@@ -314,6 +321,13 @@ export default function IFormMeta({formDesc,
 
           // locate our formState (from our appState)
           const formState = formStateSelector( getState() );
+
+          // no-op when form is inProcess
+          // ... this is a foolproof catch if the UI fails to prevent these actions from firing
+          if (formState.inProcess) {
+            reject();
+            return;
+          }
 
           // perform validation
           asyncValidate(formState.values)

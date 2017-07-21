@@ -15,7 +15,7 @@ import {Body,
         Spinner,
         Text,
         Title,
-        View}        from 'native-base';
+        View}         from 'native-base';
 import commonStyles   from './commonStyles';
 import signInFormMeta from '../logic/iForms/signInFormMeta';
 import ITextField     from '../util/iForms/comp/ITextField';
@@ -24,9 +24,12 @@ import ITextField     from '../util/iForms/comp/ITextField';
 /**
  * SignInScreen: gather user sign-in credentials.
  */
-function SignInScreen({signInForm}) {
+function SignInScreen({iForm}) {
 
   const verticalSpacing = <View style={{paddingVertical: 10}}/>;
+
+  const formLabel     = iForm.getLabel();
+  const formInProcess = iForm.inProcess();
 
   return (
     <Container style={commonStyles.container}>
@@ -37,7 +40,7 @@ function SignInScreen({signInForm}) {
           </Button>
         </Left>
         <Body>
-          <Title>{signInForm.getLabel()}</Title>
+          <Title>{formLabel}</Title>
         </Body>
         <Right/>
       </Header>
@@ -46,47 +49,49 @@ function SignInScreen({signInForm}) {
 
          {verticalSpacing}
 
-         <Text>Welcome to eatery-nod, please {signInForm.getLabel()}!</Text>
+         <Text>Welcome to eatery-nod, please {formLabel}!</Text>
 
          {verticalSpacing}
 
          <ITextField fieldName="email"
-                     iForm={signInForm}
+                     iForm={iForm}
                      placeholder="jon.snow@gmail.com"
-                     keyboardType="email-address"/>
+                     keyboardType="email-address"
+                     editable={!formInProcess}/>
 
          <ITextField fieldName="pass"
-                     iForm={signInForm}
-                     secureTextEntry/>
+                     iForm={iForm}
+                     secureTextEntry
+                     editable={!formInProcess}/>
 
          {verticalSpacing}
 
          {/* form msg  */}
-         <Text style={{color:'red'}}>{signInForm.getMsg()}</Text>
+         <Text style={{color:'red'}}>{iForm.getMsg()}</Text>
 
-         <Button success full onPress={signInForm.handleProcess}>
-           <Text>{signInForm.getLabel()}</Text>
+         <Button success full onPress={iForm.handleProcess} disabled={formInProcess}>
+           <Text>{formLabel}</Text>
          </Button>
 
          {verticalSpacing}
 
          <View style={{flex: 1, flexDirection: 'row', alignItems: 'center'}}>
            <Text>... don't have an account?</Text>
-           <Button light>
+           <Button light disabled={formInProcess}>
              <Text>Sign Up</Text>
            </Button>
          </View>
 
 
         {/* inProcess spinner  */}
-        {signInForm.inProcess() && <Spinner color="blue"/>}
+        {formInProcess && <Spinner color="blue"/>}
 
        </Form>
       </Content>
       <Footer>
         <FooterTab>
           <Button full>
-            <Title>{signInForm.getLabel()} Footer</Title>
+            <Title>{formLabel} Footer</Title>
           </Button>
         </FooterTab>
       </Footer>
@@ -95,7 +100,7 @@ function SignInScreen({signInForm}) {
 }
 
 SignInScreen.propTypes = {
-  signInForm: PropTypes.object.isRequired,
+  iForm: PropTypes.object.isRequired,
 };
 
 export default connect(
@@ -116,8 +121,8 @@ export default connect(
       ...ownProps,
     //...stateProps,    // unneeded (in this case) ... wonder: does this impact connect() optimization?
     //...dispatchProps, // ditto
-      signInForm: signInFormMeta.IForm(stateProps.formState, 
-                                       dispatchProps.dispatch),
+      iForm: signInFormMeta.IForm(stateProps.formState, 
+                                  dispatchProps.dispatch),
     };
   }
 )(SignInScreen);

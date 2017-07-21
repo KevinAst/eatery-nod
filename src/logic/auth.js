@@ -77,7 +77,7 @@ export const processSignIn = createLogic({
     setTimeout(() => {
       dispatch( actions.auth.signIn.close() );
       done();
-    }, 2000); 
+    }, 5000); 
   },
 
 });
