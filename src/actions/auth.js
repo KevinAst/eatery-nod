@@ -32,15 +32,36 @@ export default generateActions.root({
       },
     },
 
-    signIn: { // auth.signIn(email, pass): Action
-              // > SignIn with supplied email/pass
-              //   INTENT: #byUser, #byLogic, #forLogic, #forReducer ??
-              actionMeta: {
-                traits: ['email', 'pass'],
-              },
-      // ?? more sub-actions ... success/fail
-    },
+    // inject the standard iForm auto-generated form actions
+    // ... open(), fieldChanged(), fieldTouched(), process(), process.reject(), close()
+    signIn: signInFormMeta.registrar.formActionGenesis({
 
-    interactiveSignIn: signInFormMeta.registrar.formActionGenesis(), // inject the standard SignIn form-based actions
+      // along with additional app-specific actions:
+
+                  // auth.signIn(email, pass): Action
+                  // > SignIn with supplied email/pass
+                  //   INTENT: #byUser, #byLogic, #forLogic, #forReducer ??
+                  actionMeta: {
+                    traits: ['email', 'pass'],
+                  },
+
+      complete: { // auth.signIn.complete(??): Action ?? define params
+                  // > signIn completed successfully
+                  //   INTENT: #byUser, #byLogic, #forLogic, #forReducer ??
+                  actionMeta: {
+                    // traits: ['hmmm'], ?? define params
+                  },
+      },
+
+      fail: {     // auth.signIn.fail(err): Action
+                  // > signIn failure
+                  //   INTENT: #byUser, #byLogic, #forLogic, #forReducer ??
+                  actionMeta: {
+                    traits: ['err'],
+                  },
+      },
+
+
+    }),
   },
 });

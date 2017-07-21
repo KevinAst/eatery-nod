@@ -57,7 +57,7 @@ export const manualSignIn = createLogic({
   type: String(actions.auth.bootstrap.noDeviceCredentials),
 
   process({getState, action, api}, dispatch, done) {
-    dispatch( actions.auth.interactiveSignIn.open() );
+    dispatch( actions.auth.signIn.open() );
     done();
   },
 
@@ -65,17 +65,17 @@ export const manualSignIn = createLogic({
 
 
 /**
- * Process SignIn from form.
+ * Process logic for SignIn form.
  */
 export const processSignIn = createLogic({
 
   name: 'auth.processSignIn',
-  type: String(actions.auth.interactiveSignIn.process),
+  type: String(actions.auth.signIn.process),
 
   process({getState, action, api}, dispatch, done) {
-    // ?? eventually, do our work ... for now just close dialog
+    // ?? eventually, do our work (issue: actions.auth.signIn(email, pass)  ... for now just close dialog
     setTimeout(() => {
-      dispatch( actions.auth.interactiveSignIn.close() );
+      dispatch( actions.auth.signIn.close() );
       done();
     }, 2000); 
   },

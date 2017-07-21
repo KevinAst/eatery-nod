@@ -95,28 +95,28 @@ describe('IFormMeta tests', () => {
     
     const actions = generateActions({
       auth: {
-        interactiveSignIn: signInMetaForm.registrar.formActionGenesis(),
+        signIn: signInMetaForm.registrar.formActionGenesis(),
       },
     });
     
-    const formActions = actions.auth.interactiveSignIn;
+    const formActions = actions.auth.signIn;
     
     test('fieldChanged action creator exists', () => {
       // cheap check ... action type
-      expect(String(formActions.fieldChanged)).toBe('auth.interactiveSignIn.fieldChanged');
+      expect(String(formActions.fieldChanged)).toBe('auth.signIn.fieldChanged');
     });
     
     test('fieldChanged action creator basic parameter validation', () => {
-      // ERROR EX: TypeError: ERROR: action-u action creator: auth.interactiveSignIn.fieldChanged(fieldName,value) expecting 2 parameters, but received 0
+      // ERROR EX: TypeError: ERROR: action-u action creator: auth.signIn.fieldChanged(fieldName,value) expecting 2 parameters, but received 0
       expect(()=>formActions.fieldChanged())
-        .toThrow(/auth.interactiveSignIn.fieldChanged.*expecting 2 parameters.*but received 0/);
+        .toThrow(/auth.signIn.fieldChanged.*expecting 2 parameters.*but received 0/);
     });
   
     // optimization: bypass detailed validation because is a controlled invocation (by IForm components)
     // test('fieldChanged action creator detailed parameter validation', () => {
-    //   // ERROR EX: auth.interactiveSignIn.fieldChanged() action creator ... fieldName value: 'badFieldName' is NOT one of the expected fields: name,age,email,website
+    //   // ERROR EX: auth.signIn.fieldChanged() action creator ... fieldName value: 'badFieldName' is NOT one of the expected fields: name,age,email,website
     //   expect(()=>formActions.fieldChanged('badFieldName', 'newValue'))
-    //     .toThrow(/auth.interactiveSignIn.fieldChanged.*badFieldName.*is NOT one of the expected fields/);
+    //     .toThrow(/auth.signIn.fieldChanged.*badFieldName.*is NOT one of the expected fields/);
     // });
   
   });

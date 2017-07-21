@@ -213,7 +213,7 @@ export default function IFormMeta({formDesc,
     // inject any app-specific actions creators
     const check = verify.prefix('IFormMeta.formActionGenesis(): invalid appInjectedFormActions parameter ... ');
     for (const action in appInjectedFormActions) {
-      check(myFormActions[action], `${action} action is reserved as one of the auto-generated iForm actions.`);
+      check(!myFormActions[action], `${action} action is reserved as one of the auto-generated iForm actions.`);
       myFormActions[action] = appInjectedFormActions[action];
     }
 
