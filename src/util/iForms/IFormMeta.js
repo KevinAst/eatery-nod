@@ -537,8 +537,6 @@ export default function IFormMeta({formDesc,
    */
   function IForm(formState, dispatch) {
 
-    // ?? consider caching last instance only ... an optimization when injected by connect()
-
     // validate parameters
     const check = verify.prefix('IFormMeta.IForm() parameter violation: ');
     check(formState,                            'formState is required');
@@ -548,6 +546,8 @@ export default function IFormMeta({formDesc,
     check(dispatch,                             'dispatch is required');
     check(isFunction(dispatch),                 'invalid dispatch (expecting a function)');
 
+
+    // formActions required for handler methods (below)
     const formActions = formActionsSelector();
 
 
@@ -667,6 +667,7 @@ export default function IFormMeta({formDesc,
       handleProcess,
       handleClose,
     };
+
   }
 
 
