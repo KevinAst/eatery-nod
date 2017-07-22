@@ -49,7 +49,9 @@ function SignInScreen({iForm}) {
 
          {verticalSpacing}
 
-         <Text>Welcome to eatery-nod, please {formLabel}!</Text>
+         <View style={{flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'center'}}>
+           <Text>Welcome to eatery-nod, please {formLabel}!</Text>
+         </View>
 
          {verticalSpacing}
 
@@ -75,8 +77,8 @@ function SignInScreen({iForm}) {
 
          {verticalSpacing}
 
-         <View style={{flex: 1, flexDirection: 'row', alignItems: 'center'}}>
-           <Text>... don't have an account?</Text>
+         <View style={{flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'center'}}>
+           <Text>  ... don&apos;t have an account?  </Text>
            <Button light disabled={formInProcess}>
              <Text>Sign Up</Text>
            </Button>
