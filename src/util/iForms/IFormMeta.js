@@ -1,5 +1,6 @@
 import {reducerHash}  from 'astx-redux-util';
 import {createLogic}  from 'redux-logic';
+import isEqual        from 'lodash.isequal';
 import isString       from 'lodash.isstring';
 import isFunction     from 'lodash.isfunction';
 import verify         from '../verify';
@@ -27,6 +28,34 @@ import verify         from '../verify';
  * simple to inject app-specific logic to manipulate various
  * business-related items.
  *
+ *
+ * Form Input/Output Boundaries (via App Domains) ??$$## NEW
+ * ==============================================
+ *
+ * When a form is initiated, the `open` action is optionally
+ * supplied a domain object, to initialize the form (when not
+ * supplied all form fields start out as empty strings).
+ *
+ * We use the term "domain" in a generic way, that can
+ * manifest itself in a variety of different things.  It can
+ * be a real application domain object (say from an API
+ * call), or another part of your state tree, or any
+ * number of other things.
+ *
+ * Likewise, when the form is processed (via the `process`
+ * action), the form values will be mapped back to the domain
+ * representation (retained in the `process` action).
+ *
+ * This makes it convenient for your logic to operate using
+ * app-specific structures.
+ *
+ * You can easily define the mapping between your domain and the form
+ * values structure, through the optional
+ * mapDomain2Form/mapPropsToValues parameters.  By default (when not
+ * supplied), the domain structure is assumed to be "one in the same"
+ * as the form values structure (through a straight mapping of the
+ * well known iForm fields).
+ *
  * @param {string} namedArgs.formDesc a human-interpretable description for
  * this form (ex: 'Sign In').
  *
@@ -44,6 +73,43 @@ import verify         from '../verify';
  * @param {function} namedArgs.formStateSelector a selector function
  * that promotes our specific formState, given the top-level appState.
  * API: (appState) => formState
+ *
+ * ??$$ NEW
+ * @param {function} [namedArgs.mapDomain2Form] optionally define a
+ * mapping between an app domain object and the form values (employed
+ * through the `open` action).  When not specified, a straight mapping
+ * of any iForm fields is used.
+ * API: (domain) => values
+ *
+ * EX:
+ * ```
+ *   mapDomain2Form: (domain) => ({
+ *     id:        domain.id,
+ *     email:     domain.email,
+ *     firstName: domain.name.first,
+ *     lastName:  domain.name.last
+ *   })
+ * ```
+ *
+ * ??## NEW
+ * @param {function} [namedArgs.mapForm2Domain] optionally define a
+ * mapping between form values and the app domain object (employed
+ * through the `process` action).  When not specified, a straight
+ * mapping of the iForm values is used (i.e. domain is same as
+ * values).
+ * API: (castValues) => domain // NOTE: castValues have been "cast" to the appropriate type
+ *
+ * EX:
+ * ```
+ *   mapForm2Domain: (castValues) => ({
+ *     id:       castValues.id,
+ *     email:    castValues.email,
+ *     name:  {
+ *       first:  castValues.firstName,
+ *       last:   castValues.lastName
+ *     }
+ *   })
+ * ```
  *
  * @return {Object} IFormMeta object exposing various aspects of an
  * Intelligent Form ...
@@ -68,11 +134,12 @@ import verify         from '../verify';
  *  }
  * ```
  */
-// ?? MORE PARAMS: mapDomainToForm=defFun, mapFormToDomain=defFun,
 export default function IFormMeta({formDesc,
                                    formSchema,
                                    formActionsSelector,
                                    formStateSelector,
+                                   mapDomain2Form, // ??$$ NEW
+                                   mapForm2Domain, // ??## NEW
                                    ...unknownArgs}={}) {
 
   // ***
@@ -114,6 +181,32 @@ export default function IFormMeta({formDesc,
   }, {FORM: formDesc}); // initial value contains our formDesc
 
 
+
+  // ***
+  // *** default domain mapping functions with ones that have knowledge of our contextual fieldNames
+  // ***
+
+  // ??$$ NEW
+  if (!mapDomain2Form) {
+    mapDomain2Form = (domain) => {
+      return fieldNames.reduce( (values, fieldName) => {
+        values[fieldName] = domain[fieldName] || '';
+        values[fieldName] = values[fieldName].toString(); // insure string representation
+        return values;
+      }, {} );
+    };
+  }
+  check(isFunction(mapDomain2Form), 'invalid mapDomain2Form (expecting a function)');
+
+  // ??## NEW
+  if (!mapForm2Domain) {
+    mapForm2Domain = (castValues) => castValues;
+  }
+  check(isFunction(mapForm2Domain), 'invalid mapForm2Domain (expecting a function)');
+
+
+
+
   // ***
   // *** define the auto-generated iForm action creators to be injected into action-u generateActions()
   // ***
@@ -137,12 +230,15 @@ export default function IFormMeta({formDesc,
    * are defined:
    * ```
    *    ${formActionGenesis}: {
-   *      open()                         ... activate the form state, initiating form processing ?? refine to include initialization parameters/settings
+   *      open([domain] [,formMsg])      ... activate the form state, initiating form processing ??$$ new params
    *      fieldChanged(fieldName, value) ... maintain controlled field state change (with validation)
    *                                         NOTE: IForm logic supplements action with validation msgs
    *      fieldTouched(fieldName)        ... maintain field touched status, impacting validation dynamic exposure
    *                                         NOTE: IForm logic supplements action with validation msgs
    *      process()                      ... process this form
+   *                                         NOTE 1: IForm logic will reject this action, when the form is invalid
+   *                                         NOTE 2: IForm logic supplements action with values (of appropriate
+   *                                                 data types) and domain (in app-specific structure) ??## NEW
    *        reject(msgs)                 ... reject process action with supplied validation msgs
    *      close()                        ... close this form
    *
@@ -166,9 +262,12 @@ export default function IFormMeta({formDesc,
     // define our base auto-generated action creators
     const myFormActions = {
 
-      open: {         // open(??): Action ?? refine this to include initialization parameters/settings
+      open: {         // open([domain] [,formMsg]): Action
                       // > activate the form state, initiating form processing
                       actionMeta: {
+                        // ??$$ params are new
+                        traits: ['domain', 'formMsg'],
+                        ratify: (domain=null, formMsg=null) => [domain, formMsg]
                       },
       },
 
@@ -190,6 +289,9 @@ export default function IFormMeta({formDesc,
 
       process: {      // process(): Action
                       // > process this form
+                      //   NOTE 1: IForm logic will reject this action, when the form is invalid
+                      //   NOTE 2: IForm logic supplements action with values (of appropriate
+                      //           data types) and domain (in app-specific structure) ??## NEW
                       actionMeta: {
                       },
 
@@ -333,8 +435,8 @@ export default function IFormMeta({formDesc,
           asyncValidate(formState.values)
             .then( msgs => {
 
-              // reject (via new action) when validation problems encountered
-              if (Object.keys(msgs).length > 0) { // ... validation problems
+              // reject validation problems (via new action)
+              if (Object.keys(msgs).length > 0) {
 
                 // inject form msg to further highlight validation issues
                 msgs.FORM = 'Please resolve the highlighted issues, and try again.';
@@ -342,7 +444,17 @@ export default function IFormMeta({formDesc,
                 // reject current process action by re-issuing a different process.reject action
                 allow( formActions.process.reject(msgs) );
               }
-              else { // ... validation clean
+
+              // allow clean validation (supplementing action with values/domain)
+              else {
+
+                // supplement our action with values/domain
+                // ??## NEW
+                const castValues = formSchema.cast(formState.values);
+                const domain     = mapForm2Domain(castValues);
+                action.values = castValues;
+                action.domain = domain;
+
                 allow(action);
               }
             });
@@ -404,14 +516,38 @@ export default function IFormMeta({formDesc,
     const myFormReducer = reducerHash({
 
       [formActions.open]: (state, action) => {
-        // ?? must interpret optional initial action props
+        // define our initial form values
+        // ... interpret optional action props ??$$ new
+        const values = action.domain
+                           // ... either from our supplied domain (if any)
+                           //     INTERPRETED by mapDomain2Form(), which can be
+                           //     either client supplied or our own default
+                         ? mapDomain2Form(action.domain)
+                           // ... or inject empty string for each field
+                           //     NOTE: we prefer to NOT handle this in mapDomain2Form,
+                           //           so as to NOT rely on client logic "to do the right thing"
+                         : fieldNames.reduce( (values, fieldName) => { 
+                             values[fieldName] = '';
+                             return values;
+                           }, {})
+        // ... insure no miss-matched field introduced in mapDomain2Form()
+        //     - comparing our known fields: fieldNames: string[]
+        //     - to the generated object:    values:     {field1, field2, etc}
+        const normalizedFieldNames = fieldNames.sort();
+        const normalizedValueProps = Object.keys(values).sort();
+        verify(isEqual(normalizedFieldNames, normalizedValueProps),
+               `'${formDesc}' form open reducer ... miss-matched field(s) introduced in app-supplied mapDomain2Form ... generated fields: ${normalizedValueProps} ... expected fields: ${normalizedFieldNames}`);
+
+        const msgs = {};
+        if (action.formMsg) { // ... interpret optional action.formMsg
+          msgs.FORM = action.formMsg;
+        }
+
+        // expand a completely new formState
         return {
           labels,
-          values: fieldNames.reduce( (values, fieldName) => {
-            values[fieldName] = '';
-            return values;
-          }, {}),
-          msgs: {},
+          values, // ??$$ newly use construct above
+          msgs,   // ??$$ newly use construct above
           validating: {},
           inProcess: false,
         };

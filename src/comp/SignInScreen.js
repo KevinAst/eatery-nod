@@ -66,6 +66,12 @@ function SignInScreen({iForm}) {
                      secureTextEntry
                      editable={!formInProcess}/>
 
+         <ITextField fieldName="someNum"
+                     iForm={iForm}
+                     placeholder="... enter number"
+                     keyboardType="numeric"
+                     editable={!formInProcess}/>
+
          {verticalSpacing}
 
          {/* form msg  */}

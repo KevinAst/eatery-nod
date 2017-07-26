@@ -57,7 +57,32 @@ export const manualSignIn = createLogic({
   type: String(actions.auth.bootstrap.noDeviceCredentials),
 
   process({getState, action, api}, dispatch, done) {
-    dispatch( actions.auth.signIn.open() );
+    // ?? PRODUCTION CODE
+    // dispatch( actions.auth.signIn.open() );
+
+    // ?? TEMP MOD default mapDomain2Form (test open params)
+    // const domain = {
+    //   email: 'kevin@gmail.com',
+    //   pass:  'Hello6',
+    //   someNum:  8,
+    // };
+    // const formMsg = 'Test Form Msg';
+    // dispatch( actions.auth.signIn.open(domain, formMsg) );
+
+    // ?? TEMP MOD custom mapDomain2Form (test open params)
+    const domain = {
+      struct1: {
+        email: 'resa@gmail.com',
+      },
+      struct2: {
+        pass:  'WowZee7',
+      },
+      struct3: {
+        someNum:  7,
+      },
+    };
+    dispatch( actions.auth.signIn.open(domain) );
+
     done();
   },
 
@@ -73,6 +98,9 @@ export const processSignIn = createLogic({
   type: String(actions.auth.signIn.process),
 
   process({getState, action, api}, dispatch, done) {
+    console.log('?? processing valid signIn form!!');  // ??## new
+    console.log('?? action.values: ', action.values);  // {"email":"resa@gmail.com","pass":"WowZee7","someNum":7}
+    console.log('?? action.domain: ', action.domain);  // ???
     // ?? eventually, do our work (issue: actions.auth.signIn(email, pass)  ... for now just close dialog
     setTimeout(() => {
       dispatch( actions.auth.signIn.close() );
