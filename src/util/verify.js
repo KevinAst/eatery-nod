@@ -18,6 +18,7 @@
  */
 export default function verify(condition, msg) {
   if (!condition) {
+    console.error(`verify() constraint issue: ${msg}`); // supplement exception with error log (for react-native exposure)
     throw new Error(msg);
   }
 }
