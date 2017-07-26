@@ -29,7 +29,7 @@ import verify         from '../verify';
  * business-related items.
  *
  *
- * Form Input/Output Boundaries (via App Domains) ??$$## NEW
+ * Form Input/Output Boundaries (via App Domains)
  * ==============================================
  *
  * When a form is initiated, the `open` action is optionally
@@ -74,7 +74,6 @@ import verify         from '../verify';
  * that promotes our specific formState, given the top-level appState.
  * API: (appState) => formState
  *
- * ??$$ NEW
  * @param {function} [namedArgs.mapDomain2Form] optionally define a
  * mapping between an app domain object and the form values (employed
  * through the `open` action).  When not specified, a straight mapping
@@ -91,7 +90,6 @@ import verify         from '../verify';
  *   })
  * ```
  *
- * ??## NEW
  * @param {function} [namedArgs.mapForm2Domain] optionally define a
  * mapping between form values and the app domain object (employed
  * through the `process` action).  When not specified, a straight
@@ -138,8 +136,8 @@ export default function IFormMeta({formDesc,
                                    formSchema,
                                    formActionsSelector,
                                    formStateSelector,
-                                   mapDomain2Form, // ??$$ NEW
-                                   mapForm2Domain, // ??## NEW
+                                   mapDomain2Form,
+                                   mapForm2Domain,
                                    ...unknownArgs}={}) {
 
   // ***
@@ -186,7 +184,6 @@ export default function IFormMeta({formDesc,
   // *** default domain mapping functions with ones that have knowledge of our contextual fieldNames
   // ***
 
-  // ??$$ NEW
   if (!mapDomain2Form) {
     mapDomain2Form = (domain) => {
       return fieldNames.reduce( (values, fieldName) => {
@@ -198,7 +195,6 @@ export default function IFormMeta({formDesc,
   }
   check(isFunction(mapDomain2Form), 'invalid mapDomain2Form (expecting a function)');
 
-  // ??## NEW
   if (!mapForm2Domain) {
     mapForm2Domain = (castValues) => castValues;
   }
@@ -230,7 +226,7 @@ export default function IFormMeta({formDesc,
    * are defined:
    * ```
    *    ${formActionGenesis}: {
-   *      open([domain] [,formMsg])      ... activate the form state, initiating form processing ??$$ new params
+   *      open([domain] [,formMsg])      ... activate the form state, initiating form processing
    *      fieldChanged(fieldName, value) ... maintain controlled field state change (with validation)
    *                                         NOTE: IForm logic supplements action with validation msgs
    *      fieldTouched(fieldName)        ... maintain field touched status, impacting validation dynamic exposure
@@ -238,7 +234,7 @@ export default function IFormMeta({formDesc,
    *      process()                      ... process this form
    *                                         NOTE 1: IForm logic will reject this action, when the form is invalid
    *                                         NOTE 2: IForm logic supplements action with values (of appropriate
-   *                                                 data types) and domain (in app-specific structure) ??## NEW
+   *                                                 data types) and domain (in app-specific structure)
    *        reject(msgs)                 ... reject process action with supplied validation msgs
    *      close()                        ... close this form
    *
@@ -265,7 +261,6 @@ export default function IFormMeta({formDesc,
       open: {         // open([domain] [,formMsg]): Action
                       // > activate the form state, initiating form processing
                       actionMeta: {
-                        // ??$$ params are new
                         traits: ['domain', 'formMsg'],
                         ratify: (domain=null, formMsg=null) => [domain, formMsg]
                       },
@@ -291,7 +286,7 @@ export default function IFormMeta({formDesc,
                       // > process this form
                       //   NOTE 1: IForm logic will reject this action, when the form is invalid
                       //   NOTE 2: IForm logic supplements action with values (of appropriate
-                      //           data types) and domain (in app-specific structure) ??## NEW
+                      //           data types) and domain (in app-specific structure)
                       actionMeta: {
                       },
 
@@ -449,7 +444,6 @@ export default function IFormMeta({formDesc,
               else {
 
                 // supplement our action with values/domain
-                // ??## NEW
                 const castValues = formSchema.cast(formState.values);
                 const domain     = mapForm2Domain(castValues);
                 action.values = castValues;
@@ -517,7 +511,7 @@ export default function IFormMeta({formDesc,
 
       [formActions.open]: (state, action) => {
         // define our initial form values
-        // ... interpret optional action props ??$$ new
+        // ... interpret optional action props
         const values = action.domain
                            // ... either from our supplied domain (if any)
                            //     INTERPRETED by mapDomain2Form(), which can be
@@ -546,8 +540,8 @@ export default function IFormMeta({formDesc,
         // expand a completely new formState
         return {
           labels,
-          values, // ??$$ newly use construct above
-          msgs,   // ??$$ newly use construct above
+          values,
+          msgs,
           validating: {},
           inProcess: false,
         };
