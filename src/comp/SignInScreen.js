@@ -79,7 +79,7 @@ function SignInScreen({iForm}) {
 
          <View style={{flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'center'}}>
            <Text>  ... don&apos;t have an account?  </Text>
-           <Button light disabled={formInProcess}>
+           <Button light onPress={()=>console.warn('Not Yet :-(')} disabled={formInProcess}>
              <Text>Sign Up</Text>
            </Button>
          </View>
