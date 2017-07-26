@@ -62,12 +62,10 @@ import verify         from '../verify';
  * @param {ObjectSchema} namedArgs.formSchema the Yup Schema object defining
  * form fields, labels, and validation characteristics.
  *
- * @param {function} namedArgs.formActionsSelector a selector function
- * that promotes our specific formActions.  While this uses a selector
- * pattern, it is used in conjunction with our actions NOT our state.
- * This is needed to avoid cyclic dependencies in the startup
- * bootstrap process (because BOTH actions and IFormMeta instances are
- * created in-line).
+ * @param {function} namedArgs.formActionsAccessor an accessor
+ * function that promotes our specific formActions.  A function is
+ * used to avoid cyclic dependencies in the startup bootstrap process
+ * (because BOTH actions and IFormMeta instances are created in-line).
  * API: () => formActions
  *
  * @param {function} namedArgs.formStateSelector a selector function
@@ -134,7 +132,7 @@ import verify         from '../verify';
  */
 export default function IFormMeta({formDesc,
                                    formSchema,
-                                   formActionsSelector,
+                                   formActionsAccessor,
                                    formStateSelector,
                                    mapDomain2Form,
                                    mapForm2Domain,
@@ -152,8 +150,8 @@ export default function IFormMeta({formDesc,
   check(formSchema,          'formSchema is required');
   check(formSchema.validate, 'invalid formSchema (expecting a Yup Schema)'); // duck type check
 
-  check(formActionsSelector,             'formActionsSelector is required');
-  check(isFunction(formActionsSelector), 'invalid formActionsSelector (expecting a function)');
+  check(formActionsAccessor,             'formActionsAccessor is required');
+  check(isFunction(formActionsAccessor), 'invalid formActionsAccessor (expecting a function)');
 
   check(formStateSelector,             'formStateSelector is required');
   check(isFunction(formStateSelector), 'invalid formStateSelector (expecting a function)');
@@ -262,7 +260,7 @@ export default function IFormMeta({formDesc,
                       // > activate the form state, initiating form processing
                       actionMeta: {
                         traits: ['domain', 'formMsg'],
-                        ratify: (domain=null, formMsg=null) => [domain, formMsg]
+                        ratify: (domain=null, formMsg=null) => [domain, formMsg],
                       },
       },
 
@@ -360,7 +358,7 @@ export default function IFormMeta({formDesc,
    */
   function formLogic() {
 
-    const formActions = formActionsSelector();
+    const formActions = formActionsAccessor();
 
     // promote our iForm logic[]
     return [
@@ -504,7 +502,7 @@ export default function IFormMeta({formDesc,
    */
   function formReducer() {
 
-    const formActions = formActionsSelector();
+    const formActions = formActionsAccessor();
 
     // generate our reducer function
     const myFormReducer = reducerHash({
@@ -523,7 +521,7 @@ export default function IFormMeta({formDesc,
                          : fieldNames.reduce( (values, fieldName) => { 
                              values[fieldName] = '';
                              return values;
-                           }, {})
+                           }, {});
         // ... insure no miss-matched field introduced in mapDomain2Form()
         //     - comparing our known fields: fieldNames: string[]
         //     - to the generated object:    values:     {field1, field2, etc}
@@ -678,7 +676,7 @@ export default function IFormMeta({formDesc,
 
 
     // formActions required for handler methods (below)
-    const formActions = formActionsSelector();
+    const formActions = formActionsAccessor();
 
 
     /**

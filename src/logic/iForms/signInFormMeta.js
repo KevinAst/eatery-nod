@@ -8,6 +8,6 @@ export default IFormMeta({
     email:    Yup.string().required().email()        .label('Email'),
     pass:     Yup.string().required().min(6).max(9)  .label('Password'), // TODO: add password regex check: https://dzone.com/articles/use-regex-test-password
   }),
-  formActionsSelector: ()         => actions.auth.signIn,
+  formActionsAccessor: ()         => actions.auth.signIn,
   formStateSelector:   (appState) => appState.auth.signInForm,
 });

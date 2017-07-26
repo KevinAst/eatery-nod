@@ -14,7 +14,7 @@ describe('IFormMeta tests', () => {
     website: Yup.string().url(),
   });
 
-  const formActionsSelector = ()         => 'FAKE_formActions';
+  const formActionsAccessor = ()         => 'FAKE_formActions';
   const formStateSelector   = (appState) => 'FAKE_formState';
 
 
@@ -41,25 +41,25 @@ describe('IFormMeta tests', () => {
       expect(()=>IFormMeta({formDesc, formSchema:'bad'})).toThrow(/invalid formSchema/);
     });
 
-    test('formActionsSelector parameter required', () => {
-      // ERROR EX: IFormMeta() parameter violation: formActionsSelector is required
-      expect(()=>IFormMeta({formDesc, formSchema})).toThrow(/formActionsSelector.*required/);
+    test('formActionsAccessor parameter required', () => {
+      // ERROR EX: IFormMeta() parameter violation: formActionsAccessor is required
+      expect(()=>IFormMeta({formDesc, formSchema})).toThrow(/formActionsAccessor.*required/);
     });
     
-    test('invalid formActionsSelector parameter', () => {
-      // ERROR EX: IFormMeta() parameter violation: invalid formActionsSelector (expecting a function)
-      expect(()=>IFormMeta({formDesc, formSchema, formActionsSelector:'bad'})).toThrow(/invalid formActionsSelector/);
+    test('invalid formActionsAccessor parameter', () => {
+      // ERROR EX: IFormMeta() parameter violation: invalid formActionsAccessor (expecting a function)
+      expect(()=>IFormMeta({formDesc, formSchema, formActionsAccessor:'bad'})).toThrow(/invalid formActionsAccessor/);
     });
 
 
     test('formStateSelector parameter required', () => {
       // ERROR EX: IFormMeta() parameter violation: formStateSelector is required
-      expect(()=>IFormMeta({formDesc, formSchema, formActionsSelector})).toThrow(/formStateSelector.*required/);
+      expect(()=>IFormMeta({formDesc, formSchema, formActionsAccessor})).toThrow(/formStateSelector.*required/);
     });
     
     test('invalid formStateSelector parameter', () => {
       // ERROR EX: IFormMeta() parameter violation: invalid formStateSelector (expecting a function)
-      expect(()=>IFormMeta({formDesc, formSchema, formActionsSelector, formStateSelector:'bad'})).toThrow(/invalid formStateSelector/);
+      expect(()=>IFormMeta({formDesc, formSchema, formActionsAccessor, formStateSelector:'bad'})).toThrow(/invalid formStateSelector/);
     });
 
     
@@ -67,7 +67,7 @@ describe('IFormMeta tests', () => {
       // ERROR EX: IFormMeta() parameter violation: unrecognized named parameter(s): badParm1,badParm2
       expect(()=>IFormMeta({formDesc, 
                             formSchema,
-                            formActionsSelector,
+                            formActionsAccessor,
                             formStateSelector,
                             badParm1:'bad',
                             badParm2:'really bad'}))
@@ -81,7 +81,7 @@ describe('IFormMeta tests', () => {
     
     test('valid parameters', () => {
       expect.assertions(1);
-      IFormMeta({formDesc, formSchema, formActionsSelector, formStateSelector});
+      IFormMeta({formDesc, formSchema, formActionsAccessor, formStateSelector});
       expect(1).toBe(1);
     });
 
@@ -91,7 +91,7 @@ describe('IFormMeta tests', () => {
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   describe('test auto generated action creators', () => {
 
-    const signInMetaForm = IFormMeta({formDesc, formSchema, formActionsSelector, formStateSelector});
+    const signInMetaForm = IFormMeta({formDesc, formSchema, formActionsAccessor, formStateSelector});
     
     const actions = generateActions({
       auth: {
