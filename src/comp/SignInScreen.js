@@ -58,13 +58,11 @@ function SignInScreen({iForm}) {
          <ITextField fieldName="email"
                      iForm={iForm}
                      placeholder="jon.snow@gmail.com"
-                     keyboardType="email-address"
-                     editable={!formInProcess}/>
+                     keyboardType="email-address"/>
 
          <ITextField fieldName="pass"
                      iForm={iForm}
-                     secureTextEntry
-                     editable={!formInProcess}/>
+                     secureTextEntry/>
 
          {verticalSpacing}
 
@@ -127,4 +125,5 @@ export default connect(
                                   dispatchProps.dispatch),
     };
   }
+
 )(SignInScreen);

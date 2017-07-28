@@ -61,6 +61,7 @@ export default function ITextField({fieldName, iForm, ...inputExtraProps}) {
       <Item fixedLabel {...itemExtraProps}>
         <Label>{fieldLabel}</Label>
         <Input value={fieldValue}
+               editable={!iForm.inProcess()}
                onChangeText={(txt) => iForm.handleFieldChanged(fieldName, txt)}
                onEndEditing={()    => iForm.handleFieldTouched(fieldName)}
                {...inputExtraProps}/>
