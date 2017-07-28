@@ -15,18 +15,13 @@ import verify         from '../verify';
  * 
  * Complete aspects of the form is auto generated, including actions,
  * logic, and reducers.  These auto-generated items implement the hard
- * work related to dynamically determining when fields should be
- * validated (based on user touches, and form submission).
+ * work related to dynamically determining when field validation should
+ * be exposed to the user (based on user touches, and form submission).
  * 
- * In addition, a series of intelligent-form-based input form elements
- * are available.  These components auto-wire to the actions/state of an
- * IForm, and automatically expose validation msgs at the appropriate
- * time (considering user touches and form submission, etc.).
- * 
- * Bottom line is that re-usability is promoted in a dead simple way.
- * And as a bonus, because it is redux-logic-based, it is extremely
- * simple to inject app-specific logic to manipulate various
- * business-related items.
+ * **Bottom line**: iForms promotes **painless re-usability!** As a
+ * **bonus**, it is logic-based, so it is **extremely simple to inject
+ * **app-specific logic** to manipulate various business-related
+ * **items.
  *
  *
  * Form Input/Output Boundaries (via App Domains)
@@ -113,13 +108,13 @@ import verify         from '../verify';
  *  {
  *    registrar: { // auto-generated items to be externally registered
  *      // iForm action creators to be injected into action-u generateActions()
- *      formActionGenesis(): ActionGenesis
+ *      formActionGenesis([appInjectedFormActions]): ActionGenesis
  *      
  *      // iForm logic modules (providing intelligent validation) to be registered to redux-logic
- *      formLogic(formActions): logic[]
+ *      formLogic(): logic[]
  *      
  *      // iForm reducer to be registered in the redux state management process
- *      formReducer(formActions): function
+ *      formReducer(): function
  *    }
  * 
  *    // the selector that promotes self's specific formState, given the top-level appState
