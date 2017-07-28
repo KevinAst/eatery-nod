@@ -25,7 +25,10 @@ If your using [redux-logic], then iForms is your go-to choice for forms!
   * [IFormMeta](#iformmeta)
     - registrar
       * [formActionGenesis](#iformmeta-registrar-formactiongenesis)
+      * [formLogic](#iformmeta-registrar-formlogic)
   * [??more](#bla-)
+
+?? TODO: some of the links (above are different in GitHub)
 
 ## Intro
 
@@ -299,7 +302,7 @@ ${formActionGenesis}: {
 **Registration**
 
 Even though these actions are auto-generated, they must be registered
-to your action-u structure.  This is accomplished through the
+in your action-u structure.  This is accomplished through the
 iFormMeta.registrar.formActionGenesis() method.  Here is an example:
 
 **src/actions/auth.js**
@@ -364,11 +367,51 @@ promoting a top-level actionMeta node in this structure.
 
     ?? discuss insulated from state through IForm helper
 
+
 ### Form Logic
-    ?? iForm logic basically enforces validation constraints.
-    ?? discuss registration
-    ?? app-specific additions can be provided, typically related to form processing
-       ... must be registered AFTER iForms
+
+iForms maintain a consistent set of redux-logic modules that
+orchestrates various iForm characteristics, such as validation.  The
+following actions are monitored by these logic modules:
+
+| formActions monitored         | perform
+| ----------------------------- | -------
+| fieldChanged<br/>fieldTouched | validate specific field, injecting msgs in action
+| process                       | validate ALL fields, injecting msgs in action <br/> - reject `process` action on validation problems (via `process.reject` action) <br/> - allow `process` action on clean validation, supplementing action with values/domain
+
+
+**Registration**
+
+Even though iForm logic modules are auto-generated, they must be registered
+in your app's redux-logic catalog.  This is accomplished through the
+iFormMeta.registrar.formLogic() method.  Here is an example:
+
+**src/logic/auth.js**
+```js
+import signInFormMeta from './iForms/signInFormMeta';
+
+// promote all logic (accumulated in index.js)
+export default [
+  ... snip snip (other logic modules omitted)
+
+  // signIn logic (NOTE: form logic just be registered BEFORE app-specific logic)
+  ...signInFormMeta.registrar.formLogic(), // inject the standard SignIn form-based logic modules
+  processSignIn,                           // app-specific sign-in logic
+];
+```
+
+**App-Specific Additions**
+
+App-specific form processing logic additions can be injected through
+the normal redux-logic registration process (as seen above - see
+`processSignIn`).  
+
+This is typically used to inject form submission process logic, once
+the form has been cleanly validated by iForms.
+
+NOTE: The only caveot is your app-logic should be regestered after the
+iForm logic (so as to auto reject invalid form state).
+
 
 ### Form Components
 
@@ -536,7 +579,30 @@ sub-structure that is to be injected into the action-u
 generateActions() process.  The [Form Actions](#form-actions) section
 details what these actions look like.
 
-?? DONE: reduce dups - reference this structure in closer look "Form Actions"
+?? DONE: reduce dups - reference this structure in closer look
+
+
+### iFormMeta.registrar.formLogic
+
+Promote the redux-logic modules that orchestrates various iForm
+characteristics, such as validation.
+
+**API:**
+```
+formLogic(): logic[]
+```
+
+**Return**: **logic[]** - the redux-logic modules that perform
+low-level iForm business logic (such as validation).  This should be
+registered to the app's redux-logic process.  The [Form
+Logic](#form-logic) section discusses this in more detail.
+
+?? DONE: reduce dups - reference this structure in closer look
+
+
+???%%% REFERENCE
+???%%% NEW
+???%%% RETROFIT THIS ????????????????????????????????????????????????????????????????
 
 
 

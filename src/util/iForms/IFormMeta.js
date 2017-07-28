@@ -349,7 +349,7 @@ export default function IFormMeta({formDesc,
    *
    * @return {logic[]} the redux-logic modules that perform low-level
    * iForm business logic (such as validation).  This should be
-   * registered to the redux-logic process.
+   * registered to the app's redux-logic process.
    */
   function formLogic() {
 
