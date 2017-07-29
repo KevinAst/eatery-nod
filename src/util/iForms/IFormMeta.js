@@ -205,7 +205,7 @@ export default function IFormMeta({formDesc,
    * iForm.
    *
    * @param {ActionGenesis} [appInjectedFormActions] optionally
-   * specify app-specific action creators to suplement the
+   * specify additional app-specific action creators to suplement the
    * auto-generated formActions.  This is typically used to introduce
    * fail/complete actions that are spawned out of app-specific logic
    * modules.  NOTE: the formAction root can even become an action

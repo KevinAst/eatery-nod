@@ -27,9 +27,8 @@ If your using [redux-logic], then iForms is your go-to choice for forms!
       * [formActionGenesis](#iformmeta-registrar-formactiongenesis)
       * [formLogic](#iformmeta-registrar-formlogic)
       * [formReducer](#iformmeta-registrar-formReducer)
+    - [formStateSelector](#iformmeta-formstateselector)
     - [IForm](#iformmeta-iform)
-
-?? TODO: some of the links (above are different in GitHub)
 
 ## Intro
 
@@ -87,11 +86,11 @@ app-specific logic** to manipulate various business-related items.
 
 ## Sample
 
-In this sample we gather information for a sign-in form *(email and
-password)*.
+In this sample our form gathers information for a sign-in process
+*(email and password)*.
 
-The following screens represents our form's progression with
-incremental user interaction *(click each screen to expand)*:
+The following screens represent the form's progression after various
+user interactions *(click each screen to expand)*:
 
 | initial | partial email | premature `Sign In` | email correction | password correction | `Sign In` accepted
 | ------- | ------- | ------- | ------- | ------- | -------
@@ -103,12 +102,14 @@ incremental user interaction *(click each screen to expand)*:
   request is rejected, and all field validations are exposed.
 
 
+Using iForms, this process is **accomplished with minimal effort**.
+We simply do the following:
 
-This can be **accomplished with minimal effort**.  We simply do the
-following:
+1. First we define an IFormMeta instance that represents our sign-in
+   form. 
 
-1. First we define an IFormMeta instance that represents this sign-in
-   form *(a simple and declarative process)*:
+   *This is a simple and declarative process*, that packs a lot of
+   information!
 
    **src/logic/iForms/signInFormMeta.js**
    ```js
@@ -126,9 +127,6 @@ following:
      formStateSelector:   (appState) => appState.auth.signInForm,
    });
    ```
-
-   - *This is a simple and declarative process*, that packs a lot of
-     information!
 
    - The `formDesc` defines a label for our form *(for human
      consumption)*.
@@ -164,7 +162,7 @@ following:
    ... signInFormMeta.registrar.formReducer(): function
    ```
 
-3. Lastly we define our screen component that promotes our form (and
+3. Lastly we define our component screen that promotes the form (and
    it's fields):
 
    **src/comp/SignInScreen.js**
@@ -232,7 +230,8 @@ following:
      // mapStateToProps()
      (appState) => ({ formState: signInFormMeta.formStateSelector(appState) }),
    
-     null, // mapDispatchToProps()
+     // mapDispatchToProps()
+     null,
    
      // mergeProps()
      (stateProps, dispatchProps) => ({ iForm: signInFormMeta.IForm(stateProps.formState, 
@@ -273,8 +272,7 @@ insight into typical app-specific hooks.
 
 ### Form Actions
 
-The following standard actions are consistently maintained for each
-iForm:
+The following standard actions are maintained for each iForm:
 
 ```
 ${formActionGenesis}: {
@@ -304,7 +302,8 @@ ${formActionGenesis}: {
 
 Even though these actions are auto-generated, they must be registered
 in your action-u structure.  This is accomplished through the
-iFormMeta.registrar.formActionGenesis() method.  Here is an example:
+[iFormMeta.registrar.formActionGenesis()](#iformmeta-registrar-formactiongenesis)
+method.  Here is an example:
 
 **src/actions/auth.js**
 ```js
@@ -350,13 +349,14 @@ export default generateActions.root({
 **App-Specific Additions**
 
 You can supply additional app-specific actions through the optional
-`appInjectedFormActions` iFormMeta.registrar.formActionGenesis()
+`appInjectedFormActions`
+[iFormMeta.registrar.formActionGenesis()](#iformmeta-registrar-formactiongenesis)
 parameter (as seen above).
 
 This is typically used to introduce fail/complete actions that are
 spawned out of app-specific logic modules.  
 
-NOTE: the formAction root can even become an action creator by
+**NOTE:** the formAction root can even become an action creator by
 promoting a top-level actionMeta node in this structure.
 
 
@@ -364,9 +364,9 @@ promoting a top-level actionMeta node in this structure.
 
 ### Form Logic
 
-iForms maintain a consistent set of redux-logic modules that
-orchestrates various iForm characteristics, such as validation.  The
-following actions are monitored by these logic modules:
+iForms maintain a set of redux-logic modules that orchestrates various
+iForm characteristics, such as validation.  The following actions are
+monitored by these logic modules:
 
 | monitored formActions         | perform following logic
 | ----------------------------- | -------------------------
@@ -376,9 +376,11 @@ following actions are monitored by these logic modules:
 
 **Registration**
 
-Even though iForm logic modules are auto-generated, they must be registered
-in your app's redux-logic catalog.  This is accomplished through the
-iFormMeta.registrar.formLogic() method.  Here is an example:
+Even though iForm logic modules are auto-generated, they must be
+registered in your app's redux-logic catalog.  This is accomplished
+through the
+[iFormMeta.registrar.formLogic()](#iformmeta-registrar-formlogic)
+method.  Here is an example:
 
 **src/logic/auth.js**
 ```js
@@ -403,13 +405,13 @@ the normal redux-logic registration process (as seen above - see
 This is typically used to inject form submission process logic, once
 the form has been cleanly validated by iForms.
 
-NOTE: The only caveot is your app-logic should be regestered after the
+**NOTE:** The only caveot is your app-logic should be regestered after the
 iForm logic (so as to auto reject invalid form state).
 
 
 ### Form State
 
-The following state shape is consistently maintained for each iForm.
+The following state shape is maintained for each iForm.
 
 **Please Note:** Typically this state tree is NOT interpreted directly
 ... rather the [IForm helper object](#iformmeta-iform) provides a
@@ -449,9 +451,13 @@ ${formState}: { // ex: appState.auth.signInForm (null for inactive form)
 
 **Registration**
 
-Even though the state reducers are auto-generated, they must be registered
-in your redux state management process.  This is accomplished through the
-iFormMeta.registrar.formState() method.  Here is an example:
+Even though the state reducers are auto-generated, they must be
+registered in your redux state management process.  This is
+accomplished through the
+[iFormMeta.registrar.formReducer()](#iformmeta-registrar-formReducer)
+method.  Here is an example:
+
+
 
 **src/appState/auth.js**
 ```js
@@ -629,11 +635,13 @@ formActionGenesis([appInjectedFormActions]): ActionGenesis
 ```
 
 - **[appInjectedFormActions]**: ActionGenesis - optionally specify
-app-specific action creators to suplement the auto-generated
-formActions.  This is typically used to introduce fail/complete
-actions that are spawned out of app-specific logic modules.  NOTE: the
-formAction root can even become an action creator by promoting a
-top-level actionMeta node in this structure.
+additional app-specific action creators to suplement the
+auto-generated formActions.  This is typically used to introduce
+fail/complete actions that are spawned out of app-specific logic
+modules.  NOTE: the formAction root can even become an action creator
+by promoting a top-level actionMeta node in this structure.  Please
+refer to [Form Actions](#form-actions) for an example of this.
+
 
 
 
@@ -665,6 +673,15 @@ looks like.
 formReducer(): function
 ```
 
+### iFormMeta.formStateSelector
+
+The selector selector that promotes the form's specific formState,
+given the top-level appState.
+
+**API:**
+```
+formStateSelector(appState): formState
+```
 
 
 ### iFormMeta.IForm
@@ -747,6 +764,8 @@ self's handlers.
 
 
 ?? spell check everywhere
+?? consider linking any source code directly to our code
+?? some of the TOC links (above are different in GitHub)
 
 [redux-logic]: https://github.com/jeffbski/redux-logic
 [Yup]:         https://github.com/jquense/yup
