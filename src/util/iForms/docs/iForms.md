@@ -26,7 +26,7 @@ If your using [redux-logic], then iForms is your go-to choice for forms!
     - registrar
       * [formActionGenesis](#iformmetaregistrarformactiongenesis)
       * [formLogic](#iformmetaregistrarformlogic)
-      * [formReducer](#iformmetaregistrarformReducer)
+      * [formReducer](#iformmetaregistrarformreducer)
     - [formStateSelector](#iformmetaformstateselector)
     - [IForm](#iformmetaiform)
 
@@ -454,7 +454,7 @@ ${formState}: { // ex: appState.auth.signInForm (null for inactive form)
 Even though the state reducers are auto-generated, they must be
 registered in your redux state management process.  This is
 accomplished through the
-[iFormMeta.registrar.formReducer()](#iformmetaregistrarformReducer)
+[iFormMeta.registrar.formReducer()](#iformmetaregistrarformreducer)
 method.  Here is an example:
 
 
