@@ -20,7 +20,7 @@ If your using [redux-logic], then iForms is your go-to choice for forms!
   * [Form State](#form-state)
   * [Form Components](#form-components)
   * [Form Input/Output Boundaries (via App Domains)](#form-inputoutput-boundaries-via-app-domains)
-  * [Form Processing](#xx) ?? discuss how to process a form
+  * [Form Processing](#form-processing)
 - [API](#api)
   * [IFormMeta](#iformmeta)
     - registrar
@@ -267,8 +267,8 @@ insight into typical app-specific hooks.
    - of public interest
      * xx IFormMeta creation (briefly discussed in Sample, and detailed furhter in API)
      * xx registration discuss each in appropriate section (below)
-     * boundary input/output ?? key item (below)
-     * app-specific processing ?? discuss in appropriate sections (below)
+     * xx boundary input/output - key item (below)
+     * xx app-specific processing - discuss in appropriate sections (below)
 
 ### Form Actions
 
@@ -537,6 +537,62 @@ structure is assumed to be "one in the same" as the form values
 structure (through a straight mapping of the well known iForm fields).
 
 
+### Form Processing
+
+All forms are processed through the `process` form action.  This is
+often referred to as "submitting the form".
+
+iForm logic automatically monitors the `process` action, validaing the
+entire form (i.e. all fields of the form).
+
+ - when form validation issues exist, the `process` action is rejected
+   by re-issuing a `process.reject` action (containing the messages)
+
+ - when the form validation is clean, the `process` action is allowed,
+   after suplementing it with the current form state (both raw values,
+   and app-specific domain).
+
+This means that it is extremely easy to inject app-specific form
+processing logic.  The logic merely:
+
+ - monitors the the `process` action
+ - which is gaurenteed to be valid
+ - and contains the current values/domain from which to spawn the app-specific work!
+ - ultimately the app logic will either issue
+   * a form close() to take down the form
+   * or an open() to communicate processing errors
+
+Nothing could be easier!
+
+Here is an example:
+
+```js
+export const processSignIn = createLogic({
+
+  name: 'auth.processSignIn',
+  type: String(actions.auth.signIn.process),
+
+  process({getState, action, api}, dispatch, done) {
+
+    ... implement app-specific logic
+
+    ... has access to validated form:
+        - action.values
+        - action.domain
+
+    ... on success:
+        dispatch( actions.auth.signIn.close() );
+
+    ... on failure:
+        dispatch( actions.auth.signIn.open(domain, errMsg) );
+        
+  },
+
+});
+```
+
+
+
 ## API
 
 ### IFormMeta
@@ -768,14 +824,6 @@ self's handlers.
 }
 ```
 
-
-
-
-???%%% NEW
-???%%% TOC
-???%%% END
-???%%% REFERENCE
-???%%% RETROFIT THIS ????????????????????????????????????????????????????????????????
 
 [redux-logic]: https://github.com/jeffbski/redux-logic
 [Yup]:         https://github.com/jquense/yup
