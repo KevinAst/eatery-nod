@@ -16,8 +16,8 @@ If your using [redux-logic], then iForms is your go-to choice for forms!
 - [Sample](#sample)
 - [A Closer Look](#a-closer-look)
   * [Form Actions](#form-actions)
-  * [Form State](#form-state)
   * [Form Logic](#form-logic)
+  * [Form State](#form-state)
   * [Form Components](#form-components)
   * [Form Input/Output Boundaries (via App Domains)](##form-input-output-boundaries-via-app-domains-)
   * [??more](#bla-)
@@ -26,6 +26,7 @@ If your using [redux-logic], then iForms is your go-to choice for forms!
     - registrar
       * [formActionGenesis](#iformmeta-registrar-formactiongenesis)
       * [formLogic](#iformmeta-registrar-formlogic)
+      * [formReducer](#iformmeta-registrar-formReducer)
   * [??more](#bla-)
 
 ?? TODO: some of the links (above are different in GitHub)
@@ -344,7 +345,6 @@ export default generateActions.root({
     }),
   },
 });
-
 ```
 
 **App-Specific Additions**
@@ -360,12 +360,6 @@ NOTE: the formAction root can even become an action creator by
 promoting a top-level actionMeta node in this structure.
 
 
-### Form State
-    ??
-    ?? discuss registration
-    ?? typically no app-specific additions are needed
-
-    ?? discuss insulated from state through IForm helper
 
 
 ### Form Logic
@@ -374,8 +368,8 @@ iForms maintain a consistent set of redux-logic modules that
 orchestrates various iForm characteristics, such as validation.  The
 following actions are monitored by these logic modules:
 
-| formActions monitored         | perform
-| ----------------------------- | -------
+| monitored formActions         | perform following logic
+| ----------------------------- | -------------------------
 | fieldChanged<br/>fieldTouched | validate specific field, injecting msgs in action
 | process                       | validate ALL fields, injecting msgs in action <br/> - reject `process` action on validation problems (via `process.reject` action) <br/> - allow `process` action on clean validation, supplementing action with values/domain
 
@@ -411,6 +405,65 @@ the form has been cleanly validated by iForms.
 
 NOTE: The only caveot is your app-logic should be regestered after the
 iForm logic (so as to auto reject invalid form state).
+
+
+### Form State
+
+The following state shape is consistently maintained for each iForm:
+
+```
+${formState}: { // ex: appState.auth.signInForm (null for inactive form)
+
+  labels: {       // field labels (UI promotion and validation msg content)
+    FORM:         string, // form desc
+    <fieldName1>: string,
+    <fieldName2>: string,
+  },
+
+  values: {       // field values
+    <fieldName1>: string,
+    <fieldName2>: string,
+  },
+
+  msgs: {          // validation msgs (if any) ... initial: {}
+    FORM:          string, // msg spanning entire form ... non-exist for valid
+    <fieldName1>:  string, // non-exist for valid
+    <fieldName2>:  string, // non-exist for valid
+  },
+
+  validating: {    // demarks which fields are being validated
+                   // ... based on whether it has been touched by user (internal use only)
+    FORM:          boolean, // ALL fields validated (takes precedence)
+    <fieldName1>:  boolean,
+    <fieldName2>:  boolean,
+  },
+
+  inProcess: boolean, // is form being processed?
+}
+```
+
+???%%% discuss insulated from state through IForm helper (may do this by reference to other section)
+
+**Registration**
+
+Even though the state reducers are auto-generated, they must be registered
+in your redux state management process.  This is accomplished through the
+iFormMeta.registrar.formState() method.  Here is an example:
+
+**src/appState/auth.js**
+```js
+import {combineReducers}  from 'redux';
+import signInFormMeta     from '../logic/iForms/signInFormMeta';
+
+export default combineReducers({
+  ... snip snip (other reducers omitted)
+  signInForm: signInFormMeta.registrar.formReducer(), // inject the standard SignIn form-based reducer
+});
+```
+
+**App-Specific Additions**
+
+Typically, no app-specific additions are required for form state.
 
 
 ### Form Components
@@ -464,7 +517,7 @@ a straight mapping of the well known iForm fields).
 
 The primary iForm function that creates an IFormMeta object
 encapsolating the characteristics of an Intelligent Form (a reusable
-forms utility that is logic-based (using redux-logic).
+forms utility that is logic-based using redux-logic).
 
 **API:**
 ```
@@ -558,8 +611,12 @@ forms utility that is logic-based (using redux-logic).
 
 ### iFormMeta.registrar.formActionGenesis
 
-Promote the auto-generated action creators required by self's
-iForm.
+Promote the auto-generated action creators required by self's iForm.
+This is an action-u ActionGenesis sub-structure that is to be injected
+into the action-u generateActions() process.
+
+The [Form Actions](#form-actions) section details what these actions
+look like.
 
 **API:**
 ```
@@ -573,59 +630,41 @@ actions that are spawned out of app-specific logic modules.  NOTE: the
 formAction root can even become an action creator by promoting a
 top-level actionMeta node in this structure.
 
-**Return**: **ActionGenesis** - the auto-generated action creators
-required by self's iForm.  This is an action-u ActionGenesis
-sub-structure that is to be injected into the action-u
-generateActions() process.  The [Form Actions](#form-actions) section
-details what these actions look like.
-
-?? DONE: reduce dups - reference this structure in closer look
 
 
 ### iFormMeta.registrar.formLogic
 
-Promote the redux-logic modules that orchestrates various iForm
-characteristics, such as validation.
+Promote the redux-logic modules that perform low-level iForm business
+logic (such as validation).  This should be registered to the app's
+redux-logic process.
+
+The [Form Logic](#form-logic) section discusses this in more detail.
 
 **API:**
 ```
 formLogic(): logic[]
 ```
 
-**Return**: **logic[]** - the redux-logic modules that perform
-low-level iForm business logic (such as validation).  This should be
-registered to the app's redux-logic process.  The [Form
-Logic](#form-logic) section discusses this in more detail.
-
-?? DONE: reduce dups - reference this structure in closer look
 
 
-???%%% REFERENCE
+### iFormMeta.registrar.formReducer
+
+Promote the reducer that maintains the form's redux state.  This
+reducer should be registered in the redux state management process.
+
+The [Form State](#form-state) section details what this state shape
+looks like.
+
+**API:**
+```
+formReducer(): function
+```
+
+
 ???%%% NEW
+???%%% END
+???%%% REFERENCE
 ???%%% RETROFIT THIS ????????????????????????????????????????????????????????????????
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-### ?? keep going if you like this format?
 
 
 ?? spell check everywhere

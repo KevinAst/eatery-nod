@@ -466,7 +466,7 @@ export default function IFormMeta({formDesc,
    * state.  This reducer is to be registered in the redux state
    * management process.  The following state shape is maintained:
    * ```
-   *    ${formState}: { // ex: appState.auth.signInForm
+   *    ${formState}: { // ex: appState.auth.signInForm (null for inactive form)
    *
    *      labels: {       // field labels (UI promotion and validation msg content)
    *        FORM:         string, // form desc
