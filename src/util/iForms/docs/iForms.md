@@ -19,6 +19,7 @@ If your using [redux-logic], then iForms is your go-to choice for forms!
   * [Form Logic](#form-logic)
   * [Form State](#form-state)
   * [Form Components](#form-components)
+  * [Dynamic Validation](#dynamic-validation)
   * [Form Input/Output Boundaries (via App Domains)](#form-inputoutput-boundaries-via-app-domains)
   * [Form Processing](#form-processing)
 - [API](#api)
@@ -511,6 +512,29 @@ them as a pattern to build your own, using your preferred component
 library.  Just be sure to encapsulate the same feature set!
 
 
+### Dynamic Validation
+
+Form validation is triggered by low-level events *(such as field value
+changes or focus changes)*, as well has high-level events *(such as form
+process requests)*.  
+
+Internally, all form fields are validated 100% of the time.  This
+supports the ability to determine validity at all times *(for some
+internal need)*. This can be accomplished using
+[IForm's](#iformmetaiform) `isValid()` or `getMsg()` methods.
+
+Whether validation messages are exposed to the user is a different
+topic, and is based on whether a field has been touched, or the form
+has been processed.  This can be accomplished using
+[IForm's](#iformmetaiform) `isValidationExposed()` or `getExposedMsg()`
+methods.
+
+You can see an example of how this is accomplished in the
+[ITextField](../comp/ITextField.js) component.
+
+
+
+
 ### Form Input/Output Boundaries (via App Domains)
 
 When a form is initiated, the `open` [action](#form-actions) is
@@ -556,8 +580,8 @@ This means that it is extremely easy to inject app-specific form
 processing logic.  The logic merely:
 
  - monitors the the `process` action
- - which is gaurenteed to be valid
- - and contains the current values/domain from which to spawn the app-specific work!
+   * which is gaurenteed to be valid
+   * and contains the current values/domain from which to spawn the app-specific work!
  - ultimately the app logic will either issue
    * a form close() to take down the form
    * or an open() to communicate processing errors
