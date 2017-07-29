@@ -74,7 +74,7 @@ concise declarative form definition:
     * logic (implementing the hard work of validation, and dynamic presentation)
     * reducers (facilitating form state management)
 
-  - A series of **input form elements** (e.g. ITextField) is provided,
+  - A series of **input form elements** (e.g. [ITextField]) is provided,
     which auto-wires to the iForm actions/state, and automatically
     formats validation msgs, etc.
 
@@ -110,7 +110,7 @@ We simply do the following:
    *This is a simple and declarative process*, that packs a lot of
    information!
 
-   **src/logic/iForms/signInFormMeta.js**
+   **[src/logic/iForms/signInFormMeta.js](../../../../src/logic/iForms/signInFormMeta.js)**
    ```js
    import Yup        from 'yup';
    import IFormMeta  from '../../util/iForms/IFormMeta';
@@ -164,7 +164,8 @@ We simply do the following:
 3. Lastly we define our component screen that promotes the form (and
    it's fields):
 
-   **src/comp/SignInScreen.js**
+   **[src/comp/SignInScreen.js](../../../../src/comp/SignInScreen.js)**
+
    ```js
    import React        from 'react';
    import {connect}    from 'react-redux';
@@ -298,7 +299,7 @@ in your action-u structure.  This is accomplished through the
 [iFormMeta.registrar.formActionGenesis()](#iformmetaregistrarformactiongenesis)
 method.  Here is an example:
 
-**src/actions/auth.js**
+**[src/actions/auth.js](../../../../src/actions/auth.js)**
 ```js
 import {generateActions} from 'action-u';
 import signInFormMeta    from '../logic/iForms/signInFormMeta';
@@ -375,7 +376,7 @@ through the
 [iFormMeta.registrar.formLogic()](#iformmetaregistrarformlogic)
 method.  Here is an example:
 
-**src/logic/auth.js**
+**[src/logic/auth.js](../../../../src/logic/auth.js)**
 ```js
 import signInFormMeta from './iForms/signInFormMeta';
 
@@ -452,7 +453,7 @@ method.  Here is an example:
 
 
 
-**src/appState/auth.js**
+**[src/appState/auth.js](../../../../src/appState/auth.js)**
 ```js
 import {combineReducers}  from 'redux';
 import signInFormMeta     from '../logic/iForms/signInFormMeta';
@@ -471,7 +472,7 @@ Typically, no app-specific additions are required for form state.
 ### Form Components
 
 iForm provides a series of input form element components
-(e.g. [ITextField](../comp/ITextField.js)) that integrates seamlessly with IForms.  
+(e.g. [ITextField]) that integrates seamlessly with IForms.  
 
 These components encapsulate various input aspects using a consistent
 pattern.  For example, validation messages are automatically exposed
@@ -522,7 +523,7 @@ has been processed.  This can be accomplished using
 methods.
 
 You can see an example of how this is accomplished in the
-[ITextField](../comp/ITextField.js) component.
+[ITextField] component.
 
 
 
@@ -844,3 +845,4 @@ self's handlers.
 [redux-logic]: https://github.com/jeffbski/redux-logic
 [Yup]:         https://github.com/jquense/yup
 [Joi]:         https://github.com/hapijs/joi
+[ITextField]:  ../comp/ITextField.js
