@@ -239,7 +239,7 @@ We simply do the following:
    )(SignInScreen);
    ```
    
-   - **Notice** that we utilize the `ITextField` iForm component to promte the
+   - **Notice** that we utilize the `ITextField` iForm component to promote the
      text fields.  This component auto-wires to the iForm actions/state,
      and automatically promotes validation msgs at the appropriate time.
      
@@ -477,23 +477,38 @@ Typically, no app-specific additions are required for form state.
 
 ### Form Components
 
-    ???
-    iForms provides a set of intelligent-form-based input form
-    elements (ex: ITextField).  These components auto-wire to the
-    actions/state of an iForm, and automatically expose validation
-    msgs at the appropriate time (considering user touches and form
-    submission, etc.).
+iForm provides a series of input form element components
+(e.g. [ITextField](../comp/ITextField.js)) that integrates seamlessly with IForms.  
 
-    - ?? itemize what they do
-      x) present the form elements in a polished way, visualizing
-         validation messages as needed
-      x) emits the low-level actions (via auto-wired events) needed to
-         interact with the iFormMeta logic process.
+These components encapsulate various input aspects using a consistent
+pattern.  For example, validation messages are automatically exposed
+at the appropriate time, considering user touches and form submission.
 
-    Currently, these components are somewhat limited in scope, because
-    they are specific to react-native, and use the native-base
-    component library.  With that said, you can use them as a pattern
-    to build your own, using your preferred component library.
+Each component integrates seamlessly with iForms by auto-wiring to
+the IForm helper object.  Because of this, using these components is
+as simple as passing the fieldName and iForm helper object.
+
+```js
+<ITextField fieldName="email"
+            iForm={iForm}/>
+```
+
+Each component consistently employs the following heuristics:
+
+1. Present form elements in a polished way
+
+2. Dynamically expose validation messages at the appropriate time,
+   considering user touches and form submission
+
+3. Access IForm state (for values, labels, messages, etc.)
+
+4. Emit low-level actions (via IForm handlers) required to
+   interact with IForm logic.
+
+Please note that these components are specific to react-native, and
+use the native-base component library.  With that said, you can use
+them as a pattern to build your own, using your preferred component
+library.  Just be sure to encapsulate the same feature set!
 
 
 ### Form Input/Output Boundaries (via App Domains)
@@ -764,8 +779,9 @@ self's handlers.
 
 
 ?? spell check everywhere
-?? consider linking any source code directly to our code
+?? consider linking any source code directly to our code (see one example of ITextField)
 ?? some of the TOC links (above are different in GitHub)
+?? OK to singualirize iForms where appropriate
 
 [redux-logic]: https://github.com/jeffbski/redux-logic
 [Yup]:         https://github.com/jquense/yup
