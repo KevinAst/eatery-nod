@@ -80,9 +80,9 @@ concise declarative form definition:
     which auto-wires to the iForm actions/state, and automatically
     formats validation msgs, etc.
 
-**Bottom line**: iForms promotes **painless re-usability!**  As a bonus**,
-**it is logic-based, so it is **extremely simple to inject
-**app-specific logic** to manipulate various business-related items.
+**Bottom line**: iForms promotes **painless re-usability!**  As a bonus,
+it is logic-based, so it is **extremely simple to inject
+app-specific logic** to manipulate various business-related items.
 
 
 ## Sample
