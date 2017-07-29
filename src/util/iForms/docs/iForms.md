@@ -19,16 +19,16 @@ If your using [redux-logic], then iForms is your go-to choice for forms!
   * [Form Logic](#form-logic)
   * [Form State](#form-state)
   * [Form Components](#form-components)
-  * [Form Input/Output Boundaries (via App Domains)](#form-input-output-boundaries-via-app-domains-)
+  * [Form Input/Output Boundaries (via App Domains)](#form-inputoutput-boundaries-via-app-domains)
   * [Form Processing](#xx) ?? discuss how to process a form
 - [API](#api)
   * [IFormMeta](#iformmeta)
     - registrar
-      * [formActionGenesis](#iformmeta-registrar-formactiongenesis)
-      * [formLogic](#iformmeta-registrar-formlogic)
-      * [formReducer](#iformmeta-registrar-formReducer)
-    - [formStateSelector](#iformmeta-formstateselector)
-    - [IForm](#iformmeta-iform)
+      * [formActionGenesis](#iformmetaregistrarformactiongenesis)
+      * [formLogic](#iformmetaregistrarformlogic)
+      * [formReducer](#iformmetaregistrarformReducer)
+    - [formStateSelector](#iformmetaformstateselector)
+    - [IForm](#iformmetaiform)
 
 ## Intro
 
@@ -302,7 +302,7 @@ ${formActionGenesis}: {
 
 Even though these actions are auto-generated, they must be registered
 in your action-u structure.  This is accomplished through the
-[iFormMeta.registrar.formActionGenesis()](#iformmeta-registrar-formactiongenesis)
+[iFormMeta.registrar.formActionGenesis()](#iformmetaregistrarformactiongenesis)
 method.  Here is an example:
 
 **src/actions/auth.js**
@@ -350,7 +350,7 @@ export default generateActions.root({
 
 You can supply additional app-specific actions through the optional
 `appInjectedFormActions`
-[iFormMeta.registrar.formActionGenesis()](#iformmeta-registrar-formactiongenesis)
+[iFormMeta.registrar.formActionGenesis()](#iformmetaregistrarformactiongenesis)
 parameter (as seen above).
 
 This is typically used to introduce fail/complete actions that are
@@ -379,7 +379,7 @@ monitored by these logic modules:
 Even though iForm logic modules are auto-generated, they must be
 registered in your app's redux-logic catalog.  This is accomplished
 through the
-[iFormMeta.registrar.formLogic()](#iformmeta-registrar-formlogic)
+[iFormMeta.registrar.formLogic()](#iformmetaregistrarformlogic)
 method.  Here is an example:
 
 **src/logic/auth.js**
@@ -414,7 +414,7 @@ iForm logic (so as to auto reject invalid form state).
 The following state shape is maintained for each iForm.
 
 **Please Note:** Typically this state tree is NOT interpreted directly
-... rather the [IForm helper object](#iformmeta-iform) provides a
+... rather the [IForm helper object](#iformmetaiform) provides a
 convenient abstraction to both a) accessors and b) handlers to change
 the state.
 
@@ -454,7 +454,7 @@ ${formState}: { // ex: appState.auth.signInForm (null for inactive form)
 Even though the state reducers are auto-generated, they must be
 registered in your redux state management process.  This is
 accomplished through the
-[iFormMeta.registrar.formReducer()](#iformmeta-registrar-formReducer)
+[iFormMeta.registrar.formReducer()](#iformmetaregistrarformReducer)
 method.  Here is an example:
 
 
@@ -776,12 +776,6 @@ self's handlers.
 ???%%% END
 ???%%% REFERENCE
 ???%%% RETROFIT THIS ????????????????????????????????????????????????????????????????
-
-
-?? spell check everywhere
-?? consider linking any source code directly to our code (see one example of ITextField)
-?? some of the TOC links (above are different in GitHub)
-?? OK to singualirize iForms where appropriate
 
 [redux-logic]: https://github.com/jeffbski/redux-logic
 [Yup]:         https://github.com/jquense/yup
