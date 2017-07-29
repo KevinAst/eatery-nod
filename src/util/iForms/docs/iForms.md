@@ -19,15 +19,15 @@ If your using [redux-logic], then iForms is your go-to choice for forms!
   * [Form Logic](#form-logic)
   * [Form State](#form-state)
   * [Form Components](#form-components)
-  * [Form Input/Output Boundaries (via App Domains)](##form-input-output-boundaries-via-app-domains-)
-  * [??more](#bla-)
+  * [Form Input/Output Boundaries (via App Domains)](#form-input-output-boundaries-via-app-domains-)
+  * [Form Processing](#xx) ?? discuss how to process a form
 - [API](#api)
   * [IFormMeta](#iformmeta)
     - registrar
       * [formActionGenesis](#iformmeta-registrar-formactiongenesis)
       * [formLogic](#iformmeta-registrar-formlogic)
       * [formReducer](#iformmeta-registrar-formReducer)
-  * [??more](#bla-)
+    - [IForm](#iformmeta-iform)
 
 ?? TODO: some of the links (above are different in GitHub)
 
@@ -264,10 +264,10 @@ insight into typical app-specific hooks.
 
 ?? is a picture in order?
 
-?? this may be more of an internal implementation detail
+?? this may be more of an internal implementation detail (consider coloring internal details someway)
    - of public interest
-     * xx IFormMeta creation (?? briefly discussed in Sample, and detailed furhter in API)
-     * xx registration ?? discuss each in appriate section (below)
+     * xx IFormMeta creation (briefly discussed in Sample, and detailed furhter in API)
+     * xx registration discuss each in appropriate section (below)
      * boundary input/output ?? key item (below)
      * app-specific processing ?? discuss in appropriate sections (below)
 
@@ -409,7 +409,12 @@ iForm logic (so as to auto reject invalid form state).
 
 ### Form State
 
-The following state shape is consistently maintained for each iForm:
+The following state shape is consistently maintained for each iForm.
+
+**Please Note:** Typically this state tree is NOT interpreted directly
+... rather the [IForm helper object](#iformmeta-iform) provides a
+convenient abstraction to both a) accessors and b) handlers to change
+the state.
 
 ```
 ${formState}: { // ex: appState.auth.signInForm (null for inactive form)
@@ -442,8 +447,6 @@ ${formState}: { // ex: appState.auth.signInForm (null for inactive form)
 }
 ```
 
-???%%% discuss insulated from state through IForm helper (may do this by reference to other section)
-
 **Registration**
 
 Even though the state reducers are auto-generated, they must be registered
@@ -468,6 +471,7 @@ Typically, no app-specific additions are required for form state.
 
 ### Form Components
 
+    ???
     iForms provides a set of intelligent-form-based input form
     elements (ex: ITextField).  These components auto-wire to the
     actions/state of an iForm, and automatically expose validation
@@ -488,27 +492,28 @@ Typically, no app-specific additions are required for form state.
 
 ### Form Input/Output Boundaries (via App Domains)
 
-When a form is initiated, the `open` action is optionally supplied a
-domain object, to initialize the form (when not supplied all form
-fields start out as empty strings).
+When a form is initiated, the `open` [action](#form-actions) is
+optionally supplied a domain object, to initialize the form (when not
+supplied all form fields start out as empty strings).
 
 We use the term "domain" in a generic way, that can manifest itself in
 a variety of different things.  It can be a real application domain
 object (say from an API call), or another part of your state tree, or
 any number of other things.
 
-Likewise, when the form is processed (via the `process` action), the
-form values will be mapped back to the domain representation (retained
-in the `process` action).
+Likewise, when the form is processed (via the `process`
+[action](#form-actions)), the form values will be mapped back to the
+domain representation (retained in the `process` action).
 
 This makes it convenient for your logic to operate using app-specific
 structures.
 
 You can easily define the mapping between your domain and the form
-values structure, through the optional ??mapDomain2Form/??mapPropsToValues
-parameters.  By default (when not supplied), the domain structure is
-assumed to be "one in the same" as the form values structure (through
-a straight mapping of the well known iForm fields).
+values structure, through the optional
+`mapDomain2Form`/`mapPropsToValues` parameters of
+[IFormMeta](#iformmeta).  By default (when not supplied), the domain
+structure is assumed to be "one in the same" as the form values
+structure (through a straight mapping of the well known iForm fields).
 
 
 ## API
@@ -661,7 +666,81 @@ formReducer(): function
 ```
 
 
+
+### iFormMeta.IForm
+
+Create an IForm helper object, providing convenience
+accessors/handlers, avoiding direct formState intepretation.
+
+**API:**
+```
+IForm(formState, dispatch): IForm
+```
+
+- **[formState]**: ReduxState - the redux form state supporting self's
+form.
+
+- **[dispatch]**: function - the redux dispatch function, supporting
+self's handlers.
+
+
+**Return**: **IForm** - the IForm helper object, with the following API:
+```
+{
+  // the label of the supplied field (or form when not supplied)
+  getLabel(fieldName='FORM'): string
+
+  // the value of the supplied field (N/A for form)
+  getValue(fieldName): string
+
+  // is supplied field value valid (or form when not supplied
+  // ... i.e. all fields in form), irrespective to whether errors are
+  // exposed to the user or not
+  isValid(fieldName='FORM'): boolean
+
+  // the validation msg of supplied field (or form when not supplied)
+  // irrespective to whether errors are exposed to the user or not
+  // - undefined/null for valid
+  getMsg(fieldName='FORM'): string
+
+  // the exposed validation msg of supplied field (or form when not
+  // supplied) - undefined/null for valid.  The exposed msg is tailored 
+  // to whether validation should be exposed to the user or not 
+  // (BASED ON user touches).
+  getExposedMsg(fieldName='FORM'): string
+
+  // Should validation messages be exposed for supplied field (or
+  // form when not supplied), based on user touches.
+  // 
+  // This is needed to expose UI success/error icon adornment
+  // (i.e. no adornment is shown if NOT yet being validated).
+  //
+  // NOTE: Form validation (when enabled) takes precedence over
+  //       individual fields.
+  isValidationExposed(fieldName='FORM'): boolean
+
+  // is form being processed?
+  inProcess(): boolean
+
+  // Service an IForm field value change.
+  handleFieldChanged(fieldName, value): void
+
+  // Service an IForm field touched.
+  handleFieldTouched(fieldName): void
+
+  // Service an IForm process request.
+  handleProcess(): void
+
+  // Service an IForm close request.
+  handleClose(): void
+}
+```
+
+
+
+
 ???%%% NEW
+???%%% TOC
 ???%%% END
 ???%%% REFERENCE
 ???%%% RETROFIT THIS ????????????????????????????????????????????????????????????????

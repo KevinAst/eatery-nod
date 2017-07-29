@@ -121,7 +121,7 @@ import verify         from '../verify';
  *    formStateSelector(appState): formState
  *
  *    // create an IForm helper object, providing convenience accessors/handlers, avoiding direct formState interpretation
- *    IForm(formState, dispatch): Object
+ *    IForm(formState, dispatch): IForm
  *  }
  * ```
  */
