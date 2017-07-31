@@ -106,9 +106,9 @@ We simply do the following:
 
 1. First we define an IFormMeta instance that represents our sign-in
    form. 
-
    *This is a simple and declarative process*, that packs a lot of
    information!
+   **Think of it as an extension to your logic modules**!!
 
    **[src/logic/iForms/signInFormMeta.js](../../../../src/logic/iForms/signInFormMeta.js)**
    ```js
