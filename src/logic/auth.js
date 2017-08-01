@@ -1,4 +1,5 @@
 import {createLogic}  from 'redux-logic';
+import firebase       from 'firebase';
 import signInFormMeta from './iForms/signInFormMeta';
 import actions        from '../actions';
 
@@ -73,14 +74,24 @@ export const processSignIn = createLogic({
   type: String(actions.auth.signIn.process),
 
   process({getState, action, api}, dispatch, done) {
-    console.log('?? processing valid signIn form!!');
-    console.log('?? action.values: ', action.values);  // {"email":"resa@gmail.com","pass":"WowZee7","someNum":7}
-    console.log('?? action.domain: ', action.domain);  // {"struct1":{"email":"resa@gmail.com"},"struct2":{"pass":"WowZee7"},"struct3":{"someNum":7}}
-    // ?? eventually, do our work (issue: actions.auth.signIn(email, pass)  ... for now just close dialog
-    setTimeout(() => {
-      dispatch( actions.auth.signIn.close() );
-      done();
-    }, 5000); 
+    firebase.auth().signInWithEmailAndPassword(action.values.email, action.values.pass)
+            .then( user => {
+              // console.log(`?? signInWithEmailAndPassword() WORKED, user: `, user);
+              // ?? DO MORE ... what user info do we retain in state vs. utilize in firebase
+              dispatch( actions.auth.signIn.close() );
+              done();
+              
+            })
+            .catch( (err) => {
+              // re-display SignIn form WITH msg 
+              const msg = err.code
+                              // a firebase credentials problem  (treat generically so as to NOT give hacker insight)
+                            ? 'Invalid SignIn credentials.'
+                              // a REAL error (unexpected condition)
+                            : 'An unexpected condition occurred, please try again later.';
+              dispatch( actions.auth.signIn.open(action.values, msg) );
+              done();
+            });
   },
 
 });
