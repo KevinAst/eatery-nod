@@ -20,7 +20,8 @@
     "start":      "npm run test:watch",
     "lint":       "echo '*** Verify code quality (lint):' && eslint src",
     "test":       "jest",
-    "test:watch": "npm run test -- --watch"
+    "test:watch": "npm run test -- --watch",
+    "sandbox:firebaseDoodle": "babel-node sandbox/firebase/firebaseDoodle.js"
   },
   "jest": {
     "preset": "jest-expo"
@@ -44,6 +45,7 @@
     "yup": "^0.21.3"
   },
   "devDependencies": {
+    "babel-cli": "^6.24.1",
     "babel-eslint": "^7.2.3",
     "eslint": "^4.1.1",
     "eslint-config-expo": "^5.1.3",
