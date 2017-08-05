@@ -76,7 +76,7 @@ export const processSignIn = createLogic({
   process({getState, action, api}, dispatch, done) {
     firebase.auth().signInWithEmailAndPassword(action.values.email, action.values.pass)
             .then( user => {
-              // console.log(`?? signInWithEmailAndPassword() WORKED, user: `, user);
+              console.log(`?? signInWithEmailAndPassword() WORKED, user: `, user);
               // ?? DO MORE ... what user info do we retain in state vs. utilize in firebase
               dispatch( actions.auth.signIn.close() );
               done();
