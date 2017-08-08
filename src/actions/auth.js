@@ -45,23 +45,35 @@ export default generateActions.root({
                     traits: ['email', 'pass'],
                   },
 
-      complete: { // auth.signIn.complete(??): Action ?? define params
+      complete: { // auth.signIn.complete(user): Action
                   // > signIn completed successfully
+                  //   NOTE: logic supplements action with userProfile
                   //   INTENT: #byUser, #byLogic, #forLogic, #forReducer ??
                   actionMeta: {
-                    // traits: ['hmmm'], ?? define params
+                    traits: ['user'],
                   },
       },
 
-      fail: {     // auth.signIn.fail(err): Action
-                  // > signIn failure
+      checkEmailVerified: { // auth.signIn.checkEmailVerified(): Action
+                  // > check to see if account email has been verified
                   //   INTENT: #byUser, #byLogic, #forLogic, #forReducer ??
-                  actionMeta: {
-                    traits: ['err'],
-                  },
+                  actionMeta: {},
       },
 
+      resendEmailVerification: { // auth.signIn.resendEmailVerification(): Action
+                  // > resend email verificaion
+                  //   NOTE: logic supplements action with most up-to-date user
+                  //   INTENT: #byUser, #byLogic, #forLogic, #forReducer ??
+                  actionMeta: {},
+      },
 
     }),
+
+    signOut: {     // auth.signOut(): Action
+                   // > sign out active user
+                   //   INTENT: #byUser, #byLogic, #forLogic, #forReducer ??
+                   actionMeta: {},
+    },
+
   },
 });

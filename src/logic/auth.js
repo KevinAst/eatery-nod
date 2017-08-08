@@ -50,12 +50,15 @@ export const autoSignIn = createLogic({
 
 
 /**
- * Manual SignIn, when NO device credentials exist.
+ * Manual SignIn, when NO device credentials exist, or user signs out.
  */
 export const manualSignIn = createLogic({
 
   name: 'auth.manualSignIn',
-  type: String(actions.auth.bootstrap.noDeviceCredentials),
+  type: [
+    String(actions.auth.bootstrap.noDeviceCredentials),
+    String(actions.auth.signOut),
+  ],
 
   process({getState, action, api}, dispatch, done) {
     dispatch( actions.auth.signIn.open() );
@@ -66,19 +69,34 @@ export const manualSignIn = createLogic({
 
 
 /**
- * Process logic for SignIn form.
+ * Interactive SignIn form processor.
  */
 export const processSignIn = createLogic({
 
   name: 'auth.processSignIn',
   type: String(actions.auth.signIn.process),
+  
+  process({getState, action, api}, dispatch, done) {
+    dispatch( actions.auth.signIn(action.values.email, action.values.pass) );
+    done();
+  },
+
+});
+
+
+/**
+ * SignIn logic.
+ */
+export const signIn = createLogic({
+
+  name: 'auth.signIn',
+  type: String(actions.auth.signIn),
 
   process({getState, action, api}, dispatch, done) {
-    firebase.auth().signInWithEmailAndPassword(action.values.email, action.values.pass)
+    firebase.auth().signInWithEmailAndPassword(action.email, action.pass)
             .then( user => {
-              console.log(`?? signInWithEmailAndPassword() WORKED, user: `, user);
-              // ?? DO MORE ... what user info do we retain in state vs. utilize in firebase
-              dispatch( actions.auth.signIn.close() );
+              // console.log(`?? signInWithEmailAndPassword() WORKED, user: `, user);
+              dispatch( actions.auth.signIn.complete(user) );
               done();
               
             })
@@ -89,12 +107,111 @@ export const processSignIn = createLogic({
                             ? 'Invalid SignIn credentials.'
                               // a REAL error (unexpected condition)
                             : 'An unexpected condition occurred, please try again later.';
-              dispatch( actions.auth.signIn.open(action.values, msg) );
+              dispatch( actions.auth.signIn.open(action, msg) ); // NOTE: action is a cheap shortcut to domain (contains email/pass)
               done();
             });
   },
 
 });
+
+
+
+/**
+ * Fetch User Profile after SignIn, supplementing action with userProfile.
+ */
+export const fetchUserProfile = createLogic({
+
+  name: 'auth.fetchUserProfile',
+  type: String(actions.auth.signIn.complete),
+
+  // NOTE: action.user is available, we supplement action.userProfile
+  // NOTE: We accomplish this in logic transform, to simulate an Atomic operation (as from the server).
+  transform({getState, action, api}, next, reject) {
+
+    // fetch our userProfile
+    const dbRef = firebase.database().ref(`/userProfiles/${action.user.uid}`);
+    dbRef.once('value')
+         .then( snapshot => {
+           // supplement action with userProfile
+           action.userProfile = snapshot.val();
+           // console.warn(`??? logic fetchUserProfile: have userProfile: `, action.userProfile)
+           next(action);
+         })
+         .catch( err => {
+           // revert action to one that will re-display signIn with error message
+           console.log(`***ERROR*** logic auth.fetchUserProfile: encountered err: `, err);
+           const msg = 'A problem was encountered fetching your user profile.';
+           const actionRedirect = actions.auth.signIn.open({email: action.user.email}, msg);
+           next(actionRedirect);
+         });
+  },
+
+});
+
+
+
+/**
+ * SignIn cleanup.
+ */
+export const signInCleanup = createLogic({
+
+  name: 'auth.signInCleanup',
+  type: String(actions.auth.signIn.complete),
+
+  process({getState, action, api}, dispatch, done) {
+    // console.log(`?? auth.signInCleanup: user.status: `, getState().auth.user.status);
+    dispatch( actions.auth.signIn.close() ); // we are done with our signIn form
+    done();
+  },
+
+});
+
+
+
+/**
+ * Check to see if account email has been verified.
+ */
+export const checkEmailVerified = createLogic({
+
+  name: 'auth.checkEmailVerified',
+  type: String(actions.auth.signIn.checkEmailVerified),
+
+  transform({getState, action, api}, next, reject) {
+
+    // fetch the most up-to-date user
+    firebase.auth().currentUser.reload()
+      .then(()=> {
+        // supplement action with most up-to-date user
+        action.user = firebase.auth().currentUser;
+        next(action);
+      })
+      .catch( err => {
+        console.error('logic: auth.checkEmailVerified: some problem with firebase.auth().currentUser.reload()', err);
+        reject(); // nix the entire action
+      });
+  },
+
+});
+
+
+
+
+/**
+ * Resend Email Verification.
+ */
+export const resendEmailVerification = createLogic({
+
+  name: 'auth.resendEmailVerification',
+  type: String(actions.auth.signIn.resendEmailVerification),
+
+  transform({getState, action, api}, next) {
+    firebase.auth().currentUser.sendEmailVerification();
+    next(action);
+  },
+
+});
+
+
 
 // promote all logic (accumulated in index.js)
 // ... named exports (above) are used by unit tests :-)
@@ -106,4 +223,11 @@ export default [
   // signIn logic (NOTE: form logic just be registered BEFORE app-specific logic)
   ...signInFormMeta.registrar.formLogic(), // inject the standard SignIn form-based logic modules
   processSignIn,
+
+  signIn,
+  fetchUserProfile,
+  signInCleanup,
+
+  checkEmailVerified,
+  resendEmailVerification,
 ];

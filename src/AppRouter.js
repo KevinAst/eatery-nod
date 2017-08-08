@@ -1,12 +1,13 @@
-import Expo          from 'expo';
-import React         from 'react';
-import {connect}     from 'react-redux';
-import RN            from 'react-native';
-import isString      from 'lodash.isstring';
-import SplashScreen  from './comp/SplashScreen';
-import FatalScreen   from './comp/FatalScreen';
-import SignInScreen  from './comp/SignInScreen';
-// import ListScreen    from './comp/ListScreen';
+import Expo                from 'expo';
+import React               from 'react';
+import {connect}           from 'react-redux';
+import RN                  from 'react-native';
+import isString            from 'lodash.isstring';
+import SplashScreen        from './comp/SplashScreen';
+import FatalScreen         from './comp/FatalScreen';
+import SignInScreen        from './comp/SignInScreen';
+import SignInVerifyScreen  from './comp/SignInVerifyScreen';
+// import ListScreen       from './comp/ListScreen';
 
 /**
  * Our top-level App component that serves as a simple
@@ -42,7 +43,7 @@ class AppRouter extends React.Component {
     if (isString(p.systemReady))
       return <FatalScreen msg={p.systemReady}/>;
 
-    // display interactive SignIn, when form is active
+    // OLD: display interactive SignIn, when form is active
     // ?? this is truely NOT needed if we get our act together
     // ?? that means I don't have to maintain deviceCredentials of 'NONE'
     // ??? KEY: this is causing some render() issue when applied
@@ -51,16 +52,37 @@ class AppRouter extends React.Component {
     // ?   return <SignInScreen/>;
     // ? }
     // ??? ABOVE WAS CAUSING A RENDER ERROR that WAS NOT REPORTED ... was due to redux-logic swallowing the error!
-    if (p.signInForm) {
-      return <SignInScreen/>;
+
+    // primary route logic, based on user authorization
+    switch (p.userStatus) {
+
+      // user is: signed in BUT email verification in-progress
+      case 'signedInUnverified':
+        return <SignInVerifyScreen/> // screen requesting email verification completion
+
+      // user is: fully signed in (authorized/verified/profiled)
+      case 'signedIn':
+        // now the real work can begin (i.e. non-authorization stuff)
+        // ?? do something
+        // return <ListScreen/>; // ?? more logic
+
+        // ?? temp for now ... just show redux state for user
+        const {email, name, pool} = p.appState.auth.user;
+        const msg = `WowZee we are signed in ... name: ${name}, email: ${email}, pool: ${pool}`;
+        return <SplashScreen msg={msg}/>;
+
+      // user is: unauthorized (either explicit or status unknown)
+      case 'signedOut':
+      default:
+        // display interactive SignIn, when form is active
+        if (p.signInForm) {
+          return <SignInScreen/>;
+        }
+        // ?? check for signUpForm
     }
 
-    // ??? current working point!
-
-    // return <ListScreen/>; // ?? more logic
-
     // fallback is our SplashScreen
-    console.log(`?? <AppRouter> fallback to SpashScreen ... appState: `, p.appState);
+    console.log(`?? <AppRouter> fallback to SplashScreen ... appState: `, p.appState);
     return <SplashScreen/>;
   }
 
@@ -69,10 +91,11 @@ class AppRouter extends React.Component {
 export default connect(
   appState => { // mapStateToProps
     return {
-      appState, // ?? very temporary
       systemReady:       appState.systemReady,
-   // deviceCredentials: appState.auth.deviceCredentials, // ?? do we need this?
+      userStatus:        appState.auth.user.status,
       signInForm:        appState.auth.signInForm,
+      appState, // ?? very temporary
+      // deviceCredentials: appState.auth.deviceCredentials, // ?? do we need this?
     };
   })(AppRouter);
 
