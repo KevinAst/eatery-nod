@@ -128,21 +128,33 @@ export const fetchUserProfile = createLogic({
   // NOTE: We accomplish this in logic transform, to simulate an Atomic operation (as from the server).
   transform({getState, action, api}, next, reject) {
 
+    const handleFetchProfileProblem = (err=null) => {
+      // revert action to one that will re-display signIn with error message
+      console.log(`***ERROR*** logic auth.fetchUserProfile: encountered err (null indicates profile NOT found): `, err);
+      const msg = err 
+                    ? 'A problem was encountered fetching your user profile.'
+                    : 'Your user profile does NOT exist.';
+      const actionRedirect = actions.auth.signIn.open({email: action.user.email}, msg);
+      next(actionRedirect);
+    }
+
     // fetch our userProfile
     const dbRef = firebase.database().ref(`/userProfiles/${action.user.uid}`);
     dbRef.once('value')
          .then( snapshot => {
-           // supplement action with userProfile
-           action.userProfile = snapshot.val();
-           // console.warn(`??? logic fetchUserProfile: have userProfile: `, action.userProfile)
-           next(action);
+           const userProfile = snapshot.val();
+           console.log(`??? logic fetchUserProfile: have userProfile: `, action.userProfile)
+           if (!userProfile) {
+             handleFetchProfileProblem();
+           }
+           else {
+             // supplement action with userProfile
+             action.userProfile = userProfile
+             next(action);
+           }
          })
          .catch( err => {
-           // revert action to one that will re-display signIn with error message
-           console.log(`***ERROR*** logic auth.fetchUserProfile: encountered err: `, err);
-           const msg = 'A problem was encountered fetching your user profile.';
-           const actionRedirect = actions.auth.signIn.open({email: action.user.email}, msg);
-           next(actionRedirect);
+           handleFetchProfileProblem(err);
          });
   },
 
