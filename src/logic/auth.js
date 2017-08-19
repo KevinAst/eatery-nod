@@ -95,7 +95,7 @@ export const signIn = createLogic({
   process({getState, action, api}, dispatch, done) {
     firebase.auth().signInWithEmailAndPassword(action.email, action.pass)
             .then( user => {
-              // console.log(`?? signInWithEmailAndPassword() WORKED, user: `, user);
+              // console.log(`?? logic auth.signIn: signInWithEmailAndPassword() WORKED, user: `, user);
               dispatch( actions.auth.signIn.complete(user) );
               done();
               
@@ -117,11 +117,11 @@ export const signIn = createLogic({
 
 
 /**
- * Fetch User Profile after SignIn, supplementing action with userProfile.
+ * Supplement signIn complete action with userProfile, triggering profile.changed action
  */
-export const fetchUserProfile = createLogic({
+export const supplementSignInComplete = createLogic({
 
-  name: 'auth.fetchUserProfile',
+  name: 'auth.supplementSignInComplete',
   type: String(actions.auth.signIn.complete),
 
   // NOTE: action.user is available, we supplement action.userProfile
@@ -130,7 +130,7 @@ export const fetchUserProfile = createLogic({
 
     const handleFetchProfileProblem = (err=null) => {
       // revert action to one that will re-display signIn with error message
-      console.log(`***ERROR*** logic auth.fetchUserProfile: encountered err (null indicates profile NOT found): `, err);
+      console.log(`***ERROR*** logic auth.supplementSignInComplete: encountered err (null indicates profile NOT found): `, err);
       const msg = err 
                     ? 'A problem was encountered fetching your user profile.'
                     : 'Your user profile does NOT exist.';
@@ -143,7 +143,7 @@ export const fetchUserProfile = createLogic({
     dbRef.once('value')
          .then( snapshot => {
            const userProfile = snapshot.val();
-           console.log(`??? logic fetchUserProfile: have userProfile: `, action.userProfile)
+           // console.log(`?? logic supplementSignInComplete: have userProfile: `, userProfile)
            if (!userProfile) {
              handleFetchProfileProblem();
            }
@@ -156,6 +156,11 @@ export const fetchUserProfile = createLogic({
          .catch( err => {
            handleFetchProfileProblem(err);
          });
+  },
+
+  process({getState, action, api}, dispatch, done) {
+    dispatch( actions.profile.changed(action.userProfile) );
+    done();
   },
 
 });
@@ -171,7 +176,7 @@ export const signInCleanup = createLogic({
   type: String(actions.auth.signIn.complete),
 
   process({getState, action, api}, dispatch, done) {
-    // console.log(`?? auth.signInCleanup: user.status: `, getState().auth.user.status);
+    // console.log(`?? logic auth.signInCleanup: user.status: `, getState().auth.user.status);
     dispatch( actions.auth.signIn.close() ); // we are done with our signIn form
     done();
   },
@@ -237,7 +242,7 @@ export default [
   processSignIn,
 
   signIn,
-  fetchUserProfile,
+  supplementSignInComplete,
   signInCleanup,
 
   checkEmailVerified,

@@ -1,6 +1,7 @@
 import diag       from './diag';
 import bootstrap  from './bootstrap';
 import auth       from './auth';
+import eateries   from './eateries';
 
 //***
 //*** accumulation of all app logic
@@ -15,4 +16,7 @@ export default [
 
   // authorization processes
   ...auth,
+
+  // eateries processes
+  ...eateries,
 ];
