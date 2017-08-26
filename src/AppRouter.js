@@ -7,7 +7,7 @@ import SplashScreen        from './comp/SplashScreen';
 import FatalScreen         from './comp/FatalScreen';
 import SignInScreen        from './comp/SignInScreen';
 import SignInVerifyScreen  from './comp/SignInVerifyScreen';
-// import ListScreen       from './comp/ListScreen';
+import EateriesListScreen  from './comp/EateriesListScreen';
 
 /**
  * Our top-level App component that serves as a simple
@@ -61,15 +61,16 @@ class AppRouter extends React.Component {
         return <SignInVerifyScreen/> // screen requesting email verification completion
 
       // user is: fully signed in (authorized/verified/profiled)
+      // ... this is our non-authorazation real-app stuff
       case 'signedIn':
-        // now the real work can begin (i.e. non-authorization stuff)
-        // ?? do something
-        // return <ListScreen/>; // ?? more logic
 
-        // ?? temp for now ... just show redux state for user
-        const {email, name, pool} = p.appState.auth.user;
-        const msg = `WowZee we are signed in ... name: ${name}, email: ${email}, pool: ${pool}`;
-        return <SplashScreen msg={msg}/>;
+        if (p.appState.eateries) {
+          return <EateriesListScreen/>
+        }
+        else {
+          // ?? more app-logic here
+          // ? const {email, name, pool} = p.appState.auth.user;
+        }
 
       // user is: unauthorized (either explicit or status unknown)
       case 'signedOut':

@@ -49,8 +49,8 @@ export const monitorDbPool = createLogic({
     // register our firebase listener
     curDbPoolMonitor.dbRef.on('value', (snapshot) => {
       const eateries = snapshot.val();
-      console.log(`?? logic eateries.monitorDbPool: eateries changed for pool '${curDbPoolMonitor.pool}': `, eateries);
-      // ?? dispatch( eateries.changed(eateries[]) );
+      // console.log(`xx logic eateries.monitorDbPool: eateries changed for pool '${curDbPoolMonitor.pool}': `, eateries);
+      dispatch( actions.eateries.changed(eateries) );
     });
   },
 
