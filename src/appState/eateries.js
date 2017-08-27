@@ -1,7 +1,10 @@
-import {reducerHash}  from 'astx-redux-util';
-import actions        from '../actions';
+import {combineReducers}  from 'redux';
+import dbPool             from './dbPool';
+import listView           from './listView';
+import detailView         from './detailView';
 
-// eateries: all restaurants (from DB), null for NOT available yet
-export default reducerHash({
-  [actions.eateries.changed]: (state, action) => action.eateries,
-}, null); // initialState
+export default combineReducers({
+  dbPool,
+  listView,
+  detailView,
+});

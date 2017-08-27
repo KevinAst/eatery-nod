@@ -19,7 +19,10 @@ import commonStyles from './commonStyles';
 /**
  * EateriesListScreen displaying a set of eateries (possibly filtered).
  */
-function EateriesListScreen({eateries}) {
+function EateriesListScreen({entries, dbPool}) {
+
+  const eateries = entries.map( eateryKey => dbPool[eateryKey] );
+
   return (
     <Container style={commonStyles.container}>
       <Header>
@@ -36,16 +39,17 @@ function EateriesListScreen({eateries}) {
       <Content>
         <List>
           { 
-            Object.values(eateries).map( eatery => (
+            eateries.map( eatery => (
               <ListItem key={eatery.id}>
                 <Text>{eatery.name}</Text>
+                <Text>{eatery.phone}</Text>
               </ListItem>
             ))
           }
           {/* ?? temporarly emit multiple times to test scrolling */}
           { <ListItem itemDivider key="divide2"><Text>Temp Dups</Text></ListItem> }
           {
-            Object.values(eateries).map( eatery => (
+            eateries.map( eatery => (
               <ListItem key={eatery.id+'2'}>
                 <Text>{eatery.name}</Text>
               </ListItem>
@@ -54,7 +58,7 @@ function EateriesListScreen({eateries}) {
           {/* ?? ditto */}
           { <ListItem itemDivider key="divide3"><Text>Temp Dups</Text></ListItem> }
           {
-            Object.values(eateries).map( eatery => (
+            eateries.map( eatery => (
               <ListItem key={eatery.id+'3'}>
                 <Text>{eatery.name}</Text>
               </ListItem>
@@ -76,6 +80,7 @@ function EateriesListScreen({eateries}) {
 export default connect(
   appState => { // mapStateToProps
     return {
-      eateries: appState.eateries,
+      entries:  appState.eateries.listView.entries,
+      dbPool:   appState.eateries.dbPool,
     };
   })(EateriesListScreen);

@@ -50,8 +50,43 @@ export const monitorDbPool = createLogic({
     curDbPoolMonitor.dbRef.on('value', (snapshot) => {
       const eateries = snapshot.val();
       // console.log(`xx logic eateries.monitorDbPool: eateries changed for pool '${curDbPoolMonitor.pool}': `, eateries);
-      dispatch( actions.eateries.changed(eateries) );
+      dispatch( actions.eateries.dbPool.changed(eateries) );
     });
+  },
+
+});
+
+
+export const postProcessDbPool = createLogic({
+
+  name: 'eateries.postProcessDbPool',
+  type: String(actions.eateries.dbPool.changed),
+
+  process({getState, action, api}, dispatch, done) {
+    dispatch( actions.eateries.applyFilter() );
+    done();
+  },
+
+});
+
+
+export const applyFilter = createLogic({
+
+  name: 'eateries.applyFilter',
+  type: String(actions.eateries.applyFilter),
+
+  transform({getState, action, api}, next, reject) {
+
+    const appState = getState();
+    const filter   = action.filter || appState.eateries.listView.filter;
+
+    // apply listView filter (either supplied or from state),
+    // supplementing our action with end result (entries)
+    // TODO: apply filter, for now simply pass through all
+    const dbPool  = appState.eateries.dbPool;
+    const entries = Object.values(dbPool).map( eatery => eatery.id );
+    action.entries = entries;
+    next(action);
   },
 
 });
@@ -62,4 +97,6 @@ export const monitorDbPool = createLogic({
 // ... named exports (above) are used by unit tests :-)
 export default [
   monitorDbPool,
+  postProcessDbPool,
+  applyFilter,
 ];

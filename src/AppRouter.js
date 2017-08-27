@@ -64,7 +64,7 @@ class AppRouter extends React.Component {
       // ... this is our non-authorazation real-app stuff
       case 'signedIn':
 
-        if (p.appState.eateries) {
+        if (p.appState.eateries.listView.entries) {
           return <EateriesListScreen/>
         }
         else {
