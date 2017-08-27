@@ -3,5 +3,6 @@ import actions        from '../actions';
 
 // detailView: entry detail displayed in visual detailView
 export default reducerHash({
-  // ??EX: [actions.eateries.dbPool.changed]: (state, action) => action.eateries,
+  [actions.eateries.viewDetail]:       (state, action) => action.eateryId,
+  [actions.eateries.viewDetail.close]: (state, action) => null,
 }, null); // initialState

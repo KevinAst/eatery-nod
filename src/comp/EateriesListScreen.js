@@ -1,5 +1,6 @@
 import React        from 'react';
 import {connect}    from 'react-redux';
+import {TouchableWithoutFeedback} from 'react-native';
 import {Body,
         Button,
         Container,
@@ -15,13 +16,14 @@ import {Body,
         Text,
         Title}      from 'native-base';
 import commonStyles from './commonStyles';
+import actions      from '../actions';
 
 /**
  * EateriesListScreen displaying a set of eateries (possibly filtered).
  */
-function EateriesListScreen({entries, dbPool}) {
+function EateriesListScreen({entries, dbPool, showDetail}) {
 
-  const eateries = entries.map( eateryKey => dbPool[eateryKey] );
+  const eateries = entries.map( eateryId => dbPool[eateryId] );
 
   return (
     <Container style={commonStyles.container}>
@@ -40,10 +42,13 @@ function EateriesListScreen({entries, dbPool}) {
         <List>
           { 
             eateries.map( eatery => (
-              <ListItem key={eatery.id}>
-                <Text>{eatery.name}</Text>
-                <Text>{eatery.phone}</Text>
-              </ListItem>
+              <TouchableWithoutFeedback key={eatery.id}
+                                        onPress={()=>showDetail(eatery.id)}>
+                <ListItem>
+                  <Text>{eatery.name}</Text>
+                  <Text>{eatery.phone}</Text>
+                </ListItem>
+              </TouchableWithoutFeedback>
             ))
           }
           {/* ?? temporarly emit multiple times to test scrolling */}
@@ -78,9 +83,23 @@ function EateriesListScreen({entries, dbPool}) {
 }
 
 export default connect(
-  appState => { // mapStateToProps
+
+  // mapStateToProps()
+  (appState) => {
     return {
       entries:  appState.eateries.listView.entries,
       dbPool:   appState.eateries.dbPool,
     };
-  })(EateriesListScreen);
+  },
+
+  // mapDispatchToProps()
+  (dispatch) => {
+    return {
+      showDetail(eateryId) {
+        //console.log(`??? showDetail for ${eateryId}`);
+        dispatch( actions.eateries.viewDetail(eateryId) );
+      },
+    };
+  }
+
+)(EateriesListScreen);

@@ -23,5 +23,21 @@ export default generateActions.root({
                    },
     },
 
+    viewDetail: { // eateries.viewDetail(eateryId): Action
+                  // > view eatery details (from supplied eateryId)
+                  //   INTENT: #byUser, #byLogic, #forLogic, #forReducer ??
+                  actionMeta: {
+                    traits: ['eateryId'],
+                  },
+
+
+      close: { // eateries.viewDetail.close(): Action
+               // > close eatery details
+               //   INTENT: #byUser, #byLogic, #forLogic, #forReducer ??
+               actionMeta: {},
+      },
+
+    },
+
   },
 });

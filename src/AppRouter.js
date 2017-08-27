@@ -8,6 +8,7 @@ import FatalScreen         from './comp/FatalScreen';
 import SignInScreen        from './comp/SignInScreen';
 import SignInVerifyScreen  from './comp/SignInVerifyScreen';
 import EateriesListScreen  from './comp/EateriesListScreen';
+import EateryDetailScreen  from './comp/EateryDetailScreen';
 
 /**
  * Our top-level App component that serves as a simple
@@ -64,7 +65,12 @@ class AppRouter extends React.Component {
       // ... this is our non-authorazation real-app stuff
       case 'signedIn':
 
-        if (p.appState.eateries.listView.entries) {
+        if (p.appState.eateries.detailView) {
+          const eatery = p.appState.eateries.dbPool[p.appState.eateries.detailView];
+          // return <SplashScreen msg={eatery.name}/>; // ??? OBSOLETE
+          return <EateryDetailScreen eatery={eatery}/>;
+        }
+        else if (p.appState.eateries.listView.entries) {
           return <EateriesListScreen/>
         }
         else {
