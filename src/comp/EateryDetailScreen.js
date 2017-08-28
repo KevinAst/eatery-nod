@@ -1,19 +1,16 @@
 import React        from 'react';
 import PropTypes    from 'prop-types';
+import {Linking}    from 'react-native';
 import {connect}    from 'react-redux';
-import {TouchableWithoutFeedback} from 'react-native';
 import {Body,
         Button,
         Container,
         Content,
         Form,
         Footer,
-        FooterTab,
         Header,
         Icon,
         Left,
-        List,
-        ListItem,
         Right,
         Text,
         Title,
@@ -29,36 +26,18 @@ function EateryDetailScreen({eatery, handleClose}) {
 
   const verticalSpacing = (spacing=10) => <View style={{paddingVertical: spacing}}/>;
 
-  // ?? change menu icon to left arrow
-  // ? chevron-left
-  // ? chevron-circle-left
-  // ? chevron-double-left
-  // ? angle-left
-  // ? arrow-left
-  // ? toggle-left
-  // ? caret-square-o-left
-  // ? menu-left
-  // ? keyboard-arrow-left
-  // ??? FROM WARNING MESSAGE
-  // ??? appears you can drop md too
-  // ? "md-arrow-back"      ... <-
-  // ? "md-arrow-dropleft"  ... teny tiny arrow
-  // ? "md-arrow-dropleft-circle"
-  // ? 
-  // ? 
-  // ? 
-  // ? 
   return (
     <Container style={commonStyles.container}>
       <Header>
         <Left>
           <Button transparent
                   onPress={handleClose}>
-            <Icon name="arrow-dropleft"/>
+            <Icon name="arrow-dropleft"
+                  style={{fontSize:40}}/>
           </Button>
         </Left>
         <Body>
-          <Title>Eatery</Title>
+          <Title>{eatery.name}</Title>
         </Body>
         <Right/>
       </Header>
@@ -67,39 +46,44 @@ function EateryDetailScreen({eatery, handleClose}) {
         <Form>
 
           {verticalSpacing()}
-          <Text>
+          <Text style={{fontSize: 20, fontWeight: 'bold'}}>
             {eatery.name}
           </Text>
 
+          {/* Address and Navigation */}
           {verticalSpacing()}
-          <Text>
-            {eatery.addr}
-          </Text>
+          <Button transparent
+                  onPress={()=>Linking.openURL(eatery.navUrl)}>
+            <Icon name="navigate"/>
+            <Text>{eatery.addr}</Text>
+          </Button>
 
-          {verticalSpacing()}
-          <Text>
-            {eatery.phone}
-          </Text>
 
+          {/* Phone and Dialer */}
           {verticalSpacing()}
-          <Text>
-            Navigatte: {eatery.navUrl} ... {eatery.loc.lat} {eatery.loc.lng}
-          </Text>
+          <Button transparent
+                  onPress={()=>Linking.openURL(`tel:${eatery.phone}`)}>
+            <Icon name="call"/>
+            <Text>{eatery.phone}</Text>
+          </Button>
 
+          {/* Website and Launcher */}
           {verticalSpacing()}
-          <Text>
-            {eatery.website}
-          </Text>
+          <Button transparent
+                  onPress={()=>Linking.openURL(eatery.website)}>
+            <Icon name="link"/>
+            <Text>Website</Text>
+          </Button>
 
         </Form>
 
       </Content>
       <Footer>
-        <FooterTab>
-          <Button full>
-            <Title>Eatery Footer</Title>
+          <Button transparent
+                  onPress={handleClose}>
+            <Icon name="color-wand" style={{color:'white'}}/>
+            <Text style={{color:'white'}}>spin again</Text>
           </Button>
-        </FooterTab>
       </Footer>
     </Container>
   );
@@ -115,12 +99,6 @@ export default connect(
 
   // mapStateToProps()
   null,
-  // ? (appState) => {
-  // ?   return {
-  // ?     entries:  appState.eateries.listView.entries,
-  // ?     dbPool:   appState.eateries.dbPool,
-  // ?   };
-  // ? },
 
   // mapDispatchToProps()
   (dispatch) => {
