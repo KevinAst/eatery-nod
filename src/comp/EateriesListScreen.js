@@ -21,7 +21,7 @@ import actions      from '../actions';
 /**
  * EateriesListScreen displaying a set of eateries (possibly filtered).
  */
-function EateriesListScreen({entries, dbPool, showDetail}) {
+function EateriesListScreen({entries, dbPool, showDetail, handleSpin}) {
 
   const eateries = entries.map( eateryId => dbPool[eateryId] );
 
@@ -46,7 +46,6 @@ function EateriesListScreen({entries, dbPool, showDetail}) {
                                         onPress={()=>showDetail(eatery.id)}>
                 <ListItem>
                   <Text>{eatery.name}</Text>
-                  <Text>{eatery.phone}</Text>
                 </ListItem>
               </TouchableWithoutFeedback>
             ))
@@ -72,12 +71,13 @@ function EateriesListScreen({entries, dbPool, showDetail}) {
         </List>
       </Content>
       <Footer>
-        <FooterTab>
-          <Button full>
-            <Title>List View Footer</Title>
-          </Button>
-        </FooterTab>
+        <Button transparent
+                onPress={handleSpin}>
+          <Icon name="color-wand" style={{color:'white'}}/>
+          <Text style={{color:'white'}}>spin</Text>
+        </Button>
       </Footer>
+
     </Container>
   );
 }
@@ -98,6 +98,9 @@ export default connect(
       showDetail(eateryId) {
         //console.log(`??? showDetail for ${eateryId}`);
         dispatch( actions.eateries.viewDetail(eateryId) );
+      },
+      handleSpin() {
+        dispatch( actions.eateries.spin() );
       },
     };
   }

@@ -92,6 +92,56 @@ export const applyFilter = createLogic({
 });
 
 
+export const spin = createLogic({
+
+  name: 'eateries.spin',
+  type: String(actions.eateries.spin),
+
+  transform({getState, action, api}, next, reject) {
+
+    const appState = getState();
+    const entries  = appState.eateries.listView.entries;
+
+    // supplement action with spinMsg
+    action.spinMsg = `... selecting your date night eatery (from ${entries.length} entries)!`;
+    next(action);
+  },
+
+  process({getState, action, api}, dispatch, done) {
+
+    setTimeout( () => {
+
+      const appState = getState();
+      const entries  = appState.eateries.listView.entries;
+
+      // algorighm from MDN ... https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math/random
+      const min      = Math.ceil(0);                // min is inclusive (in usage below)
+      const max      = Math.floor(entries.length);  // max is exclusive (in usage below)
+      const randIndx = Math.floor(Math.random() * (max - min)) + min;
+      
+      const randomEateryId = entries[randIndx];
+
+      dispatch( actions.eateries.spin.complete(randomEateryId) );
+      done();
+
+    }, 2000);
+
+  },
+
+});
+
+export const spinComplete = createLogic({
+
+  name: 'eateries.spinComplete',
+  type: String(actions.eateries.spin.complete),
+
+  process({getState, action, api}, dispatch, done) {
+    dispatch( actions.eateries.viewDetail(action.eateryId) );
+    done();
+  },
+
+});
+
 
 // promote all logic (accumulated in index.js)
 // ... named exports (above) are used by unit tests :-)
@@ -99,4 +149,6 @@ export default [
   monitorDbPool,
   postProcessDbPool,
   applyFilter,
+  spin,
+  spinComplete,
 ];

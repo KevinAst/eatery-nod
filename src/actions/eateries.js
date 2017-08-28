@@ -30,11 +30,25 @@ export default generateActions.root({
                     traits: ['eateryId'],
                   },
 
-
       close: { // eateries.viewDetail.close(): Action
                // > close eatery details
                //   INTENT: #byUser, #byLogic, #forLogic, #forReducer ??
                actionMeta: {},
+      },
+
+    },
+
+    spin: { // eateries.spin(): Action
+            // > randomly select a date night eatery
+            //   INTENT: #byUser, #byLogic, #forLogic, #forReducer ??
+            actionMeta: {},
+
+      complete: { // eateries.spin.complete(eateryId): Action
+                  // > spin complete, with supplied eateryId selected
+                  //   INTENT: #byUser, #byLogic, #forLogic, #forReducer ??
+                  actionMeta: {
+                    traits: ['eateryId'],
+                  },
       },
 
     },

@@ -22,7 +22,7 @@ import actions      from '../actions';
 /**
  * EateryDetailScreen displaying the details of a given eatery.
  */
-function EateryDetailScreen({eatery, handleClose}) {
+function EateryDetailScreen({eatery, handleClose, handleSpin}) {
 
   const verticalSpacing = (spacing=10) => <View style={{paddingVertical: spacing}}/>;
 
@@ -80,7 +80,7 @@ function EateryDetailScreen({eatery, handleClose}) {
       </Content>
       <Footer>
           <Button transparent
-                  onPress={handleClose}>
+                  onPress={handleSpin}>
             <Icon name="color-wand" style={{color:'white'}}/>
             <Text style={{color:'white'}}>spin again</Text>
           </Button>
@@ -105,6 +105,9 @@ export default connect(
     return {
       handleClose() {
         dispatch( actions.eateries.viewDetail.close() );
+      },
+      handleSpin() {
+        dispatch( actions.eateries.spin() );
       },
     };
   }

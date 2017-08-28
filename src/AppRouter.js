@@ -65,9 +65,11 @@ class AppRouter extends React.Component {
       // ... this is our non-authorazation real-app stuff
       case 'signedIn':
 
-        if (p.appState.eateries.detailView) {
+        if (p.appState.eateries.spin) {
+          return <SplashScreen msg={p.appState.eateries.spin}/>;
+        }
+        else if (p.appState.eateries.detailView) {
           const eatery = p.appState.eateries.dbPool[p.appState.eateries.detailView];
-          // return <SplashScreen msg={eatery.name}/>; // ??? OBSOLETE
           return <EateryDetailScreen eatery={eatery}/>;
         }
         else if (p.appState.eateries.listView.entries) {
