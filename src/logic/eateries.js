@@ -84,7 +84,7 @@ export const applyFilter = createLogic({
     // supplementing our action with end result (entries)
     // TODO: apply filter, for now simply pass through all
     const dbPool  = appState.eateries.dbPool;
-    const entries = Object.values(dbPool).map( eatery => eatery.id );
+    const entries = Object.values(dbPool).sort((e1, e2)=>e1.name.localeCompare(e2.name)).map( eatery => eatery.id );
     action.entries = entries;
     next(action);
   },
