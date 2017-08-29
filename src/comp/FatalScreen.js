@@ -5,6 +5,8 @@ import {Body,
         Header,
         Icon,
         Image,
+        Left,
+        Right,
         Text,
         Title}      from 'native-base';
 import PropTypes    from 'prop-types';
@@ -26,9 +28,11 @@ export default function FatalScreen({msg}) {
   return (
     <Container style={commonStyles.container}>
       <Header>
+        <Left/>
         <Body>
           <Title>Eatery Nod (Error)</Title>
         </Body>
+        <Right/>
       </Header>
       <Content contentContainerStyle={{flex: 1, alignItems: 'center', justifyContent:'center'}}>
         <Image style={{width: 100, height: 100}}

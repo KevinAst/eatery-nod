@@ -6,6 +6,8 @@ import {Body,
         Content,
         Form,
         Header,
+        Left,
+        Right,
         Text,
         Title,
         View}       from 'native-base';
@@ -23,9 +25,11 @@ function SignInVerifyScreen({email, checkEmailVerified, resendEmailVerification,
   return (
     <Container style={commonStyles.container}>
       <Header>
+        <Left/>
         <Body>
           <Title>Eatery Nod - SignIn Verification</Title>
         </Body>
+        <Right/>
       </Header>
       <Content style={{padding: 10}}>
 

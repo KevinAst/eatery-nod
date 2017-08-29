@@ -4,6 +4,8 @@ import {Body,
         Container,
         Content,
         Header,
+        Left,
+        Right,
         Spinner,
         Text,
         Title}      from 'native-base';
@@ -21,9 +23,11 @@ export default function SplashScreen({msg}) {
   return (
     <Container style={commonStyles.container}>
       <Header>
+        <Left/>
         <Body>
           <Title>Eatery Nod</Title>
         </Body>
+        <Right/>
       </Header>
       <Content contentContainerStyle={{flex: 1, alignItems: 'center', justifyContent:'center'}}>
         <Image style={{width: 100, height: 100}}
