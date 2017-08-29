@@ -103,7 +103,7 @@ export const spin = createLogic({
     const entries  = appState.eateries.listView.entries;
 
     // supplement action with spinMsg
-    action.spinMsg = `... selecting your date night eatery (from ${entries.length} entries)!`;
+    action.spinMsg = `... selecting your eatery from ${entries.length} entries!`;
     next(action);
   },
 
@@ -124,7 +124,7 @@ export const spin = createLogic({
       dispatch( actions.eateries.spin.complete(randomEateryId) );
       done();
 
-    }, 2000);
+    }, 1000);
 
   },
 

@@ -1,6 +1,7 @@
 import React        from 'react';
 import PropTypes    from 'prop-types';
-import {Linking}    from 'react-native';
+import {TouchableWithoutFeedback,
+        Linking}    from 'react-native';
 import {connect}    from 'react-redux';
 import {Body,
         Button,
@@ -8,6 +9,7 @@ import {Body,
         Content,
         Form,
         Footer,
+        FooterTab,
         Header,
         Icon,
         Left,
@@ -37,7 +39,11 @@ function EateryDetailScreen({eatery, handleClose, handleSpin}) {
           </Button>
         </Left>
         <Body>
-          <Title>{eatery.name}</Title>
+          {/* for some reason the Button (above) is hard to click ... suplement with this */}
+          <TouchableWithoutFeedback key={eatery.id}
+                                    onPress={handleClose}>
+            <Title>Eatery</Title>
+          </TouchableWithoutFeedback>
         </Body>
         <Right/>
       </Header>
@@ -79,11 +85,13 @@ function EateryDetailScreen({eatery, handleClose, handleSpin}) {
 
       </Content>
       <Footer>
-          <Button transparent
+        <FooterTab>
+          <Button vertical
                   onPress={handleSpin}>
-            <Icon name="color-wand" style={{color:'white'}}/>
-            <Text style={{color:'white'}}>spin again</Text>
+            <Icon style={commonStyles.icon} name="color-wand"/>
+            <Text style={commonStyles.icon}>Spin Again</Text>
           </Button>
+        </FooterTab>
       </Footer>
     </Container>
   );

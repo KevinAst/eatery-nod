@@ -1,6 +1,6 @@
 import React        from 'react';
 import {connect}    from 'react-redux';
-import {TouchableWithoutFeedback} from 'react-native'; // ?? unsure why TouchableHighlight does NOT work
+import {TouchableWithoutFeedback} from 'react-native';
 import {Body,
         Button,
         Container,
@@ -71,11 +71,13 @@ function EateriesListScreen({entries, dbPool, showDetail, handleSpin}) {
         </List>
       </Content>
       <Footer>
-        <Button transparent
-                onPress={handleSpin}>
-          <Icon name="color-wand" style={{color:'white'}}/>
-          <Text style={{color:'white'}}>spin</Text>
-        </Button>
+        <FooterTab>
+          <Button vertical
+                  onPress={handleSpin}>
+            <Icon style={commonStyles.icon} name="color-wand"/>
+            <Text style={commonStyles.icon}>Spin</Text>
+          </Button>
+        </FooterTab>
       </Footer>
 
     </Container>
