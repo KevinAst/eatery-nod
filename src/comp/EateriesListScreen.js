@@ -54,18 +54,24 @@ function EateriesListScreen({entries, dbPool, showDetail, handleSpin}) {
           { <ListItem itemDivider key="divide2"><Text>Temp Dups</Text></ListItem> }
           {
             eateries.map( eatery => (
-              <ListItem key={eatery.id+'2'}>
-                <Text>{eatery.name}</Text>
-              </ListItem>
+              <TouchableWithoutFeedback key={eatery.id+'2'}
+                                        onPress={()=>showDetail(eatery.id)}>
+                <ListItem>
+                  <Text>{eatery.name}</Text>
+                </ListItem>
+              </TouchableWithoutFeedback>
             ))
           }
           {/* ?? ditto */}
           { <ListItem itemDivider key="divide3"><Text>Temp Dups</Text></ListItem> }
           {
             eateries.map( eatery => (
-              <ListItem key={eatery.id+'3'}>
-                <Text>{eatery.name}</Text>
-              </ListItem>
+              <TouchableWithoutFeedback key={eatery.id+'3'}
+                                        onPress={()=>showDetail(eatery.id)}>
+                <ListItem>
+                  <Text>{eatery.name}</Text>
+                </ListItem>
+              </TouchableWithoutFeedback>
             ))
           }
         </List>
