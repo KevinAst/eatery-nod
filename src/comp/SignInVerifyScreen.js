@@ -6,8 +6,7 @@ import {Body,
         Content,
         Form,
         Header,
-        Left,
-        Right,
+        Icon,
         Text,
         Title,
         View}       from 'native-base';
@@ -25,11 +24,9 @@ function SignInVerifyScreen({email, checkEmailVerified, resendEmailVerification,
   return (
     <Container style={commonStyles.container}>
       <Header>
-        <Left/>
         <Body>
-          <Title>Eatery Nod - SignIn Verification</Title>
+          <Title>Eatery Nod - Sign In Verification</Title>
         </Body>
-        <Right/>
       </Header>
       <Content style={{padding: 10}}>
 
@@ -51,7 +48,8 @@ function SignInVerifyScreen({email, checkEmailVerified, resendEmailVerification,
 
           <View style={{flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'center'}}>
             <Text>Once completed ... </Text>
-            <Button light onPress={checkEmailVerified}>
+            <Button transparent onPress={checkEmailVerified}>
+              <Icon name="done-all"/>
               <Text>Continue</Text>
             </Button>
           </View>
@@ -59,7 +57,8 @@ function SignInVerifyScreen({email, checkEmailVerified, resendEmailVerification,
           {verticalSpacing(40)}
 
           <View style={{flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'center'}}>
-            <Button light onPress={resendEmailVerification}>
+            <Button transparent onPress={resendEmailVerification}>
+              <Icon name="mail"/>
               <Text>Resend Email</Text>
             </Button>
           </View>
@@ -67,7 +66,8 @@ function SignInVerifyScreen({email, checkEmailVerified, resendEmailVerification,
           {verticalSpacing(40)}
 
           <View style={{flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'center'}}>
-            <Button light onPress={signOut}>
+            <Button transparent onPress={signOut}>
+              <Icon name="log-out"/>
               <Text>Sign Out</Text>
             </Button>
           </View>

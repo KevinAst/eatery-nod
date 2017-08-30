@@ -14,9 +14,10 @@ import {Body,
         ListItem,
         Right,
         Text,
-        Title}      from 'native-base';
-import commonStyles from './commonStyles';
-import actions      from '../actions';
+        Title}       from 'native-base';
+import commonStyles  from './commonStyles';
+import actions       from '../actions';
+import {openSideBar} from '../app/SideBar';
 
 /**
  * EateriesListScreen displaying a set of eateries (possibly filtered).
@@ -30,7 +31,7 @@ function EateriesListScreen({entries, dbPool, showDetail, handleSpin}) {
       <Header>
         <Left>
           <Button transparent>
-            <Icon name="menu"/>
+            <Icon name="menu" onPress={openSideBar}/>
           </Button>
         </Left>
         <Body>

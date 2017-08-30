@@ -3,12 +3,12 @@ import React               from 'react';
 import {connect}           from 'react-redux';
 import RN                  from 'react-native';
 import isString            from 'lodash.isstring';
-import SplashScreen        from './comp/SplashScreen';
-import FatalScreen         from './comp/FatalScreen';
-import SignInScreen        from './comp/SignInScreen';
-import SignInVerifyScreen  from './comp/SignInVerifyScreen';
-import EateriesListScreen  from './comp/EateriesListScreen';
-import EateryDetailScreen  from './comp/EateryDetailScreen';
+import SplashScreen        from '../comp/SplashScreen';
+import FatalScreen         from '../comp/FatalScreen';
+import SignInScreen        from '../comp/SignInScreen';
+import SignInVerifyScreen  from '../comp/SignInVerifyScreen';
+import EateriesListScreen  from '../comp/EateriesListScreen';
+import EateryDetailScreen  from '../comp/EateryDetailScreen';
 
 /**
  * Our top-level App component that serves as a simple
@@ -17,7 +17,7 @@ import EateryDetailScreen  from './comp/EateryDetailScreen';
  * NOTE: We use class component to have access to needed life-cycle
  *       methods.
  */
-class AppRouter extends React.Component {
+class ScreenRouter extends React.Component {
 
   componentWillUpdate() {
     // LayoutAnimation has to be done JUST before a state change
@@ -91,7 +91,7 @@ class AppRouter extends React.Component {
     }
 
     // fallback is our SplashScreen
-    console.log(`?? <AppRouter> fallback to SplashScreen ... appState: `, p.appState);
+    console.log(`?? <ScreenRouter> fallback to SplashScreen ... appState: `, p.appState);
     return <SplashScreen/>;
   }
 
@@ -106,7 +106,7 @@ export default connect(
       appState, // ?? very temporary
       // deviceCredentials: appState.auth.deviceCredentials, // ?? do we need this?
     };
-  })(AppRouter);
+  })(ScreenRouter);
 
 
 

@@ -2,9 +2,9 @@ import {applyMiddleware,
         compose,
         createStore}           from 'redux';
 import {createLogicMiddleware} from 'redux-logic';
-import appState                from '../appState';
-import logic                   from '../logic';
-import api                     from '../api';
+import appState                from '../../appState';
+import logic                   from '../../logic';
+import api                     from '../../api';
 
 /**
  * Create our top-level redux appStore, WITH our registered redux-logic.

@@ -5,13 +5,9 @@ import {Body,
         Button,
         Container,
         Content,
-        Footer,
-        FooterTab,
         Form,
-        Header,
         Icon,
-        Left,
-        Right,
+        Header,
         Spinner,
         Text,
         Title,
@@ -34,15 +30,9 @@ function SignInScreen({iForm}) {
   return (
     <Container style={commonStyles.container}>
       <Header>
-        <Left>
-          <Button transparent>
-            <Icon name="menu"/>
-          </Button>
-        </Left>
         <Body>
-          <Title>{formLabel}</Title>
+          <Title>Eatery Nod - {formLabel}</Title>
         </Body>
-        <Right/>
       </Header>
       <Content keyboardShouldPersistTaps="handled">
        <Form>
@@ -50,7 +40,7 @@ function SignInScreen({iForm}) {
          {verticalSpacing}
 
          <View style={{flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'center'}}>
-           <Text>Welcome to eatery-nod, please {formLabel}!</Text>
+           <Text>Welcome to Eatery Nod, please {formLabel}!</Text>
          </View>
 
          {verticalSpacing}
@@ -70,6 +60,7 @@ function SignInScreen({iForm}) {
          <Text style={{color:'red'}}>{iForm.getMsg()}</Text>
 
          <Button success full onPress={iForm.handleProcess} disabled={formInProcess}>
+           <Icon name="log-in"/>
            <Text>{formLabel}</Text>
          </Button>
 
@@ -77,7 +68,8 @@ function SignInScreen({iForm}) {
 
          <View style={{flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'center'}}>
            <Text>  ... don&apos;t have an account?  </Text>
-           <Button light onPress={()=>console.warn('Not Yet :-(')} disabled={formInProcess}>
+           <Button transparent onPress={()=>console.warn('Not Yet :-(')} disabled={formInProcess}>
+             <Icon name="log-in"/>
              <Text>Sign Up</Text>
            </Button>
          </View>
@@ -88,13 +80,6 @@ function SignInScreen({iForm}) {
 
        </Form>
       </Content>
-      <Footer>
-        <FooterTab>
-          <Button full>
-            <Title>{formLabel} Footer</Title>
-          </Button>
-        </FooterTab>
-      </Footer>
     </Container>
   );
 }
