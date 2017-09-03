@@ -1,5 +1,5 @@
 import GooglePlaces from 'GooglePlaces';
-import apiKey       from './apiKey';
+import apiKey       from '../../src/api/googlePlacesApiKey';
 
 const googlePlaces = GooglePlaces(apiKey, 'json');
 

@@ -23,7 +23,8 @@
     "test:watch": "npm run test -- --watch",
     "sandbox:firebaseDoodle":     "babel-node sandbox/firebase/firebaseDoodle.js",
     "sandbox:GooglePlacesDoodle": "babel-node sandbox/GooglePlaces/GooglePlacesDoodle.js",
-    "sandbox:GooglePlacesLocate": "babel-node sandbox/GooglePlaces/GooglePlacesLocate.js"
+    "sandbox:GooglePlacesLocate": "babel-node sandbox/GooglePlaces/GooglePlacesLocate.js",
+    "sandbox:GooglePlacesAPI":    "babel-node sandbox/GooglePlaces/GooglePlacesAPI.js"
   },
   "jest": {
     "preset": "jest-expo"
