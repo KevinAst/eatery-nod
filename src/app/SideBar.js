@@ -1,23 +1,48 @@
 import React        from 'react';
-import {Content,
+import {connect}    from 'react-redux';
+import {TouchableWithoutFeedback} from 'react-native';
+import {Body,
+        Container,
+        Content,
+        Header,
+        List,
+        ListItem,
         Text,
+        Title,
         View}       from 'native-base';
 import commonStyles from '../comp/commonStyles';
+import actions      from '../actions';
 
 /**
  * SideBar: our left-nav sidebar
  */
-export function SideBar() {
+function SideBar({systemReady, changeView}) {
 
-  const verticalSpacing = <View style={{paddingVertical: 10}}/>;
+  if (!systemReady)
+    return <Text/>
 
-  // ?? ULTIMATLY: include other app areas for things like "discoverForm"
   return (
-    <Content style={{...commonStyles.container, marginTop: 80, backgroundColor:'#FFFFFF'}}>
-      <Text>THIS IS MY SideDrawer!</Text>
-      {verticalSpacing}
-      <Text>WowZee WowZee WooWoo!</Text>
-    </Content>
+    <Container style={{...commonStyles.container, backgroundColor:'white'}}>
+      <Header>
+        <Body>
+          <Title>Select a view</Title>
+        </Body>
+      </Header>
+      <Content>
+        <List>
+          <TouchableWithoutFeedback onPress={()=>changeView('eateries')}>
+            <ListItem>
+              <Text>Eateries</Text>
+            </ListItem>
+          </TouchableWithoutFeedback>
+          <TouchableWithoutFeedback onPress={()=>changeView('discovery')}>
+            <ListItem>
+              <Text>Discover other Eateries</Text>
+            </ListItem>
+          </TouchableWithoutFeedback>
+        </List>
+      </Content>
+    </Container>
   );
 }
 
@@ -33,3 +58,24 @@ export function openSideBar() {
 export function closeSideBar() {
   _drawer._root.close();
 }
+
+export default connect(
+
+  // mapStateToProps()
+  (appState) => {
+    return {
+      systemReady: appState.systemReady,
+    };
+  },
+
+  // mapDispatchToProps()
+  (dispatch) => {
+    return {
+      changeView(view) {
+        dispatch( actions.view.change(view) );
+        setTimeout(() => closeSideBar(), 1); // delay so as to have new view up when sidebar closes (HACK)
+      },
+    };
+  }
+
+)(SideBar);

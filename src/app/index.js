@@ -5,8 +5,8 @@ import {Drawer}         from 'native-base';
 import platformSetup    from './startup/platformSetup';
 import initFireBase     from './startup/firebase/initFireBase';
 import createAppStore   from './startup/createAppStore';
-import {SideBar,
-        registerDrawer,
+import SideBar, 
+       {registerDrawer,
         closeSideBar}   from './SideBar';
 import ScreenRouter     from './ScreenRouter';
 import actions          from '../actions';

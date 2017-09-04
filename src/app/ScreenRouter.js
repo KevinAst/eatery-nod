@@ -9,6 +9,7 @@ import SignInScreen        from '../comp/SignInScreen';
 import SignInVerifyScreen  from '../comp/SignInVerifyScreen';
 import EateriesListScreen  from '../comp/EateriesListScreen';
 import EateryDetailScreen  from '../comp/EateryDetailScreen';
+import DiscoveryListScreen from '../comp/DiscoveryListScreen';
 
 /**
  * Our top-level App component that serves as a simple
@@ -62,22 +63,23 @@ class ScreenRouter extends React.Component {
         return <SignInVerifyScreen/> // screen requesting email verification completion
 
       // user is: fully signed in (authorized/verified/profiled)
-      // ... this is our non-authorazation real-app stuff
+      // ... this is our real app screens (after authorization)
       case 'signedIn':
 
-        if (p.appState.eateries.spin) {
-          return <SplashScreen msg={p.appState.eateries.spin}/>;
+        if (p.appState.view === 'eateries') {
+          if (p.appState.eateries.spin) {
+            return <SplashScreen msg={p.appState.eateries.spin}/>;
+          }
+          else if (p.appState.eateries.detailView) {
+            const eatery = p.appState.eateries.dbPool[p.appState.eateries.detailView];
+            return <EateryDetailScreen eatery={eatery}/>;
+          }
+          else if (p.appState.eateries.listView.entries) {
+            return <EateriesListScreen/>;
+          }
         }
-        else if (p.appState.eateries.detailView) {
-          const eatery = p.appState.eateries.dbPool[p.appState.eateries.detailView];
-          return <EateryDetailScreen eatery={eatery}/>;
-        }
-        else if (p.appState.eateries.listView.entries) {
-          return <EateriesListScreen/>
-        }
-        else {
-          // ?? more app-logic here
-          // ? const {email, name, pool} = p.appState.auth.user;
+        else if (p.appState.view === 'discovery') {
+          return <DiscoveryListScreen/>;
         }
 
       // user is: unauthorized (either explicit or status unknown)
