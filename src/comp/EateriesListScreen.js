@@ -30,12 +30,12 @@ function EateriesListScreen({entries, dbPool, showDetail, handleSpin}) {
     <Container style={commonStyles.container}>
       <Header>
         <Left>
-          <Button transparent>
-            <Icon name="menu" onPress={openSideBar}/>
+          <Button transparent onPress={openSideBar}>
+            <Icon name="menu"/>
           </Button>
         </Left>
         <Body>
-          <Title>Eateries List</Title>
+          <Title>Eateries</Title>
         </Body>
         <Right/>
       </Header>

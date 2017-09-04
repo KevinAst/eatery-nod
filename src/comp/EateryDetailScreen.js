@@ -31,8 +31,7 @@ function EateryDetailScreen({eatery, handleClose, handleSpin}) {
     <Container style={commonStyles.container}>
       <Header>
         <Left>
-          <Button transparent
-                  onPress={handleClose}>
+          <Button transparent onPress={handleClose}>
             <Icon name="arrow-back"/>
           </Button>
         </Left>

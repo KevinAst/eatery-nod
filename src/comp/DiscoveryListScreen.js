@@ -6,7 +6,6 @@ import {Body,
         Container,
         Content,
         Footer,
-        FooterTab,
         Header,
         Icon,
         Left,
@@ -24,18 +23,16 @@ import {openSideBar} from '../app/SideBar';
  */
 export default function DiscoveryListScreen(/* ?? {entries, dbPool, showDetail, handleSpin}*/) {
 
-  // ? const discovery = entries.map( eateryId => dbPool[eateryId] );
-
   return (
     <Container style={commonStyles.container}>
       <Header>
         <Left>
-          <Button transparent>
-            <Icon name="menu" onPress={openSideBar}/>
+          <Button transparent onPress={openSideBar}>
+            <Icon name="menu"/>
           </Button>
         </Left>
         <Body>
-          <Title>Discovery List</Title>
+          <Title>Discovery</Title>
         </Body>
         <Right/>
       </Header>
@@ -43,15 +40,11 @@ export default function DiscoveryListScreen(/* ?? {entries, dbPool, showDetail, 
         <Text>?? TODO: Discovery Entries Here ...</Text>
       </Content>
       <Footer>
-        <FooterTab>
-          {/* ???
-          <Button vertical
-                  onPress={handleSpin}>
-            <Icon style={commonStyles.icon} name="color-wand"/>
-            <Text style={commonStyles.icon}>Spin</Text>
-          </Button>
-            */}
-        </FooterTab>
+        <Left/>
+        <Body>
+          <Text style={{color: 'white', fontStyle: 'italic'}}>checked items are in your pool</Text>
+        </Body>
+        <Right/>
       </Footer>
 
     </Container>
