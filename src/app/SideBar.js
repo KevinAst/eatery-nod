@@ -74,6 +74,14 @@ export default connect(
       changeView(view) {
         dispatch( actions.view.change(view) );
         setTimeout(() => closeSideBar(), 1); // delay so as to have new view up when sidebar closes (HACK)
+        if (view==='discovery') { // ?? temp HACK for now
+          const tempFilter = {
+            location: [38.752209, -89.986610], // Glen Carbon
+            radius:   10,                      // 10 miles
+         // searchText: 'collensville', // 'fazzis'
+          };
+          dispatch( actions.discovery.retrieve(tempFilter) );
+        }
       },
     };
   }

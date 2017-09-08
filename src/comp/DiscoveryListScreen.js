@@ -21,7 +21,46 @@ import {openSideBar} from '../app/SideBar';
 /**
  * DiscoveryListScreen displaying our discovered eateries.
  */
-export default function DiscoveryListScreen(/* ?? {entries, dbPool, showDetail, handleSpin}*/) {
+function DiscoveryListScreen({eateries, nextPageToken}) {
+
+  // ?? ALL NEW ... ? check imports
+  let content = null;
+
+  if (eateries===null) {
+    content = 
+      <ListItem>
+        <Text>SPINNER HERE??</Text>
+      </ListItem>;
+  }
+  else if (eateries.length === 0) {
+    content = 
+      <ListItem>
+        <Text>NOTHING FOUND??</Text>
+      </ListItem>
+  }
+  else {
+    content = 
+      eateries.map( eatery => (
+        <ListItem key={eatery.id}>
+          <Text>{`${eatery.name}\n${eatery.addr}`}</Text>
+        </ListItem>
+      ));
+    if (nextPageToken) { // crude next page interface ?? need a real link ?? WITH an API ?? AND reducer to append, etc. etc. etc.
+      content.push(
+        <ListItem key="nextPage">
+          <Text>... more</Text>
+        </ListItem>
+      );
+    }
+    else if (content.length === 60) { // 60 entries with NO nextPageToken indicate a limitation using the free Google Places API
+      // ?? test this out
+      content.push(
+        <ListItem key="maxEntriesHit">
+          <Text>... our usage of Google Places is limited to 60 entries (please adjust the search text - with city or restaurant)</Text>
+        </ListItem>
+      );
+    }
+  }
 
   return (
     <Container style={commonStyles.container}>
@@ -37,7 +76,7 @@ export default function DiscoveryListScreen(/* ?? {entries, dbPool, showDetail, 
         <Right/>
       </Header>
       <Content>
-        <Text>?? TODO: Discovery Entries Here ...</Text>
+        {content}
       </Content>
       <Footer>
         <Left/>
@@ -46,33 +85,30 @@ export default function DiscoveryListScreen(/* ?? {entries, dbPool, showDetail, 
         </Body>
         <Right/>
       </Footer>
-
     </Container>
   );
 }
 
-// ???
-// ? export default connect(
-// ? 
-// ?   // mapStateToProps()
-// ?   (appState) => {
-// ?     return {
-// ?       entries:  appState.discovery.listView.entries,
-// ?       dbPool:   appState.discovery.dbPool,
-// ?     };
-// ?   },
-// ? 
-// ?   // mapDispatchToProps()
-// ?   (dispatch) => {
-// ?     return {
-// ?       showDetail(eateryId) {
-// ?         //console.log(`??? showDetail for ${eateryId}`);
-// ?         dispatch( actions.discovery.viewDetail(eateryId) );
-// ?       },
-// ?       handleSpin() {
-// ?         dispatch( actions.discovery.spin() );
-// ?       },
-// ?     };
-// ?   }
-// ? 
-// ? )(DiscoveryListScreen);
+export default connect(
+
+  // mapStateToProps()
+  (appState) => {
+    return {
+      eateries:      appState.discovery.eateries,
+      nextPageToken: appState.discovery.nextPageToken,
+    };
+  },
+
+  // mapDispatchToProps()
+  (dispatch) => {
+    return {
+//?   showDetail(eateryId) {
+//?     dispatch( actions.discovery.viewDetail(eateryId) );
+//?   },
+//?   handleSpin() {
+//?     dispatch( actions.discovery.spin() );
+//?   },
+    };
+  }
+
+)(DiscoveryListScreen);

@@ -2,6 +2,7 @@ import diag       from './diag';
 import bootstrap  from './bootstrap';
 import auth       from './auth';
 import eateries   from './eateries';
+import discovery  from './discovery';
 
 //***
 //*** accumulation of all app logic
@@ -19,4 +20,7 @@ export default [
 
   // eateries processes
   ...eateries,
+
+  // discovery processes
+  ...discovery,
 ];

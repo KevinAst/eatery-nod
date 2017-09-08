@@ -21,10 +21,8 @@
     "lint":       "echo '*** Verify code quality (lint):' && eslint src",
     "test":       "jest",
     "test:watch": "npm run test -- --watch",
-    "sandbox:firebaseDoodle":     "babel-node sandbox/firebase/firebaseDoodle.js",
-    "sandbox:GooglePlacesDoodle": "babel-node sandbox/GooglePlaces/GooglePlacesDoodle.js",
-    "sandbox:GooglePlacesLocate": "babel-node sandbox/GooglePlaces/GooglePlacesLocate.js",
-    "sandbox:GooglePlacesAPI":    "babel-node sandbox/GooglePlaces/GooglePlacesAPI.js"
+    "sandbox:firebaseDoodle":           "babel-node sandbox/firebase/firebaseDoodle.js",
+    "sandbox:GooglePlacesDiscoveryAPI": "babel-node sandbox/GooglePlaces/DiscoveryAPI.js"
   },
   "jest": {
     "preset": "jest-expo"
@@ -35,7 +33,6 @@
     "astx-redux-util": "^1.0.0",
     "expo": "17.0.0",
     "firebase": "^4.2.0",
-    "googleplaces": "^0.6.1",
     "lodash.isequal": "^4.5.0",
     "lodash.isfunction": "^3.0.8",
     "lodash.isstring": "^4.0.1",

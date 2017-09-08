@@ -4,6 +4,7 @@ import systemReady        from './systemReady';
 import auth               from './auth';
 import view               from './view';
 import eateries           from './eateries';
+import discovery          from './discovery';
 
 // ***
 // *** our app's top-level reducer
@@ -14,4 +15,5 @@ export default combineReducers({
   auth,
   view,
   eateries,
+  discovery,
 });
