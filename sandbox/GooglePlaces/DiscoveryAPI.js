@@ -1,4 +1,4 @@
-import 'isomorphic-fetch';  // NOTE: define fetch(), emulating what react-native packager injects automatically (this is an implied dependancy module from expo)
+import 'isomorphic-fetch';  // NOTE: define fetch(), emulating what react-native packager injects automatically (this is an implied dependency module from expo)
 import * as discoveryAPI from '../../src/api/discovery';
 
 // ***
@@ -37,19 +37,19 @@ discoveryAPI.searchEateries(selCrit)
 //?       console.log(`*** ERROR *** discoveryAPI searchEateries (continuation) ... ${''+err} ... for nextRequest: `, JSON.stringify(nextRequest));
 //?     });
 //? }, 2000);
-//?
-//? // ***
-//? // *** try a detailed retrieval
-//? // ***
-//? const eatery = resp.eateries[0];
-//? console.log(`\n\n\n ISSUING DETAILED RETRIEVAL: for '${eatery.name}'`);
-//? discoveryAPI.getDetails(eatery.id)
-//?   .then(eatery => {
-//?     console.log(`*** WORKED *** discoveryAPI getDetails: `, JSON.stringify(eatery));
-//?   })
-//?   .catch(err => {
-//?     console.log(`*** ERROR *** discoveryAPI getDetails ... ${''+err}`);
-//?   });
+
+    // ***
+    // *** try a detailed retrieval
+    // ***
+    const eatery = resp.eateries[0];
+    console.log(`\n\n\n ISSUING DETAILED RETRIEVAL: for '${eatery.name}'`);
+    discoveryAPI.getEateryDetail(eatery.id)
+      .then(eatery => {
+        console.log(`*** WORKED *** discoveryAPI getEateryDetail: `, JSON.stringify(eatery));
+      })
+      .catch(err => {
+        console.log(`*** ERROR *** discoveryAPI getEateryDetail ... ${''+err}`, err);
+      });
 
   })
   .catch(err => {

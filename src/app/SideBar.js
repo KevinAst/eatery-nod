@@ -37,7 +37,7 @@ function SideBar({systemReady, changeView}) {
           </TouchableWithoutFeedback>
           <TouchableWithoutFeedback onPress={()=>changeView('discovery')}>
             <ListItem>
-              <Text>Discover other Eateries</Text>
+              <Text>Discovery</Text>
             </ListItem>
           </TouchableWithoutFeedback>
         </List>

@@ -89,7 +89,7 @@ export function searchEateries({location,
   // *** issue our network retrieval, returning our promise
   // ***
 
-  return fetch(searchUrl)
+  return fetch(searchUrl) // ?? response detail shown in sandbox/???? ?? remove the lengthy comments here
     .then( checkHttpResponseStatus ) // validate the http response status
     .then( validResp => {
       // validResp ...
@@ -188,45 +188,72 @@ export function searchEateries({location,
 //      };
 
 
-// ?? NEW FUNCTION: getEateryDetail(eateryId): Eatery
-// ? /**
-// ?  * Retreive details for the supplied eateryId.
-// ?  * 
-// ?  * @param {string} eateryId the id for the detailed entry to retrieve (same as Google Places place_id)
-// ?  * 
-// ?  * @return {promise} a promise resolving to:
-// ?  *   {
-// ?  *     id,
-// ?  *     name,
-// ?  *     phone,
-// ?  *     loc: {lat, lng},
-// ?  *     addr,
-// ?  *     navUrl,
-// ?  *     website,
-// ?  *   }
-// ?  */
-// ? export function getEateryDetail(eateryId) {
-// ?   // promise wrapped GooglePlaces API
-// ?   return new Promise( (resolve, reject) => {
-// ?     googlePlaces.placeDetailsRequest({eateryId}, (err, resp) => {
-// ?       if (err) {
-// ?         // console.log(`xx *** ERROR-BY-ERR *** GooglePlaces placeDetailsRequest: `, JSON.stringify(err));
-// ?         reject(err); // a JS Error object ... unsure how to stimulate
-// ?       }
-// ?       else if (resp.status === 'OK') {
-// ?         const result = gp2eatery(resp.result);
-// ?         // console.log(`GooglePlaces placeDetailsRequest (${result.eateries.length} entries): `, JSON.stringify(result)); // ... of interest: result.eateries[]
-// ?         resolve(result);
-// ?       }
-// ?       else { // bad return status (i.e. an invalid request) ... see: https://developers.google.com/places/web-service/search#PlaceSearchStatusCodes
-// ?         const errMsg = resp.error_message ? ` - ${resp.error_message}` : '';
-// ?         const appErr = new Error(`*** ERROR-BY-STATUS *** resp.status: ${resp.status}${errMsg}`);
-// ?         // console.log(`xx *** ERROR-BY-STATUS *** GooglePlaces placeDetailsRequest: `, JSON.stringify(resp));
-// ?         reject(appErr);
-// ?       }
-// ?     });
-// ?   });
-// ? }
+/**
+ * Retreive details for the supplied eateryId.
+ * 
+ * @param {string} eateryId the id for the detailed entry to retrieve
+ * (same as Google Places place_id)
+ * 
+ * @return {promise} a promise resolving to eatery:
+ *   {
+ *     id,
+ *     name,
+ *     phone,
+ *     loc: {lat, lng},
+ *     addr,
+ *     navUrl,
+ *     website,
+ *   }
+ */
+export function getEateryDetail(eateryId) {
+
+  // ***
+  // *** define our parameters
+  // ***
+
+  const params = {
+    // ... supplied by client (via params)
+    placeid: eateryId,
+
+    // ... hard coded
+    key:      apiKey
+  };
+
+  // ***
+  // *** define our URL, injecting the params as a queryStr
+  // ***
+
+  const queryStr  = Object.keys(params).map( k => `${esc(k)}=${esc(params[k])}` ).join('&');
+  const url = `${googlePlacesBaseUrl}/details/json?${queryStr}`;
+  // console.log(`xx api.discovery.getEateryDetail() url: '${url}'`);
+  // ex: https://maps.googleapis.com/maps/api/place/details/json?placeid=ChIJr7nIlGpV34cRlT0NYwJOLNg&key=SnipSnip
+
+  // ***
+  // *** issue our network retrieval, returning our promise
+  // ***
+
+  return fetch(url) // ?? response detail shown in sandbox/???
+    .then( checkHttpResponseStatus ) // validate the http response status
+    .then( validResp => {
+      // convert payload to JSON
+      // ... this is a promise (hence the usage of an additional .then())
+      return validResp.json();
+    })
+    .then( payloadJson => {
+
+      // interpret GooglePlaces status error conditions
+      if (payloadJson.status !== 'OK') {
+        const errMsg = payloadJson.error_message ? ` - ${payloadJson.error_message}` : '';
+        // console.log(`xx *** ERROR-BY-GooglePlaces-STATUS *** GooglePlaces getEateryDetail: `, JSON.stringify(payloadJson));
+        throw new Error(`*** ERROR-BY-GooglePlaces-STATUS *** payloadJson.status: ${payloadJson.status}${errMsg}`);
+      }
+
+      // convert to eatery
+      const eatery = gp2eatery(payloadJson.result);
+      // console.log(`xx gp2eatery: `, eatery);
+      return eatery;
+    });
+}
 
 
 /**

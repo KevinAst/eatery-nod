@@ -53,5 +53,38 @@ export default generateActions.root({
 
     },
 
+    addToPool: { // eateries.addToPool(eateryId): Action
+                 // > add eatery (from eateryId) to pool
+                 //   INTENT: #byUser, #byLogic, #forLogic, #forReducer ??
+                 actionMeta: {
+                   traits: ['eateryId'],
+                 },
+
+      eateryDetail: { // eateries.addToPool.eateryDetail(eatery): Action
+                      // > add supplied eatery to our pool
+                      //   INTENT: #byUser, #byLogic, #forLogic, #forReducer ??
+                      actionMeta: {
+                        traits: ['eatery'],
+                      },
+      },
+
+      detailFailed: { // eateries.addToPool.detailFailed(eateryId, err): Action
+                      // > in process of adding eatery, detail retrieval failed
+                      //   INTENT: #byUser, #byLogic, #forLogic, #forReducer ??
+                      actionMeta: {
+                        traits: ['eateryId', 'err'],
+                      },
+      },
+
+    },
+
+    removeFromPool: { // eateries.removeFromPool(eateryId): Action
+                      // > remove eatery (from eateryId) to pool
+                      //   INTENT: #byUser, #byLogic, #forLogic, #forReducer ??
+                      actionMeta: {
+                        traits: ['eateryId'],
+                      },
+    },
+
   },
 });

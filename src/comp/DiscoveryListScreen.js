@@ -21,38 +21,77 @@ import {openSideBar} from '../app/SideBar';
 /**
  * DiscoveryListScreen displaying our discovered eateries.
  */
-function DiscoveryListScreen({eateries, nextPageToken}) {
+function DiscoveryListScreen({eateries, nextPageToken, eateryPool, toggleEateryPool}) {
 
-  // ?? ALL NEW ... ? check imports
+  // ***
+  // *** define page content
+  // ***
+
   let content = null;
 
+  // case for eateries retrieval in-progress
   if (eateries===null) {
     content = 
       <ListItem>
         <Text>SPINNER HERE??</Text>
       </ListItem>;
   }
+
+  // case for NO eateries found (in retrieval)
   else if (eateries.length === 0) {
     content = 
       <ListItem>
         <Text>NOTHING FOUND??</Text>
       </ListItem>
   }
+
+  // case for displaying retrieved eateries
   else {
-    content = 
+    
+    function renderPoolButton(eatery) {
+      if (eateryPool[eatery.id]) { // IN pool
+        return (
+          <Button transparent onPress={()=>toggleEateryPool(eatery, eateryPool)}>
+            <Icon name="checkmark" style={{color: 'red'}}/>
+          </Button>
+        );
+      }
+      else { // NOT in pool
+        return (
+          <Button transparent onPress={()=>toggleEateryPool(eatery, eateryPool)}>
+            <Icon name="checkmark" style={{color: 'lightgrey'}}/>
+          </Button>
+        );
+      }
+    }
+    
+    // generate list content
+    content = // ... avatar ListItem provides enough space to display address too
       eateries.map( eatery => (
-        <ListItem key={eatery.id}>
-          <Text>{`${eatery.name}\n${eatery.addr}`}</Text>
+        <ListItem avatar key={eatery.id}>
+          <Left>
+            {renderPoolButton(eatery)}
+          </Left>
+          <Body>
+            <Text>{`${eatery.name}\n${eatery.addr}`}</Text>
+          </Body>
         </ListItem>
       ));
-    if (nextPageToken) { // crude next page interface ?? need a real link ?? WITH an API ?? AND reducer to append, etc. etc. etc.
+
+    // provide CRUDE next page mechnism
+    if (nextPageToken) { // ?? need real link ?? WITH an API ?? AND reducer to append, etc. etc. etc.
       content.push(
         <ListItem key="nextPage">
-          <Text>... more</Text>
+          <Left/>
+          <Body>
+            <Text>... more</Text>
+          </Body>
+          <Right/>
         </ListItem>
       );
     }
-    else if (content.length === 60) { // 60 entries with NO nextPageToken indicate a limitation using the free Google Places API
+    // notify user when 60 entry limitation has been met (a limitation of the "free" Google Places API)
+    else if (content.length === 60) {
       // ?? test this out
       content.push(
         <ListItem key="maxEntriesHit">
@@ -79,11 +118,12 @@ function DiscoveryListScreen({eateries, nextPageToken}) {
         {content}
       </Content>
       <Footer>
-        <Left/>
         <Body>
-          <Text style={{color: 'white', fontStyle: 'italic'}}>checked items are in your pool</Text>
+          <Button transparent>
+            <Icon name="checkmark" style={{color: 'red'}}/>
+          </Button>
+          <Text style={{color: 'white', fontStyle: 'italic'}}>red checked items are in your pool</Text>
         </Body>
-        <Right/>
       </Footer>
     </Container>
   );
@@ -96,18 +136,23 @@ export default connect(
     return {
       eateries:      appState.discovery.eateries,
       nextPageToken: appState.discovery.nextPageToken,
+      eateryPool:    appState.eateries.dbPool,
     };
   },
 
   // mapDispatchToProps()
   (dispatch) => {
     return {
-//?   showDetail(eateryId) {
-//?     dispatch( actions.discovery.viewDetail(eateryId) );
-//?   },
-//?   handleSpin() {
-//?     dispatch( actions.discovery.spin() );
-//?   },
+      toggleEateryPool(eatery, eateryPool) {
+        if (eateryPool[eatery.id]) { // in pool
+          // console.log(`xx delete ${eatery.name} from pool`);
+          dispatch( actions.eateries.removeFromPool(eatery.id) );
+        }
+        else { // NOT in pool
+          // console.log(`xx add ${eatery.name} to pool`);
+          dispatch( actions.eateries.addToPool(eatery.id) );
+        }
+      },
     };
   }
 

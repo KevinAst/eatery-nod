@@ -143,6 +143,68 @@ export const spinComplete = createLogic({
 });
 
 
+export const addToPoolPrep = createLogic({
+
+  name: 'eateries.addToPoolPrep',
+  type: String(actions.eateries.addToPool),
+
+  process({getState, action, api}, dispatch, done) {
+
+    api.discovery.getEateryDetail(action.eateryId)
+      .then(eatery => {
+        dispatch( actions.eateries.addToPool.eateryDetail(eatery) );
+        done();
+      })
+      .catch(err => {
+        dispatch( actions.eateries.addToPool.detailFailed(eateryId, err) );
+        done();
+      });
+  },
+
+});
+
+
+
+export const addToPool = createLogic({
+
+  name: 'eateries.addToPool',
+  type: String(actions.eateries.addToPool.eateryDetail),
+
+  transform({getState, action, api}, next, reject) {
+
+    const appState = getState();
+    const pool     = appState.auth.user.pool;
+
+    // console.log(`xx adding eatery: /pools/${pool}/${action.eatery.id}`);
+    const dbRef = firebase.database().ref(`/pools/${pool}/${action.eatery.id}`);
+    dbRef.set(action.eatery);
+
+    next(action);
+  },
+
+});
+
+
+export const removeFromPool = createLogic({
+
+  name: 'eateries.removeFromPool',
+  type: String(actions.eateries.removeFromPool),
+
+  transform({getState, action, api}, next, reject) {
+
+    const appState = getState();
+    const pool     = appState.auth.user.pool;
+
+    // console.log(`xx removing eatery: /pools/${pool}/${action.eateryId}`);
+    const dbRef = firebase.database().ref(`/pools/${pool}/${action.eateryId}`);
+    dbRef.set(null);
+
+    next(action);
+  },
+
+});
+
+
 // promote all logic (accumulated in index.js)
 // ... named exports (above) are used by unit tests :-)
 export default [
@@ -151,4 +213,7 @@ export default [
   applyFilter,
   spin,
   spinComplete,
+  addToPoolPrep,
+  addToPool,
+  removeFromPool,
 ];
