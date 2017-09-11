@@ -17,26 +17,26 @@ discoveryAPI.searchEateries(selCrit)
   .then(resp => {
     console.log(`*** WORKED *** discoveryAPI searchEateries (${resp.eateries.length} entries): `, JSON.stringify(resp)); // ... of interest: resp.eateries[]
 
-//? // ***
-//? // *** try a continuation
-//? // ***
-//? setTimeout( () => { // timeout is necessary to make it valid (next requests are invalid by google, unless some time has expired)
-//?   console.log(`\n\n\nISSUING NEXT PAGE REQUEST (after a short timeout to prevent INVALID_REQUEST response):`);
-//?   if (!resp.pagetoken) {
-//?     console.log(`hmmmm ... NO additional pages to retrieve`);
-//?     return;
-//?   }
-//?   const nextRequest = {
-//?     pagetoken: resp.pagetoken
-//?   };
-//?   discoveryAPI.searchEateries(nextRequest)
-//?     .then(resp => {
-//?       console.log(`*** WORKED *** discoveryAPI searchEateries (continuation) (${resp.eateries.length} entries): `, JSON.stringify(resp)); // ... of interest: resp.eateries[]
-//?     })
-//?     .catch(err => {
-//?       console.log(`*** ERROR *** discoveryAPI searchEateries (continuation) ... ${''+err} ... for nextRequest: `, JSON.stringify(nextRequest));
-//?     });
-//? }, 2000);
+    // ***
+    // *** try a continuation
+    // ***
+    setTimeout( () => { // timeout is necessary to make it valid (next requests are invalid by google, unless some time has expired)
+      console.log(`\n\n\nISSUING NEXT PAGE REQUEST (after a short timeout to prevent INVALID_REQUEST response):`);
+      if (!resp.pagetoken) {
+        console.log(`hmmmm ... NO additional pages to retrieve`);
+        return;
+      }
+      const nextRequest = { // ?? TRASH
+        pagetoken: resp.pagetoken
+      };
+      discoveryAPI.searchEateriesNextPage(resp.pagetoken)
+        .then(resp => {
+          console.log(`*** WORKED *** discoveryAPI searchEateriesNextPage (${resp.eateries.length} entries): `, JSON.stringify(resp)); // ... of interest: resp.eateries[]
+        })
+        .catch(err => {
+          console.log(`*** ERROR *** discoveryAPI searchEateriesNextPage ... ${''+err} ... for next pagetoken '${resp.pagetoken}'`);
+        });
+    }, 2000);
 
     // ***
     // *** try a detailed retrieval

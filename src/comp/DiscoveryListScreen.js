@@ -12,6 +12,7 @@ import {Body,
         List,
         ListItem,
         Right,
+        Spinner,
         Text,
         Title}       from 'native-base';
 import commonStyles  from './commonStyles';
@@ -21,7 +22,7 @@ import {openSideBar} from '../app/SideBar';
 /**
  * DiscoveryListScreen displaying our discovered eateries.
  */
-function DiscoveryListScreen({eateries, nextPageToken, eateryPool, toggleEateryPool}) {
+function DiscoveryListScreen({eateries, nextPageToken, eateryPool, toggleEateryPool, handleNextPage}) {
 
   // ***
   // *** define page content
@@ -33,15 +34,26 @@ function DiscoveryListScreen({eateries, nextPageToken, eateryPool, toggleEateryP
   if (eateries===null) {
     content = 
       <ListItem>
-        <Text>SPINNER HERE??</Text>
+        <Left/>
+        <Body>
+          <Button transparent>
+            <Spinner color="blue"/>
+          </Button>
+        </Body>
+        <Right/>
       </ListItem>;
   }
 
-  // case for NO eateries found (in retrieval)
+  // case for NO eateries found (in retrieval) ?? test this out
   else if (eateries.length === 0) {
     content = 
       <ListItem>
-        <Text>NOTHING FOUND??</Text>
+        <Left/>
+        <Body>
+          <Text>No entries found.</Text>
+        </Body>
+        <Right/>
+
       </ListItem>
   }
 
@@ -78,24 +90,34 @@ function DiscoveryListScreen({eateries, nextPageToken, eateryPool, toggleEateryP
         </ListItem>
       ));
 
-    // provide CRUDE next page mechnism
-    if (nextPageToken) { // ?? need real link ?? WITH an API ?? AND reducer to append, etc. etc. etc.
+    // provide CRUDE next page mechanism
+    if (nextPageToken) {
+      const nextPageContent = nextPageToken === 'nextPageInProgress'
+                            ? <Button transparent><Spinner color="blue"/></Button>
+                            : <Button transparent onPress={()=>handleNextPage(nextPageToken)}>
+                                <Icon name="refresh"/>
+                                <Text>... more</Text>
+                              </Button>;
+
       content.push(
         <ListItem key="nextPage">
           <Left/>
           <Body>
-            <Text>... more</Text>
+            {nextPageContent}
           </Body>
           <Right/>
         </ListItem>
       );
     }
-    // notify user when 60 entry limitation has been met (a limitation of the "free" Google Places API)
+    // notify user when 60 entry limitation has been met (a limitation of the "free" Google Places API) ?? test this out
     else if (content.length === 60) {
-      // ?? test this out
       content.push(
         <ListItem key="maxEntriesHit">
-          <Text>... our usage of Google Places is limited to 60 entries (please adjust the search text - with city or restaurant)</Text>
+          <Left/>
+          <Body>
+            <Text>... our usage of Google Places is limited to 60 entries (please adjust the search text - with city or restaurant)</Text>
+          </Body>
+          <Right/>
         </ListItem>
       );
     }
@@ -153,6 +175,10 @@ export default connect(
           dispatch( actions.eateries.dbPool.add(eatery.id) );
         }
       },
+      handleNextPage(nextPageToken) {
+        dispatch( actions.discovery.nextPage(nextPageToken) );
+      },
+
     };
   }
 

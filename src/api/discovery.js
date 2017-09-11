@@ -38,6 +38,7 @@ const esc                 = encodeURIComponent; // convenience alias
 export function searchEateries({location,
                                 radius=5,
                                 searchText='',
+                                pagetoken=null, // hidden/internal namedArg used by searchEateriesNextPage()
                                 ...unknownArgs}={}) {
 
   // ***
@@ -46,34 +47,47 @@ export function searchEateries({location,
 
   const check = verify.prefix('api.discovery.searchEateries() parameter violation: ');
 
-  check(location,                'location is required ... [lat,lng]'); // really need to check array of two numbers
-
-  check(radius,                  'radius is required ... (1-31) miles');
-  check(radius>=1 && radius<=31, `supplied radius (${radius}) must be between 1-31 miles`);
-
-  check(isString(searchText),    `supplied searchText (${searchText}) must be a string`);
-
-  const unknownArgKeys = Object.keys(unknownArgs);
-  check(unknownArgKeys.length===0,  `unrecognized named parameter(s): ${unknownArgKeys}`);
+  if (!pagetoken) {
+    check(location,                'location is required ... [lat,lng]'); // really need to check array of two numbers
+    
+    check(radius,                  'radius is required ... (1-31) miles');
+    check(radius>=1 && radius<=31, `supplied radius (${radius}) must be between 1-31 miles`);
+    
+    check(isString(searchText),    `supplied searchText (${searchText}) must be a string`);
+    
+    const unknownArgKeys = Object.keys(unknownArgs);
+    check(unknownArgKeys.length===0,  `unrecognized named parameter(s): ${unknownArgKeys}`);
+  }
 
 
   // ***
   // *** define our selection criteria
   // ***
 
-  const selCrit = {
-    // ... supplied by client (via params
-    location,
-    radius: miles2meters(radius),
+  let selCrit = null;
 
-    // ... hard coded by our "eatery" requirements
-    type:     'restaurant',
-    minprice: 1, // would like 2, but other params impact this too (keep at 1)
-    key:      apiKey
-  };
-  // ... searchText is optional
-  if (searchText) {
-    selCrit.keyword = searchText;
+  if (pagetoken) { // next-page requests ... from searchEateriesNextPage()
+    selCrit = {
+      pagetoken,
+      key: apiKey
+    };
+  }
+  else {
+    selCrit = {
+      // ... supplied by client (via params
+      location,
+      radius: miles2meters(radius),
+
+      // ... hard coded by our "eatery" requirements
+      type:     'restaurant',
+      minprice: 1, // would like 2, but other params impact this too (keep at 1)
+      key:      apiKey
+    };
+
+    // ... searchText is optional
+    if (searchText) {
+      selCrit.keyword = searchText;
+    }
   }
 
   // ***
@@ -177,15 +191,32 @@ export function searchEateries({location,
 }
 
 
-// ?? NEW FUNCTION
-// ?? export function searchEateriesNext(pagetoken
-//      const selCrit = {
-//        // ... supplied by client (via params
-//        pagetoken,
-//      
-//        // ... hard coded by our "eatery" requirements
-//        key:      apiKey
-//      };
+/**
+ * Search eateries next-page request.
+ * 
+ * @param pagetoken the next page token (supplied by prior
+ * searchEateries() invocation).
+ * 
+ * @return {promise} a promise resolving to:
+ *   {
+ *     pagetoken: 'use-in-next-request', // undefined for no more pages (or 60 entries limit)
+ *     eateries: [
+ *       ... abbreviated attribute list
+ *       id,
+ *       name,
+ *       addr,
+ *       loc: {lat, lng}
+ *     ]
+ *   }
+ */
+export function searchEateriesNextPage(pagetoken) {
+
+  const check = verify.prefix('api.discovery.searchEateriesNextPage() parameter violation: ');
+  check(pagetoken, 'pagetoken is required');
+  check(isString(pagetoken), `supplied pagetoken (${pagetoken}) must be a string`);
+  
+  return searchEateries({pagetoken});
+}
 
 
 /**
