@@ -46,7 +46,10 @@ function EateriesListScreen({entries, dbPool, showDetail, handleSpin}) {
               <TouchableWithoutFeedback key={eatery.id}
                                         onPress={()=>showDetail(eatery.id)}>
                 <ListItem>
-                  <Text>{eatery.name}</Text>
+                  <Body>
+                    <Text>{eatery.name}</Text>
+                    <Text note>{eatery.addr}</Text>
+                  </Body>
                 </ListItem>
               </TouchableWithoutFeedback>
             ))

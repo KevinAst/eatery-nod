@@ -78,14 +78,15 @@ function DiscoveryListScreen({eateries, nextPageToken, eateryPool, toggleEateryP
     }
     
     // generate list content
-    content = // ... avatar ListItem provides enough space to display address too
+    content =
       eateries.map( eatery => (
         <ListItem avatar key={eatery.id}>
           <Left>
             {renderPoolButton(eatery)}
           </Left>
           <Body>
-            <Text>{`${eatery.name}\n${eatery.addr}`}</Text>
+            <Text>{eatery.name}</Text>
+            <Text note>{eatery.addr}</Text>
           </Body>
         </ListItem>
       ));
