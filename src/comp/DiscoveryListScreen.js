@@ -146,11 +146,11 @@ export default connect(
       toggleEateryPool(eatery, eateryPool) {
         if (eateryPool[eatery.id]) { // in pool
           // console.log(`xx delete ${eatery.name} from pool`);
-          dispatch( actions.eateries.removeFromPool(eatery.id) );
+          dispatch( actions.eateries.dbPool.remove(eatery.id) );
         }
         else { // NOT in pool
           // console.log(`xx add ${eatery.name} to pool`);
-          dispatch( actions.eateries.addToPool(eatery.id) );
+          dispatch( actions.eateries.dbPool.add(eatery.id) );
         }
       },
     };

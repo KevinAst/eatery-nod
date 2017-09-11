@@ -146,17 +146,17 @@ export const spinComplete = createLogic({
 export const addToPoolPrep = createLogic({
 
   name: 'eateries.addToPoolPrep',
-  type: String(actions.eateries.addToPool),
+  type: String(actions.eateries.dbPool.add),
 
   process({getState, action, api}, dispatch, done) {
 
     api.discovery.getEateryDetail(action.eateryId)
       .then(eatery => {
-        dispatch( actions.eateries.addToPool.eateryDetail(eatery) );
+        dispatch( actions.eateries.dbPool.add.eateryDetail(eatery) );
         done();
       })
       .catch(err => {
-        dispatch( actions.eateries.addToPool.detailFailed(eateryId, err) );
+        dispatch( actions.eateries.dbPool.add.detailFailed(eateryId, err) );
         done();
       });
   },
@@ -168,7 +168,7 @@ export const addToPoolPrep = createLogic({
 export const addToPool = createLogic({
 
   name: 'eateries.addToPool',
-  type: String(actions.eateries.addToPool.eateryDetail),
+  type: String(actions.eateries.dbPool.add.eateryDetail),
 
   transform({getState, action, api}, next, reject) {
 
@@ -188,7 +188,7 @@ export const addToPool = createLogic({
 export const removeFromPool = createLogic({
 
   name: 'eateries.removeFromPool',
-  type: String(actions.eateries.removeFromPool),
+  type: String(actions.eateries.dbPool.remove),
 
   transform({getState, action, api}, next, reject) {
 
