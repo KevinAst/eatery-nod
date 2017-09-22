@@ -21,7 +21,7 @@ import {openSideBar} from '../app/SideBar';
 /**
  * DiscoveryListScreen displaying our discovered eateries.
  */
-function DiscoveryListScreen({inProgress, eateries, nextPageToken, eateryPool, toggleEateryPool, handleNextPage}) {
+function DiscoveryListScreen({inProgress, eateries, nextPageToken, eateryPool, toggleEateryPool, handleNextPage, handleFilterDiscovery}) {
 
   // ***
   // *** define page content
@@ -31,8 +31,8 @@ function DiscoveryListScreen({inProgress, eateries, nextPageToken, eateryPool, t
 
   // case for eateries retrieval in-progress
   if (eateries===null || inProgress==='retrieve') { // just to be safe ... eateries===null
-    content = 
-      <ListItem>
+    content = [
+      <ListItem key="inProgress">
         <Left/>
         <Body>
           <Button transparent>
@@ -40,20 +40,23 @@ function DiscoveryListScreen({inProgress, eateries, nextPageToken, eateryPool, t
           </Button>
         </Body>
         <Right/>
-      </ListItem>;
+      </ListItem>
+    ];
   }
 
   // case for NO eateries found (in retrieval)
   else if (eateries.length === 0) {
-    content = 
-      <ListItem>
-        <Left/>
+    content = [
+      <ListItem key="noEntries">
         <Body>
-          <Text>No entries found.</Text>
+          <Text>No entries match your filter.</Text>
+          <Button transparent active onPress={handleFilterDiscovery}>
+            <Icon name="options"/>
+            <Text>Adjust Filter</Text>
+          </Button>
         </Body>
-        <Right/>
-
       </ListItem>
+    ];
   }
 
   // case for displaying retrieved eateries
@@ -96,15 +99,13 @@ function DiscoveryListScreen({inProgress, eateries, nextPageToken, eateryPool, t
                                 ? <Button transparent><Spinner color="blue"/></Button>
                                 : <Button transparent onPress={()=>handleNextPage(nextPageToken)}>
                                     <Icon name="refresh"/>
-                                    <Text>... more</Text>
+                                    <Text>more</Text>
                                   </Button>;
       content.push(
         <ListItem key="nextPage">
-          <Left/>
           <Body>
             {nextPageContent}
           </Body>
-          <Right/>
         </ListItem>
       );
     }
@@ -112,11 +113,14 @@ function DiscoveryListScreen({inProgress, eateries, nextPageToken, eateryPool, t
     else if (content.length === 60) {
       content.push(
         <ListItem key="maxEntriesHit">
-          <Left/>
           <Body>
-            <Text>... our usage of Google Places is limited to 60 entries (please adjust the search text - with city or restaurant)</Text>
+            <Text>Our usage of Google Places is limited to 60 entries.</Text>
+            <Text note>Please adjust your search text with city or restaurant.</Text>
+            <Button transparent active onPress={handleFilterDiscovery}>
+              <Icon name="options"/>
+              <Text>Adjust Filter</Text>
+            </Button>
           </Body>
-          <Right/>
         </ListItem>
       );
     }
@@ -136,7 +140,9 @@ function DiscoveryListScreen({inProgress, eateries, nextPageToken, eateryPool, t
         <Right/>
       </Header>
       <Content>
-        {content}
+        <List>
+          {content}
+        </List>
       </Content>
       <Footer>
         <Body>
@@ -177,6 +183,9 @@ export default connect(
       },
       handleNextPage(nextPageToken) {
         dispatch( actions.discovery.nextPage(nextPageToken) );
+      },
+      handleFilterDiscovery() {
+        dispatch( actions.discovery.filter.open() );
       },
 
     };
