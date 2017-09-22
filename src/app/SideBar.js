@@ -18,14 +18,10 @@ import actions      from '../actions';
 /**
  * SideBar: our left-nav sidebar
  */
-function SideBar({systemReady, filter, changeView, filterDiscovery}) {
+function SideBar({systemReady, changeView, handleFilterDiscovery}) {
 
   if (!systemReady)
     return <Text/>
-
-  function handleFilterDiscovery() {
-    filterDiscovery(filter);
-  }
 
   return (
     <Container style={{...commonStyles.container, backgroundColor:'white'}}>
@@ -86,7 +82,6 @@ export default connect(
   (appState) => {
     return {
       systemReady: appState.systemReady,
-      filter:      appState.discovery.filter,
     };
   },
 
@@ -99,8 +94,8 @@ export default connect(
         closeSideBar();
       },
 
-      filterDiscovery(filter) {
-        dispatch( actions.discovery.filter.open(filter) );
+      handleFilterDiscovery() {
+        dispatch( actions.discovery.filter.open() );
         closeSideBar();
       },
 

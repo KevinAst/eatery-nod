@@ -28,6 +28,27 @@ export const initialize = createLogic({
 });
 
 
+
+/**
+ * Default the discovery.filter.open() domain param from the appState
+ * filter.
+ */
+export const defaultFilter = createLogic({
+
+  name: 'discovery.defaultFilter',
+  type: String(actions.discovery.filter.open),
+
+  transform({getState, action, api}, next) {
+    if (!action.domain) {
+      action.domain = getState().discovery.filter;
+    }
+    next(action);
+  },
+
+});
+
+
+
 /**
  * Process discovery filter.
  */
@@ -109,6 +130,7 @@ export const nextPage = createLogic({
 // promote all logic (accumulated in index.js)
 // ... named exports (above) are used by unit tests :-)
 export default [
+  defaultFilter, // must be prior to discoveryFilterFormMeta
   ...discoveryFilterFormMeta.registrar.formLogic(), // discoveryFilter iForm logic modules
   initialize,
   processFilter,
