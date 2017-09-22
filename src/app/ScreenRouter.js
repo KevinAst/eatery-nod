@@ -1,15 +1,17 @@
-import Expo                from 'expo';
-import React               from 'react';
-import {connect}           from 'react-redux';
-import RN                  from 'react-native';
-import isString            from 'lodash.isstring';
-import SplashScreen        from '../comp/SplashScreen';
-import FatalScreen         from '../comp/FatalScreen';
-import SignInScreen        from '../comp/SignInScreen';
-import SignInVerifyScreen  from '../comp/SignInVerifyScreen';
-import EateriesListScreen  from '../comp/EateriesListScreen';
-import EateryDetailScreen  from '../comp/EateryDetailScreen';
-import DiscoveryListScreen from '../comp/DiscoveryListScreen';
+import Expo                  from 'expo';
+import React                 from 'react';
+import {connect}             from 'react-redux';
+import RN                    from 'react-native';
+import isString              from 'lodash.isstring';
+import SplashScreen          from '../comp/SplashScreen';
+import FatalScreen           from '../comp/FatalScreen';
+import SignInScreen          from '../comp/SignInScreen';
+import SignInVerifyScreen    from '../comp/SignInVerifyScreen';
+import EateriesListScreen    from '../comp/EateriesListScreen';
+import EateryDetailScreen    from '../comp/EateryDetailScreen';
+import DiscoveryListScreen   from '../comp/DiscoveryListScreen';
+import DiscoveryFilterScreen from '../comp/DiscoveryFilterScreen';
+
 
 /**
  * Our top-level App component that serves as a simple
@@ -66,15 +68,18 @@ class ScreenRouter extends React.Component {
       // ... this is our real app screens (after authorization)
       case 'signedIn':
 
-        if (p.appState.view === 'eateries') {
-          if (p.appState.eateries.spin) {
+        if (p.appState.discovery.filterForm) { // ... kinda unexpected: isolated from other Discovery feature (how would this work in "pods" concept?
+          return <DiscoveryFilterScreen/>;
+        }
+        else if (p.appState.view === 'eateries') {
+          if (p.appState.eateries.spin) { // TODO: embed this spinner in EateriesListScreen logic (try to remove the spin msg)
             return <SplashScreen msg={p.appState.eateries.spin}/>;
           }
           else if (p.appState.eateries.detailView) {
             const eatery = p.appState.eateries.dbPool[p.appState.eateries.detailView];
             return <EateryDetailScreen eatery={eatery}/>;
           }
-          else if (p.appState.eateries.listView.entries) {
+          else if (p.appState.eateries.listView.entries) { // TODO: handle case in EateriesListScreen
             return <EateriesListScreen/>;
           }
         }

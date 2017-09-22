@@ -1,25 +1,31 @@
 import React        from 'react';
 import {connect}    from 'react-redux';
-import {TouchableWithoutFeedback} from 'react-native';
 import {Body,
+        Button,
         Container,
         Content,
+        Icon,
         Header,
+        Left,
         List,
         ListItem,
+        Right,
         Text,
-        Title,
-        View}       from 'native-base';
+        Title}      from 'native-base';
 import commonStyles from '../comp/commonStyles';
 import actions      from '../actions';
 
 /**
  * SideBar: our left-nav sidebar
  */
-function SideBar({systemReady, changeView}) {
+function SideBar({systemReady, filter, changeView, filterDiscovery}) {
 
   if (!systemReady)
     return <Text/>
+
+  function handleFilterDiscovery() {
+    filterDiscovery(filter);
+  }
 
   return (
     <Container style={{...commonStyles.container, backgroundColor:'white'}}>
@@ -30,16 +36,31 @@ function SideBar({systemReady, changeView}) {
       </Header>
       <Content>
         <List>
-          <TouchableWithoutFeedback onPress={()=>changeView('eateries')}>
-            <ListItem>
-              <Text>Eateries</Text>
-            </ListItem>
-          </TouchableWithoutFeedback>
-          <TouchableWithoutFeedback onPress={()=>changeView('discovery')}>
-            <ListItem>
-              <Text>Discovery</Text>
-            </ListItem>
-          </TouchableWithoutFeedback>
+
+          <ListItem icon onPress={()=>changeView('eateries')}>
+            <Left>
+              <Icon name="bonfire" style={{color: 'red'}}/>
+            </Left>
+            <Body>
+              <Text style={{color: 'red'}}>Eatery Pool</Text>
+            </Body>
+            <Right/>
+          </ListItem>
+
+          <ListItem icon onPress={()=>changeView('discovery')}>
+            <Left>
+              <Icon name="cloud" style={{color: 'green'}}/>
+            </Left>
+            <Body>
+              <Text style={{color: 'green'}}>Discovery</Text>
+            </Body>
+            <Right>
+              <Button transparent onPress={handleFilterDiscovery}>
+                <Icon active name="options"/>
+              </Button>
+            </Right>
+          </ListItem>
+
         </List>
       </Content>
     </Container>
@@ -56,7 +77,7 @@ export function openSideBar() {
 }
 
 export function closeSideBar() {
-  _drawer._root.close();
+  setTimeout(() => _drawer._root.close(), 1); // delay so as to have new view up when sidebar closes (HACK)
 }
 
 export default connect(
@@ -65,24 +86,24 @@ export default connect(
   (appState) => {
     return {
       systemReady: appState.systemReady,
+      filter:      appState.discovery.filter,
     };
   },
 
   // mapDispatchToProps()
-  (dispatch) => {
+  (dispatch, ownProps) => {
     return {
+
       changeView(view) {
         dispatch( actions.view.change(view) );
-        setTimeout(() => closeSideBar(), 1); // delay so as to have new view up when sidebar closes (HACK)
-        if (view==='discovery') { // ?? temp HACK for now
-          const tempFilter = {
-            location: [38.752209, -89.986610], // Glen Carbon
-            radius:   10,                      // 10 miles
-         // searchText: 'collensville', // 'fazzis'
-          };
-          dispatch( actions.discovery.retrieve(tempFilter) );
-        }
+        closeSideBar();
       },
+
+      filterDiscovery(filter) {
+        dispatch( actions.discovery.filter.open(filter) );
+        closeSideBar();
+      },
+
     };
   }
 

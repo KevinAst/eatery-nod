@@ -17,7 +17,7 @@ const esc                 = encodeURIComponent; // convenience alias
  * @param {[lat,lng]} namedArgs.location the geo location to base the
  * nearby search on.
  *
- * @param {number} namedArgs.radius the radius distance (in miles) to
+ * @param {number} namedArgs.distance the radius distance (in miles) to
  * search for (1-31), DEFAULT TO 5.
  *
  * @param {number} namedArgs.searchText an optional search text (ex:
@@ -36,7 +36,7 @@ const esc                 = encodeURIComponent; // convenience alias
  *   }
  */
 export function searchEateries({location,
-                                radius=5,
+                                distance=5,
                                 searchText='',
                                 pagetoken=null, // hidden/internal namedArg used by searchEateriesNextPage()
                                 ...unknownArgs}={}) {
@@ -50,8 +50,8 @@ export function searchEateries({location,
   if (!pagetoken) {
     check(location,                'location is required ... [lat,lng]'); // really need to check array of two numbers
     
-    check(radius,                  'radius is required ... (1-31) miles');
-    check(radius>=1 && radius<=31, `supplied radius (${radius}) must be between 1-31 miles`);
+    check(distance,                    'distance is required ... (1-31) miles');
+    check(distance>=1 && distance<=31, `supplied distance (${distance}) must be between 1-31 miles`);
     
     check(isString(searchText),    `supplied searchText (${searchText}) must be a string`);
     
@@ -76,7 +76,7 @@ export function searchEateries({location,
     selCrit = {
       // ... supplied by client (via params
       location,
-      radius: miles2meters(radius),
+      radius: miles2meters(distance),
 
       // ... hard coded by our "eatery" requirements
       type:     'restaurant',

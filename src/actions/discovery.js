@@ -1,7 +1,12 @@
-import {generateActions} from 'action-u';
+import {generateActions}        from 'action-u';
+import discoveryFilterFormMeta  from '../logic/iForms/discoveryFilterFormMeta';
 
 export default generateActions.root({
   discovery: {
+
+    // inject the standard iForm auto-generated form actions
+    // ... open(), fieldChanged(), fieldTouched(), process(), process.reject(), close()
+    filter: discoveryFilterFormMeta.registrar.formActionGenesis(),
 
     retrieve: { // discovery.retrieve([filter]): Action
                 // > retrieval of discovery eateries using supplied filter
@@ -10,11 +15,11 @@ export default generateActions.root({
                   traits: ['filter']
                 },
 
-      complete: { // discovery.retrieve.complete(eateriesResp): Action
+      complete: { // discovery.retrieve.complete(filter, eateriesResp): Action
                   // > discovery eateries retrieval complete, with supplied response
                   //   INTENT: #byUser, #byLogic, #forLogic, #forReducer ??
                   actionMeta: {
-                    traits: ['eateriesResp'],
+                    traits: ['filter', 'eateriesResp'],
                   },
       },
 

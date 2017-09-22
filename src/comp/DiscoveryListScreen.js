@@ -22,7 +22,7 @@ import {openSideBar} from '../app/SideBar';
 /**
  * DiscoveryListScreen displaying our discovered eateries.
  */
-function DiscoveryListScreen({eateries, nextPageToken, eateryPool, toggleEateryPool, handleNextPage}) {
+function DiscoveryListScreen({inProgress, eateries, nextPageToken, eateryPool, toggleEateryPool, handleNextPage}) {
 
   // ***
   // *** define page content
@@ -31,7 +31,7 @@ function DiscoveryListScreen({eateries, nextPageToken, eateryPool, toggleEateryP
   let content = null;
 
   // case for eateries retrieval in-progress
-  if (eateries===null) {
+  if (eateries===null || inProgress==='retrieve') { // just to be safe ... eateries===null
     content = 
       <ListItem>
         <Left/>
@@ -44,7 +44,7 @@ function DiscoveryListScreen({eateries, nextPageToken, eateryPool, toggleEateryP
       </ListItem>;
   }
 
-  // case for NO eateries found (in retrieval) ?? test this out
+  // case for NO eateries found (in retrieval)
   else if (eateries.length === 0) {
     content = 
       <ListItem>
@@ -93,13 +93,12 @@ function DiscoveryListScreen({eateries, nextPageToken, eateryPool, toggleEateryP
 
     // provide CRUDE next page mechanism
     if (nextPageToken) {
-      const nextPageContent = nextPageToken === 'nextPageInProgress'
-                            ? <Button transparent><Spinner color="blue"/></Button>
-                            : <Button transparent onPress={()=>handleNextPage(nextPageToken)}>
-                                <Icon name="refresh"/>
-                                <Text>... more</Text>
-                              </Button>;
-
+      const nextPageContent = inProgress==='next'
+                                ? <Button transparent><Spinner color="blue"/></Button>
+                                : <Button transparent onPress={()=>handleNextPage(nextPageToken)}>
+                                    <Icon name="refresh"/>
+                                    <Text>... more</Text>
+                                  </Button>;
       content.push(
         <ListItem key="nextPage">
           <Left/>
@@ -110,7 +109,7 @@ function DiscoveryListScreen({eateries, nextPageToken, eateryPool, toggleEateryP
         </ListItem>
       );
     }
-    // notify user when 60 entry limitation has been met (a limitation of the "free" Google Places API) ?? test this out
+    // notify user when 60 entry limitation has been met (a limitation of the "free" Google Places API)
     else if (content.length === 60) {
       content.push(
         <ListItem key="maxEntriesHit">
@@ -157,6 +156,7 @@ export default connect(
   // mapStateToProps()
   (appState) => {
     return {
+      inProgress:    appState.discovery.inProgress,
       eateries:      appState.discovery.eateries,
       nextPageToken: appState.discovery.nextPageToken,
       eateryPool:    appState.eateries.dbPool,
