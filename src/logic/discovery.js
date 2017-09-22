@@ -19,7 +19,7 @@ export const initialize = createLogic({
         appState.discovery.eateries === null        && // ... discovery eateries in initial state
         !appState.discovery.inProgress) {              // ... no in-progress discovery retrieval
       // initial retrieval using default filter (located in our app state)
-      dispatch( actions.discovery.retrieve({...appState.discovery.filter, location: [38.752209, -89.986610]}) ); // TODO: location temp hard-coded to Glen Carbon
+      dispatch( actions.discovery.retrieve({...appState.discovery.filter, loc: [38.752209, -89.986610]}) ); // TODO: loc temp hard-coded to Glen Carbon
     }
 
     done();
@@ -39,7 +39,7 @@ export const processFilter = createLogic({
   process({getState, action, api}, dispatch, done) {
     // retrieve using new filter from form
     const filter = action.domain;
-    dispatch( actions.discovery.retrieve({...filter, location: [38.752209, -89.986610]}) ); // TODO: location temp hard-coded to Glen Carbon
+    dispatch( actions.discovery.retrieve({...filter, loc: [38.752209, -89.986610]}) ); // TODO: loc temp hard-coded to Glen Carbon
     
     // show 'discovery' view
     dispatch( actions.view.change('discovery') );

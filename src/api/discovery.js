@@ -14,7 +14,7 @@ const esc                 = encodeURIComponent; // convenience alias
 /**
  * Search/retreive nearby restaurants.
  * 
- * @param {[lat,lng]} namedArgs.location the geo location to base the
+ * @param {[lat,lng]} namedArgs.loc the geo location to base the
  * nearby search on.
  *
  * @param {number} namedArgs.distance the radius distance (in miles) to
@@ -35,7 +35,7 @@ const esc                 = encodeURIComponent; // convenience alias
  *     ]
  *   }
  */
-export function searchEateries({location,
+export function searchEateries({loc,
                                 distance=5,
                                 searchText='',
                                 pagetoken=null, // hidden/internal namedArg used by searchEateriesNextPage()
@@ -48,12 +48,12 @@ export function searchEateries({location,
   const check = verify.prefix('api.discovery.searchEateries() parameter violation: ');
 
   if (!pagetoken) {
-    check(location,                'location is required ... [lat,lng]'); // really need to check array of two numbers
+    check(loc,                         'loc is required ... [lat,lng]'); // really need to check array of two numbers
     
     check(distance,                    'distance is required ... (1-31) miles');
     check(distance>=1 && distance<=31, `supplied distance (${distance}) must be between 1-31 miles`);
     
-    check(isString(searchText),    `supplied searchText (${searchText}) must be a string`);
+    check(isString(searchText),        `supplied searchText (${searchText}) must be a string`);
     
     const unknownArgKeys = Object.keys(unknownArgs);
     check(unknownArgKeys.length===0,  `unrecognized named parameter(s): ${unknownArgKeys}`);
@@ -75,8 +75,8 @@ export function searchEateries({location,
   else {
     selCrit = {
       // ... supplied by client (via params
-      location,
-      radius: miles2meters(distance),
+      location: loc,
+      radius:   miles2meters(distance),
 
       // ... hard coded by our "eatery" requirements
       type:     'restaurant',

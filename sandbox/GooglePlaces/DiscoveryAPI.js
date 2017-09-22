@@ -6,8 +6,8 @@ import * as discoveryAPI from '../../src/api/discovery';
 // ***
 
 const selCrit = {
-  location: [38.752209, -89.986610], // Glen Carbon
-  radius:   10,                      // 10 miles
+  loc:      [38.752209, -89.986610], // Glen Carbon
+  distance: 10,                      // 10 miles
 };
 
 // ***
