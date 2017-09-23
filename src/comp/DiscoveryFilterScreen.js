@@ -9,6 +9,7 @@ import {Body,
         Icon,
         Header,
         Left,
+        Radio,
         Right,
         Spinner,
         Text,
@@ -64,11 +65,25 @@ function DiscoveryFilterScreen({iForm}) {
                       iForm={iForm}
                       placeholder="... restaurant or town"
                       keyboardType="default"/>
+          <Note>   ... optional - suggest a restaurant or town</Note>
 
           <ITextField fieldName="distance"
                       iForm={iForm}
                       placeholder="... enter 1-30"
                       keyboardType="numeric"/>
+          <Note>   ... enter 1-30</Note>
+
+          {verticalSpacing}
+
+          <View style={{flex: 1, flexDirection: 'row', alignItems: 'flex-start', justifyContent: 'flex-start', paddingLeft: 20, paddingTop: 10}}>
+            <Text>{iForm.getLabel('minprice')}      </Text>
+            <RadioPrice iForm={iForm} myValue="0"/>
+            <RadioPrice iForm={iForm} myValue="1"/>
+            <RadioPrice iForm={iForm} myValue="2"/>
+            <RadioPrice iForm={iForm} myValue="3"/>
+            <RadioPrice iForm={iForm} myValue="4"/>
+          </View>
+          <Note>   ... most affordable to most expensive</Note>
 
           {verticalSpacing}
 
@@ -83,6 +98,32 @@ function DiscoveryFilterScreen({iForm}) {
         </Form>
       </Content>
     </Container>
+  );
+}
+
+// convenience Note component (internal usage)
+function Note({children}) {
+  return (
+    <Text note style={{paddingRight: 20, paddingLeft: 20}}>
+      {children}
+    </Text>
+  );
+}
+
+// convenience RadioPrice component (internal usage)
+function RadioPrice({iForm, myValue}) {
+  const myFieldName = 'minprice';
+  const handleFieldChanged = () => iForm.handleFieldChanged(myFieldName, myValue);
+  return (
+    <View style={{flexDirection: 'row', alignItems: 'flex-start', justifyContent: 'flex-start', paddingLeft: 0}}>
+      <Radio selected={myValue===iForm.getValue(myFieldName)}
+             onPress={handleFieldChanged}/>
+      <Text note
+            style={{paddingRight: 20, paddingLeft: 5}}
+            onPress={handleFieldChanged}>
+        {myValue}
+      </Text>
+    </View>
   );
 }
 

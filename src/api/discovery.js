@@ -17,11 +17,14 @@ const esc                 = encodeURIComponent; // convenience alias
  * @param {[lat,lng]} namedArgs.loc the geo location to base the
  * nearby search on.
  *
+ * @param {number} namedArgs.searchText an optional search text (ex:
+ * restaurant name, or town, etc.).
+ *
  * @param {number} namedArgs.distance the radius distance (in miles) to
  * search for (1-31), DEFAULT TO 5.
  *
- * @param {number} namedArgs.searchText an optional search text (ex:
- * restaurant name, or town, etc.).
+ * @param {string} namedArgs.minprice the minimum price range '0'-'4'
+ * (from most affordable to most expensive), DEFAULT TO '1'.
  * 
  * @return {promise} a promise resolving to:
  *   {
@@ -36,8 +39,9 @@ const esc                 = encodeURIComponent; // convenience alias
  *   }
  */
 export function searchEateries({loc,
-                                distance=5,
                                 searchText='',
+                                distance=5,
+                                minprice='1',
                                 pagetoken=null, // hidden/internal namedArg used by searchEateriesNextPage()
                                 ...unknownArgs}={}) {
 
@@ -48,15 +52,18 @@ export function searchEateries({loc,
   const check = verify.prefix('api.discovery.searchEateries() parameter violation: ');
 
   if (!pagetoken) {
-    check(loc,                         'loc is required ... [lat,lng]'); // really need to check array of two numbers
+    check(loc,                            'loc is required ... [lat,lng]'); // really need to check array of two numbers
     
-    check(distance,                    'distance is required ... (1-31) miles');
-    check(distance>=1 && distance<=31, `supplied distance (${distance}) must be between 1-31 miles`);
+    check(isString(searchText),           `supplied searchText (${searchText}) must be a string`);
     
-    check(isString(searchText),        `supplied searchText (${searchText}) must be a string`);
+    check(distance,                       'distance is required ... (1-31) miles');
+    check(distance>=1 && distance<=31,    `supplied distance (${distance}) must be between 1-31 miles`);
+    
+    check(minprice,                       'minprice is required ... (0-4)');
+    check(minprice>='0' && minprice<='4', `supplied minprice (${minprice}) must be between 0-4`);
     
     const unknownArgKeys = Object.keys(unknownArgs);
-    check(unknownArgKeys.length===0,  `unrecognized named parameter(s): ${unknownArgKeys}`);
+    check(unknownArgKeys.length===0,      `unrecognized named parameter(s): ${unknownArgKeys}`);
   }
 
 
@@ -77,10 +84,10 @@ export function searchEateries({loc,
       // ... supplied by client (via params
       location: loc,
       radius:   miles2meters(distance),
+      minprice,
 
       // ... hard coded by our "eatery" requirements
       type:     'restaurant',
-      minprice: 1, // would like 2, but other params impact this too (keep at 1)
       key:      apiKey
     };
 

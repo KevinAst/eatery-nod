@@ -8,4 +8,5 @@ export default reducerHash({
 { // initialState
   searchText: '',
   distance:   10,
+  minprice:   '1',
 });

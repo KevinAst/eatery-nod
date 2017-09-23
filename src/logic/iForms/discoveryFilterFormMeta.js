@@ -9,6 +9,7 @@ export default IFormMeta({
   formSchema: Yup.object().shape({
     searchText: Yup.string().label('Search'),
     distance:   Yup.number().label('Miles').typeError(distanceMsg).required().min(1, distanceMsg).max(30, distanceMsg),
+    minprice:   Yup.string().label('Price')
   }),
   formActionsAccessor: ()         => actions.discovery.filter,
   formStateSelector:   (appState) => appState.discovery.filterForm,
