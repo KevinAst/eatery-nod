@@ -9,7 +9,6 @@ import {Body,
         Icon,
         Header,
         Left,
-        Radio,
         Right,
         Spinner,
         Text,
@@ -18,6 +17,7 @@ import {Body,
 import commonStyles            from './commonStyles';
 import discoveryFilterFormMeta from '../logic/iForms/discoveryFilterFormMeta';
 import ITextField              from '../util/iForms/comp/ITextField';
+import IRadioField             from '../util/iForms/comp/IRadioField';
 
 
 /**
@@ -28,8 +28,12 @@ function DiscoveryFilterScreen({iForm}) {
 
   const verticalSpacing = <View style={{paddingVertical: 10}}/>;
 
-  const formLabel     = iForm.getLabel();
-  const formInProcess = iForm.inProcess();
+  const formLabel       = iForm.getLabel();
+  const formInProcess   = iForm.inProcess();
+  const priceRadioProps = {
+    fieldName: 'minprice',
+    iForm,
+  };
 
   return (
     <Container style={commonStyles.container}>
@@ -75,14 +79,13 @@ function DiscoveryFilterScreen({iForm}) {
 
           {verticalSpacing}
 
-          <View style={{flex: 1, flexDirection: 'row', alignItems: 'flex-start', justifyContent: 'flex-start', paddingLeft: 20, paddingTop: 10}}>
-            <Text>{iForm.getLabel('minprice')}      </Text>
-            <RadioPrice iForm={iForm} myValue="0"/>
-            <RadioPrice iForm={iForm} myValue="1"/>
-            <RadioPrice iForm={iForm} myValue="2"/>
-            <RadioPrice iForm={iForm} myValue="3"/>
-            <RadioPrice iForm={iForm} myValue="4"/>
-          </View>
+          <IRadioField {...priceRadioProps}>
+            <IRadioField.Op value="0" label="0" {...priceRadioProps}/>
+            <IRadioField.Op value="1" label="1" {...priceRadioProps}/>
+            <IRadioField.Op value="2" label="2" {...priceRadioProps}/>
+            <IRadioField.Op value="3" label="3" {...priceRadioProps}/>
+            <IRadioField.Op value="4" label="4" {...priceRadioProps}/>
+          </IRadioField>
           <Note>   ... most affordable to most expensive</Note>
 
           {verticalSpacing}
@@ -107,23 +110,6 @@ function Note({children}) {
     <Text note style={{paddingRight: 20, paddingLeft: 20}}>
       {children}
     </Text>
-  );
-}
-
-// convenience RadioPrice component (internal usage)
-function RadioPrice({iForm, myValue}) {
-  const myFieldName = 'minprice';
-  const handleFieldChanged = () => iForm.handleFieldChanged(myFieldName, myValue);
-  return (
-    <View style={{flexDirection: 'row', alignItems: 'flex-start', justifyContent: 'flex-start', paddingLeft: 0}}>
-      <Radio selected={myValue===iForm.getValue(myFieldName)}
-             onPress={handleFieldChanged}/>
-      <Text note
-            style={{paddingRight: 20, paddingLeft: 5}}
-            onPress={handleFieldChanged}>
-        {myValue}
-      </Text>
-    </View>
   );
 }
 
