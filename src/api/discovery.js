@@ -3,10 +3,10 @@ import verify    from '../util/verify';
 import isString  from 'lodash.isstring';
 
 // sample Google Places search:
-// - Near By Place Search
-//   ... https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=38.752209,-89.986610&radius=8000&type=restaurant&key=YOUR_API_KEY
-// - Place Details
-//   ... https://maps.googleapis.com/maps/api/place/details/json?placeid=xxx&key=YOUR_API_KEY
+// - Near By Place Search:
+//   https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=38.752209,-89.986610&radius=8000&type=restaurant&key=YOUR_API_KEY
+// - Place Details:
+//   https://maps.googleapis.com/maps/api/place/details/json?placeid=xxx&key=YOUR_API_KEY
 
 const googlePlacesBaseUrl = 'https://maps.googleapis.com/maps/api/place';
 const esc                 = encodeURIComponent; // convenience alias
@@ -97,91 +97,41 @@ export function searchEateries({loc,
     }
   }
 
+  // DETAIL_SAMPLE: sandbox/GooglePlaces/discovery/sample.searchEateries.input.selCrit.js
+  // console.log(`xx sample.searchEateries.input.selCrit: `, selCrit);
+
+
   // ***
   // *** define our URL, injecting the selCrit as a queryStr
   // ***
 
   const queryStr  = Object.keys(selCrit).map( k => `${esc(k)}=${esc(selCrit[k])}` ).join('&');
   const searchUrl = `${googlePlacesBaseUrl}/nearbysearch/json?${queryStr}`;
-  // console.log(`xx api.discovery.searchEateries() searchUrl: '${searchUrl}'`);
-  // ex: https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=38.752209%2C-89.98661&radius=16093.4&type=restaurant&minprice=1&key=SnipSnip
+
+  // DETAIL_SAMPLE: sandbox/GooglePlaces/discovery/sample.searchEateries.input.queryStr.txt
+  // console.log(`xx sample.searchEateries.input.queryStr: `, queryStr);
+
+  // DETAIL_SAMPLE: sandbox/GooglePlaces/discovery/sample.searchEateries.input.searchUrl.txt
+  // console.log(`xx sample.searchEateries.input.searchUrl: `, searchUrl);
+
 
   // ***
   // *** issue our network retrieval, returning our promise
   // ***
 
-  return fetch(searchUrl) // ?? response detail shown in sandbox/???? ?? remove the lengthy comments here
+  return fetch(searchUrl)
     .then( checkHttpResponseStatus ) // validate the http response status
     .then( validResp => {
-      // validResp ...
-      //   console.log(`xx http resp: `, validResp);
-      //   sample ...
-      //     resp = {
-      //       type: "default",
-      //       status: 200,
-      //       ok: true,
-      //       headers: {
-      //         map: {
-      //           ...
-      //         },
-      //       },
-      //       url: "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=38.752209,-89.986610...BlaBlaBla",
-      //       _bodyInit: "... payload json in string format (interpreted in resp.json) ...",
-      //     }
+      // DETAIL_SAMPLE: sandbox/GooglePlaces/discovery/sample.searchEateries.output.validResp.txt
+      // console.log(`xx sample.searchEateries.output.validResp: `, validResp);
 
       // convert payload to JSON
       // ... this is a promise (hence the usage of an additional .then())
       return validResp.json();
     })
     .then( payloadJson => {
-      // payloadJson ...
-      //   console.log(`xx payloadJson: `, payloadJson);
-      //   sample ...
-      //     payloadJson = {
-      //       html_attributions: [],
-      //       next_page_token: "... big monstor token OR null ...",
-      //       results: [
-      //         {
-      //           geometry: {
-      //             location: {
-      //               lat: 38.79201130000001,
-      //               lng: -89.951972
-      //             },
-      //             viewport: {
-      //               ...
-      //             }
-      //           },
-      //           icon: "https://maps.gstatic.com/mapfiles/place_api/icons/restaurant-71.png",
-      //           id: "e572df56cbd029d57ffa784fc355645226224f23",
-      //           name: "Buffalo Wild Wings",
-      //           opening_hours: {
-      //             open_now: true,
-      //             weekday_text: []
-      //           },
-      //           photos: [
-      //             ...
-      //           ],
-      //           place_id: "ChIJBQeK_Lr5dYgRrEQGF15hQHs",
-      //           price_level: 1,
-      //           rating: 4.1,
-      //           reference: "...",
-      //           scope: "GOOGLE",
-      //           types: [
-      //             "meal_takeaway",
-      //             "bar",
-      //             "restaurant",
-      //             "food",
-      //             "point_of_interest",
-      //             "establishment"
-      //           ],
-      //           vicinity: "249 Harvard Drive, Edwardsville"
-      //         },
-      //         {
-      //           ...
-      //         },
-      //       ],
-      //       status: "OK"
-      //     }
+      // DETAIL_SAMPLE: sandbox/GooglePlaces/discovery/sample.searchEateries.output.payloadJson.js
+      // console.log(`xx sample.searchEateries.output.payloadJson: `, JSON.stringify(payloadJson));
 
       // insure the GooglePlaces status field is acceptable
       if (payloadJson.status !== 'OK' && payloadJson.status !== 'ZERO_RESULTS') {
@@ -192,7 +142,9 @@ export function searchEateries({loc,
 
       // convert to eatery
       const eateryResultsJson = gp2eateries(payloadJson);
-      // console.log(`xx gp2eateries: `, eateryResultsJson);
+      // DETAIL_SAMPLE: sandbox/GooglePlaces/discovery/sample.searchEateries.output.eateryResultsJson.js
+      // console.log(`xx sample.searchEateries.output.eateryResultsJson: `, JSON.stringify(eateryResultsJson));
+
       return eateryResultsJson;
     });
 }
@@ -257,27 +209,42 @@ export function getEateryDetail(eateryId) {
     key:      apiKey
   };
 
+  // DETAIL_SAMPLE: sandbox/GooglePlaces/discovery/sample.getEateryDetail.input.params.js
+  // console.log(`xx sample.getEateryDetail.input.params: `, params);
+
+
   // ***
   // *** define our URL, injecting the params as a queryStr
   // ***
 
   const queryStr  = Object.keys(params).map( k => `${esc(k)}=${esc(params[k])}` ).join('&');
   const url = `${googlePlacesBaseUrl}/details/json?${queryStr}`;
-  // console.log(`xx api.discovery.getEateryDetail() url: '${url}'`);
-  // ex: https://maps.googleapis.com/maps/api/place/details/json?placeid=ChIJr7nIlGpV34cRlT0NYwJOLNg&key=SnipSnip
+
+  // DETAIL_SAMPLE: sandbox/GooglePlaces/discovery/sample.getEateryDetail.input.queryStr.txt
+  // console.log(`xx sample.getEateryDetail.input.queryStr: `, queryStr);
+
+  // DETAIL_SAMPLE: sandbox/GooglePlaces/discovery/sample.getEateryDetail.input.url.txt
+  // console.log(`xx sample.getEateryDetail.input.url: `, url);
+
 
   // ***
   // *** issue our network retrieval, returning our promise
   // ***
 
-  return fetch(url) // ?? response detail shown in sandbox/???
+  return fetch(url)
     .then( checkHttpResponseStatus ) // validate the http response status
     .then( validResp => {
+      // DETAIL_SAMPLE: sandbox/GooglePlaces/discovery/sample.getEateryDetail.output.validResp.txt
+      // console.log(`xx sample.getEateryDetail.output.validResp: `, validResp);
+
       // convert payload to JSON
       // ... this is a promise (hence the usage of an additional .then())
       return validResp.json();
     })
     .then( payloadJson => {
+
+      // DETAIL_SAMPLE: sandbox/GooglePlaces/discovery/sample.getEateryDetail.output.payloadJson.js
+      // console.log(`xx sample.getEateryDetail.output.payloadJson: `, JSON.stringify(payloadJson));
 
       // interpret GooglePlaces status error conditions
       if (payloadJson.status !== 'OK') {
@@ -288,7 +255,9 @@ export function getEateryDetail(eateryId) {
 
       // convert to eatery
       const eatery = gp2eatery(payloadJson.result);
-      // console.log(`xx gp2eatery: `, eatery);
+      // DETAIL_SAMPLE: sandbox/GooglePlaces/discovery/sample.getEateryDetail.output.eatery.js
+      // console.log(`xx sample.getEateryDetail.output.eatery: `, JSON.stringify(eatery));
+
       return eatery;
     });
 }
@@ -345,6 +314,11 @@ function miles2meters(miles) {
  * Validate http response status.
  */
 function checkHttpResponseStatus(resp) {
+
+  // DETAIL_SAMPLE: sandbox/GooglePlaces/discovery/sample.searchEateries.output.resp.txt
+  // DETAIL_SAMPLE: sandbox/GooglePlaces/discovery/sample.getEateryDetail.output.resp.txt
+  // console.log(`xx sample.searchEateries.output.resp: `, resp);
+
   if (resp.status >= 200 && resp.status < 300) {
     return resp; // valid
   } 
