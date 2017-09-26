@@ -14,6 +14,10 @@ import {Body,
         Title}      from 'native-base';
 import commonStyles from '../comp/commonStyles';
 import actions      from '../actions';
+import {notify, 
+        toast,
+        alert,
+        confirm}    from '../util/notify';
 
 /**
  * SideBar: our left-nav sidebar
@@ -55,6 +59,104 @@ function SideBar({systemReady, changeView, handleFilterDiscovery}) {
                 <Icon active name="options"/>
               </Button>
             </Right>
+          </ListItem>
+
+          {/* Sandbox tests of our notify utility */}
+          <ListItem itemDivider>
+            <Text>Notify Sandbox</Text>
+          </ListItem>
+
+          <ListItem icon onPress={()=>Msg(false)}>
+            <Left>
+              <Icon name="alert" style={{color: 'purple'}}/>
+            </Left>
+            <Body left={1}>
+              <Text style={{color: 'purple'}}>Msg</Text>
+            </Body>
+            <Right>
+              <Button transparent onPress={()=>Msg(true)}>
+                <Icon active name="desktop"/>
+              </Button>
+            </Right>
+          </ListItem>
+
+          <ListItem icon onPress={()=>Msg_w_Dur(false)}>
+            <Left>
+              <Icon name="alert" style={{color: 'purple'}}/>
+            </Left>
+            <Body left={1}>
+              <Text style={{color: 'purple'}}>Msg_w_Dur</Text>
+            </Body>
+            <Right>
+              <Button transparent onPress={()=>Msg_w_Dur(true)}>
+                <Icon active name="desktop"/>
+              </Button>
+            </Right>
+          </ListItem>
+
+          <ListItem icon onPress={()=>Msg_w_Act(false)}>
+            <Left>
+              <Icon name="alert" style={{color: 'purple'}}/>
+            </Left>
+            <Body left={1}>
+              <Text style={{color: 'purple'}}>Msg_w_Act</Text>
+            </Body>
+            <Right>
+              <Button transparent onPress={()=>Msg_w_Act(true)}>
+                <Icon active name="desktop"/>
+              </Button>
+            </Right>
+          </ListItem>
+
+          <ListItem icon onPress={()=>Msg_w_Act_Dur(false)}>
+            <Left>
+              <Icon name="alert" style={{color: 'purple'}}/>
+            </Left>
+            <Body left={1}>
+              <Text style={{color: 'purple'}}>Msg_w_Act_Dur</Text>
+            </Body>
+            <Right>
+              <Button transparent onPress={()=>Msg_w_Act_Dur(true)}>
+                <Icon active name="desktop"/>
+              </Button>
+            </Right>
+          </ListItem>
+
+          <ListItem itemDivider>
+            <Text>Notify Wrappers</Text>
+          </ListItem>
+
+          <ListItem icon onPress={()=> {closeSideBar(); toast.warn('This is a toast warning')}}>
+            <Left>
+              <Icon name="alert" style={{color: 'purple'}}/>
+            </Left>
+            <Body left={1}>
+              <Text style={{color: 'purple'}}>toast.warn()</Text>
+            </Body>
+          </ListItem>
+
+          <ListItem icon onPress={()=> {closeSideBar(); alert.error('This is an alert error.\nYou must explicitly acknowledge it by clicking OK.')}}>
+            <Left>
+              <Icon name="alert" style={{color: 'purple'}}/>
+            </Left>
+            <Body left={1}>
+              <Text style={{color: 'purple'}}>alert.error()</Text>
+            </Body>
+          </ListItem>
+
+          <ListItem icon onPress={()=> {
+              closeSideBar();
+              confirm.warn('This is an confirm warning.\nYou must explicitly acknowledge it.', [
+                { txt: 'Discard Changes', action: () => console.log('xx Discarding Changes') },
+                { txt: 'Go Back' }
+              ]);
+            }}>
+            <Left>
+              <Icon name="alert" style={{color: 'purple'}}/>
+            </Left>
+            <Body left={1}>
+              <Text style={{color: 'purple'}}>confirm.warn()</Text>
+            </Body>
           </ListItem>
 
         </List>
@@ -103,3 +205,49 @@ export default connect(
   }
 
 )(SideBar);
+
+
+// Sandbox tests of our notify utility
+function Msg(modal) {
+  closeSideBar();
+  notify({
+    msg:   'Msg by itself.\nExpecting a default OK',
+    modal,
+  });
+}
+
+function Msg_w_Dur(modal) {
+  closeSideBar();
+  notify({
+    msg:      'Msg with Duration.',
+    duration: 3,
+    level:    'info',
+    modal,
+  });
+}
+
+function Msg_w_Act(modal) {
+  closeSideBar();
+  notify({
+    msg:   'Msg with Action.',
+    level: 'warn',
+    modal,
+    actions: [
+      { txt: 'Discard Changes', action: () => console.log('xx Discarding Changes') },
+      { txt: 'Go Back' }
+    ],
+  });
+}
+
+function Msg_w_Act_Dur(modal) {
+  closeSideBar();
+  notify({
+    msg:      'Msg with Duration and Action.',
+    duration: 5,
+    level:    'error',
+    modal,
+    actions: [
+      { txt: 'Undo', action: () => console.log('xx UnDoing') },
+    ],
+  });
+}

@@ -15,7 +15,7 @@ import {Body,
 import commonStyles   from './commonStyles';
 import signInFormMeta from '../logic/iForms/signInFormMeta';
 import ITextField     from '../util/iForms/comp/ITextField';
-
+import {toast}        from '../util/notify';
 
 /**
  * SignInScreen: gather user sign-in credentials.
@@ -68,12 +68,13 @@ function SignInScreen({iForm}) {
 
          <View style={{flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'center'}}>
            <Text>  ... don&apos;t have an account?  </Text>
-           <Button transparent onPress={()=>console.warn('Not Yet :-(')} disabled={formInProcess}>
+           <Button transparent
+                   onPress={()=>toast.warn('Sign Up has not yet been implemented.')}
+                   disabled={formInProcess}>
              <Icon name="log-in"/>
              <Text>Sign Up</Text>
            </Button>
          </View>
-
 
         {/* inProcess spinner  */}
         {formInProcess && <Spinner color="blue"/>}

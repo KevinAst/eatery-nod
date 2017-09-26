@@ -84,7 +84,7 @@ export default connect(
   (dispatch) => {
     return {
       showDetail(eateryId) {
-        //console.log(`??? showDetail for ${eateryId}`);
+        //console.log(`xx showDetail for ${eateryId}`);
         dispatch( actions.eateries.viewDetail(eateryId) );
       },
       handleSpin() {

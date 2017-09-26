@@ -9,6 +9,7 @@ import SideBar,
        {registerDrawer,
         closeSideBar}   from './SideBar';
 import ScreenRouter     from './ScreenRouter';
+import Notify           from '../util/notify';
 import actions          from '../actions';
 
 //***
@@ -31,6 +32,7 @@ const appRootComp = () => (
             content={<SideBar/>}
             onClose={closeSideBar}>
       <ScreenRouter/>
+      <Notify/>
     </Drawer>
   </Provider>);
 Expo.registerRootComponent(appRootComp);
