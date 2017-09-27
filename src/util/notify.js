@@ -24,15 +24,13 @@ import {Button,
  * summarized as:
  *
  * ```
- *                                            position
- *               params               modal  (via modal) notes
- *               ===================  ======  =========  ======================================
- * - notify .... (namedArgs)          either  either     named parameters direct exact features
- * - toast ..... ({msg,               NO      bottom     uses duration
- *                 [duration=3],
- *                 [action]})
- * - alert ..... (msg)                YES     top        injects single OK action TODO: may want to support optional actions in alert()
- * - confirm ... (msg, actions)       YES     top        requires client actions
+ *                                                     position
+ *               params                        modal  (via modal) notes
+ *               ===================           ======  =========  ======================================
+ * - notify .... (namedArgs)                   either  either     named parameters direct exact features
+ * - toast ..... ({msg, duration=3, actions})  NO      bottom     uses duration
+ * - alert ..... ({msg, actions})              YES     top        injects single OK action
+ * - confirm ... ({msg, actions})              YES     top        requires client actions
  * ```
  *
  * **Setup**: The Notify component is tightly controlled as a single
@@ -397,50 +395,73 @@ toast.error = function(directive) { toastBase(directive, 'error'); }
 /**
  * The alert() function is a convenience wrapper around notify() that
  * displays the supplied msg as a "alert" ... a modal dialog located
- * at the top of the screen, that must be closed by the user with an
- * OK button.
+ * at the top of the screen, that must be acknowledged by the user with
+ * either the default OK button, or a client-supplied action.
  *
  * Various levels can be accomplished via alert.info(), alert.warn(),
  * alert.error() ... all of which have the same signature.  NOTE:
  * alert() is the same as alert.info().
  *
- * @param {string} msg the message to be displayed. CR/LF are
+ * @param {string} directive.msg the message to be displayed. CR/LF are
  * supported to add spacing.
+ *
+ * @param {Action[]} [directive.actions] one or more actions -
+ * button/action combinations.  The required Action.txt defines the
+ * button label, and the Action.action is an option client-supplied
+ * callback.  Each defined action will implicitly close the dialog,
+ * in addition to invoking the optional client-supplied callback.
+ *
+ * NOTE: When NO actions are defined, a default OK  action is injected
+ *       that will close the dialog when clicked.
  *
  * Example:
  * ```
- *   alert('Hello World');
- *   alert.warn(`Your limit (${limit}) has been reached!`);
+ *   alert({ msg:'Hello World' });
+ *   alert.warn({ msg:`Your limit (${limit}) has been reached!` });
  * ```
  */
-function alertBase(msg, level) {
-  // NOTE: for alert(), all validations are provided by the root notify()
+function alertBase({msg, actions, ...unknownArgs}, level) {
+
+  // validate alert-specific characteristics (other validation done by notify())
+  const funcQual = level ? `.${level}` : '';
+  const check    = verify.prefix(`alert${funcQual}() parameter violation: `);
+
+  // checking msg explicitly avoids unknownArgKeys weirdnsess (below) when msg is passed as a non-named param
+  check(msg, 'directive.msg is required');
+
+  // ... NOTE: most validations are provided by the root notify()
+
+  const unknownArgKeys = Object.keys(unknownArgs);
+  check(unknownArgKeys.length===0,  `following directive()s are not allowed by alert: ${unknownArgKeys}`);
+
+  // defer to our general-purpose notify() utility
   notify({
     msg,
+    actions,
     level, // NOTE: level is defaulted by the root notify()
     modal: true,
   });
 }
-export function  alert(msg) { alertBase(msg);  }
-alert.info  = function(msg) { alertBase(msg, 'info');  }
-alert.warn  = function(msg) { alertBase(msg, 'warn');  }
-alert.error = function(msg) { alertBase(msg, 'error'); }
+export function  alert(directive) { alertBase(directive);          }
+alert.info  = function(directive) { alertBase(directive, 'info');  }
+alert.warn  = function(directive) { alertBase(directive, 'warn');  }
+alert.error = function(directive) { alertBase(directive, 'error'); }
 
 
 /**
  * The confirm() function is a convenience wrapper around notify()
  * that displays the supplied msg as a "confirmation" ... a modal
- * dialog located at the top of the screen, that must be acknologied
+ * dialog located at the top of the screen, that must be acknowledged
  * through client-supplied action buttons.
  *
  * Various levels can be accomplished via confirm.info(), confirm.warn(),
  * confirm.error() ... all of which have the same signature.  NOTE:
  * confirm() is the same as confirm.info().
  *
- * @param {string} msg the message to be displayed. CR/LF are
+ * @param {string} directive.msg the message to be displayed. CR/LF are
  * supported to add spacing.
  *
- * @param {Action[]} [actions] one or more actions - button/action
+ * @param {Action[]} directive.actions one or more actions - button/action
  * combinations.  The required Action.txt defines the button label,
  * and the Action.action is an option client-supplied callback.  Each
  * defined action will implicitly close the dialog, in addition to
@@ -448,20 +469,33 @@ alert.error = function(msg) { alertBase(msg, 'error'); }
  *
  * Example:
  * ```
- *   confirm.warn('This is an confirm warning.\nYou must explicitly acknowledge it.', [
- *     { txt: 'Discard Changes', action: () => console.log('xx Discarding Changes') },
- *     { txt: 'Go Back' }
- *   ]);
+ *   confirm.warn({ 
+ *     msg: 'This is an confirm warning.\nYou must explicitly acknowledge it.', 
+ *     actions: [
+ *       { txt: 'Discard Changes', action: () => console.log('xx Discarding Changes') },
+ *       { txt: 'Go Back' }
+ *     ]
+ *   });
  * ```
  */
-function confirmBase(msg, actions, level) {
+function confirmBase({msg, actions, ...unknownArgs}, level) {
 
   // validate confirm-specific characteristics (other validation done by notify())
   const funcQual = level ? `.${level}` : '';
   const check    = verify.prefix(`confirm${funcQual}() parameter violation: `);
 
+  // checking msg explicitly avoids unknownArgKeys weirdnsess (below) when msg is passed as a non-named param
+  check(msg, 'directive.msg is required');
+
+  // confirm() requires client-supp0lied actions
   check(actions && actions.length>0, 'client-specific actions are required.');
 
+  // ... NOTE: most validations are provided by the root notify()
+
+  const unknownArgKeys = Object.keys(unknownArgs);
+  check(unknownArgKeys.length===0,  `following directive()s are not allowed by confirm: ${unknownArgKeys}`);
+
+  // defer to our general-purpose notify() utility
   notify({
     msg,
     level, // NOTE: level is defaulted by the root notify()
@@ -469,7 +503,7 @@ function confirmBase(msg, actions, level) {
     actions,
   });
 }
-export function  confirm(msg, actions) { confirmBase(msg, actions);  }
-confirm.info  = function(msg, actions) { confirmBase(msg, actions, 'info');  }
-confirm.warn  = function(msg, actions) { confirmBase(msg, actions, 'warn');  }
-confirm.error = function(msg, actions) { confirmBase(msg, actions, 'error'); }
+export function  confirm(directive) { confirmBase(directive);          }
+confirm.info  = function(directive) { confirmBase(directive, 'info');  }
+confirm.warn  = function(directive) { confirmBase(directive, 'warn');  }
+confirm.error = function(directive) { confirmBase(directive, 'error'); }

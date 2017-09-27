@@ -152,7 +152,7 @@ function SideBar({systemReady, changeView, handleFilterDiscovery}) {
             </Body>
           </ListItem>
 
-          <ListItem icon onPress={()=> {closeSideBar(); alert.error('This is an alert error.\nYou must explicitly acknowledge it by clicking OK.')}}>
+          <ListItem icon onPress={()=> {closeSideBar(); alert.error({ msg: 'This is an alert error.\nYou must explicitly acknowledge it by clicking OK.' })}}>
             <Left>
               <Icon name="alert" style={{color: 'purple'}}/>
             </Left>
@@ -163,10 +163,13 @@ function SideBar({systemReady, changeView, handleFilterDiscovery}) {
 
           <ListItem icon onPress={()=> {
               closeSideBar();
-              confirm.warn('This is an confirm warning.\nYou must explicitly acknowledge it.', [
-                { txt: 'Discard Changes', action: () => console.log('xx Discarding Changes') },
-                { txt: 'Go Back' }
-              ]);
+              confirm.warn({ 
+                msg: 'This is an confirm warning.\nYou must explicitly acknowledge it.',
+                actions: [
+                  { txt: 'Discard Changes', action: () => console.log('xx Discarding Changes') },
+                  { txt: 'Go Back' }
+                ]
+              });
             }}>
             <Left>
               <Icon name="alert" style={{color: 'purple'}}/>

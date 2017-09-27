@@ -152,7 +152,6 @@ export const addToPoolPrep = createLogic({
 
     api.discovery.getEateryDetail(action.eateryId)
       .then(eatery => {
-        // throw new Error('?? ouchy: eateries.addToPoolPrep ... test this out');
         dispatch( actions.eateries.dbPool.add.eateryDetail(eatery) );
         done();
       })

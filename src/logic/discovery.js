@@ -86,7 +86,6 @@ export const retrieve = createLogic({
 
     api.discovery.searchEateries(action.filter)
        .then(resp => {
-         // throw new Error('?? ouchy: discovery.retrieve ... test this out');
          // console.log(`xx here is our response: `, resp);
          dispatch( actions.discovery.retrieve.complete(action.filter, resp) );
          done();
@@ -114,7 +113,6 @@ export const nextPage = createLogic({
 
     api.discovery.searchEateriesNextPage(action.pagetoken)
        .then(resp => {
-         // throw new Error('?? ouchy: discovery.nextPage ... test this out');
          // console.log(`xx here is our response: `, resp);
          dispatch( actions.discovery.nextPage.complete(resp) );
          done();

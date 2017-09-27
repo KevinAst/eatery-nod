@@ -1,4 +1,4 @@
-import {toast} from './notify';
+import {toast, alert} from './notify';
 
 /**
  * The handleUnexpectedError() function provides a common utility to
@@ -50,13 +50,12 @@ Please refresh the data and try your operation again.`
     // console.error(userMsg, err); // NO LIKEY in react-native (appears on device in "red screen of death")
     
     // notify user
-    toast.error({
+    alert.error({
       msg: userMsg,
       actions: [
         { txt: 'details',
           action: () => {
-            toast.error({ 
-              duration: 0, // forces an OK closure
+            alert.error({ 
               msg:      `${userMsg}
 
 ${err}
