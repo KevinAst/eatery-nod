@@ -31,7 +31,7 @@ import {Button,
  * - toast ..... ({msg,               NO      bottom     uses duration
  *                 [duration=3],
  *                 [action]})
- * - alert ..... (msg)                YES     top        injects single OK action
+ * - alert ..... (msg)                YES     top        injects single OK action TODO: may want to support optional actions in alert()
  * - confirm ... (msg, actions)       YES     top        requires client actions
  * ```
  *

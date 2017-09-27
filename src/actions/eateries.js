@@ -27,14 +27,14 @@ export default generateActions.root({
                         actionMeta: {
                           traits: ['eatery'],
                         },
-        },
       
-        detailFailed: { // eateries.dbPool.add.detailFailed(eateryId, err): Action
-                        // > in process of adding eatery, detail retrieval failed
-                        //   INTENT: #byUser, #byLogic, #forLogic, #forReducer ??
-                        actionMeta: {
-                          traits: ['eateryId', 'err'],
-                        },
+          fail: { // eateries.dbPool.add.eateryDetail.fail(eateryId, err): Action
+                  // > in process of adding eatery, detail retrieval failed
+                  //   INTENT: #byUser, #byLogic, #forLogic, #forReducer ??
+                  actionMeta: {
+                    traits: ['eateryId', 'err'],
+                  },
+          },
         },
       
       },

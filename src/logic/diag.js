@@ -18,7 +18,7 @@ export const communicateUnexpectedErrors = createLogic({
     const err = action.err ||   // ... from app async '*.fail' actions
                 action.payload; // ... from redux-logic error handler
 
-    dispatch( handleUnexpectedError(err) );
+    handleUnexpectedError(err);
     done();
   },
 
