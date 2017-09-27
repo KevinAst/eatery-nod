@@ -24,25 +24,38 @@ import {Button,
  * summarized as:
  *
  * ```
- *                                          position
- *               params             modal  (via modal) notes
- *               =================  ======  =========  ======================================
- * - notify .... (namedArgs)        either  either     named parameters direct exact function
- * - toast ..... (msg, duration=3)  NO      bottom     uses duration
- * - alert ..... (msg)              YES     top        injects single OK action
- * - confirm ... (msg, actions)     YES     top        requires client actions
+ *                                            position
+ *               params               modal  (via modal) notes
+ *               ===================  ======  =========  ======================================
+ * - notify .... (namedArgs)          either  either     named parameters direct exact features
+ * - toast ..... ({msg,               NO      bottom     uses duration
+ *                 [duration=3],
+ *                 [action]})
+ * - alert ..... (msg)                YES     top        injects single OK action
+ * - confirm ... (msg, actions)       YES     top        requires client actions
  * ```
  *
- * The Notify component is tightly controlled as a single instance
- * within an entire app.  Therefore, one and only one Notify instance
- * must be pre-instantiated (initially hidden) somewhere at the
- * top-level of your app:
+ * **Setup**: The Notify component is tightly controlled as a single
+ * instance within an entire app.  Therefore, one and only one Notify
+ * instance must be pre-instantiated (initially hidden) somewhere at
+ * the top-level of your app.
  *
  * ```
  *   <Notify/>
  * ```
  * 
- * Usage: see notify()
+ * **Usage**: see doc below: `notify()`, `toast()`, `alert()`, `confirm()`
+ * 
+ * **Module Note**:
+ *
+ *   This utility is housed in a lower-case `notify.js` module,
+ *   because the general public API is a series of lower-case "named
+ *   exported" functions: `notify()`, `toast()`, `alert()`,
+ *   `confirm()`.
+ * 
+ *   There is a "default exported" Notify component (which is somewhat
+ *   unusual to find in a lower-case module), but is only used once at
+ *   app startup, so is therefore justified (in this case).
  */
 export default class Notify extends React.Component {
 
@@ -69,7 +82,7 @@ export default class Notify extends React.Component {
            ...unknownArgs}={}) {
 
     // validate the named parameters (i.e. the directive)
-    const check = verify.prefix('Notify.display() parameter violation: ');
+    const check = verify.prefix('notify() parameter violation: '); // NOTE: we pretend we are: notify() (the public access point)
 
     check(msg, 'directive.msg is required');
     // TODO: check duration (if supplied) is a number between 1 and 20
@@ -302,8 +315,6 @@ const identityFn = (p)=>p;
  *     ]
  *   });
  * ```
- *
- * @public
  */
 export function notify(directive) {
   // validate that an <Notify> has been instantiated
@@ -324,33 +335,63 @@ export function notify(directive) {
  * toast.error() ... all of which have the same signature.  NOTE:
  * toast() is the same as toast.info().
  *
- * @param {string} msg the message to be displayed. CR/LF are
+ * @param {string} directive.msg the message to be displayed. CR/LF are
  * supported to add spacing.
  *
- * @param {number} [duration] the number of seconds before
- * automatically closing the dialog (default: 3).  A zero (0) directs
- * an explicit OK that must be clicked to close.
+ * @param {number} [directive.duration] the number of seconds before
+ * automatically closing the dialog (default: 3).  A zero (0) derfers to
+ * supplied actions to close (which in turn defaults to an OK).
+ *
+ * @param {Action[]} [directive.actions] one or more actions -
+ * button/action combinations.  The required Action.txt defines the
+ * button label, and the Action.action is an option client-supplied
+ * callback.  Each defined action will implicitly close the dialog,
+ * in addition to invoking the optional client-supplied callback.
+ *
+ * NOTE: When NO duration and NO actions are defined, a default OK 
+ *       action is injected that will close the dialog when clicked.
  *
  * Example:
  * ```
- *   toast('Hello World');
- *   toast.error(`An error occurred: ${err}`, 0);
+ *   toast({ msg:'Hello World' }); // will close in 3 secs
+ *   toast.error({ msg:     `An error occurred: ${err}`, 
+ *                 duration: 0 }); // OK button will close
+ *   toast.warn({                  // will close in 3 secs -OR- when "undo" is clicked
+ *     msg: 'Your item was deleted', 
+ *     actions: [
+ *       { txt: 'undo', action: () => ...callback-logic-here... },
+ *     ]
  * ```
- *
- * @public
  */
-export  function toast(msg, duration=3) { toastBase(msg, duration, 'info');  }
-toast.info  = function(msg, duration=3) { toastBase(msg, duration, 'info');  }
-toast.warn  = function(msg, duration=3) { toastBase(msg, duration, 'warn');  }
-toast.error = function(msg, duration=3) { toastBase(msg, duration, 'error'); }
-function     toastBase(msg, duration, level) {
+function toastBase({msg, duration=3, actions, ...unknownArgs}, level) {
+
+  // validate toast-specific characteristics (other validation done by notify())
+  const funcQual = level ? `.${level}` : '';
+  const check    = verify.prefix(`toast${funcQual}() parameter violation: `);
+
+  // checking msg explicitly avoids unknownArgKeys weirdnsess (below) when msg is passed as a non-named param
+  check(msg, 'directive.msg is required');
+
+  // ... NOTE: most validations are provided by the root notify()
+
+  const unknownArgKeys = Object.keys(unknownArgs);
+  check(unknownArgKeys.length===0,  `following directive()s are not allowed by toast: ${unknownArgKeys}`);
+
+  // defer to our general-purpose notify() utility
   notify({
     msg,
     duration,
-    level,
+    actions,
+    level, // NOTE: level is defaulted by the root notify()
     modal: false,
   });
 }
+export function  toast(directive) { toastBase(directive);          }
+toast.info  = function(directive) { toastBase(directive, 'info');  }
+toast.warn  = function(directive) { toastBase(directive, 'warn');  }
+toast.error = function(directive) { toastBase(directive, 'error'); }
+
+
 
 
 /**
@@ -371,20 +412,19 @@ function     toastBase(msg, duration, level) {
  *   alert('Hello World');
  *   alert.warn(`Your limit (${limit}) has been reached!`);
  * ```
- *
- * @public
  */
-export  function alert(msg) { alertBase(msg, 'info');  }
-alert.info  = function(msg) { alertBase(msg, 'info');  }
-alert.warn  = function(msg) { alertBase(msg, 'warn');  }
-alert.error = function(msg) { alertBase(msg, 'error'); }
-function     alertBase(msg, level) {
+function alertBase(msg, level) {
+  // NOTE: for alert(), all validations are provided by the root notify()
   notify({
     msg,
-    level,
+    level, // NOTE: level is defaulted by the root notify()
     modal: true,
   });
 }
+export function  alert(msg) { alertBase(msg);  }
+alert.info  = function(msg) { alertBase(msg, 'info');  }
+alert.warn  = function(msg) { alertBase(msg, 'warn');  }
+alert.error = function(msg) { alertBase(msg, 'error'); }
 
 
 /**
@@ -413,19 +453,23 @@ function     alertBase(msg, level) {
  *     { txt: 'Go Back' }
  *   ]);
  * ```
- *
- * @public
  */
-export  function confirm(msg, actions) { confirmBase(msg, actions, 'info');  }
-confirm.info  = function(msg, actions) { confirmBase(msg, actions, 'info');  }
-confirm.warn  = function(msg, actions) { confirmBase(msg, actions, 'warn');  }
-confirm.error = function(msg, actions) { confirmBase(msg, actions, 'error'); }
-function     confirmBase(msg, actions, level) {
-  verify(actions, 'confirm(): requires client-specific actions to be supplied.');
+function confirmBase(msg, actions, level) {
+
+  // validate confirm-specific characteristics (other validation done by notify())
+  const funcQual = level ? `.${level}` : '';
+  const check    = verify.prefix(`confirm${funcQual}() parameter violation: `);
+
+  check(actions && actions.length>0, 'client-specific actions are required.');
+
   notify({
     msg,
-    level,
+    level, // NOTE: level is defaulted by the root notify()
     modal: true,
     actions,
   });
 }
+export function  confirm(msg, actions) { confirmBase(msg, actions);  }
+confirm.info  = function(msg, actions) { confirmBase(msg, actions, 'info');  }
+confirm.warn  = function(msg, actions) { confirmBase(msg, actions, 'warn');  }
+confirm.error = function(msg, actions) { confirmBase(msg, actions, 'error'); }

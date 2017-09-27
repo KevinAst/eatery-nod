@@ -126,7 +126,24 @@ function SideBar({systemReady, changeView, handleFilterDiscovery}) {
             <Text>Notify Wrappers</Text>
           </ListItem>
 
-          <ListItem icon onPress={()=> {closeSideBar(); toast.warn('This is a toast warning')}}>
+          <ListItem icon onPress={()=> {closeSideBar(); toast({ msg:'Here is a toast to you!' })}}>
+            <Left>
+              <Icon name="alert" style={{color: 'purple'}}/>
+            </Left>
+            <Body left={1}>
+              <Text style={{color: 'purple'}}>toast()</Text>
+            </Body>
+          </ListItem>
+
+          <ListItem icon onPress={()=> {
+              closeSideBar();
+              toast.warn({
+                msg:'Your item was deleted.',
+                actions: [
+                  { txt: 'undo', action: () => toast({ msg: 'OK then ... make up your mind'}) },
+                ]
+              });
+            }}>
             <Left>
               <Icon name="alert" style={{color: 'purple'}}/>
             </Left>

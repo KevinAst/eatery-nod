@@ -69,7 +69,7 @@ function SignInScreen({iForm}) {
          <View style={{flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'center'}}>
            <Text>  ... don&apos;t have an account?  </Text>
            <Button transparent
-                   onPress={()=>toast.warn('Sign Up has not yet been implemented.')}
+                   onPress={()=>toast({ msg:'Sign Up has not yet been implemented.' })}
                    disabled={formInProcess}>
              <Icon name="log-in"/>
              <Text>Sign Up</Text>
