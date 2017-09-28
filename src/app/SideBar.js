@@ -1,5 +1,5 @@
 import React        from 'react';
-import {connect}    from 'react-redux';
+import connectRedux from '../util/connectRedux';
 import {Body,
         Button,
         Container,
@@ -198,34 +198,25 @@ export function closeSideBar() {
   setTimeout(() => _drawer._root.close(), 1); // delay so as to have new view up when sidebar closes (HACK)
 }
 
-export default connect(
-
-  // mapStateToProps()
-  (appState) => {
+export default connectRedux(SideBar, {
+  mapStateToProps(appState) {
     return {
       systemReady: appState.systemReady,
     };
   },
-
-  // mapDispatchToProps()
-  (dispatch, ownProps) => {
+  mapDispatchToProps(dispatch) {
     return {
-
       changeView(view) {
         dispatch( actions.view.change(view) );
         closeSideBar();
       },
-
       handleFilterDiscovery() {
         dispatch( actions.discovery.filter.open() );
         closeSideBar();
       },
-
     };
-  }
-
-)(SideBar);
-
+  },
+});
 
 // Sandbox tests of our notify utility
 function Msg(modal) {

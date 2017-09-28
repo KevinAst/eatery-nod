@@ -1,7 +1,7 @@
 import React        from 'react';
 import PropTypes    from 'prop-types';
 import {Linking}    from 'react-native';
-import {connect}    from 'react-redux';
+import connectRedux from '../util/connectRedux';
 import {Body,
         Button,
         Container,
@@ -95,14 +95,8 @@ EateryDetailScreen.propTypes = {
   eatery: PropTypes.object.isRequired,
 };
 
-
-export default connect(
-
-  // mapStateToProps()
-  null,
-
-  // mapDispatchToProps()
-  (dispatch) => {
+export default connectRedux(EateryDetailScreen, {
+  mapDispatchToProps(dispatch) {
     return {
       handleClose() {
         dispatch( actions.eateries.viewDetail.close() );
@@ -111,6 +105,5 @@ export default connect(
         dispatch( actions.eateries.spin() );
       },
     };
-  }
-
-)(EateryDetailScreen);
+  },
+});

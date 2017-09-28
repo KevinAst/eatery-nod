@@ -1,5 +1,5 @@
 import React        from 'react';
-import {connect}    from 'react-redux';
+import connectRedux from '../util/connectRedux';
 import {Body,
         Button,
         Container,
@@ -156,10 +156,8 @@ function DiscoveryListScreen({inProgress, eateries, nextPageToken, eateryPool, t
   );
 }
 
-export default connect(
-
-  // mapStateToProps()
-  (appState) => {
+export default connectRedux(DiscoveryListScreen, {
+  mapStateToProps(appState) {
     return {
       inProgress:    appState.discovery.inProgress,
       eateries:      appState.discovery.eateries,
@@ -167,9 +165,7 @@ export default connect(
       eateryPool:    appState.eateries.dbPool,
     };
   },
-
-  // mapDispatchToProps()
-  (dispatch) => {
+  mapDispatchToProps(dispatch) {
     return {
       toggleEateryPool(eatery, eateryPool) {
         if (eateryPool[eatery.id]) { // in pool
@@ -187,8 +183,6 @@ export default connect(
       handleFilterDiscovery() {
         dispatch( actions.discovery.filter.open() );
       },
-
     };
-  }
-
-)(DiscoveryListScreen);
+  },
+});

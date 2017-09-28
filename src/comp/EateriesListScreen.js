@@ -1,5 +1,5 @@
 import React        from 'react';
-import {connect}    from 'react-redux';
+import connectRedux from '../util/connectRedux';
 import {TouchableWithoutFeedback} from 'react-native';
 import {Body,
         Button,
@@ -70,18 +70,14 @@ function EateriesListScreen({entries, dbPool, showDetail, handleSpin}) {
   );
 }
 
-export default connect(
-
-  // mapStateToProps()
-  (appState) => {
+export default connectRedux(EateriesListScreen, {
+  mapStateToProps(appState) {
     return {
       entries:  appState.eateries.listView.entries,
       dbPool:   appState.eateries.dbPool,
     };
   },
-
-  // mapDispatchToProps()
-  (dispatch) => {
+  mapDispatchToProps(dispatch) {
     return {
       showDetail(eateryId) {
         //console.log(`xx showDetail for ${eateryId}`);
@@ -91,6 +87,5 @@ export default connect(
         dispatch( actions.eateries.spin() );
       },
     };
-  }
-
-)(EateriesListScreen);
+  },
+});

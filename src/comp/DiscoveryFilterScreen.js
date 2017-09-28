@@ -1,5 +1,5 @@
 import React        from 'react';
-import {connect}    from 'react-redux';
+import connectRedux from '../util/connectRedux';
 import PropTypes    from 'prop-types';
 import {Body,
         Button,
@@ -117,27 +117,19 @@ DiscoveryFilterScreen.propTypes = {
   iForm: PropTypes.object.isRequired,
 };
 
-export default connect(
-
-  // mapStateToProps()
-  (appState) => {
+export default connectRedux(DiscoveryFilterScreen, {
+  mapStateToProps(appState) {
     return {
       formState: discoveryFilterFormMeta.formStateSelector(appState),
     };
   },
-
-  // mapDispatchToProps()
-  null,
-
-  // mergeProps()
-  (stateProps, dispatchProps, ownProps) => {
+  mergeProps(stateProps, dispatchProps, ownProps) {
     return {
       ...ownProps,
-      //...stateProps,    // unneeded (in this case) ... wonder: does this impact connect() optimization?
-      //...dispatchProps, // ditto
+    //...stateProps,    // unneeded (in this case) ... wonder: does this impact connect() optimization?
+    //...dispatchProps, // ditto
       iForm: discoveryFilterFormMeta.IForm(stateProps.formState, 
                                            dispatchProps.dispatch),
     };
-  }
-
-)(DiscoveryFilterScreen);
+  },
+});

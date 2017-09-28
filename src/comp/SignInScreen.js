@@ -1,5 +1,5 @@
 import React        from 'react';
-import {connect}    from 'react-redux';
+import connectRedux from '../util/connectRedux';
 import PropTypes    from 'prop-types';
 import {Body,
         Button,
@@ -89,20 +89,13 @@ SignInScreen.propTypes = {
   iForm: PropTypes.object.isRequired,
 };
 
-export default connect(
-
-  // mapStateToProps()
-  (appState) => {
+export default connectRedux(SignInScreen, {
+  mapStateToProps(appState) {
     return {
       formState: signInFormMeta.formStateSelector(appState),
     };
   },
-
-  // mapDispatchToProps()
-  null,
-
-  // mergeProps()
-  (stateProps, dispatchProps, ownProps) => {
+  mergeProps(stateProps, dispatchProps, ownProps) {
     return {
       ...ownProps,
     //...stateProps,    // unneeded (in this case) ... wonder: does this impact connect() optimization?
@@ -110,6 +103,5 @@ export default connect(
       iForm: signInFormMeta.IForm(stateProps.formState, 
                                   dispatchProps.dispatch),
     };
-  }
-
-)(SignInScreen);
+  },
+});

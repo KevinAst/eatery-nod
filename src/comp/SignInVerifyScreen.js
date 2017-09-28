@@ -1,5 +1,5 @@
 import React        from 'react';
-import {connect}    from 'react-redux';
+import connectRedux from '../util/connectRedux';
 import {Body,
         Button,
         Container,
@@ -87,17 +87,13 @@ SignInVerifyScreen.propTypes = {
   signOut:                 PropTypes.func.isRequired,
 };
 
-export default connect(
-
-  // mapStateToProps()
-  (appState) => {
+export default connectRedux(SignInVerifyScreen, {
+  mapStateToProps(appState) {
     return {
       email: appState.auth.user.email,
     };
   },
-
-  // mapDispatchToProps()
-  (dispatch) => {
+  mapDispatchToProps(dispatch) {
     return {
       checkEmailVerified() {
         dispatch( actions.auth.signIn.checkEmailVerified() );
@@ -109,6 +105,5 @@ export default connect(
         dispatch( actions.auth.signOut() );
       },
     };
-  }
-
-)(SignInVerifyScreen);
+  },
+});

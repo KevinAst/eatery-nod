@@ -1,8 +1,8 @@
 import Expo                  from 'expo';
 import React                 from 'react';
-import {connect}             from 'react-redux';
 import RN                    from 'react-native';
 import isString              from 'lodash.isstring';
+import connectRedux          from '../util/connectRedux';
 import SplashScreen          from '../comp/SplashScreen';
 import FatalScreen           from '../comp/FatalScreen';
 import SignInScreen          from '../comp/SignInScreen';
@@ -104,17 +104,17 @@ class ScreenRouter extends React.Component {
 
 }
 
-export default connect(
-  appState => { // mapStateToProps
+export default connectRedux(ScreenRouter, {
+  mapStateToProps(appState) {
     return {
-      systemReady:       appState.systemReady,
-      userStatus:        appState.auth.user.status,
-      signInForm:        appState.auth.signInForm,
-      appState, // ?? very temporary
-      // deviceCredentials: appState.auth.deviceCredentials, // ?? do we need this?
+      appState,     // ?? very temporary
+      systemReady:  appState.systemReady,
+      userStatus:   appState.auth.user.status,
+      signInForm:   appState.auth.signInForm,
+   // deviceCredentials: appState.auth.deviceCredentials, // ?? do we need this?
     };
-  })(ScreenRouter);
-
+  },
+});
 
 
 // define our own animation characteristics (very close to spring)
