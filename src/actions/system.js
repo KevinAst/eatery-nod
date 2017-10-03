@@ -6,17 +6,51 @@ export default generateActions.root({
                    // > bootstrap system resources
                    //   INTENT: #byLogic, #forLogic
                    actionMeta: {},
-      complete: {  // system.bootstrap.complete(): Action
-                   // > system resourses available - app CAN start
-                   //   INTENT: #byLogic, #forLogic, #forReducer
-                   actionMeta: {},
+
+      loadFonts: {   // system.bootstrap.loadFonts(): Action
+                     // > load fonts needed by system/app
+                     //   INTENT: #byLogic, #forLogic
+                     actionMeta: {},
+        complete: {  // system.bootstrap.loadFonts.complete(): Action
+                     // > system fonts are now available
+                     //   INTENT: #byLogic, #forLogic, #forReducer
+                     actionMeta: {},
+        },
+        fail: {      // system.bootstrap.loadFonts(err): Action
+                     // > system fonts are NOT available - app CANNOT start
+                     //   INTENT: #byLogic, #forLogic, #forReducer
+                     actionMeta: {
+                       traits: ['err'],
+                     },
+        },
       },
-      fail: {      // system.bootstrap.fail(err): Action
-                   // > system resourses are NOT available - app CANNOT start
-                   //   INTENT: #byLogic, #forLogic, #forReducer
-                   actionMeta: {
-                     traits: ['err'],
-                   },
+
+      locateDevice: { // system.bootstrap.locateDevice(): Action
+                      // > determing geo location of device
+                      //   INTENT: #byLogic, #forLogic
+                      actionMeta: {},
+        complete: {   // system.bootstrap.locateDevice.complete(loc): Action
+                      // > device location is now available
+                      //   INTENT: #byLogic, #forLogic, #forReducer
+                      actionMeta: {
+                        traits: ['loc'],
+                      },
+        },            
+        fail: {       // system.bootstrap.locateDevice(err): Action
+                      // > device location failed - fallback to last known location
+                      //   INTENT: #byLogic, #forLogic, #forReducer
+                      actionMeta: {
+                        traits: ['err'],
+                      },
+        },
+      },
+
+      statusUpdate: { // system.bootstrap.statusUpdate(statusMsg): Action
+                      // > system status has been updated to supplied statusMsg
+                      //   INTENT: #byLogic, #forLogic
+                      actionMeta: {
+                        traits: ['statusMsg'],
+                      },
       },
     },
   },

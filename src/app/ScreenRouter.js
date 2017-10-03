@@ -4,7 +4,6 @@ import RN                    from 'react-native';
 import isString              from 'lodash.isstring';
 import connectRedux          from '../util/connectRedux';
 import SplashScreen          from '../comp/SplashScreen';
-import FatalScreen           from '../comp/FatalScreen';
 import SignInScreen          from '../comp/SignInScreen';
 import SignInVerifyScreen    from '../comp/SignInVerifyScreen';
 import EateriesListScreen    from '../comp/EateriesListScreen';
@@ -37,15 +36,13 @@ class ScreenRouter extends React.Component {
 
     /* eslint-disable curly */
 
-    // initally promote Expo.AppLoading untill our system resources are available
-    // ... because it uses NO yet-to-be-loaded fonts
-    if (!p.systemReady)
-      return <Expo.AppLoading/>;
+    // promote a simple SpashScreen (with status) until our system is ready
+    // NOTE: Errors related to system resources are promoted through independent user notifications
+    if (!p.device.fontsLoaded)   // ... before our fonts are loaded,
+      return <Expo.AppLoading/>; //     we must use the Expo spash screen (no dependancy on yet-to-be-loaded fonts)
+    if (p.device.status !== 'READY')
+      return <SplashScreen msg={p.device.status}/>;
 
-    // if our system could NOT initialized, we cannot continue
-    // ... systemReady will contain an error msg string on initialization failure
-    if (isString(p.systemReady))
-      return <FatalScreen msg={p.systemReady}/>;
 
     // OLD: display interactive SignIn, when form is active
     // ?? this is truely NOT needed if we get our act together
@@ -108,7 +105,7 @@ export default connectRedux(ScreenRouter, {
   mapStateToProps(appState) {
     return {
       appState,     // ?? very temporary
-      systemReady:  appState.systemReady,
+      device:       appState.device,
       userStatus:   appState.auth.user.status,
       signInForm:   appState.auth.signInForm,
    // deviceCredentials: appState.auth.deviceCredentials, // ?? do we need this?
