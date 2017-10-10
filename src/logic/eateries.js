@@ -1,5 +1,6 @@
 import {createLogic}  from 'redux-logic';
 import firebase       from 'firebase';
+import geodist        from 'geodist';
 import actions        from '../actions';
 
 
@@ -48,7 +49,17 @@ export const monitorDbPool = createLogic({
 
     // register our firebase listener
     curDbPoolMonitor.dbRef.on('value', (snapshot) => {
+
       const eateries = snapshot.val();
+
+      // supplement eateries with distance from device (as the crow flies)
+      const deviceLoc = getState().device.loc;
+      for (const eateryId in eateries) {
+        const eatery = eateries[eateryId];
+        eatery.distance = geodist([eatery.loc.lat, eatery.loc.lng], [deviceLoc.lat, deviceLoc.lng]);
+      }
+
+      // broadcast notification of new eateries
       // console.log(`xx logic eateries.monitorDbPool: eateries changed for pool '${curDbPoolMonitor.pool}': `, eateries);
       dispatch( actions.eateries.dbPool.changed(eateries) );
     });
@@ -84,7 +95,14 @@ export const applyFilter = createLogic({
     // supplementing our action with end result (entries)
     // TODO: apply filter, for now simply pass through all
     const dbPool  = appState.eateries.dbPool;
-    const entries = Object.values(dbPool).sort((e1, e2)=>e1.name.localeCompare(e2.name)).map( eatery => eatery.id );
+    const entries = Object.values(dbPool)
+                          .sort((e1, e2) => { // sort entries
+                            let order = e1.distance - e2.distance;   // ... primary: distance
+                            if (order === 0)
+                              order = e1.name.localeCompare(e2.name);// ... secondary: name
+                            return order;
+                          })
+                          .map( eatery => eatery.id );
     action.entries = entries;
     next(action);
   },

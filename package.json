@@ -33,6 +33,7 @@
     "astx-redux-util": "^1.0.0",
     "expo": "^21.0.0",
     "firebase": "^4.3.1",
+    "geodist": "^0.2.1",
     "lodash.isequal": "^4.5.0",
     "lodash.isfunction": "^3.0.8",
     "lodash.isstring": "^4.0.1",

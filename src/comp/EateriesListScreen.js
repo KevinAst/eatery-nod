@@ -47,7 +47,7 @@ function EateriesListScreen({entries, dbPool, showDetail, handleSpin}) {
                                         onPress={()=>showDetail(eatery.id)}>
                 <ListItem>
                   <Body>
-                    <Text>{eatery.name}</Text>
+                    <Text>{eatery.name} ({eatery.distance} miles)</Text>
                     <Text note>{eatery.addr}</Text>
                   </Body>
                 </ListItem>
