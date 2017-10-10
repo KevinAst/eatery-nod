@@ -24,7 +24,7 @@ import verify    from './verify';
  *   export default connectRedux(MyClass, {
  *     mapStateToProps(appState) {
  *       return {
- *         systemReady: appState.systemReady,
+ *         deviceStatus: appState.device.status,
  *       };
  *     },
  *     mapDispatchToProps(dispatch, ownProps) {

@@ -22,11 +22,11 @@ import {notify,
 /**
  * SideBar: our left-nav sidebar
  */
-function SideBar({systemReady, changeView, handleFilterDiscovery}) {
-
-  if (!systemReady)
+function SideBar({deviceStatus, changeView, handleFilterDiscovery}) {
+  if (deviceStatus !== 'READY') { // ... render placebo, until system fonts have been loaded
     return <Text/>
-
+  }
+  
   return (
     <Container style={{...commonStyles.container, backgroundColor:'white'}}>
       <Header>
@@ -201,7 +201,7 @@ export function closeSideBar() {
 export default connectRedux(SideBar, {
   mapStateToProps(appState) {
     return {
-      systemReady: appState.systemReady,
+      deviceStatus: appState.device.status,
     };
   },
   mapDispatchToProps(dispatch) {
