@@ -61,6 +61,41 @@ function SideBar({deviceStatus, changeView, handleFilterDiscovery}) {
             </Right>
           </ListItem>
 
+          {/* Sandbox tests of what happens to logs in published apps */}
+          <ListItem itemDivider>
+            <Text>Published Logs Test</Text>
+          </ListItem>
+
+          <ListItem icon onPress={()=>console.log('Here is a console.log() probe.')}>
+            <Left>
+              <Icon name="alert" style={{color: 'black'}}/>
+            </Left>
+            <Body left={1}>
+              <Text style={{color: 'black'}}>console.log()</Text>
+            </Body>
+            <Right/>
+          </ListItem>
+
+          <ListItem icon onPress={()=>console.warn('Here is a console.warn() probe.')}>
+            <Left>
+              <Icon name="alert" style={{color: 'orange'}}/>
+            </Left>
+            <Body left={1}>
+              <Text style={{color: 'orange'}}>console.warn()</Text>
+            </Body>
+            <Right/>
+          </ListItem>
+
+          <ListItem icon onPress={()=>console.error('Here is a console.error() probe.')}>
+            <Left>
+              <Icon name="alert" style={{color: 'red'}}/>
+            </Left>
+            <Body left={1}>
+              <Text style={{color: 'red'}}>console.error()</Text>
+            </Body>
+            <Right/>
+          </ListItem>
+
           {/* Sandbox tests of our notify utility */}
           <ListItem itemDivider>
             <Text>Notify Sandbox</Text>
