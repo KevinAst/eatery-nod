@@ -60,7 +60,8 @@ export const processFilter = createLogic({
   
   process({getState, action, api}, dispatch, done) {
     // retrieve using new filter from form
-    const filter = action.domain;
+    const appState = getState();
+    const filter   = action.domain;
     dispatch( actions.discovery.retrieve({...filter, 
                                           loc: [appState.device.loc.lat, appState.device.loc.lng]}) );
     
@@ -132,8 +133,8 @@ export const nextPage = createLogic({
 // promote all logic (accumulated in index.js)
 // ... named exports (above) are used by unit tests :-)
 export default [
-  defaultFilter, // must be prior to discoveryFilterFormMeta
   ...discoveryFilterFormMeta.registrar.formLogic(), // discoveryFilter iForm logic modules
+  defaultFilter,
   initialize,
   processFilter,
   retrieve,
