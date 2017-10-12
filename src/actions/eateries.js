@@ -1,4 +1,5 @@
-import {generateActions} from 'action-u';
+import {generateActions}     from 'action-u';
+import eateryFilterFormMeta  from '../logic/iForms/eateryFilterFormMeta';
 
 export default generateActions.root({
   eateries: {
@@ -49,15 +50,21 @@ export default generateActions.root({
 
     },
 
-    applyFilter: { // eateries.applyFilter([filter]): Action
+    // inject the standard iForm auto-generated form actions
+    // ... open(), fieldChanged(), fieldTouched(), process(), process.reject(), close()
+    applyFilter: eateryFilterFormMeta.registrar.formActionGenesis({
+
+      // along with additional app-specific actions:
+
+                   // eateries.applyFilter([filter]): Action
                    // > apply listView filter (either supplied or from state)
-                   //   NOTE: logic supplements action with .entries[]
+                   //   NOTE: logic supplements action with .entries[] and .filter (as needed)
                    //   INTENT: #byUser, #byLogic, #forLogic, #forReducer ??
                    actionMeta: {
                      traits: ['filter'],
                      ratify: (filter=null) => [filter]
                    },
-    },
+    }),
 
     viewDetail: { // eateries.viewDetail(eateryId): Action
                   // > view eatery details (from supplied eateryId)

@@ -22,7 +22,7 @@ import {notify,
 /**
  * SideBar: our left-nav sidebar
  */
-function SideBar({deviceStatus, changeView, handleFilterDiscovery}) {
+function SideBar({deviceStatus, changeView, handleFilterDiscovery, handleFilterEatery}) {
   if (deviceStatus !== 'READY') { // ... render placebo, until system fonts have been loaded
     return <Text/>
   }
@@ -42,9 +42,13 @@ function SideBar({deviceStatus, changeView, handleFilterDiscovery}) {
               <Icon name="bonfire" style={{color: 'red'}}/>
             </Left>
             <Body>
-              <Text style={{color: 'red'}}>Eatery Pool</Text>
+              <Text style={{color: 'red'}}>Pool</Text>
             </Body>
-            <Right/>
+            <Right>
+              <Button transparent onPress={handleFilterEatery}>
+                <Icon active name="options"/>
+              </Button>
+            </Right>
           </ListItem>
 
           <ListItem icon onPress={()=>changeView('discovery')}>
@@ -247,6 +251,10 @@ export default connectRedux(SideBar, {
       },
       handleFilterDiscovery() {
         dispatch( actions.discovery.filter.open() );
+        closeSideBar();
+      },
+      handleFilterEatery() {
+        dispatch( actions.eateries.applyFilter.open() );
         closeSideBar();
       },
     };

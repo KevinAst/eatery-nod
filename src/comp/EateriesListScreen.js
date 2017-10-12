@@ -15,6 +15,7 @@ import {Body,
         Right,
         Text,
         Title}       from 'native-base';
+import SplashScreen  from './SplashScreen';
 import commonStyles  from './commonStyles';
 import actions       from '../actions';
 import {openSideBar} from '../app/SideBar';
@@ -22,9 +23,49 @@ import {openSideBar} from '../app/SideBar';
 /**
  * EateriesListScreen displaying a set of eateries (possibly filtered).
  */
-function EateriesListScreen({entries, dbPool, showDetail, handleSpin}) {
+function EateriesListScreen({entries, dbPool, filter, showDetail, handleSpin}) {
+
+  if (!entries) {
+    return <SplashScreen msg="... waiting for pool entries"/>;
+  }
 
   const eateries = entries.map( eateryId => dbPool[eateryId] );
+
+  let currentDistance = -1;
+
+  function listContent() {
+    const content = [];
+    eateries.forEach( eatery => {
+      // optionally supply sub-header when ordered by distance
+      if (filter.distance && eatery.distance !== currentDistance) {
+        currentDistance = eatery.distance;
+        content.push((
+          <ListItem itemDivider key={`subheader${currentDistance}`}>
+            <Text style={{color: 'red'}}>
+              {currentDistance} mile{currentDistance===1?'':'s'}
+              <Text note> (as the crow flies)</Text>
+            </Text>
+          </ListItem>
+        ));
+      }
+      // supply our primary entry content
+      content.push((
+        <TouchableWithoutFeedback key={eatery.id}
+                                  onPress={()=>showDetail(eatery.id)}>
+          <ListItem>
+            <Body>
+              <Text>
+                {eatery.name}
+                <Text note> ({eatery.distance} mile{eatery.distance===1?'':'s'})</Text>
+              </Text>
+              <Text note>{eatery.addr}</Text>
+            </Body>
+          </ListItem>
+        </TouchableWithoutFeedback>
+      ));
+    });
+    return content;
+  }
 
   return (
     <Container style={commonStyles.container}>
@@ -35,25 +76,14 @@ function EateriesListScreen({entries, dbPool, showDetail, handleSpin}) {
           </Button>
         </Left>
         <Body>
-          <Title>Eateries</Title>
+          <Title>Pool</Title>
+          {filter.distance && <Text note>(within {filter.distance} mile{filter.distance===1?'':'s'})</Text>}
         </Body>
         <Right/>
       </Header>
       <Content>
         <List>
-          { 
-            eateries.map( eatery => (
-              <TouchableWithoutFeedback key={eatery.id}
-                                        onPress={()=>showDetail(eatery.id)}>
-                <ListItem>
-                  <Body>
-                    <Text>{eatery.name} ({eatery.distance} mile{eatery.distance===1 ?'':'s'})</Text>
-                    <Text note>{eatery.addr}</Text>
-                  </Body>
-                </ListItem>
-              </TouchableWithoutFeedback>
-            ))
-          }
+          { listContent() }
         </List>
       </Content>
       <Footer>
@@ -75,6 +105,7 @@ export default connectRedux(EateriesListScreen, {
     return {
       entries:  appState.eateries.listView.entries,
       dbPool:   appState.eateries.dbPool,
+      filter:   appState.eateries.listView.filter,
     };
   },
   mapDispatchToProps(dispatch) {

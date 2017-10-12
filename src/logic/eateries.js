@@ -1,6 +1,7 @@
 import {createLogic}  from 'redux-logic';
 import firebase       from 'firebase';
 import geodist        from 'geodist';
+import eateryFilterFormMeta from './iForms/eateryFilterFormMeta';
 import actions        from '../actions';
 
 
@@ -81,6 +82,64 @@ export const postProcessDbPool = createLogic({
 });
 
 
+
+
+/**
+ * Default the eateries.applyFilter.open() domain param from the
+ * appState filter.
+ */
+export const defaultFilter = createLogic({
+
+  name: 'eatery.defaultFilter',
+  type: String(actions.eateries.applyFilter.open),
+
+  transform({getState, action, api}, next) {
+    if (!action.domain) {
+      action.domain = getState().eateries.listView.filter;
+    }
+    next(action);
+  },
+
+});
+
+
+/**
+ * Process eatery filter.
+ */
+export const processFilter = createLogic({
+
+  name: 'eatery.processFilter',
+  type: String(actions.eateries.applyFilter.process),
+  
+  process({getState, action, api}, dispatch, done) {
+
+    // console.log(`xx logic: eatery.processFilter, action is: `, action);
+    //   action: {
+    //     "domain": {
+    //       "distance": 6, // null when NOT supplied
+    //     },
+    //     "type": "eateries.applyFilter.process",
+    //     "values": {
+    //       "distance": 6, // null when NOT supplied
+    //     },
+    //   }
+
+    // apply filter
+    const filter = action.domain;
+    dispatch( actions.eateries.applyFilter(filter) );
+    
+    // show 'eatery' view
+    dispatch( actions.view.change('eateries') );
+
+    // close eatery form filter
+    dispatch( actions.eateries.applyFilter.close() );
+
+    done();
+  },
+
+});
+
+
 export const applyFilter = createLogic({
 
   name: 'eateries.applyFilter',
@@ -89,21 +148,32 @@ export const applyFilter = createLogic({
   transform({getState, action, api}, next, reject) {
 
     const appState = getState();
-    const filter   = action.filter || appState.eateries.listView.filter;
 
-    // apply listView filter (either supplied or from state),
-    // supplementing our action with end result (entries)
-    // TODO: apply filter, for now simply pass through all
+    // supplement action filter (when not supplied is taken from state)
+    // ... allows us to store latest filter in state
+    const filter  = action.filter || appState.eateries.listView.filter;
+    action.filter = filter;
+
+    // apply our filter (either supplied or from state)
     const dbPool  = appState.eateries.dbPool;
     const entries = Object.values(dbPool)
+                          .filter(entry => { // filter entries
+                            // apply distance (when supplied in filter)
+                            return filter.distance ? entry.distance <= filter.distance : true;
+                          })
                           .sort((e1, e2) => { // sort entries
-                            let order = e1.distance - e2.distance;   // ... primary: distance
+                            // ... order by distance (when supplied)
+                            let order = filter.distance ? e1.distance-e2.distance : 0;
+                            // ... order by name - either secondary (within distance), or primary (when no distance)
                             if (order === 0)
-                              order = e1.name.localeCompare(e2.name);// ... secondary: name
+                              order = e1.name.localeCompare(e2.name);
                             return order;
                           })
                           .map( eatery => eatery.id );
+
+    // supplement action entries (the filtered/sorted end result)
     action.entries = entries;
+
     next(action);
   },
 
@@ -228,6 +298,9 @@ export const removeFromPool = createLogic({
 export default [
   monitorDbPool,
   postProcessDbPool,
+  ...eateryFilterFormMeta.registrar.formLogic(), // inject the standard eatery filter form-based logic modules
+  defaultFilter,
+  processFilter,
   applyFilter,
   spin,
   spinComplete,
