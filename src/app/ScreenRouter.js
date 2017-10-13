@@ -44,17 +44,6 @@ class ScreenRouter extends React.Component {
     if (p.device.status !== 'READY')
       return <SplashScreen msg={p.device.status}/>;
 
-
-    // OLD: display interactive SignIn, when form is active
-    // ?? this is truely NOT needed if we get our act together
-    // ?? that means I don't have to maintain deviceCredentials of 'NONE'
-    // ??? KEY: this is causing some render() issue when applied
-    // ? if (p.deviceCredentials === 'NONE') { // ?? unsure WHY is this needed (if our multiple dispatches operate in succession
-    // ?   console.log(`??? ROUTE: SignInScreen 111 (deviceCredentials is NONE) ... deviceCredentials/signInForm: `, p.deviceCredentials, p.signInForm);
-    // ?   return <SignInScreen/>;
-    // ? }
-    // ??? ABOVE WAS CAUSING A RENDER ERROR that WAS NOT REPORTED ... was due to redux-logic swallowing the error!
-
     // primary route logic, based on user authorization
     switch (p.userStatus) {
 
@@ -111,7 +100,6 @@ export default connectRedux(ScreenRouter, {
       device:       appState.device,
       userStatus:   appState.auth.user.status,
       signInForm:   appState.auth.signInForm,
-   // deviceCredentials: appState.auth.deviceCredentials, // ?? do we need this?
     };
   },
 });
