@@ -70,7 +70,7 @@ function SideBar({deviceStatus, changeView, handleFilterDiscovery, handleFilterE
             </Right>
           </ListItem>
 
-          {/* Sandbox tests of what happens to logs in published apps */}
+{/* Sandbox tests of what happens to logs in published apps
           <ListItem itemDivider>
             <Text>Published Logs Test</Text>
           </ListItem>
@@ -104,8 +104,9 @@ function SideBar({deviceStatus, changeView, handleFilterDiscovery, handleFilterE
             </Body>
             <Right/>
           </ListItem>
+  */}
 
-          {/* Sandbox tests of our notify utility */}
+{/* Sandbox tests of our notify utility
           <ListItem itemDivider>
             <Text>Notify Sandbox</Text>
           </ListItem>
@@ -222,6 +223,7 @@ function SideBar({deviceStatus, changeView, handleFilterDiscovery, handleFilterE
               <Text style={{color: 'purple'}}>confirm.warn()</Text>
             </Body>
           </ListItem>
+  */}
 
         </List>
       </Content>
