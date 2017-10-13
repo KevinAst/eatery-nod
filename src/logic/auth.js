@@ -2,6 +2,7 @@ import {createLogic}  from 'redux-logic';
 import firebase       from 'firebase';
 import signInFormMeta from './iForms/signInFormMeta';
 import actions        from '../actions';
+import {alert, toast} from '../util/notify';
 
 
 /**
@@ -95,21 +96,82 @@ export const signIn = createLogic({
   process({getState, action, api}, dispatch, done) {
     firebase.auth().signInWithEmailAndPassword(action.email, action.pass)
             .then( user => {
-              // console.log(`?? logic auth.signIn: signInWithEmailAndPassword() WORKED, user: `, user);
+              // console.log(`xx logic auth.signIn: signInWithEmailAndPassword() WORKED, user: `, user);
+              api.device.storeCredentials(action.email, action.pass)
+                 .catch( (err) => {
+                   // hmmmm ... nested errors in a promise are caught in the outer catch (need to better understand this)
+                 });
               dispatch( actions.auth.signIn.complete(user) );
               done();
-              
             })
             .catch( (err) => {
-              // re-display SignIn form WITH msg 
-              const msg = err.code
-                              // a firebase credentials problem  (treat generically so as to NOT give hacker insight)
-                            ? 'Invalid SignIn credentials.'
-                              // a REAL error (unexpected condition)
-                            : 'An unexpected condition occurred, please try again later.';
+
+              const unexpectedMsg = 'An unexpected condition occurred, please try again later.';
+
+              // firebase provides a .code, enumerating credentials problem
+              // ... we do NOT interpret this, rather treat it generically (so as to NOT give hacker insight)
+              const invalidCredentials = err.code ? true : false;
+
+              // for unexpected errors, display msg to user
+              if (!invalidCredentials) {
+                toast.error({  // ... will auto close -OR- when "details" is clicked
+                  msg:     unexpectedMsg,
+                  actions: [
+                    { txt:    'detail',
+                      action: () => {
+                        alert.error({ msg: ''+err });
+                      }},
+                  ]
+                });
+              }
+
+              // re-display SignIn form
+              const msg = invalidCredentials ? 'Invalid SignIn credentials.' : unexpectedMsg;
               dispatch( actions.auth.signIn.open(action, msg) ); // NOTE: action is a cheap shortcut to domain (contains email/pass)
+
               done();
             });
+  },
+
+});
+
+
+/**
+ * SignOut logic.
+ */
+export const signOut = createLogic({
+
+  name: 'auth.signOut',
+  type: String(actions.auth.signOut),
+
+  process({getState, action, api}, dispatch, done) {
+    firebase.auth().signOut()
+            .catch( (err) => {
+              // simply report unexpected error to user
+              toast.error({  // ... will auto close -OR- when "details" is clicked
+                msg:     'A problem was encountered trying to signOut of firebase.',
+                actions: [
+                  { txt:    'detail',
+                    action: () => {
+                      alert.error({ msg: ''+err });
+                    }},
+                ]
+              });
+            });
+    api.device.removeCredentials()
+       .catch( (err) => {
+         // simply report unexpected error to user
+         toast.error({  // ... will auto close -OR- when "details" is clicked
+           msg:     'A problem was encountered trying to remove your credentials from the device.',
+           actions: [
+             { txt:    'detail',
+               action: () => {
+                 alert.error({ msg: ''+err });
+               }},
+           ]
+         });
+       });
+    done();
   },
 
 });
@@ -143,7 +205,7 @@ export const supplementSignInComplete = createLogic({
     dbRef.once('value')
          .then( snapshot => {
            const userProfile = snapshot.val();
-           // console.log(`?? logic supplementSignInComplete: have userProfile: `, userProfile)
+           // console.log(`xx logic supplementSignInComplete: have userProfile: `, userProfile)
            if (!userProfile) {
              handleFetchProfileProblem();
            }
@@ -176,7 +238,7 @@ export const signInCleanup = createLogic({
   type: String(actions.auth.signIn.complete),
 
   process({getState, action, api}, dispatch, done) {
-    // console.log(`?? logic auth.signInCleanup: user.status: `, getState().auth.user.status);
+    // console.log(`xx logic auth.signInCleanup: user.status: `, getState().auth.user.status);
     dispatch( actions.auth.signIn.close() ); // we are done with our signIn form
     done();
   },
@@ -244,6 +306,8 @@ export default [
   signIn,
   supplementSignInComplete,
   signInCleanup,
+
+  signOut,
 
   checkEmailVerified,
   resendEmailVerification,

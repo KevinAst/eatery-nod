@@ -22,7 +22,7 @@ import {notify,
 /**
  * SideBar: our left-nav sidebar
  */
-function SideBar({deviceStatus, changeView, handleFilterDiscovery, handleFilterEatery}) {
+function SideBar({deviceStatus, changeView, handleFilterDiscovery, handleFilterEatery, handleSignOut}) {
   if (deviceStatus !== 'READY') { // ... render placebo, until system fonts have been loaded
     return <Text/>
   }
@@ -33,6 +33,11 @@ function SideBar({deviceStatus, changeView, handleFilterDiscovery, handleFilterE
         <Body>
           <Title>Select a view</Title>
         </Body>
+        <Right>
+          <Button transparent onPress={handleSignOut}>
+            <Icon active name="log-out"/>
+          </Button>
+        </Right>
       </Header>
       <Content>
         <List>
@@ -255,6 +260,10 @@ export default connectRedux(SideBar, {
       },
       handleFilterEatery() {
         dispatch( actions.eateries.applyFilter.open() );
+        closeSideBar();
+      },
+      handleSignOut() {
+        dispatch( actions.auth.signOut() );
         closeSideBar();
       },
     };
