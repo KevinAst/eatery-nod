@@ -359,6 +359,7 @@ export function notify(directive) {
  *     actions: [
  *       { txt: 'undo', action: () => ...callback-logic-here... },
  *     ]
+ *    })
  * ```
  */
 function toastBase({msg, duration=3, actions, ...unknownArgs}, level) {
