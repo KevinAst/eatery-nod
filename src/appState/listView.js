@@ -10,7 +10,8 @@ export default combineReducers({
   filter: reducerHash({ // filter applied to visual listView
     [actions.eateries.applyFilter]: (state, action) => action.filter,
   }, { // initialState
-    distance: null, // distance in miles (default: null - for any distance), when set: implies sort by distance
+    distance: null,    // distance in miles (default: null - for any distance)
+    sortOrder: 'name', // sortOrder: 'name'/'distance'
   }),
 
   entries: reducerHash({ // filtered entries displayed in visual listView

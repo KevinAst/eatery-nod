@@ -116,11 +116,13 @@ export const processFilter = createLogic({
     // console.log(`xx logic: eatery.processFilter, action is: `, action);
     //   action: {
     //     "domain": {
-    //       "distance": 6, // null when NOT supplied
+    //       "distance":  6, // null when NOT supplied
+    //       "sortOrder": "name",
     //     },
     //     "type": "eateries.applyFilter.process",
     //     "values": {
     //       "distance": 6, // null when NOT supplied
+    //       "sortOrder": "name",
     //     },
     //   }
 
@@ -162,8 +164,8 @@ export const applyFilter = createLogic({
                             return filter.distance ? entry.distance <= filter.distance : true;
                           })
                           .sort((e1, e2) => { // sort entries
-                            // ... order by distance (when supplied)
-                            let order = filter.distance ? e1.distance-e2.distance : 0;
+                            // ... order by distance (when requested)
+                            let order = filter.sortOrder==='distance' ? e1.distance-e2.distance : 0;
                             // ... order by name - either secondary (within distance), or primary (when no distance)
                             if (order === 0)
                               order = e1.name.localeCompare(e2.name);

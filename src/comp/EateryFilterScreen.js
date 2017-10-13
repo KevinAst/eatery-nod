@@ -17,6 +17,7 @@ import {Body,
 import commonStyles          from './commonStyles';
 import eateryFilterFormMeta  from '../logic/iForms/eateryFilterFormMeta';
 import ITextField            from '../util/iForms/comp/ITextField';
+import IRadioField           from '../util/iForms/comp/IRadioField';
 
 
 /**
@@ -29,6 +30,11 @@ function EateryFilterScreen({iForm}) {
 
   const formLabel       = iForm.getLabel();
   const formInProcess   = iForm.inProcess();
+  const sortOrderRadioProps = {
+    fieldName: 'sortOrder',
+    iForm,
+  };
+
 
   return (
     <Container style={commonStyles.container}>
@@ -64,7 +70,12 @@ function EateryFilterScreen({iForm}) {
                       keyboardType="numeric"/>
           <Note>   ... optionally prune entries within this distance</Note>
           <Note>   ... leave blank to view entire pool</Note>
-          <Note>   ... when supplied, will order by distance</Note>
+
+          {verticalSpacing}
+          <IRadioField {...sortOrderRadioProps}>
+            <IRadioField.Op value="name"     label="Restaurant" {...sortOrderRadioProps}/>
+            <IRadioField.Op value="distance" label="Distance" {...sortOrderRadioProps}/>
+          </IRadioField>
 
           {verticalSpacing}
 

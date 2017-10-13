@@ -37,7 +37,7 @@ function EateriesListScreen({entries, dbPool, filter, showDetail, handleSpin}) {
     const content = [];
     eateries.forEach( eatery => {
       // optionally supply sub-header when ordered by distance
-      if (filter.distance && eatery.distance !== currentDistance) {
+      if (filter.sortOrder === 'distance' && eatery.distance !== currentDistance) {
         currentDistance = eatery.distance;
         content.push((
           <ListItem itemDivider key={`subheader${currentDistance}`}>
