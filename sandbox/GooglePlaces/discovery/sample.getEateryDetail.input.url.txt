@@ -1,0 +1,3 @@
+// getEateryDetail() url:
+
+https://maps.googleapis.com/maps/api/place/details/json?placeid=ChIJr7nIlGpV34cRlT0NYwJOLNg&key=YOUR_API_KEY

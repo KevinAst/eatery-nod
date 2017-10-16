@@ -1,0 +1,59 @@
+{
+  "name": "eatery-nod",
+  "version": "0.1.0",
+  "description": "A Date Night Random Restaurant Selector (my first react-native mobile app)",
+  "author": "Kevin J. Bridges <kevinast@gmail.com> (https://github.com/KevinAst)",
+  "private": true,
+  "main": "src/app/index.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/KevinAst/eatery-nod.git"
+  },
+  "keywords": [
+    "react-native",
+    "mobile-app",
+    "astx"
+  ],
+  "license": "MIT",
+  "homepage": "https://github.com/KevinAst/eatery-nod",
+  "scripts": {
+    "start":      "npm run test:watch",
+    "lint":       "echo '*** Verify code quality (lint):' && eslint src",
+    "test":       "jest",
+    "test:watch": "npm run test -- --watch",
+    "sandbox:firebaseDoodle":           "babel-node sandbox/firebase/firebaseDoodle.js",
+    "sandbox:GooglePlacesDiscoveryAPI": "babel-node sandbox/GooglePlaces/DiscoveryAPI.js"
+  },
+  "jest": {
+    "preset": "jest-expo"
+  },
+  "dependencies": {
+    "@expo/vector-icons": "^5.2.0",
+    "action-u": "^0.2.0",
+    "astx-redux-util": "^1.0.0",
+    "expo": "^21.0.0",
+    "firebase": "^4.3.1",
+    "geodist": "^0.2.1",
+    "lodash.isequal": "^4.5.0",
+    "lodash.isfunction": "^3.0.8",
+    "lodash.isstring": "^4.0.1",
+    "native-base": "^2.3.1",
+    "react": "16.0.0-alpha.12",
+    "react-native": "https://github.com/expo/react-native/archive/sdk-21.0.2.tar.gz",
+    "react-redux": "^5.0.6",
+    "redux": "^3.7.2",
+    "redux-logic": "^0.12.3",
+    "yup": "^0.22.0"
+  },
+  "devDependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-eslint": "^8.0.0",
+    "eslint": "^4.6.1",
+    "eslint-config-expo": "^6.0.0",
+    "eslint-plugin-babel": "^4.1.2",
+    "eslint-plugin-flowtype": "^2.35.1",
+    "eslint-plugin-import": "^2.7.0",
+    "eslint-plugin-react": "^7.3.0",
+    "jest-expo": "^21.0.0"
+  }
+}

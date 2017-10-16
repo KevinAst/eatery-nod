@@ -1,0 +1,5 @@
+node_modules/**/*
+.expo/*
+npm-debug.*
+src/startup/firebase/firebaseAppConfig.js
+src/api/googlePlacesApiKey.js
