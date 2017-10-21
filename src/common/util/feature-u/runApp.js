@@ -1,9 +1,19 @@
-// ?? check imports
-import {combineReducers}  from 'redux';
-import verify             from '../verify';
-import isString           from 'lodash.isstring';
-import isFunction         from 'lodash.isfunction';
-
+import Expo                    from 'expo';
+import React                   from 'react';
+import {applyMiddleware,
+        compose,
+        createStore,
+        combineReducers}       from 'redux';
+import {createLogicMiddleware} from 'redux-logic';
+import {Provider}              from 'react-redux';
+import ScreenRouter            from './ScreenRouter';
+import {Drawer}                from 'native-base';
+import SideBar, 
+      {registerDrawer,
+       closeSideBar}           from '../../../app/SideBar';
+import isFunction              from 'lodash.isfunction';
+import verify                  from '../verify';
+import Notify                  from '../notify'; 
 
 /**
  * Launch an app by assembling/configuring the supplied app features.
@@ -30,6 +40,9 @@ import isFunction         from 'lodash.isfunction';
  * @param {Feature[]} features the features that comprise this
  * application.
  *
+ * @param {API} api an app-specific API object (to be injected into
+ * the redux middleware).
+ *
  * @return {App} an app object which used in feature
  * cross-communication (as follows):
  * ```
@@ -38,7 +51,7 @@ import isFunction         from 'lodash.isfunction';
  *  }
  * ```
  */
-export default function runApp(features) {
+export default function runApp(features, api) {
 
   // ***
   // *** validate parameters
@@ -50,39 +63,164 @@ export default function runApp(features) {
   check(features.length && features.length>0, 'features should be an array of one or more Feature objects');
 
 
+  // prune to activeFeatures, insuring all feature.names are unique
+  const allNames = {};
+  const activeFeatures = features.filter( feature => {
+    check(!allNames[feature.name], `feature.name: '${feature.name}' is NOT unique`);
+    return feature.enabled;
+  });
+
+
   // ***
-  // *** define our app-wide reducer that specifies our overall appState
+  // *** create our new App object (used in feature cross-communication)
   // ***
 
-  const appReducer = accumAppReducer(features);
+  const app =  {
+    // EX:
+    // {feature}: {
+    //   .selectors: {
+    //     .abc(appState) {...}
+    //   },
+    //   .actions: {
+    //     .xyz(...) {...}
+    //   }
+    // }
+  };
+
+  // inject all active feature selectors/actions to app
+  activeFeatures.forEach( feature => {
+    const featureNode = app[feature.name] = {};
+    if (feature.selectors) {
+      featureNode.selectors = feature.selectors
+    }
+    // ?? same for actions
+  });
+
+
+  // ***
+  // *** define our top-level redux appReducer that specifies our overall appState
+  // ***
+
+  const appReducer = accumAppReducer(activeFeatures);
+
+
+  // ***
+  // *** accumulate logic modules
+  // ***
+
+  let appLogic = [];
+  activeFeatures.forEach( feature => {
+    if (feature.logic) {
+      appLogic = [...appLogic, ...feature.logic];
+    }
+  });
   
 
-  // ??? MORE
+  // ***
+  // *** define our top-level redux appStore, WITH our registered redux-logic
+  // ***
+  
+  const appStore = createAppStore(appReducer, appLogic, app, api);
 
 
   // ***
-  // *** return a new App object (used in feature cross-communication)
+  // *** accumulate routers
   // ***
 
-  return {
-    // ? .{feature}.selectors.abc()
-    // ? .{feature}.actions.xyz()
-  };
+  let routers = [];
+  activeFeatures.forEach( feature => {
+    if (feature.router) {
+      routers = [...routers, ...feature.router];
+    }
+  });
+
+  // ***
+  // *** define our appRootComp and register it to Expo
+  // ***
+
+  // // platform-specific setup (iOS/Android)
+  //    ?? accomplished by startup/init module (via appWillStart() lifecycle hook)
+  // ? import platformSetup from './startup/platformSetup';
+  // ? platformSetup();
+
+  // // Initialize FireBase
+  //    ?? accomplished by startup/init module (via appWillStart() lifecycle hook)
+  // ? import initFireBase from './startup/firebase/initFireBase';
+  // ? initFireBase();
+
+  // register our appRootComp to Expo, wiring up redux, and our left-nav sidebar
+
+  // TODO: SideBar (an app-specific component) is currently directly used in this generic utility.
+  //       This is a temporary measure to get us going.
+  //       See SideBar.js code for some long-term solutions.
+  const appRootComp = () => (
+    <Provider store={appStore}>
+      <Drawer ref={ ref => registerDrawer(ref) }
+              content={<SideBar/>}
+              onClose={closeSideBar}>
+        <ScreenRouter app={app} routers={routers}/>
+        <Notify/>
+      </Drawer>
+    </Provider>);
+  Expo.registerRootComponent(appRootComp);
+
+  // // bootstrap our app processes (a swift kick to get the ball rolling)
+  //    ?? accomplished by startup module (via appDidStart() lifecycle hook)
+  // ? appStore.dispatch( actions.system.bootstrap() );
+
+
+  // ?? MORE MORE MORE ********************************************************************************
+
+  // ?? apply app life-cycle callbacks
+  //    - EARLIER: appWillStart: () => whatever, // arbitrary code that is executed one-time at app startup
+  //    - LAST:    appDidStart: ({app, appState, dispatch}) => whatever // optional code that executes once expo is fully setup (typically dispatches a 'bootstrap app' action)
+  //                              ?? app      <via self>
+  //                              ?? appState <via appStore.getState()>
+  //                              ?? dispatch <via appStore.dispatch>
+
+  // ***
+  // *** expose our new App object (used in feature cross-communication)
+  // ***
+
+  return app;
 
 }
 
 /**
  * Create our top-level redux appStore, WITH our registered redux-logic.
  *
- * @param {???} reducer the app-wide reducer function, defining our overall appState.
- * @param {???} logic the ???
- * @param {???} api the ???
- * @param {???} ??? the ???
+ * @param {reducerFn} appReducer the top-level redux appReducer that
+ * specifies our overall appState
+ *
+ * @param {Logic[]} appLogic the accumulation of redux-logic modules
+ * that comprise our app
+ *
+ * @param {App} app the feature-u app object used in feature
+ * cross-communication (to be injected into the redux middleware)
+ *
+ * @param {API} api an app-specific API object (to be injected into
+ * the redux middleware)
  *
  * @return {Redux Store} the top-levl redux appStore.
  */
-function createAppStore() {
-  // ?? pattern after c:/TEMP/EateryByType/src/app/startup/createAppStore.js
+function createAppStore(appReducer, appLogic, app, api) {
+
+  // register our redux-logic modules, and inject app/api
+  const logicMiddleware = createLogicMiddleware(appLogic,
+                                                { // injected dependancies
+                                                  app,
+                                                  api,
+                                                });
+
+  // define our Redux app-wide store, WITH our middleware registration
+  const appStore = createStore(appReducer,
+                               compose(applyMiddleware(logicMiddleware)));
+
+  // ... AS NEEDED: provide additional redux-logic diagnostics
+  //     logicMiddleware.monitor$.subscribe( probe => console.log('Diag(redux-logic diag): ', probe) );
+
+  // promote our new appStore
+  return appStore;
 }
 
 
@@ -90,7 +228,7 @@ function createAppStore() {
  * Interpret the supplied features, generating an top-level app
  * reducer function.
  *
- * @param {Feature[]} features the features that comprise this
+ * @param {Feature[]} features the "active" features that comprise this
  * application.
  *
  * @return {appReducerFn} a top-level app reducer function.
@@ -105,7 +243,9 @@ export function accumAppReducer(features) { // ... named export ONLY used for te
   const shapedGenesis = {};
   for (const feature of features) {
 
-    // only interpret enabled features that define reducers
+    // only interpret active features that define reducers
+    // ... technically we do NOT need to check enabled (because of our "controlled" runApp() invocation)
+    //     HOWEVER, some of our tests do not pass through runApp()
     if (feature.enabled && feature.reducer) {
 
       const reducer = feature.reducer;

@@ -1,12 +1,12 @@
-// ?? check imports
-import verify         from '../verify';
-import isEqual        from 'lodash.isequal';
-import isString       from 'lodash.isstring';
-import isFunction     from 'lodash.isfunction';
+import verify            from '../verify';
+import isString          from 'lodash.isstring';
+import isFunction        from 'lodash.isfunction';
+import {isValidRouterCB} from './createRouterCB';
+
 
 /**
  * Create a new Feature object, that accumulates various feature
- * aspects to be consumed by runApp().
+ * aspects to be consumed by feature-u runApp().
  *
  * Example:
  * ```
@@ -18,13 +18,6 @@ import isFunction     from 'lodash.isfunction';
  *     reducer:    shapedReducer(reducer, 'views.currentView'),
  *     ?? more
 
-  *???   selectors:  ??,  for cross-communication between features (minimal need, because most access is internal)
-  *???   * ? selectors (trimmed down) ....   * ? define via: stateRoot(appState) ... ex: currentView: (appState) => appState.views.currentView
-  *???                                     - most state is internal/private (used within the feature)
-  *???                                       ... public promotion (outside feature) is acomplished through selector definition
-  *??? 
-
-
  *   };
  * ```
  *
@@ -34,23 +27,62 @@ import isFunction     from 'lodash.isfunction';
  * @param {boolean} [namedArgs.enabled=true] an indicator as to
  * whether this feature is enabled (true) or not (false).
  *
- * @param {reducerFn} [namedArgs.reducer] the optional reducer that
+ * @param {reducerFn} [namedArgs.reducer] an optional reducer that
  * maintains redux state (if any) for this feature.  By default, the
  * state managed by this reducer will be injected at the top-level
  * state tree using the feature name, however this can be fully
  * defined using the shapedReducer() utility.
  *
- * @return {Feature} a new Feature object (as follows):
+ * @param {SelectorObject} [namedArgs.selectors] an optional set of
+ * selectors to be publically promoted for this feature, through the
+ * feature-u App object, promoting cross-communication between
+ * features.
+ *
+ * Ex:
  * ```
- *  {
- *    ??? doc this
- *  }
+ * selectors: {
+ *   currentView: (appState) => appState.views.currentView, ?? isolate appstate.views in function
+ *   deviceReady: (appState) => appState.device.status === 'READY',
+ * }
  * ```
+ *
+ * Selectors are functions which abstract access to application state.
+ * They are useful in decoupling specific knowledge about the internal
+ * state representation.  
+ *
+ * Even though redux state is available globally, the interpretive
+ * meaning of this state should be fronted through selectors (that
+ * encapsolate business logic and interpret state shape).  This is
+ * certainly true for externall state access (by other features), but
+ * less so for internal feature access (IMHO).
+ *
+ * Promoted through feature-u App object:
+ * ```
+ *   app: {
+ *     views: {  // feature name
+ *       selectors: {
+ *         deviceReady(appState) {...},
+ *         etc.
+ *       }
+ *     }
+ *   }
+ * ```
+ *
+ * @param {Logic[]} [namedArgs.logic] an optional set of business
+ * logic modules (if any) to be registered to redux-logic in support
+ * of this feature.
+ *
+ * @param {RouterCB} [namedArgs.router] the optional router callback that
+ * exposes feature-based Components based on appState.
+ *
+ * @return {Feature} a new Feature object (to be consumed by feature-u runApp()).
  */
 export default function createFeature({name,
                                        enabled=true,
                                        reducer,
-                                       //?? more here
+                                       selectors,
+                                       logic,
+                                       router,
                                        ...unknownArgs}={}) {
 
   // ***
@@ -68,6 +100,19 @@ export default function createFeature({name,
     check(isFunction(reducer), 'reducer (when supplied) must be a function');
   }
 
+  if (selectors) {
+    // ? consider doing a lodash isPlainObject(selectors)
+  }
+
+  if (logic) {
+    check(Array.isArray(logic), 'logic (when supplied) must be an array of redux-logic modules');
+  }
+
+  if (router) {
+    const routerMsg = isValidRouterCB(router);
+    check(!routerMsg, routerMsg);
+  }
+
   const unknownArgKeys = Object.keys(unknownArgs);
   check(unknownArgKeys.length===0,  `unrecognized named parameter(s): ${unknownArgKeys}`);
 
@@ -80,6 +125,9 @@ export default function createFeature({name,
     name,
     enabled,
     reducer,
+    selectors,
+    logic,
+    router,
   };
 
 }
@@ -90,40 +138,17 @@ export default function createFeature({name,
 
 //??????????????????????????????????????
 
+//?   >>> KEY: ?? feature specific action creators.  Only requirement is each action creator function must be toString() overloaded to promote the action type.
+//?               Each feature will typically need many actions, most of which can be considered an internal implementation detail to that feature.
+//?               The only actions that are required here are those that require public access (i.e. cross-feature communication)
+//?               Will be publically promoted for this feature, through the feature-u App object, promoting cross-communication between features.
+
 //?   actions:    ??,  ?? unsure what needs to be communicated here (typically actions used in a feature are exclusively used internally)
 //?                    ?? need a way to publically expose actions outside of feature
 //? 
-//?   * ? actions (action creators) ... - ROOTED in a single node (carving out a single root action-u ActionStructure)
-//?                                       * ? define via: actionsRoot(actions) ... ex: changeView: actions.views.changeView
-//?                                     - most actions are internal/private (used within the feature)
-//?                                       ... consider how to promote public actions (KINDA LIKE how selectors decouple state location)
-//?                                     - ???
-//?                                           
+//?   ?? appWillStart: () => whatever, // arbitrary code that is executed one-time at app startup
 //? 
-//? 
-//?   logic:      ??,
-//?   * ? logic ....................... - simply a collection of logic modules (i.e. an array) to be registered
-//?                                       * order of feature registration defines logic precedence (typically only needed in rare cases)
-//? 
-//?   router:     ??,
-//?   * ? router ...................... - ? some registered API that is invoked at run-time to emit the correct components to render
-//? 
-//?   sideBar:    ??,
-//?   * ? SideBar hooks ...............
-//? 
-//?   components: ??,  ?? unsure what needs to be communicated here (typically components used in a feature are exclusively used internally)
-//?   * ? components .................. - ? components (called out by feature-u router) to execute feature functionality
-//? 
-//?   api:        ??,  ?? I kinda think of this as independent of features (ex: firebase) because it can be used by many features
-//?                    ?? UNLESS we are referring to some feature api that we want to promote for cross-communication between features
-//?   * ? api (may be more global) .... - hmmm I kinda think of this as independent of features
-//? 
-//?   appWillStart()
-//?   initialization:  () => whatever, // arbitrary code that is executed one-time at app startup
-//? 
-//?                    ?? is this too much?
-//?   appDidStart()
-//?   kickStartApp:    ({getState, dispatch}) => whatever // optional code that executes once expo is fully setup (typically dispatches a 'bootstrap app' action)
+//?   ?? appDidStart: ({getState, dispatch}) => whatever // optional code that executes once expo is fully setup (typically dispatches a 'bootstrap app' action)
 //? 
 //? 
 //?   * ? log-u configuration ......... - ? many aspects of log configuration revolve around filter identies (federated namespaces)
