@@ -125,9 +125,11 @@ export default function runApp(features, api) {
 
 
   // ***
-  // *** accumulate routers
+  // *** define our router, which is the root of our App's component tree
   // ***
 
+  // accumulate all the routes from our features
+  // ... each feature has the oppertunity to contribute to our routes
   const routers = [];
   activeFeatures.forEach( feature => {
     if (feature.router) {
@@ -137,6 +139,10 @@ export default function runApp(features, api) {
   });
   // console.log(`xx runApp routers: `, routers);
 
+  // define our <Router> component, which will be injected at the root of our App's component tree
+  // ... before that (however), our features have the oppertunity to inject additional content at the root!
+  let children = <Router app={app} routers={routers}/>;
+
 
   // ***
   // *** apply appWillStart(app) life-cycle hooks
@@ -144,7 +150,8 @@ export default function runApp(features, api) {
 
   activeFeatures.forEach( feature => {
     if (feature.appWillStart) {
-      feature.appWillStart(app);
+      // appWillStart() can do any initialization -AND- supplement our top-level content (using a non-null return)
+      children = feature.appWillStart(app, children) || children;
     }
   });
 
@@ -154,6 +161,8 @@ export default function runApp(features, api) {
   // ***
 
   // register our appRootComp to Expo, wiring up redux, and our left-nav sidebar
+
+  // ??$$ eliminate ALL this KRAP (once ??Notify and ??Drawer HAS BEEN REMOVED) ?? don't forget to clean imports
 
   // TODO: SideBar (an app-specific component) is currently directly used in this generic utility.
   //       This is a temporary measure to get us going.
@@ -198,9 +207,6 @@ export default function runApp(features, api) {
   //?   <Router app={app} routers={routers}/>,
   //?   <Notify/>
   //? ];
-
-  // this works for single component
-  let children = <Router app={app} routers={routers}/>; // our router is the crucial component!
 
   // simulate external feature injecting Notify as a sibling of our Router
   const childrenArr = React.Children.toArray(children);

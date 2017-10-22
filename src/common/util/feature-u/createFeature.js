@@ -106,8 +106,41 @@ import {isValidRouterCB} from './createRouterCB';
  *
  * @param {function} [namedArgs.appWillStart] an optional app
  * life-cycle method invoked one-time at app startup time.
+ *
+ * This life-cycle method can do any type of initialization, and/or
+ * optionally supplement the app's top-level content (using a non-null
+ * return).  
+ *
  * ```
- *   API: appWillStart(app): void
+ *   API: appWillStart(app, children): optional-top-level-content (null for none)
+ * ```
+ *
+ * Normally, this callback doesn't return anything (i.e. undefined).
+ * However any return value is interpreted as the content to inject at
+ * the top of the app (between the redux Provider and feature-u's
+ * Router.  IMPORTANT: If you return top-level content, it is your
+ * responsiblity to include the supplied children in your render.
+ * Otherwise NO app content will be displayed (because children
+ * contains the feature-u Router, which decides what screen to
+ * display).
+ *
+ * Here is an example of injecting new root-level content:
+ * ```
+ * appWillStart(app, children) {
+ *   return (
+ *     <Drawer ...>
+ *       {children}
+ *     </Drawer>
+ *   );
+ * }
+ * ```
+ *
+ * Here is an example of injecting a new sibling to children:
+ * ```
+ * appWillStart(app, children) {
+ *   const childrenArr = React.Children.toArray(children);
+ *   return childrenArr.push(<Notify/>);
+ * }
  * ```
  *
  * @param {function} [namedArgs.appDidStart] an optional app
