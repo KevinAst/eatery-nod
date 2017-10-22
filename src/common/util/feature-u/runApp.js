@@ -6,7 +6,7 @@ import {applyMiddleware,
         combineReducers}       from 'redux';
 import {createLogicMiddleware} from 'redux-logic';
 import {Provider}              from 'react-redux';
-import ScreenRouter            from './ScreenRouter';
+import Router                  from './Router';
 import {Drawer}                from 'native-base';
 import SideBar, 
       {registerDrawer,
@@ -165,7 +165,7 @@ export default function runApp(features, api) {
   //?           ref={ ref => registerDrawer(ref) }
   //?           content={<SideBar/>}
   //?           onClose={closeSideBar}/>,
-  //?   <ScreenRouter  key="222" app={app} routers={routers}/>,
+  //?   <Router  key="222" app={app} routers={routers}/>,
   //?   <Notify key="333"/>,
   //? ];
   //? const appRootComp = () => (
@@ -182,7 +182,7 @@ export default function runApp(features, api) {
   //?     <Drawer ref={ ref => registerDrawer(ref) }
   //?             content={<SideBar/>}
   //?             onClose={closeSideBar}>
-  //?       <ScreenRouter app={app} routers={routers}/>
+  //?       <Router app={app} routers={routers}/>
   //?       <Notify/>
   //?     </Drawer>
   //?   </Provider>
@@ -194,14 +194,14 @@ export default function runApp(features, api) {
 
   //? this works for multiple components
   //? let children = [
-  //?   <ScreenRouter app={app} routers={routers}/>,
+  //?   <Router app={app} routers={routers}/>,
   //?   <Notify/>
   //? ];
 
   // this works for single component
-  let children = <ScreenRouter app={app} routers={routers}/>; // our router is the crucial component!
+  let children = <Router app={app} routers={routers}/>; // our router is the crucial component!
 
-  // simulate external feature injecting Notify as a sibling of our ScreenRouter
+  // simulate external feature injecting Notify as a sibling of our Router
   const childrenArr = React.Children.toArray(children);
   childrenArr.push(<Notify/>);
   children = childrenArr;

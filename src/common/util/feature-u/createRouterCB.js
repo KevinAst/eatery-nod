@@ -28,7 +28,7 @@ const defaultCB = () => null;
  * CB (if any) ... see: desc above.
  *
  * @return {RouterCB} a new RouterCB object (to be consumed by
- * feature-u's ScreenRouter via runApp()).
+ * feature-u's Router via runApp()).
  */
 export default function createRouterCB({content=defaultCB,
                                         priorityContent=defaultCB,

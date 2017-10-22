@@ -22,7 +22,7 @@ import SplashScreen          from '../../comp/SplashScreen';
  * NOTE: We use class component in order to provide animation
  *       (controlled through component life-cycle events).
  */
-class ScreenRouter extends React.Component {
+class Router extends React.Component {
 
   componentWillUpdate() {
     // LayoutAnimation has to be injected JUST before a state change
@@ -118,13 +118,13 @@ class ScreenRouter extends React.Component {
   }
 }
 
-ScreenRouter.propTypes = {
+Router.propTypes = {
   app:      PropTypes.object.isRequired,
   routers:  PropTypes.array.isRequired,
   appState: PropTypes.object.isRequired,
 };
 
-export default connectRedux(ScreenRouter, {
+export default connectRedux(Router, {
   mapStateToProps(appState) {
     return {
       appState,
