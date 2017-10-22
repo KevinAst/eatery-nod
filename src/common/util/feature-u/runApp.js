@@ -127,56 +127,118 @@ export default function runApp(features, api) {
   // *** accumulate routers
   // ***
 
-  let routers = [];
+  const routers = [];
   activeFeatures.forEach( feature => {
     if (feature.router) {
-      routers = [...routers, ...feature.router];
+      // console.log(`??? runApp acumulating router for ${feature.name}`);
+      routers.push(feature.router);
     }
   });
+  // console.log(`??? runApp routers: `, routers);
+
+
+  // ***
+  // *** apply appWillStart(app) life-cycle hooks
+  // ***
+
+  activeFeatures.forEach( feature => {
+    if (feature.appWillStart) {
+      feature.appWillStart(app);
+    }
+  });
+
 
   // ***
   // *** define our appRootComp and register it to Expo
   // ***
-
-  // // platform-specific setup (iOS/Android)
-  //    ?? accomplished by startup/init module (via appWillStart() lifecycle hook)
-  // ? import platformSetup from './startup/platformSetup';
-  // ? platformSetup();
-
-  // // Initialize FireBase
-  //    ?? accomplished by startup/init module (via appWillStart() lifecycle hook)
-  // ? import initFireBase from './startup/firebase/initFireBase';
-  // ? initFireBase();
 
   // register our appRootComp to Expo, wiring up redux, and our left-nav sidebar
 
   // TODO: SideBar (an app-specific component) is currently directly used in this generic utility.
   //       This is a temporary measure to get us going.
   //       See SideBar.js code for some long-term solutions.
+  // ********************************************************************************
+  // ??$$ see if Drawer has to have children ... View is temporary ... looking for Wrapper article
+  //? const Wrapper = ({children}) => children; // ?? can't get to work
+  //? const content = [
+  //?   <Drawer key="111"
+  //?           ref={ ref => registerDrawer(ref) }
+  //?           content={<SideBar/>}
+  //?           onClose={closeSideBar}/>,
+  //?   <ScreenRouter  key="222" app={app} routers={routers}/>,
+  //?   <Notify key="333"/>,
+  //? ];
+  //? const appRootComp = () => (
+  //?   <Provider store={appStore}>
+  //?     <Wrapper>
+  //?       {content}
+  //?     </Wrapper>
+  //?   </Provider>
+  //? );
+  // ********************************************************************************
+  // ??$$ ORIGINAL - WORKS
+  //? const appRootComp = () => (
+  //?   <Provider store={appStore}>
+  //?     <Drawer ref={ ref => registerDrawer(ref) }
+  //?             content={<SideBar/>}
+  //?             onClose={closeSideBar}>
+  //?       <ScreenRouter app={app} routers={routers}/>
+  //?       <Notify/>
+  //?     </Drawer>
+  //?   </Provider>
+  //? );
+  //? Expo.registerRootComponent(appRootComp);
+  // ********************************************************************************
+
+  // ??$$ TRY manipulating as children
+
+  //? this works for multiple components
+  //? let children = [
+  //?   <ScreenRouter app={app} routers={routers}/>,
+  //?   <Notify/>
+  //? ];
+
+  // this works for single component
+  let children = <ScreenRouter app={app} routers={routers}/>; // our router is the crucial component!
+
+  // simulate external feature injecting Notify as a sibling of our ScreenRouter
+  const childrenArr = React.Children.toArray(children);
+  childrenArr.push(<Notify/>);
+  children = childrenArr;
+
+  // simulate external feature injecting Drawer at the top, with children <<< WORKS!!!
+  // ... in general this top works, and CAN add to childen, by placing <Notify/> right after {children}
+  children = (
+    <Drawer ref={ ref => registerDrawer(ref) }
+            content={<SideBar/>}
+            onClose={closeSideBar}>
+      {children}
+      {/* see note above ... <Notify/> */}
+    </Drawer>
+  );
+  // now complete the deal
   const appRootComp = () => (
     <Provider store={appStore}>
-      <Drawer ref={ ref => registerDrawer(ref) }
-              content={<SideBar/>}
-              onClose={closeSideBar}>
-        <ScreenRouter app={app} routers={routers}/>
-        <Notify/>
-      </Drawer>
-    </Provider>);
+      {children}
+    </Provider>
+  );
   Expo.registerRootComponent(appRootComp);
 
-  // // bootstrap our app processes (a swift kick to get the ball rolling)
-  //    ?? accomplished by startup module (via appDidStart() lifecycle hook)
-  // ? appStore.dispatch( actions.system.bootstrap() );
 
+  // ***
+  // *** apply appDidStart({app, appState, dispatch}) life-cycle hooks
+  // ***
 
-  // ?? MORE MORE MORE ********************************************************************************
+  activeFeatures.forEach( feature => {
+    if (feature.appDidStart) {
+      feature.appDidStart({
+        app,
+        appState: appStore.getState(),
+        dispatch: appStore.dispatch,
+      });
+    }
+  });
 
-  // ?? apply app life-cycle callbacks
-  //    - EARLIER: appWillStart: () => whatever, // arbitrary code that is executed one-time at app startup
-  //    - LAST:    appDidStart: ({app, appState, dispatch}) => whatever // optional code that executes once expo is fully setup (typically dispatches a 'bootstrap app' action)
-  //                              ?? app      <via self>
-  //                              ?? appState <via appStore.getState()>
-  //                              ?? dispatch <via appStore.dispatch>
 
   // ***
   // *** expose our new App object (used in feature cross-communication)

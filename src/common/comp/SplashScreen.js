@@ -1,6 +1,10 @@
+import Expo         from 'expo';
 import React        from 'react';
+import connectRedux from '../util/connectRedux';
 import {Image}      from 'react-native';
+// ?? Button is: VERY TEMP
 import {Body,
+        Button,
         Container,
         Content,
         Header,
@@ -10,19 +14,23 @@ import {Body,
         Text,
         Title}      from 'native-base';
 import PropTypes    from 'prop-types';
+import app          from '../../app';
 import commonStyles from '../../app/commonStyles';
+import {openSideBar}  from '../../app/SideBar'; // ?? VERY TEMP
 
 
 /**
  * SplashScreen used when there is nothing else to display.
- *
- * ??? implement this note internally
- * NOTE: Because this screen contains text which uses native-base
- *       fonts, it cannot be displayed on initial entry.  In this
- *       case use the <Expo.AppLoading/> xcomponent.
  */
-export default function SplashScreen({msg}) {
-  // return <Expo.AppLoading/>; // ?? temp for now
+function SplashScreen({msg, fontsLoaded}) {
+
+  // fallback to <Expo.AppLoading/> when fonts have not yet been loaded
+  // ... because <Text> uses native-base fonts
+  if (!fontsLoaded) {
+    // console.log('xx <SplashScreen> FONTS NOT LOADED: fallback to <Expo.AppLoading>');
+    return <Expo.AppLoading/>;
+  }
+
   return (
     <Container style={commonStyles.container}>
       <Header>
@@ -37,6 +45,12 @@ export default function SplashScreen({msg}) {
                source={require("../../../assets/icons/eatery.png")}/>
         <Spinner color="blue"/>
         <Text>{msg}</Text>
+        {/* ??? VERY TEMP */}
+        <Button transparent
+                onPress={openSideBar}>
+          <Text>TEMPORARY SideBar</Text>
+        </Button>
+
       </Content>
     </Container>
   );
@@ -49,3 +63,12 @@ SplashScreen.propTypes = {
 SplashScreen.defaultProps = {
   msg: '',
 };
+
+
+export default connectRedux(SplashScreen, {
+  mapStateToProps(appState) {
+    return {
+      fontsLoaded: app.startup.selectors.fontsLoaded(appState), // hmmm: inappropriate coupling: common component <SplashScreen> using app-specific info
+    };
+  },
+});

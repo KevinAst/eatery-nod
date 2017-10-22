@@ -75,6 +75,18 @@ import {isValidRouterCB} from './createRouterCB';
  * @param {RouterCB} [namedArgs.router] the optional router callback that
  * exposes feature-based Components based on appState.
  *
+ * @param {function} [namedArgs.appWillStart] an optional app
+ * life-cycle method invoked one-time at app startup time.
+ * ```
+ *   API: appWillStart(app): void
+ * ```
+ *
+ * @param {function} [namedArgs.appDidStart] an optional app
+ * life-cycle method invoked one-time immediatly after app has started.
+ * ```
+ *   API: appDidStart({app, appState, dispatch}): void
+ * ```
+ *
  * @return {Feature} a new Feature object (to be consumed by feature-u runApp()).
  */
 export default function createFeature({name,
@@ -83,6 +95,8 @@ export default function createFeature({name,
                                        selectors,
                                        logic,
                                        router,
+                                       appWillStart,
+                                       appDidStart,
                                        ...unknownArgs}={}) {
 
   // ***
@@ -113,6 +127,14 @@ export default function createFeature({name,
     check(!routerMsg, routerMsg);
   }
 
+  if (appWillStart) {
+    check(isFunction(appWillStart), 'appWillStart (when supplied) must be a function');
+  }
+
+  if (appDidStart) {
+    check(isFunction(appDidStart), 'appDidStart (when supplied) must be a function');
+  }
+
   const unknownArgKeys = Object.keys(unknownArgs);
   check(unknownArgKeys.length===0,  `unrecognized named parameter(s): ${unknownArgKeys}`);
 
@@ -128,13 +150,11 @@ export default function createFeature({name,
     selectors,
     logic,
     router,
+    appWillStart,
+    appDidStart,
   };
 
 }
-
-
-
-
 
 //??????????????????????????????????????
 
@@ -145,11 +165,6 @@ export default function createFeature({name,
 
 //?   actions:    ??,  ?? unsure what needs to be communicated here (typically actions used in a feature are exclusively used internally)
 //?                    ?? need a way to publically expose actions outside of feature
-//? 
-//?   ?? appWillStart: () => whatever, // arbitrary code that is executed one-time at app startup
-//? 
-//?   ?? appDidStart: ({getState, dispatch}) => whatever // optional code that executes once expo is fully setup (typically dispatches a 'bootstrap app' action)
-//? 
 //? 
 //?   * ? log-u configuration ......... - ? many aspects of log configuration revolve around filter identies (federated namespaces)
 

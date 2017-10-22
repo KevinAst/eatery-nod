@@ -46,7 +46,7 @@ import {notify,
 function SideBar({deviceStatus, changeView, handleFilterDiscovery, handleFilterEatery, handleSignOut}) {
 
   // ?? RETROFIT: temp to display it (see note above)
-  return <Text>TODO: RETROFIT to access features.</Text>;
+  // ?? return <Text>TODO: RETROFIT to access features.</Text>;
 
   if (deviceStatus !== 'READY') { // ... render placebo, until system fonts have been loaded
     return <Text/>
@@ -131,7 +131,7 @@ function SideBar({deviceStatus, changeView, handleFilterDiscovery, handleFilterE
           </ListItem>
   */}
 
-{/* Sandbox tests of our notify utility
+{/* Sandbox tests of our notify utility  */}
           <ListItem itemDivider>
             <Text>Notify Sandbox</Text>
           </ListItem>
@@ -248,7 +248,7 @@ function SideBar({deviceStatus, changeView, handleFilterDiscovery, handleFilterE
               <Text style={{color: 'purple'}}>confirm.warn()</Text>
             </Body>
           </ListItem>
-  */}
+{/* END: Sandbox tests of our notify utility */}
 
         </List>
       </Content>
@@ -273,7 +273,7 @@ export default connectRedux(SideBar, {
   mapStateToProps(appState) {
     return {
       // ?? RETROFIT: appState/actions (see note above)
-      // ? deviceStatus: appState.device.status,
+      deviceStatus: appState.device.status,
     };
   },
   mapDispatchToProps(dispatch) {

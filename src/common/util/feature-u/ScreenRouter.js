@@ -1,7 +1,7 @@
 import React                 from 'react';
 import RN                    from 'react-native';
 import PropTypes             from 'prop-types';
-import connectRedux          from '../util/connectRedux';
+import connectRedux          from '../connectRedux';
 import SplashScreen          from '../../comp/SplashScreen';
 
 // ?? obsolete imports
@@ -58,14 +58,16 @@ class ScreenRouter extends React.Component {
     // ?? OBSOLETE (pull into various features)
 
 
+    //x DENOTES logic moved into new structure ?? trash this when complete
+    //
     //? /* eslint-disable curly */
-    //? 
-    //? // promote a simple SpashScreen (with status) until our system is ready
-    //? // NOTE: Errors related to system resources are promoted through independent user notifications
-    //? if (!p.device.fontsLoaded)   // ... before our fonts are loaded,
-    //?   return <Expo.AppLoading/>; //     we must use the Expo spash screen (no dependancy on yet-to-be-loaded fonts)
-    //? if (p.device.status !== 'READY')
-    //?   return <SplashScreen msg={p.device.status}/>;
+    //
+    //x // promote a simple SpashScreen (with status) until our system is ready
+    //x // NOTE: Errors related to system resources are promoted through independent user notifications
+    //x if (!p.device.fontsLoaded)   // ... before our fonts are loaded,
+    //x   return <Expo.AppLoading/>; //     we must use the Expo spash screen (no dependancy on yet-to-be-loaded fonts)
+    //x if (p.device.status !== 'READY')
+    //x   return <SplashScreen msg={p.device.status}/>;
     //? 
     //? // primary route logic, based on user authorization
     //? switch (p.userStatus) {
