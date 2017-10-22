@@ -33,38 +33,67 @@ import {isValidRouterCB} from './createRouterCB';
  * state tree using the feature name, however this can be fully
  * defined using the shapedReducer() utility.
  *
- * @param {SelectorObject} [namedArgs.selectors] an optional set of
- * selectors to be publically promoted for this feature, through the
- * feature-u App object, promoting cross-communication between
- * features.
+ * @param {Any} [namedArgs.crossFeature] an optional resource exposed
+ * in app.{feature}.{crossFeature} (of runApp()), promoting
+ * cross-communication between features.
  *
- * Ex:
+ * Many aspects of a feature are internal to the feature's
+ * implementation.  For example, most actions are created and consumed
+ * exclusively by logic/reducers that are internal to the feature.
+ *
+ * However, other aspects of a feature may need to be exposed, to
+ * promote cross-communication between features.  For example,
+ * featureB may need to know some aspect of featureB, such as some of
+ * it's state (through a selector), or emit one of it's actions, or in
+ * general anything (invoke some function that does xyz).
+ *
+ * This cross-communication is accomplished through the crossFeature.
+ * This is an item of any type (typically an object) that is exposed
+ * through the feature-u app (emitted from runApp(), and exported
+ * through your app).
+ *
+ * You can think of crossFeature as your feature's public API.
+ *
+ * Here is a suggested sampling:
  * ```
- * selectors: {
- *   currentView: (appState) => appState.views.currentView, ?? isolate appstate.views in function
- *   deviceReady: (appState) => appState.device.status === 'READY',
+ * name: 'foo',
+ * crossFeature: {
+ *
+ *   // actions stimulate activity within our app
+ *   // ... our actions are encapsulated as action creator functions
+ *   //     that promote both creator and type (via toString() overload)
+ *   // ... we expose JUST actions that needs public access (not all)
+ *   actions: {
+ *     open(): action,
+ *     etc(),
+ *   },
+ *
+ *   // selectors encapsulate state location (shape) and apply business logic (as needed)
+ *   // ... we expose JUST state that needs public access (not all)
+ *   selectors: {
+ *     currentView: (appState) => appState.foo.currentView,
+ *     deviceReady: (appState) => appState.foo.status === 'READY',
+ *     etc(appState),
+ *   },
+ *   anyThingElseYouNeed() // etc, etc, etc
  * }
  * ```
  *
- * Selectors are functions which abstract access to application state.
- * They are useful in decoupling specific knowledge about the internal
- * state representation.  
- *
- * Even though redux state is available globally, the interpretive
- * meaning of this state should be fronted through selectors (that
- * encapsolate business logic and interpret state shape).  This is
- * certainly true for externall state access (by other features), but
- * less so for internal feature access (IMHO).
- *
- * Promoted through feature-u App object:
+ * The above sample is exposed through the feature-u app, as follows:
  * ```
- *   app: {
- *     views: {  // feature name
- *       selectors: {
- *         deviceReady(appState) {...},
- *         etc.
- *       }
- *     }
+ *   import app from './your-app-import'; // an export of runApp()
+ *   ...
+ *   app.foo.selectors.currentView(appState)
+ * ```
+ *
+ * Please note that if a feature can be disabled, the corresponding
+ * app.{feature} will NOT exist.  External features can use this
+ * aspect to dynamically determine if the feature is active or not.
+ * ```
+ *   import app from './your-app-import';
+ *   ...
+ *   if (app.foo) {
+ *     do something foo related
  *   }
  * ```
  *
@@ -92,7 +121,7 @@ import {isValidRouterCB} from './createRouterCB';
 export default function createFeature({name,
                                        enabled=true,
                                        reducer,
-                                       selectors,
+                                       crossFeature,
                                        logic,
                                        router,
                                        appWillStart,
@@ -114,9 +143,7 @@ export default function createFeature({name,
     check(isFunction(reducer), 'reducer (when supplied) must be a function');
   }
 
-  if (selectors) {
-    // ? consider doing a lodash isPlainObject(selectors)
-  }
+  // crossFeature: nothing to validate
 
   if (logic) {
     check(Array.isArray(logic), 'logic (when supplied) must be an array of redux-logic modules');
@@ -147,7 +174,7 @@ export default function createFeature({name,
     name,
     enabled,
     reducer,
-    selectors,
+    crossFeature,
     logic,
     router,
     appWillStart,
@@ -155,16 +182,3 @@ export default function createFeature({name,
   };
 
 }
-
-//??????????????????????????????????????
-
-//?   >>> KEY: ?? feature specific action creators.  Only requirement is each action creator function must be toString() overloaded to promote the action type.
-//?               Each feature will typically need many actions, most of which can be considered an internal implementation detail to that feature.
-//?               The only actions that are required here are those that require public access (i.e. cross-feature communication)
-//?               Will be publically promoted for this feature, through the feature-u App object, promoting cross-communication between features.
-
-//?   actions:    ??,  ?? unsure what needs to be communicated here (typically actions used in a feature are exclusively used internally)
-//?                    ?? need a way to publically expose actions outside of feature
-//? 
-//?   * ? log-u configuration ......... - ? many aspects of log configuration revolve around filter identies (federated namespaces)
-

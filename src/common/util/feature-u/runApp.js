@@ -72,28 +72,29 @@ export default function runApp(features, api) {
 
 
   // ***
-  // *** create our new App object (used in feature cross-communication)
+  // *** create our new App object (used in cross-communication of features)
   // ***
 
   const app =  {
     // EX:
-    // {feature}: {
-    //   .selectors: {
-    //     .abc(appState) {...}
+    // featureA: {
+    //   selectors: {
+    //     abc(appState),
     //   },
-    //   .actions: {
-    //     .xyz(...) {...}
+    //   actions: {
+    //     xyz(...),
     //   }
-    // }
+    // },
+    // featureB: {
+    //   ...
+    // },
+    // etc: {
+    //   ...
+    // },
   };
 
-  // inject all active feature selectors/actions to app
   activeFeatures.forEach( feature => {
-    const featureNode = app[feature.name] = {};
-    if (feature.selectors) {
-      featureNode.selectors = feature.selectors
-    }
-    // ?? same for actions
+    app[feature.name] = feature.crossFeature || {};
   });
 
 
@@ -130,11 +131,11 @@ export default function runApp(features, api) {
   const routers = [];
   activeFeatures.forEach( feature => {
     if (feature.router) {
-      // console.log(`??? runApp acumulating router for ${feature.name}`);
+      // console.log(`xx runApp acumulating router for ${feature.name}`);
       routers.push(feature.router);
     }
   });
-  // console.log(`??? runApp routers: `, routers);
+  // console.log(`xx runApp routers: `, routers);
 
 
   // ***
@@ -158,7 +159,7 @@ export default function runApp(features, api) {
   //       This is a temporary measure to get us going.
   //       See SideBar.js code for some long-term solutions.
   // ********************************************************************************
-  // ??$$ see if Drawer has to have children ... View is temporary ... looking for Wrapper article
+  // ??XX see if Drawer has to have children ... View is temporary ... looking for Wrapper article
   //? const Wrapper = ({children}) => children; // ?? can't get to work
   //? const content = [
   //?   <Drawer key="111"
@@ -176,7 +177,7 @@ export default function runApp(features, api) {
   //?   </Provider>
   //? );
   // ********************************************************************************
-  // ??$$ ORIGINAL - WORKS
+  // ??XX ORIGINAL - WORKS
   //? const appRootComp = () => (
   //?   <Provider store={appStore}>
   //?     <Drawer ref={ ref => registerDrawer(ref) }
@@ -190,7 +191,7 @@ export default function runApp(features, api) {
   //? Expo.registerRootComponent(appRootComp);
   // ********************************************************************************
 
-  // ??$$ TRY manipulating as children
+  // ??XX TRY manipulating as children
 
   //? this works for multiple components
   //? let children = [

@@ -10,7 +10,8 @@ import actions          from './actions';
 /**
  * The 'startup' feature bootstraps the entire app, getting it up-and-running.
  *
- * ?? document any publicAPI for this feature
+ * For this feature's public API, please see crossFeature (below), 
+ * promoted through app.startup.
  */
 export default createFeature({
 
@@ -19,9 +20,11 @@ export default createFeature({
   logic,
   router,
 
-  selectors: {
-    fontsLoaded: (appState) => appState.device.fontsLoaded === true, // NOTE: can also contain error string, so true check is required
-    deviceReady: (appState) => appState.device.status === 'READY',
+  crossFeature: {
+    selectors: {
+      fontsLoaded: (appState) => appState.device.fontsLoaded === true, // NOTE: can also contain error string, so true check is required
+      deviceReady: (appState) => appState.device.status === 'READY',
+    },
   },
 
   appWillStart(app) {
