@@ -1,3 +1,4 @@
+import React            from 'react';
 import {createFeature,
         shapedReducer}  from '../../common/util/feature-u';
 import reducer          from './reducer';
@@ -6,6 +7,7 @@ import router           from './router';
 import platformSetup    from './init/platformSetup';
 import initFireBase     from './init/firebase/initFireBase';
 import actions          from './actions';
+import Notify           from '../../common/util/notify'; 
 
 /**
  * The 'startup' feature bootstraps the entire app, getting it up-and-running.
@@ -27,12 +29,15 @@ export default createFeature({
     },
   },
 
-  appWillStart(app) {
+  appWillStart(app, children) {
     // platform-specific setup (iOS/Android)
     platformSetup();
 
-    // Initialize FireBase
+    // initialize FireBase
     initFireBase();
+
+    // initialize notify utility, by injecting it to our App root
+    return [React.Children.toArray(children), <Notify/>];
   },
 
   appDidStart({app, appState, dispatch}) {

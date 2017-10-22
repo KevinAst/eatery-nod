@@ -13,7 +13,6 @@ import SideBar,
        closeSideBar}           from '../../../app/SideBar';
 import isFunction              from 'lodash.isfunction';
 import verify                  from '../verify';
-import Notify                  from '../notify'; 
 
 /**
  * Launch an app by assembling/configuring the supplied app features.
@@ -208,10 +207,11 @@ export default function runApp(features, api) {
   //?   <Notify/>
   //? ];
 
-  // simulate external feature injecting Notify as a sibling of our Router
-  const childrenArr = React.Children.toArray(children);
-  childrenArr.push(<Notify/>);
-  children = childrenArr;
+  // XXXX TRASH ... NO done in feature
+  //? // simulate external feature injecting Notify as a sibling of our Router
+  //? const childrenArr = React.Children.toArray(children);
+  //? childrenArr.push(<Notify/>);
+  //? children = childrenArr;
 
   // simulate external feature injecting Drawer at the top, with children <<< WORKS!!!
   // ... in general this top works, and CAN add to childen, by placing <Notify/> right after {children}

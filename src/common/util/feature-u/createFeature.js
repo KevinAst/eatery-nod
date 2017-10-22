@@ -127,6 +127,7 @@ import {isValidRouterCB} from './createRouterCB';
  * Here is an example of injecting new root-level content:
  * ```
  * appWillStart(app, children) {
+ *   ... other initialization ...
  *   return (
  *     <Drawer ...>
  *       {children}
@@ -137,10 +138,7 @@ import {isValidRouterCB} from './createRouterCB';
  *
  * Here is an example of injecting a new sibling to children:
  * ```
- * appWillStart(app, children) {
- *   const childrenArr = React.Children.toArray(children);
- *   return childrenArr.push(<Notify/>);
- * }
+ * appWillStart: (app, children) => [React.Children.toArray(children), <Notify/>]
  * ```
  *
  * @param {function} [namedArgs.appDidStart] an optional app
