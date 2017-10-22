@@ -16,7 +16,6 @@ import {Body,
 import PropTypes    from 'prop-types';
 import app          from '../../app';
 import commonStyles from '../../app/commonStyles';
-import {openSideBar}  from '../../app/SideBar'; // ?? VERY TEMP
 
 
 /**
@@ -47,8 +46,8 @@ function SplashScreen({msg, fontsLoaded}) {
         <Text>{msg}</Text>
         {/* ??? VERY TEMP */}
         <Button transparent
-                onPress={openSideBar}>
-          <Text>TEMPORARY SideBar</Text>
+                onPress={app.leftNav.open}>
+          <Text>TEMPORARY left-nav</Text>
         </Button>
 
       </Content>

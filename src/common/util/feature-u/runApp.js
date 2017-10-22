@@ -7,10 +7,6 @@ import {applyMiddleware,
 import {createLogicMiddleware} from 'redux-logic';
 import {Provider}              from 'react-redux';
 import Router                  from './Router';
-import {Drawer}                from 'native-base';
-import SideBar, 
-      {registerDrawer,
-       closeSideBar}           from '../../../app/SideBar';
 import isFunction              from 'lodash.isfunction';
 import verify                  from '../verify';
 
@@ -138,18 +134,22 @@ export default function runApp(features, api) {
   });
   // console.log(`xx runApp routers: `, routers);
 
-  // define our <Router> component, which will be injected at the root of our App's component tree
-  // ... before that (however), our features have the oppertunity to inject additional content at the root!
+  // define our <Router> component, which will be injected at the root
+  // of our App's component tree
+  // ... before that (however), our features have the 
+  //     oppertunity to inject additional content at the root
+  //     (see appWillStart() below)
   let children = <Router app={app} routers={routers}/>;
 
 
   // ***
-  // *** apply appWillStart(app) life-cycle hooks
+  // *** apply appWillStart(app, children) life-cycle hooks
   // ***
 
+  // appWillStart() can do any initialization
+  // -AND- supplement our top-level content (using a non-null return)
   activeFeatures.forEach( feature => {
     if (feature.appWillStart) {
-      // appWillStart() can do any initialization -AND- supplement our top-level content (using a non-null return)
       children = feature.appWillStart(app, children) || children;
     }
   });
@@ -159,71 +159,8 @@ export default function runApp(features, api) {
   // *** define our appRootComp and register it to Expo
   // ***
 
+  // TODO: if a "feature" changes children to an array, <Provider> can't handle multiple children
   // register our appRootComp to Expo, wiring up redux, and our left-nav sidebar
-
-  // ??$$ eliminate ALL this KRAP (once ??Notify and ??Drawer HAS BEEN REMOVED) ?? don't forget to clean imports
-
-  // TODO: SideBar (an app-specific component) is currently directly used in this generic utility.
-  //       This is a temporary measure to get us going.
-  //       See SideBar.js code for some long-term solutions.
-  // ********************************************************************************
-  // ??XX see if Drawer has to have children ... View is temporary ... looking for Wrapper article
-  //? const Wrapper = ({children}) => children; // ?? can't get to work
-  //? const content = [
-  //?   <Drawer key="111"
-  //?           ref={ ref => registerDrawer(ref) }
-  //?           content={<SideBar/>}
-  //?           onClose={closeSideBar}/>,
-  //?   <Router  key="222" app={app} routers={routers}/>,
-  //?   <Notify key="333"/>,
-  //? ];
-  //? const appRootComp = () => (
-  //?   <Provider store={appStore}>
-  //?     <Wrapper>
-  //?       {content}
-  //?     </Wrapper>
-  //?   </Provider>
-  //? );
-  // ********************************************************************************
-  // ??XX ORIGINAL - WORKS
-  //? const appRootComp = () => (
-  //?   <Provider store={appStore}>
-  //?     <Drawer ref={ ref => registerDrawer(ref) }
-  //?             content={<SideBar/>}
-  //?             onClose={closeSideBar}>
-  //?       <Router app={app} routers={routers}/>
-  //?       <Notify/>
-  //?     </Drawer>
-  //?   </Provider>
-  //? );
-  //? Expo.registerRootComponent(appRootComp);
-  // ********************************************************************************
-
-  // ??XX TRY manipulating as children
-
-  //? this works for multiple components
-  //? let children = [
-  //?   <Router app={app} routers={routers}/>,
-  //?   <Notify/>
-  //? ];
-
-  // XXXX TRASH ... NO done in feature
-  //? // simulate external feature injecting Notify as a sibling of our Router
-  //? const childrenArr = React.Children.toArray(children);
-  //? childrenArr.push(<Notify/>);
-  //? children = childrenArr;
-
-  // simulate external feature injecting Drawer at the top, with children <<< WORKS!!!
-  // ... in general this top works, and CAN add to childen, by placing <Notify/> right after {children}
-  children = (
-    <Drawer ref={ ref => registerDrawer(ref) }
-            content={<SideBar/>}
-            onClose={closeSideBar}>
-      {children}
-      {/* see note above ... <Notify/> */}
-    </Drawer>
-  );
-  // now complete the deal
   const appRootComp = () => (
     <Provider store={appStore}>
       {children}

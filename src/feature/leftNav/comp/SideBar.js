@@ -1,5 +1,5 @@
 import React        from 'react';
-import connectRedux from '../common/util/connectRedux';
+import connectRedux from '../../../common/util/connectRedux';
 import {Body,
         Button,
         Container,
@@ -12,41 +12,19 @@ import {Body,
         Right,
         Text,
         Title}      from 'native-base';
-import commonStyles from './commonStyles';
+import commonStyles from '../../../app/commonStyles';
 import {notify, 
         toast,
         alert,
-        confirm}    from '../common/util/notify';
+        confirm}    from '../../../common/util/notify';
 
 // TODO: ?? RETROFIT: ALL props, actions, state, MUST be retrofitted to use use app.{feature} .selector.xxx -and- .actions.xxx
 
 /**
- * SideBar: our left-nav sidebar
- * 
- * TODO: resolve SideBar coupling issue with generic feature-u utility.
- *       
- *       SideBar (an app-specific component) is currently directly used by feature-u (an inappropriate dependency)
- *       
- *       This is a temporary measure to get us going.
- *           - included directly in feature-u runApp()
- *           - access app-specific resources (importing app, accessing app/feature specific actions/state
- *       
- *       Long Term solutions to consider are:
- *           - some parameterization of runApp([sideBar>), optionally dynamically injecting Drawer as needed
- *        OR - some feature-based injection
- *             * createFeature( accept sideBar)
- *             * runApp() only one sideBar accepeted (from all features)
- *             * setup (below): interface is tricky
- *               - dynamically inject Drawer when side-bar is defined
- *               - BAD: has some coupling with our sidebar implementation ... registerDrawer()
- *                      ... unsure how this would be acomplished (need more throught)
- *             * KEY: this sideBar feature would have public knowledge of other app features, invoking their actions, accessing their state, etc.
+ * SideBar: our left-nav SideBar, exposed through the Drawer.
  */
 // ?? RETROFIT: props here (see note above)
 function SideBar({deviceStatus, changeView, handleFilterDiscovery, handleFilterEatery, handleSignOut}) {
-
-  // ?? RETROFIT: temp to display it (see note above)
-  // ?? return <Text>TODO: RETROFIT to access features.</Text>;
 
   if (deviceStatus !== 'READY') { // ... render placebo, until system fonts have been loaded
     return <Text/>
@@ -268,6 +246,7 @@ export function openSideBar() {
 export function closeSideBar() {
   setTimeout(() => _drawer._root.close(), 1); // delay so as to have new view up when sidebar closes (HACK)
 }
+
 
 export default connectRedux(SideBar, {
   mapStateToProps(appState) {
