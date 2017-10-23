@@ -3,7 +3,7 @@ import {reducerHash}      from 'astx-redux-util';
 import actions            from './actions';
 
 // ***
-// *** startup feature state for our device
+// *** 'startup' feature state for our device
 // ***
 
 export default combineReducers({

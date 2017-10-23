@@ -2,6 +2,7 @@ import {createLogic}  from 'redux-logic';
 import {Location,
         Permissions}  from 'expo';
 import isString       from 'lodash.isstring';
+import miniMeta       from './miniMeta';
 import actions        from './actions';
 import {toast}        from '../../common/util/notify';
 
@@ -12,7 +13,7 @@ import {toast}        from '../../common/util/notify';
  */
 export const startApp = createLogic({
 
-  name: 'bootstrap.startApp',
+  name: `${miniMeta.name}.startApp`,
   type: String(actions.system.bootstrap),
   
   process({getState, action, api}, dispatch, done) {
@@ -30,7 +31,7 @@ export const startApp = createLogic({
  */
 export const loadFonts = createLogic({
 
-  name: 'bootstrap.loadFonts',
+  name: `${miniMeta.name}.loadFonts`,
   type: String(actions.system.bootstrap.loadFonts),
   
   process({getState, action, api}, dispatch, done) {
@@ -54,7 +55,7 @@ export const loadFonts = createLogic({
  */
 export const locateDevice = createLogic({
 
-  name: 'bootstrap.locateDevice',
+  name: `${miniMeta.name}.locateDevice`,
   type: String(actions.system.bootstrap.locateDevice),
   warnTimeout: 0, // long-running logic (due to user interaction)
   
@@ -130,12 +131,12 @@ export const locateDevice = createLogic({
  */
 export const monitorStartupProgress = createLogic({
 
-  name: 'bootstrap.monitorStartupProgress',
+  name: `${miniMeta.name}.monitorStartupProgress`,
   type: /system.bootstrap.*.(complete|fail)/,
   
   process({getState, action, api}, dispatch, done) {
 
-    const device    = getState().device;
+    const device    = miniMeta.getFeatureState(getState());
     let   statusMsg = null;
 
     // monitor the status of various system resources
@@ -170,7 +171,7 @@ export const monitorStartupProgress = createLogic({
  */
 export const startAppAuthProcess = createLogic({
 
-  name: 'bootstrap.startAppAuthProcess',
+  name: `${miniMeta.name}.startAppAuthProcess`,
   type: String(actions.system.bootstrap.statusUpdate),
   
   process({getState, action, api}, dispatch, done) {

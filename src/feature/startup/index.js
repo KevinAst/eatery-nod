@@ -1,13 +1,13 @@
 import React            from 'react';
-import {createFeature,
-        shapedReducer}  from '../../common/util/feature-u';
-import reducer          from './reducer';
+import {createFeature}  from '../../common/util/feature-u';
+import miniMeta         from './miniMeta';
 import logic            from './logic';
 import router           from './router';
+import actions          from './actions';
 import platformSetup    from './init/platformSetup';
 import initFireBase     from './init/firebase/initFireBase';
-import actions          from './actions';
 import Notify           from '../../common/util/notify'; 
+
 
 /**
  * The 'startup' feature bootstraps the entire app, getting it up-and-running.
@@ -17,15 +17,15 @@ import Notify           from '../../common/util/notify';
  */
 export default createFeature({
 
-  name:       'startup',
-  reducer:    shapedReducer(reducer, 'device'),
+  name:     miniMeta.name,
+  reducer:  miniMeta.reducer,
   logic,
   router,
 
   crossFeature: {
     selectors: {
-      fontsLoaded: (appState) => appState.device.fontsLoaded === true, // NOTE: can also contain error string, so true check is required
-      deviceReady: (appState) => appState.device.status === 'READY',
+      fontsLoaded: (appState) => miniMeta.getFeatureState(appState).fontsLoaded === true, // NOTE: fontsLoaded true check IS REQUIRED, as it can also contain error string
+      deviceReady: (appState) => miniMeta.getFeatureState(appState).status === 'READY',
     },
   },
 
