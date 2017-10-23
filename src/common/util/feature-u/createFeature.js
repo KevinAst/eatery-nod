@@ -2,6 +2,7 @@ import verify            from '../verify';
 import isString          from 'lodash.isstring';
 import isFunction        from 'lodash.isfunction';
 import {isValidRouterCB} from './createRouterCB';
+import shapedReducer     from './shapedReducer';
 
 
 /**
@@ -31,10 +32,13 @@ import {isValidRouterCB} from './createRouterCB';
  * maintains redux state (if any) for this feature.  By default, the
  * state managed by this reducer will be injected at the top-level
  * state tree using the feature name, however this can be fully
- * defined using the shapedReducer() utility.
+ * defined using the shapedReducer() utility.  Please note that
+ * createFeature() automatically insures all reducers are embellished
+ * with shapedReducer() (a stake in the ground) ... we can rely on:
+ * reducer.getShapedState(appState) to ALWAYS be available!
  *
  * @param {Any} [namedArgs.crossFeature] an optional resource exposed
- * in app.{feature}.{crossFeature} (of runApp()), promoting
+ * in app.{feature}.{crossFeature} (emitted from runApp()), promoting
  * cross-communication between features.
  *
  * Many aspects of a feature are internal to the feature's
@@ -43,14 +47,14 @@ import {isValidRouterCB} from './createRouterCB';
  *
  * However, other aspects of a feature may need to be exposed, to
  * promote cross-communication between features.  For example,
- * featureB may need to know some aspect of featureB, such as some of
+ * feature-a may need to know some aspect of feature-b, such as some of
  * it's state (through a selector), or emit one of it's actions, or in
- * general anything (invoke some function that does xyz).
+ * general anything (ex: invoke some function that does xyz).
  *
  * This cross-communication is accomplished through the crossFeature.
  * This is an item of any type (typically an object) that is exposed
  * through the feature-u app (emitted from runApp(), and exported
- * through your app).
+ * through your app.js).
  *
  * You can think of crossFeature as your feature's public API.
  *
@@ -64,7 +68,7 @@ import {isValidRouterCB} from './createRouterCB';
  *   //     that promote both creator and type (via toString() overload)
  *   // ... we expose JUST actions that needs public access (not all)
  *   actions: {
- *     open(): action,
+ *     open: actions.view.open, // NOTE: strongly suspect NOT available in app during in-line execution - for MONITORING code (figure this out when we come to it)
  *     etc(),
  *   },
  *
@@ -172,6 +176,11 @@ export default function createFeature({name,
 
   if (reducer) {
     check(isFunction(reducer), 'reducer (when supplied) must be a function');
+
+    // insure all reducers are embellished with shapedReducer(), defaulting to the feature name
+    if (!reducer.shape) {
+      shapedReducer(reducer, name);
+    }
   }
 
   // crossFeature: nothing to validate
@@ -210,6 +219,14 @@ export default function createFeature({name,
     router,
     appWillStart,
     appDidStart,
+
+    // a convenience selector, for internal use (within our feature implementation)
+    // ... insulation from repeated duplication of our feature state location
+    // NOTE: Decided against this
+    //       - limited scope: in the future we may support multiple rooted reducers per feature
+    //       - requires Feature object to be expanded, which is problematic during in-line excution of code
+    //       - SOLUTION: used a internal convention of miniMeta object
+    // NIXED: getFeatureState: !reducer ? null : (appState) => reducer.getShapedState(appState),
   };
 
 }
