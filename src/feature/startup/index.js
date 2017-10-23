@@ -42,7 +42,7 @@ export default createFeature({
 
   appDidStart({app, appState, dispatch}) {
     // bootstrap our app processes (a swift kick to get the ball rolling)
-    dispatch( actions.system.bootstrap() );
+    dispatch( actions.startup() );
   },
 
 });

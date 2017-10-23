@@ -14,12 +14,12 @@ import {toast}        from '../../common/util/notify';
 export const startApp = createLogic({
 
   name: `${miniMeta.name}.startApp`,
-  type: String(actions.system.bootstrap),
+  type: String(actions.startup),
   
   process({getState, action, api}, dispatch, done) {
     // start our app - by kicking off resource retrievals needed by our app
-    dispatch( actions.system.bootstrap.loadFonts() );
-    dispatch( actions.system.bootstrap.locateDevice() );
+    dispatch( actions.startup.loadFonts() );
+    dispatch( actions.startup.locateDevice() );
     done();
   },
 
@@ -32,17 +32,17 @@ export const startApp = createLogic({
 export const loadFonts = createLogic({
 
   name: `${miniMeta.name}.loadFonts`,
-  type: String(actions.system.bootstrap.loadFonts),
+  type: String(actions.startup.loadFonts),
   
   process({getState, action, api}, dispatch, done) {
     // asynchronously load our system resources
     api.system.loadResources()
        .then( () => {
-         dispatch( actions.system.bootstrap.loadFonts.complete() );
+         dispatch( actions.startup.loadFonts.complete() );
          done();
        })
        .catch( err => {
-         dispatch( actions.system.bootstrap.loadFonts.fail(err) );
+         dispatch( actions.startup.loadFonts.fail(err) );
          done();
        });
   },
@@ -56,7 +56,7 @@ export const loadFonts = createLogic({
 export const locateDevice = createLogic({
 
   name: `${miniMeta.name}.locateDevice`,
-  type: String(actions.system.bootstrap.locateDevice),
+  type: String(actions.startup.locateDevice),
   warnTimeout: 0, // long-running logic (due to user interaction)
   
   process({getState, action, api}, dispatch, done) {
@@ -71,7 +71,7 @@ export const locateDevice = createLogic({
       });
 
       // fallback to last known location (for now just hard-code to Glen Carbon)
-      dispatch( actions.system.bootstrap.locateDevice.complete({lat: 38.752209, lng: -89.986610}) );
+      dispatch( actions.startup.locateDevice.complete({lat: 38.752209, lng: -89.986610}) );
 
       // log any error
       if (err) {
@@ -105,8 +105,8 @@ export const locateDevice = createLogic({
                              // }
 
                              // communicate device location
-                             dispatch( actions.system.bootstrap.locateDevice.complete({lat: location.coords.latitude, 
-                                                                                       lng: location.coords.longitude}) );
+                             dispatch( actions.startup.locateDevice.complete({lat: location.coords.latitude, 
+                                                                              lng: location.coords.longitude}) );
                            })
                            .catch( err => {
                              handleIssue('Could not obtain device location.', err);
@@ -132,7 +132,7 @@ export const locateDevice = createLogic({
 export const monitorStartupProgress = createLogic({
 
   name: `${miniMeta.name}.monitorStartupProgress`,
-  type: /system.bootstrap.*.(complete|fail)/,
+  type: /startup.*.(complete|fail)/,
   
   process({getState, action, api}, dispatch, done) {
 
@@ -157,7 +157,7 @@ export const monitorStartupProgress = createLogic({
     }
 
     // update the system status
-    dispatch( actions.system.bootstrap.statusUpdate(statusMsg) );
+    dispatch( actions.startup.statusUpdate(statusMsg) );
 
     done();
   },
@@ -172,7 +172,7 @@ export const monitorStartupProgress = createLogic({
 export const startAppAuthProcess = createLogic({
 
   name: `${miniMeta.name}.startAppAuthProcess`,
-  type: String(actions.system.bootstrap.statusUpdate),
+  type: String(actions.startup.statusUpdate),
   
   process({getState, action, api}, dispatch, done) {
 
