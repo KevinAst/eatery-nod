@@ -67,7 +67,8 @@ SplashScreen.defaultProps = {
 export default connectRedux(SplashScreen, {
   mapStateToProps(appState) {
     return {
-      fontsLoaded: app.startup.selectors.fontsLoaded(appState), // hmmm: inappropriate coupling: common component <SplashScreen> using app-specific info
+      // hmmm ... inappropriate coupling: common component <SplashScreen> using app-specific info
+      fontsLoaded: app.startup.selectors.fontsLoaded(appState),
     };
   },
 });
