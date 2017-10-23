@@ -1,5 +1,5 @@
 import React            from 'react';
-import {createFeature}  from '../../common/util/feature-u';
+import {createFeature}  from '../../util/feature-u';
 import {Drawer}         from 'native-base';
 import SideBar, 
       {registerDrawer,

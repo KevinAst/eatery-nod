@@ -2,7 +2,7 @@ import React                 from 'react';
 import RN                    from 'react-native';
 import PropTypes             from 'prop-types';
 import connectRedux          from '../connectRedux';
-import SplashScreen          from '../../comp/SplashScreen';
+import SplashScreen          from '../comp/SplashScreen';
 
 // ?? obsolete imports
 //? import Expo                  from 'expo';
@@ -62,7 +62,7 @@ class Router extends React.Component {
     //
     //? /* eslint-disable curly */
     //
-    //x // promote a simple SpashScreen (with status) until our system is ready
+    //x // promote a simple SplashScreen (with status) until our system is ready
     //x // NOTE: Errors related to system resources are promoted through independent user notifications
     //x if (!p.device.fontsLoaded)   // ... before our fonts are loaded,
     //x   return <Expo.AppLoading/>; //     we must use the Expo spash screen (no dependancy on yet-to-be-loaded fonts)

@@ -4,7 +4,7 @@ import {Location,
 import isString       from 'lodash.isstring';
 import miniMeta       from './miniMeta';
 import actions        from './actions';
-import {toast}        from '../../common/util/notify';
+import {toast}        from '../../util/notify';
 
 
 /**

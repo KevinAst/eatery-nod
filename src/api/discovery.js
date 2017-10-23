@@ -1,5 +1,5 @@
 import apiKey    from './googlePlacesApiKey';
-import verify    from '../common/util/verify';
+import verify    from '../util/verify';
 import isString  from 'lodash.isstring';
 
 // sample Google Places search:

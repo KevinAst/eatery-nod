@@ -1,4 +1,4 @@
-import {runApp}  from '../common/util/feature-u';
+import {runApp}  from '../util/feature-u';
 import features  from '../feature';
 import api       from '../api';
 

@@ -1,6 +1,6 @@
 import Expo         from 'expo';
 import React        from 'react';
-import connectRedux from '../util/connectRedux';
+import connectRedux from '../connectRedux';
 import {Image}      from 'react-native';
 // ?? Button is: VERY TEMP
 import {Body,

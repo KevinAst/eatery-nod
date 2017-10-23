@@ -1,12 +1,12 @@
 import React            from 'react';
-import {createFeature}  from '../../common/util/feature-u';
+import {createFeature}  from '../../util/feature-u';
 import miniMeta         from './miniMeta';
 import logic            from './logic';
 import router           from './router';
 import actions          from './actions';
 import platformSetup    from './init/platformSetup';
 import initFireBase     from './init/firebase/initFireBase';
-import Notify           from '../../common/util/notify'; 
+import Notify           from '../../util/notify'; 
 
 
 /**

@@ -1,4 +1,4 @@
-import {shapedReducer}  from '../../common/util/feature-u';
+import {shapedReducer}  from '../../util/feature-u';
 import reducer          from './reducer';
 
 /**

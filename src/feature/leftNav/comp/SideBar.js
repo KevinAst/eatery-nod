@@ -1,5 +1,5 @@
 import React        from 'react';
-import connectRedux from '../../../common/util/connectRedux';
+import connectRedux from '../../../util/connectRedux';
 import {Body,
         Button,
         Container,
@@ -16,7 +16,7 @@ import commonStyles from '../../../app/commonStyles';
 import {notify, 
         toast,
         alert,
-        confirm}    from '../../../common/util/notify';
+        confirm}    from '../../../util/notify';
 
 // TODO: ?? RETROFIT: ALL props, actions, state, MUST be retrofitted to use use app.{feature} .selector.xxx -and- .actions.xxx
 
