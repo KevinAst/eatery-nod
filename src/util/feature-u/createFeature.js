@@ -142,7 +142,7 @@ import shapedReducer     from './shapedReducer';
  *
  * Here is an example of injecting a new sibling to children:
  * ```
- * appWillStart: (app, children) => [React.Children.toArray(children), <Notify/>]
+ * appWillStart: (app, children) => [React.Children.toArray(children), <Notify key="Notify"/>]
  * ```
  *
  * @param {function} [namedArgs.appDidStart] an optional app

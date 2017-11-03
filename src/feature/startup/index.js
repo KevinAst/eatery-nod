@@ -37,7 +37,7 @@ export default createFeature({
     initFireBase();
 
     // initialize notify utility, by injecting it to our App root
-    return [React.Children.toArray(children), <Notify/>];
+    return [React.Children.toArray(children), <Notify key="Notify"/>];
   },
 
   appDidStart({app, appState, dispatch}) {
