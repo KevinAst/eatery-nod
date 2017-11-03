@@ -4,7 +4,7 @@
   "description": "A Date Night Random Restaurant Selector (my first react-native mobile app)",
   "author": "Kevin J. Bridges <kevinast@gmail.com> (https://github.com/KevinAst)",
   "private": true,
-  "main": "src/app/index.js",
+  "main": "src/app.js",
   "repository": {
     "type": "git",
     "url": "https://github.com/KevinAst/eatery-nod.git"

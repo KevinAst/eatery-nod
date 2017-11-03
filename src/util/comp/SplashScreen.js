@@ -15,7 +15,7 @@ import {Body,
         Title}      from 'native-base';
 import PropTypes    from 'prop-types';
 import app          from '../../app';
-import commonStyles from '../../app/commonStyles';
+import commonStyles from '../../feature/commonStyles';
 
 
 /**

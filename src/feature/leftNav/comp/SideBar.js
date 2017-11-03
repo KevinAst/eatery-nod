@@ -12,7 +12,7 @@ import {Body,
         Right,
         Text,
         Title}      from 'native-base';
-import commonStyles from '../../../app/commonStyles';
+import commonStyles from '../../commonStyles';
 import {notify, 
         toast,
         alert,

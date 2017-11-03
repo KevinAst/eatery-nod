@@ -1,5 +1,5 @@
 /**
- * Promote commonStyles used throughout our components.
+ * Promote commonStyles used throughout our App.
  */
 export default {
 
