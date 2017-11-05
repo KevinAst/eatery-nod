@@ -1,5 +1,6 @@
 import createFeature  from './createFeature';
 import shapedReducer  from './shapedReducer';
+import injectContext  from './injectContext';
 import runApp         from './runApp';
 import createRouterCB from './createRouterCB';
 
@@ -15,6 +16,7 @@ import createRouterCB from './createRouterCB';
 export {
   createFeature,
   shapedReducer,
+  injectContext,
   runApp,
   createRouterCB,
 };
@@ -27,6 +29,7 @@ export {
 export default {
   createFeature,
   shapedReducer,
+  injectContext,
   runApp,
   createRouterCB,
 };

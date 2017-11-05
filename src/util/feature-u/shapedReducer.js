@@ -29,7 +29,11 @@ import isFunction     from 'lodash.isfunction';
  * ```
  * 
  * SideBar: feature-u will default the location of non-embellished
- * reducers to the feature name.
+ *          reducers to the feature name.
+ *
+ * SideBar: When BOTH shapedReducer() and injectContext() are needed,
+ *          shapedReducer() should be adorned in the outer function
+ *          passed to createFunction().
  *
  * @param {reducerFn} reducer a redux reducer function to be
  * embellished with the shape specification.

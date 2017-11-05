@@ -12,6 +12,7 @@ import {Body,
         Right,
         Text,
         Title}      from 'native-base';
+import app          from '../../../app';
 import commonStyles from '../../commonStyles';
 import {notify, 
         toast,
@@ -24,10 +25,14 @@ import {notify,
  * SideBar: our left-nav SideBar, exposed through the Drawer.
  */
 // ?? RETROFIT: props here (see note above)
-function SideBar({deviceStatus, changeView, handleFilterDiscovery, handleFilterEatery, handleSignOut}) {
+function SideBar({deviceReady, changeView, handleFilterDiscovery, handleFilterEatery, handleSignOut}) {
 
-  if (deviceStatus !== 'READY') { // ... render placebo, until system fonts have been loaded
-    return <Text/>
+  if (!deviceReady) { // ... render placebo, until system fonts have been loaded
+    return (
+      <Text style={commonStyles.container}>
+        Device NOT ready (waiting for fonts to load)
+      </Text>
+    );
   }
   
   return (
@@ -251,8 +256,8 @@ export function closeSideBar() {
 export default connectRedux(SideBar, {
   mapStateToProps(appState) {
     return {
+      deviceReady: app.startup.selectors.deviceReady(appState),
       // ?? RETROFIT: appState/actions (see note above)
-      deviceStatus: appState.device.status,
     };
   },
   mapDispatchToProps(dispatch) {

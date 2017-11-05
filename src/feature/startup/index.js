@@ -1,6 +1,8 @@
 import React            from 'react';
-import {createFeature}  from '../../util/feature-u';
-import miniMeta         from './miniMeta';
+import {createFeature,
+        injectContext,
+        shapedReducer}  from '../../util/feature-u';
+import reducer          from './reducer';
 import logic            from './logic';
 import router           from './router';
 import actions          from './actions';
@@ -17,17 +19,18 @@ import Notify           from '../../util/notify';
  */
 export default createFeature({
 
-  name:     miniMeta.name,
-  reducer:  miniMeta.reducer,
+  name:     'startup',
+  reducer:  shapedReducer(reducer, 'device'),
+
+  crossFeature: injectContext( (feature) => ({
+    selectors: {
+      fontsLoaded: (appState) => feature.reducer.getShapedState(appState).fontsLoaded === true, // NOTE: fontsLoaded true check IS REQUIRED, as it can also contain error string
+      deviceReady: (appState) => feature.reducer.getShapedState(appState).status === 'READY',
+    },
+  }) ),
+
   logic,
   router,
-
-  crossFeature: {
-    selectors: {
-      fontsLoaded: (appState) => miniMeta.getFeatureState(appState).fontsLoaded === true, // NOTE: fontsLoaded true check IS REQUIRED, as it can also contain error string
-      deviceReady: (appState) => miniMeta.getFeatureState(appState).status === 'READY',
-    },
-  },
 
   appWillStart(app, children) {
     // platform-specific setup (iOS/Android)

@@ -17,7 +17,7 @@ import shapedReducer     from './shapedReducer';
  *     name:       'views',
  *     enabled:    true,
  *     reducer:    shapedReducer(reducer, 'views.currentView'),
- *     ?? more
+ *     ? more
 
  *   };
  * ```
@@ -28,18 +28,9 @@ import shapedReducer     from './shapedReducer';
  * @param {boolean} [namedArgs.enabled=true] an indicator as to
  * whether this feature is enabled (true) or not (false).
  *
- * @param {reducerFn} [namedArgs.reducer] an optional reducer that
- * maintains redux state (if any) for this feature.  By default, the
- * state managed by this reducer will be injected at the top-level
- * state tree using the feature name, however this can be fully
- * defined using the shapedReducer() utility.  Please note that
- * createFeature() automatically insures all reducers are embellished
- * with shapedReducer() (a stake in the ground) ... we can rely on:
- * reducer.getShapedState(appState) to ALWAYS be available!
- *
- * @param {Any} [namedArgs.crossFeature] an optional resource exposed
- * in app.{feature}.{crossFeature} (emitted from runApp()), promoting
- * cross-communication between features.
+ * @param {Any|contextCallbackFn} [namedArgs.crossFeature] an optional
+ * resource exposed in app.{feature}.{crossFeature} (emitted from
+ * runApp()), promoting cross-communication between features.
  *
  * Many aspects of a feature are internal to the feature's
  * implementation.  For example, most actions are created and consumed
@@ -79,6 +70,8 @@ import shapedReducer     from './shapedReducer';
  *     deviceReady: (appState) => appState.foo.status === 'READY',
  *     etc(appState),
  *   },
+ *   api: {
+ *   },
  *   anyThingElseYouNeed() // etc, etc, etc
  * }
  * ```
@@ -101,9 +94,31 @@ import shapedReducer     from './shapedReducer';
  *   }
  * ```
  *
- * @param {Logic[]} [namedArgs.logic] an optional set of business
+ * Because some crossFeature may require feature-based context
+ * information, this parameter can also be a contextCallbackFn - a
+ * callback that returns the crossFeature (see injectContext()).
+ *
+ * @param {reducerFn|contextCallbackFn} [namedArgs.reducer] an
+ * optional reducer that maintains redux state (if any) for this
+ * feature.  By default, the state managed by any supplied reducer
+ * will be injected at the top-level state tree using the feature
+ * name, however this can be fully defined using the shapedReducer()
+ * utility.  Please note that createFeature() automatically insures
+ * all reducers are embellished with shapedReducer() (i.e. a stake in
+ * the ground) ... so you can rely on:
+ * reducer.getShapedState(appState) to ALWAYS be available!
+ *
+ * Because some reducers may require feature-based context
+ * information, this parameter can also be a contextCallbackFn - a
+ * callback that returns the reducerFn (see injectContext()).
+ *
+ * @param {Logic[]|contextCallbackFn} [namedArgs.logic] an optional set of business
  * logic modules (if any) to be registered to redux-logic in support
  * of this feature.
+ *
+ * Because some logic modules may require feature-based context
+ * information, this parameter can also be a contextCallbackFn - a
+ * callback that returns the Logic[] (see injectContext()).
  *
  * @param {RouterCB} [namedArgs.router] the optional router callback that
  * exposes feature-based Components based on appState.
@@ -155,10 +170,13 @@ import shapedReducer     from './shapedReducer';
  */
 export default function createFeature({name,
                                        enabled=true,
-                                       reducer,
+
                                        crossFeature,
+
+                                       reducer,
                                        logic,
                                        router,
+
                                        appWillStart,
                                        appDidStart,
                                        ...unknownArgs}={}) {
@@ -174,19 +192,19 @@ export default function createFeature({name,
 
   check(enabled===true||enabled===false, 'enabled must be a boolean');
 
-  if (reducer) {
-    check(isFunction(reducer), 'reducer (when supplied) must be a function');
+  // crossFeature: nothing to validate (it can be anything, INCLUDING a .injectContext function)
 
-    // insure all reducers are embellished with shapedReducer(), defaulting to the feature name
+  if (reducer) {
+    check(isFunction(reducer) || reducer.injectContext, 'reducer (when supplied) must be a function -or- a contextCallbackFn');
+
+    // default reducer shape to our feature name
     if (!reducer.shape) {
       shapedReducer(reducer, name);
     }
   }
 
-  // crossFeature: nothing to validate
-
   if (logic) {
-    check(Array.isArray(logic), 'logic (when supplied) must be an array of redux-logic modules');
+    check(Array.isArray(logic) || logic.injectContext, 'logic (when supplied) must be an array of redux-logic modules -or- a contextCallbackFn');
   }
 
   if (router) {
@@ -207,26 +225,74 @@ export default function createFeature({name,
 
 
   // ***
-  // *** return a new Feature object, accumulating feature aspects
+  // *** establish a new Feature object which accumulates feature aspects
   // ***
 
-  return {
-    name,
-    enabled,
-    reducer,
-    crossFeature,
-    logic,
-    router,
-    appWillStart,
-    appDidStart,
+  // create new Feature object, accumulating all feature aspects
+  // NOTES:
+  //   *1*: we pre-register all "raw" aspects
+  //        ... regardless of whether they are fully expanded (via injectContext())
+  //   *2*: some aspects contain "digestible" info that can potentially be used
+  //        in the expansion of other aspects (via injectContext())
+  //   *3*: some aspects may NOT yet be fully expanded
+  //        ... ones that support (and use) the injectContext() callback wrapper
+  const feature = {
 
-    // a convenience selector, for internal use (within our feature implementation)
-    // ... insulation from repeated duplication of our feature state location
-    // NOTE: Decided against this
-    //       - limited scope: in the future we may support multiple rooted reducers per feature
-    //       - requires Feature object to be expanded, which is problematic during in-line excution of code
-    //       - SOLUTION: used a internal convention of miniMeta object
-    // NIXED: getFeatureState: !reducer ? null : (appState) => reducer.getShapedState(appState),
+    name,          // *1* *2*
+    enabled,       // *1* *2*
+
+    crossFeature,  // *1* *2* *3* KEY: this aspect is the feature's public API   ??NO: , and is fully expanded out-of-the-box
+
+    reducer,       // *1* *2* *3* NOTE: for reducer, digestible info (*2*) is simply reducer.getShapedState(appState)
+    logic,         // *1*     *3*
+    router,        // *1*
+
+    appWillStart,  // *1*
+    appDidStart,   // *1*
   };
+
+  // now fully expand aspects supporting (and using) the injectContext() callback wrapper
+  // ... injecting feature context in their expansion (see *3* above)
+
+  // ... crossFeature
+  //     NOTE: when pulled into runApp(), the crossFeature is resolved for ALL features, prior to any other feature aspect expansion
+  //           - making the public API of ALL features available for the expansion of ALL feature aspects
+  //           - eliminating order dependancy (with the exception of dependancies in the crossFeature itself - which should be an anti-pattern)
+  if (feature.crossFeature && feature.crossFeature.injectContext) {
+    feature.crossFeature = feature.crossFeature(feature);
+  }
+
+  // ... reducer
+  if (feature.reducer && feature.reducer.injectContext) {
+
+    // hold on to our reducer shape
+    // ... we know shape is available, because WE default it (above)
+    const shape = feature.reducer.shape;
+
+    // fully resolve our actual reducer
+    feature.reducer = feature.reducer(feature);
+
+    // validate that no incompatable shape has been defined within our resolved reducer
+    if (feature.reducer.shape) {
+      check(feature.reducer.shape === shape, `reducer contextCallbackFn shape: '${shape}' is different from resolved reducer shape: '${feature.reducer.shape}'.
+SideBar: When BOTH shapedReducer() and injectContext() are needed, shapedReducer() should be adorned ONLY in the outer function passed to createFunction().`);
+    }
+
+    // apply same shape to our final resolved reducer
+    // ... so feature.reducer.getShapedState(appState) is available for public access
+    shapedReducer(feature.reducer, shape);
+  }
+
+  // ... logic
+  if (feature.logic && feature.logic.injectContext) {
+    feature.logic = feature.logic(feature);
+  }
+
+
+  // ***
+  // *** return our new Feature object
+  // ***
+
+  return feature;
 
 }

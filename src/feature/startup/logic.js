@@ -1,19 +1,19 @@
-import {createLogic}  from 'redux-logic';
+import {createLogic}    from 'redux-logic';
 import {Location,
-        Permissions}  from 'expo';
-import isString       from 'lodash.isstring';
-import miniMeta       from './miniMeta';
-import actions        from './actions';
-import {toast}        from '../../util/notify';
+        Permissions}    from 'expo';
+import isString         from 'lodash.isstring';
+import {injectContext}  from '../../util/feature-u';
+import actions          from './actions';
+import {toast}          from '../../util/notify';
 
 
 /**
  * Monitor system bootstrap completion, starting our app's
  * authorization process.
  */
-export const startApp = createLogic({
+export const startApp = injectContext( (feature) => createLogic({
 
-  name: `${miniMeta.name}.startApp`,
+  name: `${feature.name}.startApp`,
   type: String(actions.startup),
   
   process({getState, action, api}, dispatch, done) {
@@ -22,16 +22,15 @@ export const startApp = createLogic({
     dispatch( actions.startup.locateDevice() );
     done();
   },
-
-});
+}));
 
 
 /**
  * Load our system fonts.
  */
-export const loadFonts = createLogic({
+export const loadFonts = injectContext( (feature) => createLogic({
 
-  name: `${miniMeta.name}.loadFonts`,
+  name: `${feature.name}.loadFonts`,
   type: String(actions.startup.loadFonts),
   
   process({getState, action, api}, dispatch, done) {
@@ -47,15 +46,15 @@ export const loadFonts = createLogic({
        });
   },
 
-});
+}));
 
 
 /**
  * Geo locate our device.
  */
-export const locateDevice = createLogic({
+export const locateDevice = injectContext( (feature) => createLogic({
 
-  name: `${miniMeta.name}.locateDevice`,
+  name: `${feature.name}.locateDevice`,
   type: String(actions.startup.locateDevice),
   warnTimeout: 0, // long-running logic (due to user interaction)
   
@@ -123,20 +122,20 @@ export const locateDevice = createLogic({
 
   },
 
-});
+}));
 
 
 /**
  * Monitor Startup Progress
  */
-export const monitorStartupProgress = createLogic({
+export const monitorStartupProgress = injectContext( (feature) => createLogic({
 
-  name: `${miniMeta.name}.monitorStartupProgress`,
+  name: `${feature.name}.monitorStartupProgress`,
   type: /startup.*.(complete|fail)/,
   
   process({getState, action, api}, dispatch, done) {
 
-    const device    = miniMeta.getFeatureState(getState());
+    const device    = feature.reducer.getShapedState(getState());
     let   statusMsg = null;
 
     // monitor the status of various system resources
@@ -144,8 +143,8 @@ export const monitorStartupProgress = createLogic({
     if (!device.fontsLoaded) {
       statusMsg = 'Waiting for Fonts to load';
     }
-    else if (isString(device.fontsLoaded)) {
-      statusMsg = device.fontsLoaded;
+    else if (isString(device.fontsLoaded)) { // when contains a string, 
+      statusMsg = device.fontsLoaded;        // a problem occured in loading fonts ... expose it here
     }
     // ... device location
     else if (!device.loc) {
@@ -162,16 +161,16 @@ export const monitorStartupProgress = createLogic({
     done();
   },
 
-});
+}));
 
 
 
 /**
  * Start app when system resources are available.
  */
-export const startAppAuthProcess = createLogic({
+export const startAppAuthProcess = injectContext( (feature) => createLogic({
 
-  name: `${miniMeta.name}.startAppAuthProcess`,
+  name: `${feature.name}.startAppAuthProcess`,
   type: String(actions.startup.statusUpdate),
   
   process({getState, action, api}, dispatch, done) {
@@ -185,14 +184,14 @@ export const startAppAuthProcess = createLogic({
     done();
   },
 
-});
+}));
 
 // promote all logic (accumulated in index.js)
 // ... named exports (above) are used by unit tests :-)
-export default [
-  startApp,
-  loadFonts,
-  locateDevice,
-  monitorStartupProgress,
-  startAppAuthProcess,
-];
+export default injectContext( (feature) => [
+  startApp(feature),
+  loadFonts(feature),
+  locateDevice(feature),
+  monitorStartupProgress(feature),
+  startAppAuthProcess(feature),
+]);
