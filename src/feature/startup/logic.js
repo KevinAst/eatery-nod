@@ -11,7 +11,7 @@ import {toast}          from '../../util/notify';
  * Monitor system bootstrap completion, starting our app's
  * authorization process.
  */
-export const startApp = injectContext( (feature) => createLogic({
+export const startApp = injectContext( (feature, app) => createLogic({
 
   name: `${feature.name}.startApp`,
   type: String(actions.startup),
@@ -28,7 +28,7 @@ export const startApp = injectContext( (feature) => createLogic({
 /**
  * Load our system fonts.
  */
-export const loadFonts = injectContext( (feature) => createLogic({
+export const loadFonts = injectContext( (feature, app) => createLogic({
 
   name: `${feature.name}.loadFonts`,
   type: String(actions.startup.loadFonts),
@@ -52,7 +52,7 @@ export const loadFonts = injectContext( (feature) => createLogic({
 /**
  * Geo locate our device.
  */
-export const locateDevice = injectContext( (feature) => createLogic({
+export const locateDevice = injectContext( (feature, app) => createLogic({
 
   name: `${feature.name}.locateDevice`,
   type: String(actions.startup.locateDevice),
@@ -128,7 +128,7 @@ export const locateDevice = injectContext( (feature) => createLogic({
 /**
  * Monitor Startup Progress
  */
-export const monitorStartupProgress = injectContext( (feature) => createLogic({
+export const monitorStartupProgress = injectContext( (feature, app) => createLogic({
 
   name: `${feature.name}.monitorStartupProgress`,
   type: /startup.*.(complete|fail)/,
@@ -168,7 +168,7 @@ export const monitorStartupProgress = injectContext( (feature) => createLogic({
 /**
  * Start app when system resources are available.
  */
-export const startAppAuthProcess = injectContext( (feature) => createLogic({
+export const startAppAuthProcess = injectContext( (feature, app) => createLogic({
 
   name: `${feature.name}.startAppAuthProcess`,
   type: String(actions.startup.statusUpdate),
@@ -188,10 +188,10 @@ export const startAppAuthProcess = injectContext( (feature) => createLogic({
 
 // promote all logic (accumulated in index.js)
 // ... named exports (above) are used by unit tests :-)
-export default injectContext( (feature) => [
-  startApp(feature),
-  loadFonts(feature),
-  locateDevice(feature),
-  monitorStartupProgress(feature),
-  startAppAuthProcess(feature),
+export default injectContext( (feature, app) => [
+  startApp(feature, app),
+  loadFonts(feature, app),
+  locateDevice(feature, app),
+  monitorStartupProgress(feature, app),
+  startAppAuthProcess(feature, app),
 ]);

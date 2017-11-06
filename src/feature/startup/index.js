@@ -22,7 +22,7 @@ export default createFeature({
   name:     'startup',
   reducer:  shapedReducer(reducer, 'device'),
 
-  crossFeature: injectContext( (feature) => ({
+  crossFeature: injectContext( (feature, app) => ({
     selectors: {
       fontsLoaded: (appState) => feature.reducer.getShapedState(appState).fontsLoaded === true, // NOTE: fontsLoaded true check IS REQUIRED, as it can also contain error string
       deviceReady: (appState) => feature.reducer.getShapedState(appState).status === 'READY',

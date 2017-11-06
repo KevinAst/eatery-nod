@@ -28,7 +28,7 @@ import shapedReducer     from './shapedReducer';
  * @param {boolean} [namedArgs.enabled=true] an indicator as to
  * whether this feature is enabled (true) or not (false).
  *
- * @param {Any|contextCallbackFn} [namedArgs.crossFeature] an optional
+ * @param {Any|contextCallback} [namedArgs.crossFeature] an optional
  * resource exposed in app.{feature}.{crossFeature} (emitted from
  * runApp()), promoting cross-communication between features.
  *
@@ -95,10 +95,10 @@ import shapedReducer     from './shapedReducer';
  * ```
  *
  * Because some crossFeature may require feature-based context
- * information, this parameter can also be a contextCallbackFn - a
- * callback that returns the crossFeature (see injectContext()).
+ * information, this parameter can also be a contextCallback - a
+ * function that returns the crossFeature (see injectContext()).
  *
- * @param {reducerFn|contextCallbackFn} [namedArgs.reducer] an
+ * @param {reducerFn|contextCallback} [namedArgs.reducer] an
  * optional reducer that maintains redux state (if any) for this
  * feature.  By default, the state managed by any supplied reducer
  * will be injected at the top-level state tree using the feature
@@ -109,16 +109,16 @@ import shapedReducer     from './shapedReducer';
  * reducer.getShapedState(appState) to ALWAYS be available!
  *
  * Because some reducers may require feature-based context
- * information, this parameter can also be a contextCallbackFn - a
- * callback that returns the reducerFn (see injectContext()).
+ * information, this parameter can also be a contextCallback - a
+ * function that returns the reducerFn (see injectContext()).
  *
- * @param {Logic[]|contextCallbackFn} [namedArgs.logic] an optional set of business
+ * @param {Logic[]|contextCallback} [namedArgs.logic] an optional set of business
  * logic modules (if any) to be registered to redux-logic in support
  * of this feature.
  *
  * Because some logic modules may require feature-based context
- * information, this parameter can also be a contextCallbackFn - a
- * callback that returns the Logic[] (see injectContext()).
+ * information, this parameter can also be a contextCallback - a
+ * function that returns the Logic[] (see injectContext()).
  *
  * @param {RouterCB} [namedArgs.router] the optional router callback that
  * exposes feature-based Components based on appState.
@@ -195,7 +195,7 @@ export default function createFeature({name,
   // crossFeature: nothing to validate (it can be anything, INCLUDING a .injectContext function)
 
   if (reducer) {
-    check(isFunction(reducer) || reducer.injectContext, 'reducer (when supplied) must be a function -or- a contextCallbackFn');
+    check(isFunction(reducer) || reducer.injectContext, 'reducer (when supplied) must be a function -or- a contextCallback');
 
     // default reducer shape to our feature name
     if (!reducer.shape) {
@@ -204,7 +204,7 @@ export default function createFeature({name,
   }
 
   if (logic) {
-    check(Array.isArray(logic) || logic.injectContext, 'logic (when supplied) must be an array of redux-logic modules -or- a contextCallbackFn');
+    check(Array.isArray(logic) || logic.injectContext, 'logic (when supplied) must be an array of redux-logic modules -or- a contextCallback');
   }
 
   if (router) {
@@ -225,42 +225,77 @@ export default function createFeature({name,
 
 
   // ***
-  // *** establish a new Feature object which accumulates feature aspects
+  // *** return a new Feature object, accumulating feature aspects
   // ***
 
-  // create new Feature object, accumulating all feature aspects
   // NOTES:
-  //   *1*: we pre-register all "raw" aspects
-  //        ... regardless of whether they are fully expanded (via injectContext())
-  //   *2*: some aspects contain "digestible" info that can potentially be used
-  //        in the expansion of other aspects (via injectContext())
-  //   *3*: some aspects may NOT yet be fully expanded
-  //        ... ones that support (and use) the injectContext() callback wrapper
-  const feature = {
+  //  *P*: we pre-register all "raw" feature aspects
+  //  *E*: some of which may NOT yet be fully expanded
+  //       ... ones that support (and use) the injectContext() callback wrapper
+  //       ... this expansion is controlled by runApp() 
+  //           to insure the publicAPI of ALL features are expanded FIRST,
+  //           for other feature aspect expansion to use
+  //  *D*: some aspects contain "digestible" info that can be used internally in 
+  //       aspect expansion (for single-source-of-truth)
+  return {
+    name,          // *P* *D*
+    enabled,       // *P* *D*
 
-    name,          // *1* *2*
-    enabled,       // *1* *2*
+    crossFeature,  // *P* *D* *E* KEY: this aspect is the feature's public API
 
-    crossFeature,  // *1* *2* *3* KEY: this aspect is the feature's public API   ??NO: , and is fully expanded out-of-the-box
+    reducer,       // *P* *D* *E* NOTE: digestible info for reducers (*D*) are simply reducer.getShapedState(appState)
+    logic,         // *P*     *E*
+    router,        // *P*
 
-    reducer,       // *1* *2* *3* NOTE: for reducer, digestible info (*2*) is simply reducer.getShapedState(appState)
-    logic,         // *1*     *3*
-    router,        // *1*
-
-    appWillStart,  // *1*
-    appDidStart,   // *1*
+    appWillStart,  // *P*
+    appDidStart,   // *P*
   };
+}
 
-  // now fully expand aspects supporting (and using) the injectContext() callback wrapper
-  // ... injecting feature context in their expansion (see *3* above)
-
-  // ... crossFeature
-  //     NOTE: when pulled into runApp(), the crossFeature is resolved for ALL features, prior to any other feature aspect expansion
-  //           - making the public API of ALL features available for the expansion of ALL feature aspects
-  //           - eliminating order dependancy (with the exception of dependancies in the crossFeature itself - which should be an anti-pattern)
+/**
+ * Expand the publicAPI aspect of the supplied feature, when it is
+ * employing the injectContext() callback wrapper (see *E* above).
+ * 
+ * This is invoked by runApp() to insure the publicAPI of ALL features
+ * are expanded FIRST, so that other feature aspect expansion can use
+ * it.
+ *
+ * This eliminates order dependency issues related to feature
+ * expansion - EVEN in code that is expanded in-line.  The only
+ * exception to this is dependencies in the crossFeature itself (which
+ * should be an anti-pattern).
+ *
+ * @param {Feature} feature the Feature object for which to expand the
+ * publicAPI.
+ *
+ * @param {App} app the App object (emitted by runApp()).
+ */
+export function expandFeatureAspect_PublicAPI(feature, app) {
   if (feature.crossFeature && feature.crossFeature.injectContext) {
-    feature.crossFeature = feature.crossFeature(feature);
+    feature.crossFeature = feature.crossFeature(feature, app);
   }
+}
+
+
+/**
+ * Expand all other aspects of the supplied feature, when they are
+ * employing the injectContext() callback wrapper (see *E* above).
+ * 
+ * This is invoked by runApp() to insure the publicAPI of ALL features
+ * are expanded BEFORE all other aspects, so that they can use the
+ * publicAPI.
+ *
+ * This eliminates order dependency issues related to feature
+ * expansion - EVEN in code that is expanded in-line.  The only
+ * exception to this is dependencies in the crossFeature itself (which
+ * should be an anti-pattern).
+ *
+ * @param {Feature} feature the Feature object for which to expand the
+ * aspects.
+ *
+ * @param {App} app the App object (emitted by runApp()).
+ */
+export function expandFeatureAspects(feature, app) {
 
   // ... reducer
   if (feature.reducer && feature.reducer.injectContext) {
@@ -270,11 +305,11 @@ export default function createFeature({name,
     const shape = feature.reducer.shape;
 
     // fully resolve our actual reducer
-    feature.reducer = feature.reducer(feature);
+    feature.reducer = feature.reducer(feature, app);
 
     // validate that no incompatable shape has been defined within our resolved reducer
     if (feature.reducer.shape) {
-      check(feature.reducer.shape === shape, `reducer contextCallbackFn shape: '${shape}' is different from resolved reducer shape: '${feature.reducer.shape}'.
+      verify(feature.reducer.shape === shape, `createFeature() parameter violation: reducer contextCallback shape: '${shape}' is different from resolved reducer shape: '${feature.reducer.shape}'.
 SideBar: When BOTH shapedReducer() and injectContext() are needed, shapedReducer() should be adorned ONLY in the outer function passed to createFunction().`);
     }
 
@@ -285,14 +320,7 @@ SideBar: When BOTH shapedReducer() and injectContext() are needed, shapedReducer
 
   // ... logic
   if (feature.logic && feature.logic.injectContext) {
-    feature.logic = feature.logic(feature);
+    feature.logic = feature.logic(feature, app);
   }
-
-
-  // ***
-  // *** return our new Feature object
-  // ***
-
-  return feature;
 
 }
