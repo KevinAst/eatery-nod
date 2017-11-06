@@ -31,11 +31,11 @@ import verify    from './verify';
  *       return {
  *         changeView(view) {
  *           dispatch( actions.view.change(view) );
- *           app.leftNav.close();
+ *           app.leftNav.api.close();
  *         },
  *         handleFilterDiscovery() {
  *           dispatch( actions.discovery.filter.open() );
- *           app.leftNav.close();
+ *           app.leftNav.api.close();
  *         },
  *       };
  *     },

@@ -124,9 +124,9 @@ import shapedReducer     from './shapedReducer';
  * exposes feature-based Components based on appState.
  *
  * @param {function} [namedArgs.appWillStart] an optional app
- * life-cycle method invoked one-time at app startup time.
+ * life-cycle callback invoked one-time at app startup time.
  *
- * This life-cycle method can do any type of initialization, and/or
+ * This life-cycle callback can do any type of initialization, and/or
  * optionally supplement the app's top-level content (using a non-null
  * return).  
  *
@@ -161,7 +161,7 @@ import shapedReducer     from './shapedReducer';
  * ```
  *
  * @param {function} [namedArgs.appDidStart] an optional app
- * life-cycle method invoked one-time immediatly after app has started.
+ * life-cycle callback invoked one-time immediatly after app has started.
  * ```
  *   API: appDidStart({app, appState, dispatch}): void
  * ```
