@@ -6,7 +6,7 @@ import {applyMiddleware,
         combineReducers}       from 'redux';
 import {createLogicMiddleware} from 'redux-logic';
 import {Provider}              from 'react-redux';
-import {expandFeatureAspect_PublicAPI,
+import {expandFeatureAspect_publicAPI,
         expandFeatureAspects}  from './createFeature';
 import Router                  from './Router';
 import isFunction              from 'lodash.isfunction';
@@ -94,15 +94,15 @@ export default function runApp(features, api) {
   // so the expansion of other feature apects can use it
   // ... this eliminates order dependency issues related to feature
   //     expansion - EVEN in code that is expanded in-line.  The only
-  //     exception to this is dependencies in the crossFeature itself (which
+  //     exception to this is dependencies in the publicAPI itself (which
   //     should be an anti-pattern)
   activeFeatures.forEach( feature => {
     // expand the publicAPI of this feature
-    expandFeatureAspect_PublicAPI(feature, app);
+    expandFeatureAspect_publicAPI(feature, app);
 
     // promote the feature publicAPI in our app
     // ... defaulting to an empty object (indicating the feature is enabled)
-    app[feature.name] = feature.crossFeature || {};
+    app[feature.name] = feature.publicAPI || {};
   });
 
   // expand all other aspects of our features
