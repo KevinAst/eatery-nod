@@ -10,14 +10,14 @@ import SideBar,
  * The 'leftNav' feature introduces the app-specific Drawer/SideBar 
  * on the left-hand side of the screen.
  *
- * For this feature's public API, please see crossFeature (below), 
+ * For this feature's public API, please see publicAPI (below), 
  * promoted through app.leftNav.
  */
 export default createFeature({
 
   name: 'leftNav',
 
-  crossFeature: {
+  publicAPI: {
     open:  openSideBar,  // API: app.leftNav.open()
     close: closeSideBar, // API: app.leftNav.close()
   },

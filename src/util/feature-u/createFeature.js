@@ -28,8 +28,8 @@ import shapedReducer     from './shapedReducer';
  * @param {boolean} [namedArgs.enabled=true] an indicator as to
  * whether this feature is enabled (true) or not (false).
  *
- * @param {Any|contextCallback} [namedArgs.crossFeature] an optional
- * resource exposed in app.{feature}.{crossFeature} (emitted from
+ * @param {Any|contextCallback} [namedArgs.publicAPI] an optional
+ * resource exposed in app.{feature}.{publicAPI} (emitted from
  * runApp()), promoting cross-communication between features.
  *
  * Many aspects of a feature are internal to the feature's
@@ -42,17 +42,17 @@ import shapedReducer     from './shapedReducer';
  * it's state (through a selector), or emit one of it's actions, or in
  * general anything (ex: invoke some function that does xyz).
  *
- * This cross-communication is accomplished through the crossFeature.
+ * This cross-communication is accomplished through the publicAPI.
  * This is an item of any type (typically an object) that is exposed
  * through the feature-u app (emitted from runApp(), and exported
  * through your app.js).
  *
- * You can think of crossFeature as your feature's public API.
+ * You can think of publicAPI as your feature's public API.
  *
  * Here is a suggested sampling:
  * ```
  * name: 'foo',
- * crossFeature: {
+ * publicAPI: {
  *
  *   // actions stimulate activity within our app
  *   // ... our actions are encapsulated as action creator functions
@@ -94,9 +94,9 @@ import shapedReducer     from './shapedReducer';
  *   }
  * ```
  *
- * Because some crossFeature may require feature-based context
+ * Because some publicAPI may require feature-based context
  * information, this parameter can also be a contextCallback - a
- * function that returns the crossFeature (see injectContext()).
+ * function that returns the publicAPI (see injectContext()).
  *
  * @param {reducerFn|contextCallback} [namedArgs.reducer] an
  * optional reducer that maintains redux state (if any) for this
@@ -171,7 +171,7 @@ import shapedReducer     from './shapedReducer';
 export default function createFeature({name,
                                        enabled=true,
 
-                                       crossFeature,
+                                       publicAPI,
 
                                        reducer,
                                        logic,
@@ -192,7 +192,7 @@ export default function createFeature({name,
 
   check(enabled===true||enabled===false, 'enabled must be a boolean');
 
-  // crossFeature: nothing to validate (it can be anything, INCLUDING a .injectContext function)
+  // publicAPI: nothing to validate (it can be anything, INCLUDING a .injectContext function)
 
   if (reducer) {
     check(isFunction(reducer) || reducer.injectContext, 'reducer (when supplied) must be a function -or- a contextCallback');
@@ -241,7 +241,7 @@ export default function createFeature({name,
     name,          // *P* *D*
     enabled,       // *P* *D*
 
-    crossFeature,  // *P* *D* *E* KEY: this aspect is the feature's public API
+    publicAPI,     // *P* *D* *E* KEY: this aspect is the feature's public API
 
     reducer,       // *P* *D* *E* NOTE: digestible info for reducers (*D*) are simply reducer.getShapedState(appState)
     logic,         // *P*     *E*
@@ -262,7 +262,7 @@ export default function createFeature({name,
  *
  * This eliminates order dependency issues related to feature
  * expansion - EVEN in code that is expanded in-line.  The only
- * exception to this is dependencies in the crossFeature itself (which
+ * exception to this is dependencies in the publicAPI itself (which
  * should be an anti-pattern).
  *
  * @param {Feature} feature the Feature object for which to expand the
@@ -270,9 +270,9 @@ export default function createFeature({name,
  *
  * @param {App} app the App object (emitted by runApp()).
  */
-export function expandFeatureAspect_PublicAPI(feature, app) {
-  if (feature.crossFeature && feature.crossFeature.injectContext) {
-    feature.crossFeature = feature.crossFeature(feature, app);
+export function expandFeatureAspect_publicAPI(feature, app) {
+  if (feature.publicAPI && feature.publicAPI.injectContext) {
+    feature.publicAPI = feature.publicAPI(feature, app);
   }
 }
 
@@ -287,7 +287,7 @@ export function expandFeatureAspect_PublicAPI(feature, app) {
  *
  * This eliminates order dependency issues related to feature
  * expansion - EVEN in code that is expanded in-line.  The only
- * exception to this is dependencies in the crossFeature itself (which
+ * exception to this is dependencies in the publicAPI itself (which
  * should be an anti-pattern).
  *
  * @param {Feature} feature the Feature object for which to expand the

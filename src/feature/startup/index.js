@@ -14,7 +14,7 @@ import Notify           from '../../util/notify';
 /**
  * The 'startup' feature bootstraps the entire app, getting it up-and-running.
  *
- * For this feature's public API, please see crossFeature (below), 
+ * For this feature's public API, please see publicAPI (below), 
  * promoted through app.startup.
  */
 export default createFeature({
@@ -22,7 +22,7 @@ export default createFeature({
   name:     'startup',
   reducer:  shapedReducer(reducer, 'device'),
 
-  crossFeature: injectContext( (feature, app) => ({
+  publicAPI: injectContext( (feature, app) => ({
     selectors: {
       fontsLoaded: (appState) => feature.reducer.getShapedState(appState).fontsLoaded === true, // NOTE: fontsLoaded true check IS REQUIRED, as it can also contain error string
       deviceReady: (appState) => feature.reducer.getShapedState(appState).status === 'READY',
