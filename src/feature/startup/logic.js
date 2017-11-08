@@ -1,10 +1,12 @@
-import {createLogic}    from 'redux-logic';
+import {createLogic}      from 'redux-logic';
 import {Location,
-        Permissions}    from 'expo';
-import isString         from 'lodash.isstring';
-import {injectContext}  from '../../util/feature-u';
-import actions          from './actions';
-import {toast}          from '../../util/notify';
+        Permissions}      from 'expo';
+import {injectContext}    from '../../util/feature-u';
+import actions            from './actions';
+import {fontsLoaded,
+        fontsLoadedProblem,
+        deviceLoc}        from './reducer';
+import {toast}            from '../../util/notify';
 
 
 /**
@@ -135,19 +137,23 @@ export const monitorStartupProgress = injectContext( (feature, app) => createLog
   
   process({getState, action, api}, dispatch, done) {
 
-    const device    = feature.reducer.getShapedState(getState());
+    const appState            = getState();
+    const _fontsLoaded        = fontsLoaded(appState);
+    const _fontsLoadedProblem = fontsLoadedProblem(appState);
+    const _deviceLoc          = deviceLoc(appState);
+
     let   statusMsg = null;
 
     // monitor the status of various system resources
     // ... fonts
-    if (!device.fontsLoaded) {
+    if (!_fontsLoaded) {
       statusMsg = 'Waiting for Fonts to load';
     }
-    else if (isString(device.fontsLoaded)) { // when contains a string, 
-      statusMsg = device.fontsLoaded;        // a problem occured in loading fonts ... expose it here
+    else if (_fontsLoadedProblem) { // expose any problem in loading fonts
+      statusMsg = _fontsLoadedProblem;
     }
     // ... device location
-    else if (!device.loc) {
+    else if (!_deviceLoc) {
       statusMsg = 'Waiting for Device Location';
     }
     // ... system is READY!
