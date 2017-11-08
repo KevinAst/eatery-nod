@@ -12,7 +12,7 @@ import shapedReducer     from './shapedReducer';
  * Example:
  * ```
  *   import {createFeature} from 'feature-u';
- *   import reducer         from './reducer';
+ *   import reducer         from './state';
  *   export default createFeature({
  *     name:       'views',
  *     enabled:    true,

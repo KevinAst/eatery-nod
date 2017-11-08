@@ -1,6 +1,6 @@
 import React                from 'react';
 import {isDeviceReady,
-        getDeviceStatusMsg} from './reducer';
+        getDeviceStatusMsg} from './state';
 import {createRouterCB}     from '../../util/feature-u';
 import SplashScreen         from '../../util/comp/SplashScreen';
 

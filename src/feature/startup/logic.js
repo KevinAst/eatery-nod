@@ -5,7 +5,7 @@ import {injectContext}    from '../../util/feature-u';
 import actions            from './actions';
 import {areFontsLoaded,
         getFontsLoadedProblem,
-        getDeviceLoc}     from './reducer';
+        getDeviceLoc}     from './state';
 import {toast}            from '../../util/notify';
 
 

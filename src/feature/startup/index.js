@@ -1,6 +1,6 @@
 import {createFeature,
         shapedReducer}  from '../../util/feature-u';
-import reducer          from './reducer';
+import reducer          from './state';
 import publicAPI        from './publicAPI';
 import logic            from './logic';
 import router           from './router';

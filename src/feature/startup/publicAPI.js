@@ -1,6 +1,6 @@
 import {injectContext}    from '../../util/feature-u';
 import {areFontsLoaded,
-        isDeviceReady}    from './reducer';
+        isDeviceReady}    from './state';
 
 /**
  * The 'startup' feature public API, promoted through app.startup
