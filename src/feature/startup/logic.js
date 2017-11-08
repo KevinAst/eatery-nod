@@ -3,9 +3,9 @@ import {Location,
         Permissions}      from 'expo';
 import {injectContext}    from '../../util/feature-u';
 import actions            from './actions';
-import {fontsLoaded,
-        fontsLoadedProblem,
-        deviceLoc}        from './reducer';
+import {areFontsLoaded,
+        getFontsLoadedProblem,
+        getDeviceLoc}     from './reducer';
 import {toast}            from '../../util/notify';
 
 
@@ -137,23 +137,23 @@ export const monitorStartupProgress = injectContext( (feature, app) => createLog
   
   process({getState, action, api}, dispatch, done) {
 
-    const appState            = getState();
-    const _fontsLoaded        = fontsLoaded(appState);
-    const _fontsLoadedProblem = fontsLoadedProblem(appState);
-    const _deviceLoc          = deviceLoc(appState);
+    const appState           = getState();
+    const fontsLoaded        = areFontsLoaded(appState);
+    const fontsLoadedProblem = getFontsLoadedProblem(appState);
+    const deviceLoc          = getDeviceLoc(appState);
 
     let   statusMsg = null;
 
     // monitor the status of various system resources
     // ... fonts
-    if (!_fontsLoaded) {
+    if (!fontsLoaded) {
       statusMsg = 'Waiting for Fonts to load';
     }
-    else if (_fontsLoadedProblem) { // expose any problem in loading fonts
-      statusMsg = _fontsLoadedProblem;
+    else if (fontsLoadedProblem) { // expose any problem in loading fonts
+      statusMsg = fontsLoadedProblem;
     }
     // ... device location
-    else if (!_deviceLoc) {
+    else if (!deviceLoc) {
       statusMsg = 'Waiting for Device Location';
     }
     // ... system is READY!

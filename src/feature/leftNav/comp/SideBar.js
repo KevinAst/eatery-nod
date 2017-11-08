@@ -256,7 +256,7 @@ export function closeSideBar() {
 export default connectRedux(SideBar, {
   mapStateToProps(appState) {
     return {
-      deviceReady: app.startup.selectors.deviceReady(appState),
+      deviceReady: app.startup.selectors.isDeviceReady(appState),
       // ?? RETROFIT: appState/actions (see note above)
     };
   },
