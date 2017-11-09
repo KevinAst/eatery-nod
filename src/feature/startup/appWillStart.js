@@ -4,9 +4,10 @@ import initFireBase     from './init/firebase/initFireBase';
 import Notify           from '../../util/notify'; 
 
 /**
- * An app-level life-cycle callback (supporting this 'startup'
- * feature), that initializes our feature, and injects the notify
- * utility at the top of our app.
+ * An app-level life-cycle hook, initializing our feature by:
+ *  - performing platform-specific setup (iOS/Android)
+ *  - initializes FireBase
+ *  - and initialize the notify utility, by injecting it in our App root
  */
 export default function appWillStart(app, children) {
   // platform-specific setup (iOS/Android)
@@ -15,6 +16,6 @@ export default function appWillStart(app, children) {
   // initialize FireBase
   initFireBase();
 
-  // initialize notify utility, by injecting it to our App root
+  // initialize notify utility, by injecting it in our App root
   return [React.Children.toArray(children), <Notify key="Notify"/>];
 }

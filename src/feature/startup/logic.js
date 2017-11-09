@@ -16,12 +16,12 @@ import {toast}            from '../../util/notify';
 export const startApp = injectContext( (feature, app) => createLogic({
 
   name: `${feature.name}.startApp`,
-  type: String(actions.startup),
+  type: String(actions.bootstrap),
   
   process({getState, action, api}, dispatch, done) {
     // start our app - by kicking off resource retrievals needed by our app
-    dispatch( actions.startup.loadFonts() );
-    dispatch( actions.startup.locateDevice() );
+    dispatch( actions.loadFonts() );
+    dispatch( actions.locateDevice() );
     done();
   },
 }));
@@ -33,17 +33,17 @@ export const startApp = injectContext( (feature, app) => createLogic({
 export const loadFonts = injectContext( (feature, app) => createLogic({
 
   name: `${feature.name}.loadFonts`,
-  type: String(actions.startup.loadFonts),
+  type: String(actions.loadFonts),
   
   process({getState, action, api}, dispatch, done) {
     // asynchronously load our system resources
     api.system.loadResources()
        .then( () => {
-         dispatch( actions.startup.loadFonts.complete() );
+         dispatch( actions.loadFonts.complete() );
          done();
        })
        .catch( err => {
-         dispatch( actions.startup.loadFonts.fail(err) );
+         dispatch( actions.loadFonts.fail(err) );
          done();
        });
   },
@@ -57,7 +57,7 @@ export const loadFonts = injectContext( (feature, app) => createLogic({
 export const locateDevice = injectContext( (feature, app) => createLogic({
 
   name: `${feature.name}.locateDevice`,
-  type: String(actions.startup.locateDevice),
+  type: String(actions.locateDevice),
   warnTimeout: 0, // long-running logic (due to user interaction)
   
   process({getState, action, api}, dispatch, done) {
@@ -72,7 +72,7 @@ export const locateDevice = injectContext( (feature, app) => createLogic({
       });
 
       // fallback to last known location (for now just hard-code to Glen Carbon)
-      dispatch( actions.startup.locateDevice.complete({lat: 38.752209, lng: -89.986610}) );
+      dispatch( actions.locateDevice.complete({lat: 38.752209, lng: -89.986610}) );
 
       // log any error
       if (err) {
@@ -106,8 +106,8 @@ export const locateDevice = injectContext( (feature, app) => createLogic({
                              // }
 
                              // communicate device location
-                             dispatch( actions.startup.locateDevice.complete({lat: location.coords.latitude, 
-                                                                              lng: location.coords.longitude}) );
+                             dispatch( actions.locateDevice.complete({lat: location.coords.latitude, 
+                                                                      lng: location.coords.longitude}) );
                            })
                            .catch( err => {
                              handleIssue('Could not obtain device location.', err);
@@ -162,7 +162,7 @@ export const monitorStartupProgress = injectContext( (feature, app) => createLog
     }
 
     // update the system status
-    dispatch( actions.startup.statusUpdate(statusMsg) );
+    dispatch( actions.statusUpdate(statusMsg) );
 
     done();
   },
@@ -177,7 +177,7 @@ export const monitorStartupProgress = injectContext( (feature, app) => createLog
 export const startAppAuthProcess = injectContext( (feature, app) => createLogic({
 
   name: `${feature.name}.startAppAuthProcess`,
-  type: String(actions.startup.statusUpdate),
+  type: String(actions.statusUpdate),
   
   process({getState, action, api}, dispatch, done) {
 

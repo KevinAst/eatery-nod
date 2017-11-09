@@ -185,9 +185,20 @@ feature, and discover how feature-u manages these items.
 
 Within the [redux] framework,
 [actions](https://redux.js.org/docs/basics/Actions.html) are the basic
-building blocks that facilitate application activity.  Actions follow
-a pre-defined convention that promote an action type and a
-type-specific payload.
+building blocks that facilitate application activity.  
+
+- Actions follow a pre-defined convention that promote an action type
+  and a type-specific payload.
+
+- Actions are dispatched throughout the system (both UI components,
+  and logic modules).
+
+- Actions are monitored by reducers (which in turn change state), and
+  trigger UI changes.
+
+- Actions are also monitored by logic modules, implementing a variety
+  of app-level logic (things like asynchronously gathering server
+  resources, and even dispatching other actions).
 
 In general, **actions are considered to be an internal detail of the
 feature**, and therefore are **NOT managed by feature-u**.  In other
@@ -197,9 +208,8 @@ This allows you to manage your actions however you wish.  Best
 practices prescribe that actions should be created by [action
 creators](https://redux.js.org/docs/basics/Actions.html#action-creators)
 (functions that return actions).  It is common to manage your action
-creators and action types through a library like
-[action-u](https://www.npmjs.com/package/action-u) or
-[redux-actions](https://www.npmjs.com/package/redux-actions).
+creators and action types through a library like [action-u] or
+[redux-actions].
 
 With that said, **there are cases where actions need to be promoted
 outside of a feature's implementation**.  Say, for example, featureA's
@@ -209,6 +219,42 @@ this happens **the [Public API](#public-api) feature-u aspect can be
 used for this promotion**.  Please note that in consideration of
 feature encapsulation, *best practices would strive to minimize the
 public promotion of actions outside the feature boundry*.
+
+In regard to actions, one characteristic that must be adhered to is
+**action types must to be unique across the entire app**, *because
+they are interpreted at an app-level scope*.  This uniqueness is the
+responsibility of your implementation, because feature-u does not
+inject itself in the action definition process.  This may simply
+naturally happen in your implementation.  If however, you wish to
+systematically insure this uniqueness, the simplest thing to do is to
+**prefix all your action types with the feature name** (*feature-u
+guarantees all feature names are unique*).  This has the *added
+benefit of readily associating dispatched action flows to the feature
+they belong to*.  **Note**: Ideally you could use the feature.name as
+a single-source-of-truth, however importing feature from your actions
+module is problematic (due to the inner dependency of actions with
+other feature aspects).  As a result, you can either duplicate the
+name in your action root, or import a separate `featureName` module
+(*that simply holds the name*).  Here is an example (using
+[action-u]):
+
+**`src/feature/featureA/actions.js`**
+```js
+import {generateActions} from 'action-u';
+import featureName       from './featureName';
+
+export default generateActions.root({
+  [featureName]: { // prefix all actions with our feature name, guaranteeing they unique app-wide!
+    action1: {     // actions.action1(): Action
+                   actionMeta: {},
+    },
+    action2: {     // actions.action2(): Action
+                   actionMeta: {},
+    },
+    etc...
+  },
+});
+```
 
 
 #### Reducers (state)
@@ -494,3 +540,5 @@ export const startApp = injectContext( (feature, app) => createLogic({
 [eatery-nod]:     https://github.com/KevinAst/eatery-nod
 [expo]:           https://expo.io/
 [redux]:          http://redux.js.org/
+[action-u]:       https://www.npmjs.com/package/action-u
+[redux-actions]:  https://www.npmjs.com/package/redux-actions
