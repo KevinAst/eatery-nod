@@ -192,8 +192,8 @@ export const startAppAuthProcess = injectContext( (feature, app) => createLogic(
 
 }));
 
-// promote all logic (accumulated in index.js)
-// ... named exports (above) are used by unit tests :-)
+// promote all logic modules for this feature
+// ... NOTE: individual logic modules are unit tested using the named exports.
 export default injectContext( (feature, app) => [
   startApp(feature, app),
   loadFonts(feature, app),
