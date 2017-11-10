@@ -9,9 +9,9 @@ import {areFontsLoaded,
 import {toast}            from '../../util/notify';
 
 
+
 /**
- * Monitor system bootstrap completion, starting our app's
- * authorization process.
+ * Start the app running upon bootstrap request.
  */
 export const startApp = injectContext( (feature, app) => createLogic({
 
@@ -128,7 +128,7 @@ export const locateDevice = injectContext( (feature, app) => createLogic({
 
 
 /**
- * Monitor Startup Progress
+ * Monitor our startup progress, syncing the device status.
  */
 export const monitorStartupProgress = injectContext( (feature, app) => createLogic({
 
@@ -170,9 +170,8 @@ export const monitorStartupProgress = injectContext( (feature, app) => createLog
 }));
 
 
-
 /**
- * Start app when system resources are available.
+ * Start our authorization process when our device is ready.
  */
 export const startAppAuthProcess = injectContext( (feature, app) => createLogic({
 

@@ -6,7 +6,7 @@ import SplashScreen         from '../../util/comp/SplashScreen';
 
 
 // ***
-// *** 'startup' feature routes
+// *** The routes for this feature.
 // ***
 
 export default createRouterCB({
@@ -16,7 +16,7 @@ export default createRouterCB({
     // promote a simple SplashScreen (with status) until our system is ready
     // NOTE: Errors related to system resources are promoted through independent user notifications
     if (!isDeviceReady(appState)) {
-      // console.log(`xx 'startup' feature: DEVICE NOT READY: router -> SplashScreen with msg: ${getDeviceStatusMsg(appState)}`);
+      // console.log(`xx DEVICE NOT READY: router -> SplashScreen with msg: ${getDeviceStatusMsg(appState)}`);
       return <SplashScreen msg={getDeviceStatusMsg(appState)}/>;
     }
 

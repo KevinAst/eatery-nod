@@ -5,8 +5,8 @@ import SideBar,
        closeSideBar}    from './comp/SideBar';
 
 /**
- * An app-level life-cycle callback (supporting this 'leftNav'
- * feature), that injects our Drawer/SideBar at the top of our app.
+ * An app-level life-cycle hook that:
+ *  - injects our Drawer/SideBar at the top of our app.
  */
 export default function appWillStart(app, children) {
   return (

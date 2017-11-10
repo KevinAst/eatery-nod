@@ -5,7 +5,7 @@ import actions            from './actions';
 import isString           from 'lodash.isstring';
 
 // ***
-// *** 'startup' feature reducer, managing state for our device
+// *** Our feature reducer, managing state for our device.
 // ***
 
 export default combineReducers({
@@ -27,7 +27,7 @@ export default combineReducers({
 
 
 // ***
-// *** various selectors
+// *** Various Selectors
 // ***
 
                                      /** Our standard selector accessing the root of our feature state */

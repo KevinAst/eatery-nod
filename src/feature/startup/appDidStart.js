@@ -1,8 +1,8 @@
 import actions  from './actions';
 
 /**
- * An app-level life-cycle hook that bootstraps our app (a swift
- * kick to get the ball rolling).
+ * An app-level life-cycle hook that dispatches our bootstrap action
+ * that gets the ball rolling!
  */
 export default function appDidStart({app, appState, dispatch}) {
   dispatch( actions.bootstrap() );

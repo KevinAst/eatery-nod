@@ -2,7 +2,7 @@ import {areFontsLoaded,
         isDeviceReady}    from './state';
 
 /**
- * The 'startup' feature public API, promoted through app.startup
+ * The public API promoted by this feature through: app.startup...
  */
 export default {
   selectors: {

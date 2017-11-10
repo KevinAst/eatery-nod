@@ -2,7 +2,7 @@ import firebase          from 'firebase';
 import firebaseAppConfig from './firebaseAppConfig';
 
 /**
- * Initialize FireBase (invoked at app startup).
+ * Initialize FireBase.
  */
 export default function initFireBase() {
   firebase.initializeApp(firebaseAppConfig);

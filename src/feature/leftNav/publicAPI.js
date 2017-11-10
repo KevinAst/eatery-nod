@@ -2,11 +2,11 @@ import {openSideBar,
         closeSideBar}  from './comp/SideBar';
 
 /**
- * The 'leftNav' feature public API, promoted through app.leftNav.api
+ * The public API promoted by this feature through: app.leftNav...
  */
 export default {
   api: {
-    open:  openSideBar,  // API: app.leftNav.api.open()
-    close: closeSideBar, // API: app.leftNav.api.close()
+    open:  openSideBar,  // open():  void ... open  the SideBar
+    close: closeSideBar, // close(): void ... close the SideBar
   },
 };
