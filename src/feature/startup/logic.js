@@ -3,7 +3,8 @@ import {Location,
         Permissions}      from 'expo';
 import {injectContext}    from '../../util/feature-u';
 import actions            from './actions';
-import {areFontsLoaded,
+import {isDeviceReady,
+        areFontsLoaded,
         getFontsLoadedProblem,
         getDeviceLoc}     from './state';
 import {toast}            from '../../util/notify';
@@ -180,11 +181,11 @@ export const startAppAuthProcess = injectContext( (feature, app) => createLogic(
   
   process({getState, action, api}, dispatch, done) {
 
-    // when system resources are available, 
-    // start the app by kicking off our authorization process
-    if (action.statusMsg === 'READY') {
-      // ?? this has to be obtained from app cross-feature communication
+    // when our device is ready, kick off our authorization process
+    if ( isDeviceReady(getState()) ) {
+      // ?? need action from other feature ... publicAPI ... app.auth.actions.bootstrap() -or- startAuth()
       // dispatch( actions.auth.bootstrap() );
+      dispatch({type:'BOOTSTRAP_AUTH'});
     }
     done();
   },
