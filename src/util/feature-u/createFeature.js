@@ -297,6 +297,10 @@ export function expandFeatureAspect_publicAPI(feature, app) {
  */
 export function expandFeatureAspects(feature, app) {
 
+  // TODO: #reducerPartOfOtherFeature: here we expand the reducers
+  //       - can we somehow do more?
+  //       - like pass in un-attached reducers, 
+  //       - giving other features the oppertunity to include them?
   // ... reducer
   if (feature.reducer && feature.reducer.injectContext) {
 
