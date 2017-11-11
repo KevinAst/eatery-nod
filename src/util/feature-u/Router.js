@@ -36,18 +36,18 @@ class Router extends React.Component {
    */
   render() {
 
-    const {app, routers, appState} = this.props;
+    const {app, routes, appState} = this.props;
 
     // apply priority routes (if any)
-    for (const router of routers) {
-      const content = router.priorityContent(app, appState);
+    for (const route of routes) {
+      const content = route.priorityContent(app, appState);
       if (content)
         return content;
     }
 
     // apply non-priority routes (if any)
-    for (const router of routers) {
-      const content = router.content(app, appState);
+    for (const route of routes) {
+      const content = route.content(app, appState);
       if (content)
         return content;
     }
@@ -111,16 +111,16 @@ class Router extends React.Component {
     //?     }
     //?     // ?? check for signUpForm
     //? }
-    //? 
-    //? // fallback is our SplashScreen
-    //? return <SplashScreen msg="Router Fallback"/>;
+    //x 
+    //x // fallback is our SplashScreen
+    //x return <SplashScreen msg="Router Fallback"/>;
 
   }
 }
 
 Router.propTypes = {
   app:      PropTypes.object.isRequired,
-  routers:  PropTypes.array.isRequired,
+  routes:   PropTypes.array.isRequired,
   appState: PropTypes.object.isRequired,
 };
 

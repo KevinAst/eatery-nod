@@ -9,7 +9,7 @@ manages the process.
 Essentially, feature-u accumulates all features (and their aspects)
 that comprise an app (ex: actions, reducers, components, routes,
 logic, etc.), managing and registering these items to the appropriate
-concerns (ex: redux, redux-logic, router, etc.), and then launches the
+concerns (ex: redux, redux-logic, routes, etc.), and then launches the
 app, relegating your mainline to a single line of code.  The following
 benefits are promoted:
 
@@ -86,7 +86,7 @@ src/
       logic.js
       publicAPI.js
       reducer.js
-      router.js
+      route.js
 
     featureB/         ... another app feature
       ...
@@ -105,7 +105,7 @@ import {createFeature}  from 'feature-u';
 import publicAPI        from './publicAPI';
 import reducer          from './state;
 import logic            from './logic';
-import router           from './router';
+import route            from './route';
 import appWillStart     from './appWillStart';
 import appDidStart      from './appDidStart';
 
@@ -122,7 +122,7 @@ export default createFeature({
 
   reducer,
   logic,
-  router,
+  route,
 
   appWillStart,
   appDidStart,
@@ -348,7 +348,7 @@ There are several ways to access feature resources:
 - Within feature-u's programatic APIs, the App object is supplied as a
   parameter.
 
-  * router:
+  * route:
     ```js
     functionCB(app, appState): rendered-component (null for none)
     ```

@@ -2,7 +2,7 @@ import createFeature  from './createFeature';
 import shapedReducer  from './shapedReducer';
 import injectContext  from './injectContext';
 import runApp         from './runApp';
-import createRouterCB from './createRouterCB';
+import createRoute    from './createRoute';
 
 //*** 
 //*** Promote all feature-u utilities through a centralized module.
@@ -18,7 +18,7 @@ export {
   shapedReducer,
   injectContext,
   runApp,
-  createRouterCB,
+  createRoute,
 };
 
 // NOTE: This default export supports CommonJS modules (otherwise Babel does NOT promote them).
@@ -31,6 +31,6 @@ export default {
   shapedReducer,
   injectContext,
   runApp,
-  createRouterCB,
+  createRoute,
 };
 

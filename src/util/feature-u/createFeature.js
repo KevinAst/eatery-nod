@@ -1,7 +1,7 @@
 import verify            from '../verify';
 import isString          from 'lodash.isstring';
 import isFunction        from 'lodash.isfunction';
-import {isValidRouterCB} from './createRouterCB';
+import {isValidRoute}    from './createRoute';
 import shapedReducer     from './shapedReducer';
 
 
@@ -120,7 +120,7 @@ import shapedReducer     from './shapedReducer';
  * information, this parameter can also be a contextCallback - a
  * function that returns the Logic[] (see injectContext()).
  *
- * @param {RouterCB} [namedArgs.router] the optional router callback that
+ * @param {Route} [namedArgs.route] the optional route callback that
  * exposes feature-based Components based on appState.
  *
  * @param {function} [namedArgs.appWillStart] an optional app
@@ -175,7 +175,7 @@ export default function createFeature({name,
 
                                        reducer,
                                        logic,
-                                       router,
+                                       route,
 
                                        appWillStart,
                                        appDidStart,
@@ -207,9 +207,9 @@ export default function createFeature({name,
     check(Array.isArray(logic) || logic.injectContext, 'logic (when supplied) must be an array of redux-logic modules -or- a contextCallback');
   }
 
-  if (router) {
-    const routerMsg = isValidRouterCB(router);
-    check(!routerMsg, routerMsg);
+  if (route) {
+    const routeMsg = isValidRoute(route);
+    check(!routeMsg, routeMsg);
   }
 
   if (appWillStart) {
@@ -245,7 +245,7 @@ export default function createFeature({name,
 
     reducer,       // *P* *D* *E* NOTE: digestible info for reducers (*D*) are simply reducer.getShapedState(appState)
     logic,         // *P*     *E*
-    router,        // *P*
+    route,         // *P*
 
     appWillStart,  // *P*
     appDidStart,   // *P*

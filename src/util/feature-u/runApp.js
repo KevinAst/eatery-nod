@@ -155,21 +155,21 @@ export default function runApp(features, api) {
 
   // accumulate all the routes from our features
   // ... each feature has the oppertunity to contribute to our routes
-  const routers = [];
+  const routes = [];
   activeFeatures.forEach( feature => {
-    if (feature.router) {
-      // console.log(`xx runApp acumulating router for ${feature.name}`);
-      routers.push(feature.router);
+    if (feature.route) {
+      // console.log(`xx runApp acumulating route for ${feature.name}`);
+      routes.push(feature.route);
     }
   });
-  // console.log(`xx runApp routers: `, routers);
+  // console.log(`xx runApp routes: `, routes);
 
   // define our <Router> component, which will be injected at the root
   // of our App's component tree
   // ... before that (however), our features have the 
   //     oppertunity to inject additional content at the root
   //     (see appWillStart() below)
-  let children = <Router app={app} routers={routers}/>;
+  let children = <Router app={app} routes={routes}/>;
 
 
   // ***

@@ -4,7 +4,7 @@ import name             from './featureName';
 import reducer          from './state';
 import publicAPI        from './publicAPI';
 import logic            from './logic';
-import router           from './router';
+import route            from './route';
 import appWillStart     from './appWillStart';
 import appDidStart      from './appDidStart';
 
@@ -25,7 +25,7 @@ export default createFeature({
   publicAPI,
 
   logic,
-  router,
+  route,
 
   appWillStart,
   appDidStart,
