@@ -307,17 +307,20 @@ returns the reducerFn* (please refer to
 
 #### Selectors (encapsolating state)
 
-TODO: ??
+[Selectors](https://gist.github.com/abhiaiyer91/aaf6e325cf7fc5fd5ebc70192a1fa170)
+are a best practice which encapsulates the raw nature of the state
+shape and business logic interpretation of that state.
 
-?? should this discussion change the reducers docs (above)
+Selectors should be used to encapsulate all your state.  Most
+selectors should be promoted/used internally within the feature
+(defined in close proximity to your reducers).
 
-?? Selectors are a best practice ??? bla bla bla 
-
-?? selectors should be used to encapsolate all your state
-
-?? however, most selectors are used internally (within the feature) and defined close to your reducers.
-
-?? however, some of these selectors may be need to be promoted outside the feature ?? use Public API
+While feature-u does not directly manage anything about selectors, a
+feature may wish to promote some of it's selectors using the [Public
+API](#public-api) feature-u aspect.  Please note that in consideration
+of feature encapsulation, *best practices would strive to minimize the
+public promotion of feature state (and selectors) outside the feature
+boundary*.
 
 
 
