@@ -17,10 +17,9 @@ const defaultCB = () => null;
  * rendered component, or null to allow downstream routes the same
  * opportunity.  Basically the first non-null return wins.
  *
- * As mentioned earlier, one or two CBs can be registered, one with
- * priority and one without.  The priority CBs are given precedence
- * across all registered routes before the non-priority CBs are
- * invoked.
+ * One or two CBs can be registered, one with priority and one
+ * without.  The priority CBs are given precedence across all
+ * registered routes before the non-priority CBs are invoked.
  *
  * @param {CB} [namedArgs.content] the non-priority route CB (if any)
  * ... see: desc above.

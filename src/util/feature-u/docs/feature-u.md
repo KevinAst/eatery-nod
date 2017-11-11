@@ -277,14 +277,90 @@ TODO: ??
 
 #### Components
 
-TODO: ??
+Within the [react] framework,
+[components](https://reactjs.org/docs/react-component.html) are the
+User Interface (UI) of your app.
+
+In general, **components are considered to be an internal detail of
+the feature**, and therefore are **NOT managed by feature-u**.  In
+other words, *each feature will define and use it's own set of
+components*.
+
+This allows you to manage your components however you wish.  
+
+A feature will typically promote it's top-level screen components
+through the feature-u Router (see: [Routes](#routes)).  This is the
+primary way in which a feature exposes it's components to the app.
+
+Like other feature aspects, **there may be cases where components need
+to be programatically exposed outside of a feature's implementation**.
+This typically happens for lower-level utility components.  When this
+happens **the [Public API](#public-api) feature-u aspect can be used
+for this promotion**.
 
 
 
 #### Routes
 
-TODO: ??
+Each feature promotes it's top-level screen components by registering
+a `feature.route`, defined by the createRoute() utility.
 
+The Route object contains one or two function callbacks (CB), with
+the following signature:
+```
+  CB(app, appState): rendered-component (null for none)
+```
+
+The CB reasons about the supplied appState, and either returns a
+rendered component, or null to allow downstream routes the same
+opportunity.  Basically the first non-null return wins.
+
+One or two CBs can be registered, one with priority and one without.
+The priority CBs are given precedence across all registered routes
+before the non-priority CBs are invoked.
+
+Here is a route for a `startup` feature that simply promotes a
+SplashScreen until the system is ready:
+
+**`src/feature/startup/index.js`**
+```js
+imports ... omitted for brevity
+export default createFeature({
+  name: 'startup',
+
+  publicAPI: {
+    ...
+  },
+
+  reducer,
+  logic,
+  route: priorityContent({
+    content(app, appState) {
+      if (!isDeviceReady(appState)) {
+        return <SplashScreen msg={getDeviceStatusMsg(appState)}/>;
+      }
+      return null;
+    },
+  }),
+
+  appWillStart,
+  appDidStart,
+});
+```
+
+**NOTE**: Because routes operate on a "first come, first serve" basis,
+this is the one aspect that **may dictate the order of your feature
+registration**.  With that said, *it is not uncommon for your route logic
+to naturally operate independent of this ordering*.
+
+**SideBar**: As you can see, **feature-u provides it's own Router
+implementation**.  This is something you may not have expected, given
+the popularity of various routers.  The reason for this is I wanted
+the app-level redux state to directly drive the screen routes, rather
+than an external router dictate a route, from which the app state must
+sync.  This just seems more natural to me.  This is what the feature-u
+Router accomplishes.  *With that said, I am open to the possibility
+that I may be missing something here* :-)
 
 
 #### Public API

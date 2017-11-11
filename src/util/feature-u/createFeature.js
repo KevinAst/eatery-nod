@@ -120,8 +120,10 @@ import shapedReducer     from './shapedReducer';
  * information, this parameter can also be a contextCallback - a
  * function that returns the Logic[] (see injectContext()).
  *
- * @param {Route} [namedArgs.route] the optional route callback that
- * exposes feature-based Components based on appState.
+ * @param {Route} [namedArgs.route] the optional route callback (see
+ * createRoute()) that promotes feature-based top-level screen
+ * components based on appState.  Pplease refer to the feature-u
+ * `routes` documentation for more detail.
  *
  * @param {function} [namedArgs.appWillStart] an optional app
  * life-cycle callback invoked one-time at app startup time.
