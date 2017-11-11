@@ -98,15 +98,13 @@ import shapedReducer     from './shapedReducer';
  * information, this parameter can also be a contextCallback - a
  * function that returns the publicAPI (see injectContext()).
  *
- * @param {reducerFn|contextCallback} [namedArgs.reducer] an
- * optional reducer that maintains redux state (if any) for this
- * feature.  By default, the state managed by any supplied reducer
- * will be injected at the top-level state tree using the feature
- * name, however this can be fully defined using the shapedReducer()
- * utility.  Please note that createFeature() automatically insures
- * all reducers are embellished with shapedReducer() (i.e. a stake in
- * the ground) ... so you can rely on:
- * reducer.getShapedState(appState) to ALWAYS be available!
+ * @param {reducerFn|contextCallback} [namedArgs.reducer] an optional
+ * reducer that maintains redux state (if any) for this feature.
+ * feature-u patches each reducer into the overall app state, by
+ * default using the `feature.name`, but can be explicitly defined
+ * through the shapedReducer() (embellishing the reducer with a shape
+ * specification).  Please refer to the feature-u `Reducers`
+ * documentation for more detail.
  *
  * Because some reducers may require feature-based context
  * information, this parameter can also be a contextCallback - a
@@ -122,7 +120,7 @@ import shapedReducer     from './shapedReducer';
  *
  * @param {Route} [namedArgs.route] the optional route callback (see
  * createRoute()) that promotes feature-based top-level screen
- * components based on appState.  Pplease refer to the feature-u
+ * components based on appState.  Please refer to the feature-u
  * `routes` documentation for more detail.
  *
  * @param {function} [namedArgs.appWillStart] an optional app

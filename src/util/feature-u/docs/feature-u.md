@@ -167,7 +167,7 @@ app: {
 
 ## A Closer Look
 
-TODO: ?? consider eliminating "A Closer Look"
+Let's take a closer look at feature-u ...
 
 
 ### Feature Aspects
@@ -183,7 +183,7 @@ feature, and discover how feature-u manages these items.
 
 #### Actions
 
-Within the [redux] framework,
+Within a [redux] framework,
 [actions](https://redux.js.org/docs/basics/Actions.html) are the basic
 building blocks that facilitate application activity.  
 
@@ -259,13 +259,65 @@ export default generateActions.root({
 
 #### Reducers (state)
 
-TODO: ??
+Within a [redux] framework,
+[reducers](https://redux.js.org/docs/basics/Reducers.html) monitor
+actions, changing app state, which in turn triggers UI changes.
 
+Each feature (that maintains state), will define it's own reducer,
+maintaining it's own feature-based state (typically a sub-tree of
+several items).
+
+While these reducers are opaque assets that maintain state as an
+internal detail of the feature, **feature-u is interested in them to
+the extent that it must combine all feature states into one overall
+app state, and in turn register them to redux**.
+
+Each feature (that maintains state) **promotes it's own reducer through a
+`feature.reducer` createFeature() parameter**.  
+
+feature-u patches each reducer into the overall app state by injecting
+it into the state root using the `feature.name` (by default).  You can
+however explicitly control this location by directly using the
+shapedReducer() utility, which embellishes the reducer with a shape
+property - a federated namespace (delimited by dots) specifying the
+exact location of the state.  Another advantage of shapedReducer() is
+that it also embellishes the reducer with a standard selector:
+`getShapedState(appState): featureState`, which returns the root of
+the feature state, further isolating this detail in an encapsulation.
+Please note that feature-u guarantees that shapedReducer() is
+embellished on all it's reducers, so you can rely on
+`feature.reducer.getShapedState(appState)` to ALWAYS be available!
+Please refer to getShapedState() for further information.
+
+**There are cases where feature state needs to be promoted outside of
+a feature's implementation**.  When this happens,
+[selectors](https://gist.github.com/abhiaiyer91/aaf6e325cf7fc5fd5ebc70192a1fa170)
+should be used, which encapsulates the raw nature of the state shape
+and business logic interpretation of that state.  These selectors can
+be promoted through the [Public API](#public-api) feature-u aspect.
+Please note that in consideration of feature encapsulation, *best
+practices would strive to minimize the public promotion of feature
+state outside the feature boundary*.
+
+Because some reducers may require feature-based context information,
+**this parameter can also be a contextCallback** - *a function that
+returns the reducerFn* (please refer to
+[injectContext()](#injectcontext) for more information).
 
 
 #### Selectors (encapsolating state)
 
 TODO: ??
+
+?? should this discussion change the reducers docs (above)
+
+?? Selectors are a best practice ??? bla bla bla 
+
+?? selectors should be used to encapsolate all your state
+
+?? however, most selectors are used internally (within the feature) and defined close to your reducers.
+
+?? however, some of these selectors may be need to be promoted outside the feature ?? use Public API
 
 
 
@@ -277,7 +329,7 @@ TODO: ??
 
 #### Components
 
-Within the [react] framework,
+Within a [react] framework,
 [components](https://reactjs.org/docs/react-component.html) are the
 User Interface (UI) of your app.
 
@@ -302,8 +354,9 @@ for this promotion**.
 
 #### Routes
 
-Each feature promotes it's top-level screen components by registering
-a `feature.route`, defined by the createRoute() utility.
+Each feature (that maintains components) promotes it's top-level
+screen components through a `feature.route` createFeature()
+parameter, using the createRoute() utility.
 
 The Route object contains one or two function callbacks (CB), with
 the following signature:
