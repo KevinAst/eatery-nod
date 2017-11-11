@@ -110,9 +110,9 @@ import shapedReducer     from './shapedReducer';
  * information, this parameter can also be a contextCallback - a
  * function that returns the reducerFn (see injectContext()).
  *
- * @param {Logic[]|contextCallback} [namedArgs.logic] an optional set of business
- * logic modules (if any) to be registered to redux-logic in support
- * of this feature.
+ * @param {Logic[]|contextCallback} [namedArgs.logic] an optional set
+ * of business logic modules (if any) to be registered to redux-logic
+ * in support of this feature.
  *
  * Because some logic modules may require feature-based context
  * information, this parameter can also be a contextCallback - a

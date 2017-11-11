@@ -326,8 +326,21 @@ boundary*.
 
 #### Logic
 
-TODO: ??
+feature-u assumes the usage of [redux-logic] in managing your business
+logic (a solution that is growing in popularity).  The following
+article is an introduction (and motivation) for the development of
+redux-logic: [Where do I put my business logic in a React-Redux
+application](https://medium.com/@jeffbski/where-do-i-put-my-business-logic-in-a-react-redux-application-9253ef91ce1).
 
+Any feature that has business logic **promotes it's own logic modules
+through the `feature.logic` createFeature() parameter**.  While logic
+modules are opaque functional assets, **feature-u's interest in them
+is to merely register them to the redux-logic agent**.
+
+Because logic modules may require feature-based context information,
+**this parameter can also be a contextCallback** - *a function that
+returns the set of logic modules* (please refer to
+[injectContext()](#injectcontext) for more information).
 
 
 #### Components
