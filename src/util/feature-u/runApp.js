@@ -13,6 +13,9 @@ import isFunction              from 'lodash.isfunction';
 import verify                  from '../verify';
 
 /**
+ * @function runApp
+ * @description
+ *
  * Launch an app by assembling/configuring the supplied app features.
  *
  * The runApp() function manages the configuration of all feature
@@ -28,7 +31,7 @@ import verify                  from '../verify';
  * communication).
  *
  * Example:
- * ```
+ * ```js
  *   import {runApp} from 'feature-u';
  *   import features from '../features';
  *   export default runApp(features);
@@ -42,7 +45,7 @@ import verify                  from '../verify';
  *
  * @return {App} an app object which used in feature
  * cross-communication (as follows):
- * ```
+ * ```js
  *  {
  *    ?? document
  *  }
@@ -223,6 +226,8 @@ export default function runApp(features, api) {
 }
 
 /**
+ * @private
+ *
  * Create our top-level redux appStore, WITH our registered redux-logic.
  *
  * @param {reducerFn} appReducer the top-level redux appReducer that
@@ -237,7 +242,7 @@ export default function runApp(features, api) {
  * @param {API} api an app-specific API object (to be injected into
  * the redux middleware)
  *
- * @return {Redux Store} the top-levl redux appStore.
+ * @return {ReduxStore} the top-levl redux appStore.
  */
 function createAppStore(appReducer, appLogic, app, api) {
 
@@ -261,6 +266,8 @@ function createAppStore(appReducer, appLogic, app, api) {
 
 
 /**
+ * @private
+ *
  * Interpret the supplied features, generating an top-level app
  * reducer function.
  *
@@ -334,6 +341,8 @@ export function accumAppReducer(features) { // ... named export ONLY used for te
 
 
 /**
+ * @private
+ *
  * A recursive function that acumulates all reducers in the supplied
  * genisisNode into a single reducer function.
  *
