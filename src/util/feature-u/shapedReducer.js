@@ -3,34 +3,19 @@ import isString       from 'lodash.isstring';
 import isFunction     from 'lodash.isfunction';
 
 /**
+ * @function shapedReducer
+ * @description
+ *
  * Embellish the supplied reducer with a shape property - a
  * specification (interpreted by feature-u) as to the location of the
  * reducer within the top-level appState tree.
  * 
- * This can be a federated namespace (delimited by dots).
- *
- * As an example, `shapedReducer(reducer, 'views.currentView')`
- * injects the reducer in the following shape:
- * ```
- *   appState: {
- *     views: {
- *       currentView, // managed by supplied reducer
- *       ... other reducers
- *     },
- *     ... other reducers
- *   }
- * ```
- * 
- * The reducer is embellished BOTH with the shape property, and a
- * standard selector, as follows:
- * ```
- *   reducer.shape: given-shape-string
- *   reducer.getShapedState(appState): state-at-given-shape
- * ```
+ * Please refer to the Reducers documentation for more information and
+ * examples.
  * 
  * SideBar: feature-u will default the location of non-embellished
  *          reducers to the feature name.
- *
+ * 
  * SideBar: When BOTH shapedReducer() and injectContext() are needed,
  *          shapedReducer() should be adorned in the outer function
  *          passed to createFunction().
@@ -39,9 +24,15 @@ import isFunction     from 'lodash.isfunction';
  * embellished with the shape specification.
  *
  * @param {string} shape the location of the managed state within the
- * overall top-level appState tree (see docs above).
+ * overall top-level appState tree.  This can be a federated namespace
+ * (delimited by dots).  Example: `'views.currentView'`
  *
- * @return {reducerFn} the supplied reducer, embellished with shape.
+ * @return {reducerFn} the supplied reducer, embellished with both the
+ * shape and a standard selector:
+ * ```js
+ * reducer.shape: shape
+ * reducer.getShapedState(appState): featureState
+ * ```
  */
 export default function shapedReducer(reducer, shape) {
 

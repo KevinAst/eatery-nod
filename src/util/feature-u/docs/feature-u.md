@@ -276,21 +276,55 @@ app state, and in turn register them to redux**.
 Each feature (that maintains state) **promotes it's own reducer through a
 `feature.reducer` createFeature() parameter**.  
 
-feature-u patches each reducer into the overall app state by injecting
-it into the state root using the `feature.name` (by default).  You can
-however explicitly control this location by directly using the
+By default, feature-u injects each reducer into the overall app state
+using a property defined from the `feature.name`.  As an example, if
+you have two features, named featureA/featureB, your appState would
+appear as follows:
+
+```js
+appState: {
+  featureA: {
+    ... state managed by featureA.reducer
+  },
+  featureB: {
+    ... state managed by featureB.reducer
+  },
+}
+```
+
+You can however explicitly control this location by using the
 shapedReducer() utility, which embellishes the reducer with a shape
 property - a federated namespace (delimited by dots) specifying the
-exact location of the state.  Another advantage of shapedReducer() is
-that it also embellishes the reducer with a standard selector:
-`getShapedState(appState): featureState`, which returns the root of
-the feature state, further isolating this detail in an encapsulation.
-Please note that feature-u guarantees that shapedReducer() is
+exact location of the state.  As an example, if featureA's reducer was
+embellished with `shapedReducer(reducer, 'views.currentView')`, your
+appState would appear as follows:
+
+```js
+appState: {
+  views: {
+    currentView {
+      ... state managed by featureA.reducer
+    },
+  },
+  featureB: {
+    ... state managed by featureB.reducer
+  },
+}
+```
+
+Another benefit of `shapedReducer()` is that it also embellishes the
+reducer with a standard selector, that returns the featureState root,
+further isolating this detail in an encapsulation:
+
+```js
+reducer.getShapedState(appState): featureState
+```
+
+**Please Note** that feature-u guarantees that `shapedReducer()` is
 embellished on all it's reducers, so you can rely on
 `feature.reducer.getShapedState(appState)` to ALWAYS be available!
-Please refer to getShapedState() for further information.
 
-**There are cases where feature state needs to be promoted outside of
+**There are cases where some feature state needs to be promoted outside of
 a feature's implementation**.  When this happens,
 [selectors](https://gist.github.com/abhiaiyer91/aaf6e325cf7fc5fd5ebc70192a1fa170)
 should be used, which encapsulates the raw nature of the state shape
@@ -300,7 +334,7 @@ Please note that in consideration of feature encapsulation, *best
 practices would strive to minimize the public promotion of feature
 state outside the feature boundary*.
 
-Because some reducers may require feature-based context information,
+Because reducers may require feature-based context information,
 **this parameter can also be a contextCallback** - *a function that
 returns the reducerFn* (please refer to
 [injectContext()](#injectcontext) for more information).
@@ -511,6 +545,11 @@ aspect to dynamically determine if the feature is active or not.
     do something featureA related
   }
 ```
+
+Because publicAPI may require feature-based context information,
+**this parameter can also be a contextCallback** - *a function that
+returns the PublicAPI object* (please refer to
+[injectContext()](#injectcontext) for more information).
 
 
 #### App Life Cycle Hooks
