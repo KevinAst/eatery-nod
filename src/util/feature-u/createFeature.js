@@ -29,70 +29,10 @@ import shapedReducer     from './shapedReducer';
  * whether this feature is enabled (true) or not (false).
  *
  * @param {Any|contextCallback} [namedArgs.publicAPI] an optional
- * resource exposed in app.{feature}.{publicAPI} (emitted from
- * runApp()), promoting cross-communication between features.
- *
- * Many aspects of a feature are internal to the feature's
- * implementation.  For example, most actions are created and consumed
- * exclusively by logic/reducers that are internal to the feature.
- *
- * However, other aspects of a feature may need to be exposed, to
- * promote cross-communication between features.  For example,
- * feature-a may need to know some aspect of feature-b, such as some of
- * it's state (through a selector), or emit one of it's actions, or in
- * general anything (ex: invoke some function that does xyz).
- *
- * This cross-communication is accomplished through the publicAPI.
- * This is an item of any type (typically an object) that is exposed
- * through the feature-u app (emitted from runApp(), and exported
- * through your app.js).
- *
- * You can think of publicAPI as your feature's public API.
- *
- * Here is a suggested sampling:
- * ```
- * name: 'foo',
- * publicAPI: {
- *
- *   // actions stimulate activity within our app
- *   // ... our actions are encapsulated as action creator functions
- *   //     that promote both creator and type (via toString() overload)
- *   // ... we expose JUST actions that needs public access (not all)
- *   actions: {
- *     open: actions.view.open, // NOTE: strongly suspect NOT available in app during in-line execution - for MONITORING code (figure this out when we come to it)
- *     etc(),
- *   },
- *
- *   // selectors encapsulate state location (shape) and apply business logic (as needed)
- *   // ... we expose JUST state that needs public access (not all)
- *   selectors: {
- *     currentView: (appState) => appState.foo.currentView,
- *     deviceReady: (appState) => appState.foo.status === 'READY',
- *     etc(appState),
- *   },
- *   api: {
- *   },
- *   anyThingElseYouNeed() // etc, etc, etc
- * }
- * ```
- *
- * The above sample is exposed through the feature-u app, as follows:
- * ```
- *   import app from './your-app-import'; // an export of runApp()
- *   ...
- *   app.foo.selectors.currentView(appState)
- * ```
- *
- * Please note that if a feature can be disabled, the corresponding
- * app.{feature} will NOT exist.  External features can use this
- * aspect to dynamically determine if the feature is active or not.
- * ```
- *   import app from './your-app-import';
- *   ...
- *   if (app.foo) {
- *     do something foo related
- *   }
- * ```
+ * resource exposed in app.{featureName}.{publicAPI} (emitted from
+ * runApp()), promoting cross-communication between features.  Please
+ * refer to the feature-u `Public API` documentation for more
+ * detail.
  *
  * Because some publicAPI may require feature-based context
  * information, this parameter can also be a contextCallback - a
@@ -112,7 +52,8 @@ import shapedReducer     from './shapedReducer';
  *
  * @param {Logic[]|contextCallback} [namedArgs.logic] an optional set
  * of business logic modules (if any) to be registered to redux-logic
- * in support of this feature.
+ * in support of this feature. Please refer to the feature-u `Logic`
+ * documentation for more detail.
  *
  * Because some logic modules may require feature-based context
  * information, this parameter can also be a contextCallback - a
@@ -124,7 +65,7 @@ import shapedReducer     from './shapedReducer';
  * `routes` documentation for more detail.
  *
  * @param {function} [namedArgs.appWillStart] an optional app
- * life-cycle callback invoked one-time at app startup time.
+ * life-cycle callback invoked one-time at app startup time. 
  *
  * This life-cycle callback can do any type of initialization, and/or
  * optionally supplement the app's top-level content (using a non-null

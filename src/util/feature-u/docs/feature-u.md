@@ -434,8 +434,82 @@ that I may be missing something here* :-)
 
 #### Public API
 
-TODO: ??
+Many aspects of a feature are internal to the feature's
+implementation.  For example, most actions are created and consumed
+exclusively by logic/reducers that are internal to the feature.
 
+However, other aspects of a feature may need to be exposed, to promote
+cross-communication between features.  For example, featureA may need
+to know some aspect of featureB (ex: some state through a selector),
+or emit one of it's actions, or in general anything (ex: invoke some
+function that does xyz).
+
+This cross-communication is accomplished through the
+`feature.publicAPI` createFeature() parameter.  This promotes an item
+of any type (typically an object containing functions) and is exposed
+through the feature-u app (emitted from runApp()).
+
+You can think of publicAPI as your feature's public API.
+
+Here is a suggested sampling:
+
+**`src/feature/featureA/index.js`**
+```js
+export default createFeature({
+  name:     'featureA',
+
+  publicAPI: {
+    actions: {   // ... expose JUST actions that needs public access (not all)
+      open: actions.view.open,
+      etc(),
+    },
+    
+    selectors: { // ... expose JUST state that needs public access (not all)
+      currentView: (appState) => ... implementation omitted,
+      deviceReady: (appState) => ... implementation omitted,
+      etc(appState),
+    },
+
+    api: {
+      open:  () => ... implementation omitted,
+      close: () => ... implementation omitted,
+    },
+
+    anyThingElseYouNeed(),  ... etc, etc, etc
+  },
+
+  reducer,
+  logic,
+  route,
+
+  appWillStart,
+  appDidStart,
+});
+```
+
+The above sample is promoted through the feature-u app (returned from
+runApp()), as `app.{featureName}`.  The app object can be accessed in
+a number of ways (see: [Accessing Feature
+Resources](#accessing-feature-resources)), but is typically exported
+from your app.js.  Here is a sample usage:
+
+**`src/feature/featureB/someModule.js`**
+```js
+  import app from './your-app-import'; // exported from runApp()
+  ...
+  app.featureA.selectors.currentView(appState)
+```
+
+Please note that if a feature can be disabled, the corresponding
+app.{featureName} will NOT exist.  External features can use this
+aspect to dynamically determine if the feature is active or not.
+```js
+  import app from './your-app-import';
+  ...
+  if (app.featureA) {
+    do something featureA related
+  }
+```
 
 
 #### App Life Cycle Hooks
