@@ -374,19 +374,19 @@ Each feature (that maintains components) promotes it's top-level
 screen components through a `feature.route` createFeature()
 parameter, using the createRoute() utility.
 
-The Route object contains one or two function callbacks (CB), with
+The Route object contains one or two function callbacks (routeCB), with
 the following signature:
 ```
-  CB(app, appState): rendered-component (null for none)
+  routeCB(app, appState): rendered-component (null for none)
 ```
 
-The CB reasons about the supplied appState, and either returns a
+The routeCB reasons about the supplied appState, and either returns a
 rendered component, or null to allow downstream routes the same
 opportunity.  Basically the first non-null return wins.
 
-One or two CBs can be registered, one with priority and one without.
-The priority CBs are given precedence across all registered routes
-before the non-priority CBs are invoked.
+One or two routeCBs can be registered, one with priority and one without.
+The priority routeCBs are given precedence across all registered routes
+before the non-priority routeCBs are invoked.
 
 Here is a route for a `startup` feature that simply promotes a
 SplashScreen until the system is ready:
@@ -569,7 +569,7 @@ There are several ways to access feature resources:
 
   * route:
     ```js
-    functionCB(app, appState): rendered-component (null for none)
+    routeCB(app, appState): rendered-component (null for none)
     ```
   * app life-cycle functions:
     ```js

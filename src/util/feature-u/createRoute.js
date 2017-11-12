@@ -7,24 +7,24 @@ const defaultCB = () => null;
  * Create a new Route object, that provides a generalized run-time
  * API to abstractly expose component rendering, based on appState.
  *
- * The Route object contains one or two function callbacks (CB), with
+ * The Route object contains one or two function callbacks (routeCB), with
  * the following signature:
  * ```
- *   CB(app, appState): rendered-component (null for none)
+ *   routeCB(app, appState): rendered-component (null for none)
  * ```
  *
- * The CB reasons about the supplied appState, and either returns a
+ * The routeCB reasons about the supplied appState, and either returns a
  * rendered component, or null to allow downstream routes the same
  * opportunity.  Basically the first non-null return wins.
  *
- * One or two CBs can be registered, one with priority and one
- * without.  The priority CBs are given precedence across all
- * registered routes before the non-priority CBs are invoked.
+ * One or two routeCBs can be registered, one with priority and one
+ * without.  The priority routeCBs are given precedence across all
+ * registered routes before the non-priority routeCBs are invoked.
  *
- * @param {CB} [namedArgs.content] the non-priority route CB (if any)
+ * @param {routeCB} [namedArgs.content] the non-priority route routeCB (if any)
  * ... see: desc above.
  *
- * @param {CB} [namedArgs.priorityContent] the priority route CB (if
+ * @param {routeCB} [namedArgs.priorityContent] the priority route routeCB (if
  * any) ... see: desc above.
  *
  * @return {Route} a new Route object (to be consumed by feature-u's
@@ -42,6 +42,8 @@ export default function createRoute({content=defaultCB,
 
   check(isFunction(content),         'content (when supplied) must be a function');
   check(isFunction(priorityContent), 'priorityContent (when supplied) must be a function');
+
+  check(!(content===defaultCB && priorityContent===defaultCB), 'at least one routeCB must be supplied (either content or priorityContent)');
 
   const unknownArgKeys = Object.keys(unknownArgs);
   check(unknownArgKeys.length===0,  `unrecognized named parameter(s): ${unknownArgKeys}`);
