@@ -53,6 +53,7 @@ useful concepts that can be *(at minimum)* followed by your project.
   * [Feature Resources](#feature-resources)
     - [Accessing Feature Resources](#accessing-feature-resources)
     - [injectContext()](#injectcontext)
+    - [Access Summary](#access-summary)
 
 - [API](#api)
   * [IFormMeta](#iformmeta)
@@ -564,7 +565,7 @@ through the App object (*promoting cross feature communication*).
 
 There are several ways to access feature resources:
 
-- Within feature-u's programatic APIs, the App object is supplied as a
+- Within feature-u's programatic APIs, the `app` object is supplied as a
   parameter.
 
   * route:
@@ -575,6 +576,19 @@ There are several ways to access feature resources:
     ```js
     appWillStart(app, children): optional-top-level-content
     appDidStart({app, appState, dispatch}): void                        
+    ```
+
+  * logic hooks:
+    ```js
+    createLogic({
+      ...
+      transform({getState, action, app}, next) {
+        ...
+      },
+      process({getState, action, app}, dispatch, done) {
+        ...
+      }
+    })
     ```
 
 - For other cases, the simplest way to access Feature Resources is to
@@ -619,8 +633,9 @@ There are several ways to access feature resources:
   });
   ```
 
-With that said, there are **two issues that make access to these
-resources problematic** (*which are addressed by feature-u*):
+With that said, **there are two issues that make access to these
+resources problematic** (*which are addressed by*
+[`injectContext()`](#injectcontext) **discussed below**):
 
  1. in-line expansion of code
 
@@ -683,7 +698,7 @@ in-line.  **feature-u addresses both of these issues (above) by:**
 
  - providing a technique to inject feature context (both App and
    Feature) into the code definition (at code expansion time)
-   ... please refer to [injectContext()](#injectcontext) (below).
+   ... please refer to [`injectContext()`](#injectcontext) (below).
 
  - controlling the expansion of feature assets in such a way that
    gaurentees the publicAPI of ALL features are available prior to any
@@ -749,6 +764,23 @@ export const startApp = injectContext( (feature, app) => createLogic({
    features are available prior to any other aspect expansion.
 
 
+#### Access Summary
+
+In summary, you may access Feature Resources in one of 3 ways:
+
+1. Use the app parameter supplied through feature-u's programmatic APIs
+   (route, live-cycle hooks, and logic hooks)
+
+2. Simply import the feature or app
+
+3. Use the feature/app supplied through `injectContext()`
+
+**NOTE**: It is possible that a module may be using more than one of
+these techniques.  As an example a logic module may have to use
+`injectContext()` to access app at expansion time, but is also
+supplied app as a parameter in it's functional hook.  This is
+perfectly fine, as they will be referencing the exact same app object
+instance.
 
 
 
