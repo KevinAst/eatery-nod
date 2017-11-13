@@ -55,14 +55,10 @@ useful concepts that can be *(at minimum)* followed by your project.
     - [injectContext()](#injectcontext)
     - [Access Summary](#access-summary)
 
-- [API](#api)
-  * [IFormMeta](#iformmeta)
-    - registrar
-      * [formActionGenesis](#iformmetaregistrarformactiongenesis)
-      * [formLogic](#iformmetaregistrarformlogic)
-      * [formReducer](#iformmetaregistrarformreducer)
-    - [formStateSelector](#iformmetaformstateselector)
-    - [IForm](#iformmetaiform)
+- [API](api.md)
+  * [`createFeature()`](api.md#createFeature)
+  * [`shapedReducer()`](api.md#shapedReducer)
+  * [`runApp()`](api.md#runApp)
 
 
 ## Intro
