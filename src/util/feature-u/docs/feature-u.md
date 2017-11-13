@@ -100,7 +100,7 @@ these aspects through a Feature object (using createFeature()):
 ```js
 import {createFeature}  from 'feature-u';
 import publicAPI        from './publicAPI';
-import reducer          from './state;
+import reducer          from './state';
 import logic            from './logic';
 import route            from './route';
 import appWillStart     from './appWillStart';
