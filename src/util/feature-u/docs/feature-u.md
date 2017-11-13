@@ -554,8 +554,66 @@ returns the PublicAPI object* (please refer to
 
 #### App Life Cycle Hooks
 
-TODO: ??
+Because feature-u is in control of starting the app, application life
+cycle hooks can be introduced, allowing features to perform
+app-specific initialization, and even introduce components into the
+root of the app.
 
+Two hooks are provided through the following feature parameters:
+
+1. **appWillStart** - invoked one time at app startup time.
+
+   ```js
+   API: appWillStart(app, children): optional-top-level-content (undefined for none)
+   ```
+
+   This life-cycle hook can do any type of initialization.  For
+   example: initialize FireBase.
+
+   In addition, this life-cycle hook can optionally supplement the
+   app's top-level content (using a non-null return).  Typically,
+   nothing is returned (i.e. undefined).  However any return value is
+   interpreted as the content to inject at the top of the app, between
+   the redux Provider and feature-u's Router.  **IMPORTANT**: If you
+   return top-level content, it is your responsiblity to include the
+   supplied children in your render.  Otherwise NO app content will be
+   displayed (because children contains the feature-u Router, which
+   decides what screen to display).
+   
+   Here is an example that injects new root-level content:
+   ```js
+   appWillStart(app, children) {
+     ... any other initialization ...
+     return (
+       <Drawer ...>
+         {children}
+       </Drawer>
+     );
+   }
+   ```
+   
+   Here is an example of injecting a new sibling to children:
+   ```js
+   appWillStart: (app, children) => [React.Children.toArray(children), <Notify key="Notify"/>]
+   ```
+   
+2. **appDidStart** - invoked one time immediatly after app has started.
+   
+   ```js
+   API: appDidStart({app, appState, dispatch}): void
+   ```
+
+   Because the app is up-and-running at this time, you have access to
+   the appState and the dispatch function.
+
+   A typical usage for this hook is to dispatch some type of bootstrap
+   action.  Here is a startup feature, that issues a bootstrap action:
+
+   ```js
+   appDidStart({app, appState, dispatch}) {
+     dispatch( actions.bootstrap() );
+   }
+   ```
 
 
 

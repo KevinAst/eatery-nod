@@ -24,6 +24,8 @@ import shapedReducer     from './shapedReducer';
  *   };
  * ```
  *
+ * **Please Note** `createFeature()` accepts named parameters.
+ *
  * @param {string} name the feature name, used in
  * programmatically delineating various features (ex: 'views').
  *
@@ -66,48 +68,19 @@ import shapedReducer     from './shapedReducer';
  * components based on appState.  Please refer to the feature-u
  * `routes` documentation for more detail.
  *
- * @param {function} [appWillStart] an optional app
- * life-cycle callback invoked one-time at app startup time. 
+ * @param {function} [appWillStart] an optional app life-cycle hook
+ * invoked one-time at app startup time.  `API: appWillStart(app,
+ * children): optional-top-level-content` This life-cycle hook can do
+ * any type of initialization, and/or optionally supplement the app's
+ * top-level content (using a non-null return).  Please refer to the
+ * feature-u `App Life Cycle Hooks` documentation for more detail.
  *
- * This life-cycle callback can do any type of initialization, and/or
- * optionally supplement the app's top-level content (using a non-null
- * return).  
- *
- * ```
- *   API: appWillStart(app, children): optional-top-level-content (null for none)
- * ```
- *
- * Normally, this callback doesn't return anything (i.e. undefined).
- * However any return value is interpreted as the content to inject at
- * the top of the app (between the redux Provider and feature-u's
- * Router.  IMPORTANT: If you return top-level content, it is your
- * responsiblity to include the supplied children in your render.
- * Otherwise NO app content will be displayed (because children
- * contains the feature-u Router, which decides what screen to
- * display).
- *
- * Here is an example of injecting new root-level content:
- * ```js
- * appWillStart(app, children) {
- *   ... other initialization ...
- *   return (
- *     <Drawer ...>
- *       {children}
- *     </Drawer>
- *   );
- * }
- * ```
- *
- * Here is an example of injecting a new sibling to children:
- * ```js
- * appWillStart: (app, children) => [React.Children.toArray(children), <Notify key="Notify"/>]
- * ```
- *
- * @param {function} [appDidStart] an optional app
- * life-cycle callback invoked one-time immediatly after app has started.
- * ```
- *   API: appDidStart({app, appState, dispatch}): void
- * ```
+ * @param {function} [appDidStart] an optional app life-cycle hook
+ * invoked one-time immediately after app has started.  `API:
+ * appDidStart({app, appState, dispatch}): void` Because the app is
+ * up-and-running at this time, you have access to the appState and
+ * the dispatch function.  Please refer to the feature-u `App Life
+ * Cycle Hooks` documentation for more detail.
  *
  * @return {Feature} a new Feature object (to be consumed by feature-u runApp()).
  */
