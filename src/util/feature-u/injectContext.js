@@ -2,9 +2,18 @@ import verify         from '../verify';
 import isFunction     from 'lodash.isfunction';
 
 /**
+ * @function injectContext
+ * @description
+ *
  * Mark the supplied function as a "callback injected with feature
  * context", distinguishing it from other functions (such as
  * reducer functions).
+ *
+ * The callback function should conform to the following signature:
+ *
+ * ```js
+ * contextCallback(feature, app): feature-aspect
+ * ```
  *
  * Example (reducer):
  * ```
@@ -22,13 +31,11 @@ import isFunction     from 'lodash.isfunction';
  *   }));
  * ```
  *
+ * Please refer to the feature-u `injectContext()` documentation for more detail.
+ *
  * @param {function} contextCallback the callback function to be invoked
  * by feature-u with feature context, returning the appropriate
- * feature aspect.  The callback should conform to the following
- * signature:
- * ```
- *   contextCallback(feature, app): feature-aspect
- * ```
+ * feature aspect.
  *
  * @return {function} the supplied contextCallback, marked as "callback
  * injected with feature context".

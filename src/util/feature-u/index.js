@@ -17,8 +17,8 @@ export {
   createFeature,
   shapedReducer,
   injectContext,
-  runApp,
   createRoute,
+  runApp,
 };
 
 // NOTE: This default export supports CommonJS modules (otherwise Babel does NOT promote them).
@@ -30,7 +30,7 @@ export default {
   createFeature,
   shapedReducer,
   injectContext,
-  runApp,
   createRoute,
+  runApp,
 };
 

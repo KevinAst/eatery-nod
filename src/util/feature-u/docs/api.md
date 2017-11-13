@@ -40,6 +40,37 @@ Embellish the supplied reducer with a shape property - aspecification (interpre
 
 <br/><br/><br/>
 
+<a id="injectContext"></a>
+
+<h5 style="margin: 10px 0px; border-width: 5px 0px; padding: 5px; border-style: solid;">
+  injectContext(contextCallback) ⇒ function</h5>
+Mark the supplied function as a "callback injected with featurecontext", distinguishing it from other functions (such asreducer functions).The callback function should conform to the following signature:```jscontextCallback(feature, app): feature-aspect```Example (reducer):```  export default injectContext( (feature, app) => combineReducers({...reducer-code-using-feature...} ) );```SideBar: For reducer aspects, when BOTH shapedReducer() and         injectContext() are used, shapedReducer() should be         adorned in the outer function passed to createFunction().Example (logic):```  export const startAppAuthProcess = injectContext( (feature, app) => createLogic({    ...logic-code-using-feature...  }));```Please refer to the feature-u `injectContext()` documentation for more detail.
+
+
+| Param | Type | Description |
+| --- | --- | --- |
+| contextCallback | function | the callback function to be invoked by feature-u with feature context, returning the appropriate feature aspect. |
+
+**Returns**: function - the supplied contextCallback, marked as "callbackinjected with feature context".  
+
+<br/><br/><br/>
+
+<a id="createRoute"></a>
+
+<h5 style="margin: 10px 0px; border-width: 5px 0px; padding: 5px; border-style: solid;">
+  createRoute() ⇒ Route</h5>
+Create a new Route object, that provides a generalized run-timeAPI to abstractly expose component rendering, based on appState.The Route object contains one or two function callbacks (routeCB), withthe following signature:```js  routeCB(app, appState): rendered-component (null for none)```The routeCB reasons about the supplied appState, and either returns arendered component, or null to allow downstream routes the sameopportunity.  Basically the first non-null return wins.One or two routeCBs can be registered, one with priority and onewithout.  The priority routeCBs are given precedence across allregistered routes before the non-priority routeCBs are invoked.
+
+
+| Param | Type | Description |
+| --- | --- | --- |
+| [namedArgs.content] | routeCB | the non-priority route routeCB (if any) ... see: desc above. |
+| [namedArgs.priorityContent] | routeCB | the priority route routeCB (if any) ... see: desc above. |
+
+**Returns**: Route - a new Route object (to be consumed by feature-u'sRouter via runApp()).  
+
+<br/><br/><br/>
+
 <a id="runApp"></a>
 
 <h5 style="margin: 10px 0px; border-width: 5px 0px; padding: 5px; border-style: solid;">

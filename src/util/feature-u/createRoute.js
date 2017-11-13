@@ -4,12 +4,15 @@ import isFunction     from 'lodash.isfunction';
 const defaultCB = () => null;
 
 /**
+ * @function createRoute
+ * @description
+ *
  * Create a new Route object, that provides a generalized run-time
  * API to abstractly expose component rendering, based on appState.
  *
  * The Route object contains one or two function callbacks (routeCB), with
  * the following signature:
- * ```
+ * ```js
  *   routeCB(app, appState): rendered-component (null for none)
  * ```
  *
@@ -62,6 +65,8 @@ export default function createRoute({content=defaultCB,
 
 
 /**
+ * @private
+ *
  * Validate the supplied route object.
  *
  * @param {Route} route the Route object to validate.

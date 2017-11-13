@@ -58,6 +58,8 @@ useful concepts that can be *(at minimum)* followed by your project.
 - [API](api.md)
   * [`createFeature()`](api.md#createFeature)
   * [`shapedReducer()`](api.md#shapedReducer)
+  * [`injectContext()`](api.md#injectContext)
+  * [`createRoute()`](api.md#createRoute)
   * [`runApp()`](api.md#runApp)
 
 
