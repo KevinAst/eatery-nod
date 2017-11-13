@@ -16,7 +16,7 @@ import isFunction     from 'lodash.isfunction';
  * ```
  *
  * Example (reducer):
- * ```
+ * ```js
  *   export default injectContext( (feature, app) => combineReducers({...reducer-code-using-feature...} ) );
  * ```
  *
@@ -25,7 +25,7 @@ import isFunction     from 'lodash.isfunction';
  *          adorned in the outer function passed to createFunction().
  *
  * Example (logic):
- * ```
+ * ```js
  *   export const startAppAuthProcess = injectContext( (feature, app) => createLogic({
  *     ...logic-code-using-feature...
  *   }));
