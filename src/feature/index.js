@@ -1,9 +1,9 @@
+import logActions  from './logActions';
 import startup     from './startup';
 import leftNav     from './leftNav';
-import logActions  from './logActions';
 
 export default [
+  logActions,
   startup,
   leftNav,
-  logActions,
 ];
