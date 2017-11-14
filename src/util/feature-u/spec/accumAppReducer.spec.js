@@ -26,14 +26,14 @@ const feature2 = createFeature({
 
 const feature3 = createFeature({
   name:    'feature3',
-  reducer: shapedReducer((state='default-feature3', action) => 'state-for-feature3', 
-                         'complex.shape.feature3'),
+  reducer: shapedReducer('complex.shape.feature3',
+                         (state='default-feature3', action) => 'state-for-feature3'),
 });
 
 const feature4 = createFeature({
   name:    'feature4',
-  reducer: shapedReducer((state='default-feature4', action) => 'state-for-feature4', 
-                         'complex.shape'), // is an intermediate duplicate from feature3
+  reducer: shapedReducer('complex.shape', // is an intermediate duplicate from feature3
+                         (state='default-feature4', action) => 'state-for-feature4'),
 });
 
 const disabledFeature = createFeature({
@@ -109,20 +109,20 @@ describe('feature-u accumAppReducer() tests', () => {
 
     const manageViews = createFeature({
       name:    'manageViews',
-      reducer: shapedReducer((state='default-manageViews', action) => 'state-for-manageViews', 
-                             'views.curView'),
+      reducer: shapedReducer('views.curView',
+                             (state='default-manageViews', action) => 'state-for-manageViews'),
     });
 
     const eateries = createFeature({
       name:    'eateries',
-      reducer: shapedReducer((state='default-eateries', action) => 'state-for-eateries', 
-                             'views.eateries'),
+      reducer: shapedReducer('views.eateries',
+                             (state='default-eateries', action) => 'state-for-eateries'),
     });
 
     const discovery = createFeature({
       name:    'discovery',
-      reducer: shapedReducer((state='default-discovery', action) => 'state-for-discovery', 
-                             'views.discovery'),
+      reducer: shapedReducer('views.discovery',
+                             (state='default-discovery', action) => 'state-for-discovery'),
     });
 
     expect(applyAppState([manageViews, eateries, discovery]))

@@ -294,7 +294,7 @@ You can however explicitly control this location by using the
 shapedReducer() utility, which embellishes the reducer with a shape
 property - a federated namespace (delimited by dots) specifying the
 exact location of the state.  As an example, if featureA's reducer was
-embellished with `shapedReducer(reducer, 'views.currentView')`, your
+embellished with `shapedReducer('views.currentView', reducer)`, your
 appState would appear as follows:
 
 ```js

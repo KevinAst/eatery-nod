@@ -19,7 +19,7 @@ import shapedReducer     from './shapedReducer';
  *   export default createFeature({
  *     name:       'views',
  *     enabled:    true,
- *     reducer:    shapedReducer(reducer, 'views.currentView'),
+ *     reducer:    shapedReducer('views.currentView', reducer),
  *     ? more
  *   };
  * ```
@@ -115,7 +115,7 @@ export default function createFeature({name,
 
     // default reducer shape to our feature name
     if (!reducer.shape) {
-      shapedReducer(reducer, name);
+      shapedReducer(name, reducer);
     }
   }
 

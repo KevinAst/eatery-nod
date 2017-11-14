@@ -20,7 +20,7 @@ import appDidStart      from './appDidStart';
  */
 export default createFeature({
   name,
-  reducer:  shapedReducer(reducer, 'device'),
+  reducer:  shapedReducer('device', reducer),
 
   publicAPI,
 

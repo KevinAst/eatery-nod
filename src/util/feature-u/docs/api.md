@@ -6,7 +6,7 @@
 
 <h5 style="margin: 10px 0px; border-width: 5px 0px; padding: 5px; border-style: solid;">
   createFeature(name, [enabled], [publicAPI], [reducer], [logic], [route], [appWillStart], [appDidStart]) ⇒ Feature</h5>
-Create a new Feature object, that accumulates various featureaspects to be consumed by feature-u runApp().Example:```js  import {createFeature} from 'feature-u';  import reducer         from './state';  export default createFeature({    name:       'views',    enabled:    true,    reducer:    shapedReducer(reducer, 'views.currentView'),    ? more  };```**Please Note** `createFeature()` accepts named parameters.
+Create a new Feature object, that accumulates various featureaspects to be consumed by feature-u runApp().Example:```js  import {createFeature} from 'feature-u';  import reducer         from './state';  export default createFeature({    name:       'views',    enabled:    true,    reducer:    shapedReducer('views.currentView', reducer),    ? more  };```**Please Note** `createFeature()` accepts named parameters.
 
 
 | Param | Type | Default | Description |
@@ -27,14 +27,14 @@ Create a new Feature object, that accumulates various featureaspects to be cons
 <a id="shapedReducer"></a>
 
 <h5 style="margin: 10px 0px; border-width: 5px 0px; padding: 5px; border-style: solid;">
-  shapedReducer(reducer, shape) ⇒ reducerFn</h5>
+  shapedReducer(shape, reducer) ⇒ reducerFn</h5>
 Embellish the supplied reducer with a shape property - aspecification (interpreted by feature-u) as to the location of thereducer within the top-level appState tree.Please refer to the Reducers documentation for more information andexamples.SideBar: feature-u will default the location of non-embellished         reducers to the feature name.SideBar: When BOTH shapedReducer() and injectContext() are needed,         shapedReducer() should be adorned in the outer function         passed to createFunction().
 
 
 | Param | Type | Description |
 | --- | --- | --- |
-| reducer | reducerFn | a redux reducer function to be embellished with the shape specification. |
 | shape | string | the location of the managed state within the overall top-level appState tree.  This can be a federated namespace (delimited by dots).  Example: `'views.currentView'` |
+| reducer | reducerFn | a redux reducer function to be embellished with the shape specification. |
 
 **Returns**: reducerFn - the supplied reducer, embellished with both theshape and a standard selector:```jsreducer.shape: shapereducer.getShapedState(appState): featureState```  
 
@@ -44,7 +44,7 @@ Embellish the supplied reducer with a shape property - aspecification (interpre
 
 <h5 style="margin: 10px 0px; border-width: 5px 0px; padding: 5px; border-style: solid;">
   injectContext(contextCallback) ⇒ function</h5>
-Mark the supplied function as a "callback injected with featurecontext", distinguishing it from other functions (such asreducer functions).The callback function should conform to the following signature:```jscontextCallback(feature, app): feature-aspect```Example (reducer):```  export default injectContext( (feature, app) => combineReducers({...reducer-code-using-feature...} ) );```SideBar: For reducer aspects, when BOTH shapedReducer() and         injectContext() are used, shapedReducer() should be         adorned in the outer function passed to createFunction().Example (logic):```  export const startAppAuthProcess = injectContext( (feature, app) => createLogic({    ...logic-code-using-feature...  }));```Please refer to the feature-u `injectContext()` documentation for more detail.
+Mark the supplied function as a "callback injected with featurecontext", distinguishing it from other functions (such asreducer functions).The callback function should conform to the following signature:```jscontextCallback(feature, app): feature-aspect```Example (reducer):```js  export default injectContext( (feature, app) => combineReducers({...reducer-code-using-feature...} ) );```SideBar: For reducer aspects, when BOTH shapedReducer() and         injectContext() are used, shapedReducer() should be         adorned in the outer function passed to createFunction().Example (logic):```js  export const startAppAuthProcess = injectContext( (feature, app) => createLogic({    ...logic-code-using-feature...  }));```Please refer to the feature-u `injectContext()` documentation for more detail.
 
 
 | Param | Type | Description |
