@@ -11,7 +11,7 @@ import SplashScreen         from '../../util/comp/SplashScreen';
 
 export default createRoute({
 
-  content(app, appState) {
+  priorityContent(app, appState) {
 
     // promote a simple SplashScreen (with status) until our system is ready
     // NOTE: Errors related to system resources are promoted through independent user notifications
