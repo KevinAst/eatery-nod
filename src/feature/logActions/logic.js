@@ -1,6 +1,8 @@
 import {createLogic}      from 'redux-logic';
 import {injectContext}    from '../../util/feature-u';
 
+let lastState = null;
+
 /**
  * Log all dispatched actions.
  *
@@ -30,6 +32,19 @@ export const actionLogger = injectContext( (feature, app) => createLogic({
     // continue processing
     next(action);
   },
+
+  process({getState, action, appPOOP}, dispatch, done) {
+    const curState = getState();
+    if (curState === lastState) {
+      console.log('Current State: UNCHANGED');
+    }
+    else {
+      console.log('Current State:', curState);
+    }
+    lastState = curState;
+    done();
+  },
+
 
 }) );
 
