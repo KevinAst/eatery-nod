@@ -68,18 +68,18 @@ class Router extends React.Component {
     //x   return <Expo.AppLoading/>; //     we must use the Expo spash screen (no dependancy on yet-to-be-loaded fonts)
     //x if (p.device.status !== 'READY')
     //x   return <SplashScreen msg={p.device.status}/>;
-    //? 
-    //? // primary route logic, based on user authorization
-    //? switch (p.userStatus) {
-    //? 
-    //?   // user is: signed in BUT email verification in-progress
-    //?   case 'signedInUnverified':
-    //?     return <SignInVerifyScreen/> // screen requesting email verification completion
-    //? 
-    //?   // user is: fully signed in (authorized/verified/profiled)
-    //?   // ... this is our real app screens (after authorization)
-    //?   case 'signedIn':
-    //? 
+    //x 
+    //x // primary route logic, based on user authorization
+    //x switch (p.userStatus) {
+    //x 
+    //x   // user is: signed in BUT email verification in-progress
+    //x   case 'signedInUnverified':
+    //x     return <SignInVerifyScreen/> // screen requesting email verification completion
+    //x 
+    //x   // user is: fully signed in (authorized/verified/profiled)
+    //x   // ... this is our real app screens (after authorization)
+    //x   case 'signedIn':
+    //x 
     //?     if (p.appState.discovery.filterForm) { // ... kinda unexpected: isolated from other Discovery feature (how would this work in "pods" concept?
     //?       return <DiscoveryFilterScreen/>;
     //?     }
@@ -101,16 +101,16 @@ class Router extends React.Component {
     //?     else if (p.appState.view === 'discovery') {
     //?       return <DiscoveryListScreen/>;
     //?     }
-    //? 
-    //?   // user is: unauthorized (either explicit or status unknown)
-    //?   case 'signedOut':
-    //?   default:
-    //?     // display interactive SignIn, when form is active
-    //?     if (p.signInForm) {
-    //?       return <SignInScreen/>;
-    //?     }
-    //?     // ?? check for signUpForm
-    //? }
+    //x 
+    //x   // user is: unauthorized (either explicit or status unknown)
+    //x   case 'signedOut':
+    //x   default:
+    //x     // display interactive SignIn, when form is active
+    //x     if (p.signInForm) {
+    //x       return <SignInScreen/>;
+    //x     }
+    //x     // ?? check for signUpForm
+    //x }
     //x 
     //x // fallback is our SplashScreen
     //x return <SplashScreen msg="Router Fallback"/>;

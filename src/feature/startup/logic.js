@@ -183,9 +183,7 @@ export const startAppAuthProcess = injectContext( (feature, app) => createLogic(
 
     // when our device is ready, kick off our authorization process
     if ( isDeviceReady(getState()) ) {
-      // ?? need action from other feature ... publicAPI ... app.auth.actions.bootstrap() -or- startAuth()
-      // dispatch( actions.auth.bootstrap() );
-      dispatch({type:'BOOTSTRAP_AUTH'});
+      dispatch( app.auth.actions.bootstrap() );
     }
     done();
   },
