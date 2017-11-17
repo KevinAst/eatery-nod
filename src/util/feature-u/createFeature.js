@@ -239,7 +239,7 @@ SideBar: When BOTH shapedReducer() and injectContext() are needed, shapedReducer
 
     // apply same shape to our final resolved reducer
     // ... so feature.reducer.getShapedState(appState) is available for public access
-    shapedReducer(feature.reducer, shape);
+    shapedReducer(shape, feature.reducer);
   }
 
   // ... logic
