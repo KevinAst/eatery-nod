@@ -46,10 +46,10 @@ export default function createRoute({content=defaultCB,
   check(isFunction(content),         'content (when supplied) must be a function');
   check(isFunction(priorityContent), 'priorityContent (when supplied) must be a function');
 
-  check(!(content===defaultCB && priorityContent===defaultCB), 'at least one routeCB must be supplied (either content or priorityContent)');
-
   const unknownArgKeys = Object.keys(unknownArgs);
   check(unknownArgKeys.length===0,  `unrecognized named parameter(s): ${unknownArgKeys}`);
+
+  check(!(content===defaultCB && priorityContent===defaultCB), 'at least one routeCB must be supplied (either content or priorityContent)');
 
 
   // ***
