@@ -1,6 +1,7 @@
 import Yup        from 'yup';
 import IFormMeta  from '../../util/iForms/IFormMeta';
 import actions    from './actions';
+import * as sel   from './state';
 
 export default IFormMeta({
   formDesc:  'Sign In',
@@ -9,5 +10,5 @@ export default IFormMeta({
     pass:     Yup.string().required().min(6).max(9)  .label('Password'), // TODO: add password regex check: https://dzone.com/articles/use-regex-test-password
   }),
   formActionsAccessor: ()         => actions.signIn,
-  formStateSelector:   (appState) => appState.auth.signInForm, // TODO: need selector (sel.getUserSignInForm(appState)) BUT stimulates "PROBLEMS WITH es6 circular dependency" (see journal for followup)
+  formStateSelector:   (appState) => sel.getUserSignInForm(appState),
 });

@@ -16,7 +16,7 @@ import isFunction     from 'lodash.isfunction';
  * SideBar: feature-u will default the location of non-embellished
  *          reducers to the feature name.
  * 
- * SideBar: When BOTH shapedReducer() and injectContext() are needed,
+ * SideBar: When BOTH shapedReducer() and managedExpansion() are needed,
  *          shapedReducer() should be adorned in the outer function
  *          passed to createFunction().
  *

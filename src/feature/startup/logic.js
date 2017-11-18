@@ -1,7 +1,7 @@
 import {createLogic}      from 'redux-logic';
 import {Location,
         Permissions}      from 'expo';
-import {injectContext}    from '../../util/feature-u';
+import {managedExpansion} from '../../util/feature-u';
 import actions            from './actions';
 import {isDeviceReady,
         areFontsLoaded,
@@ -14,7 +14,7 @@ import {toast}            from '../../util/notify';
 /**
  * Start the app running upon bootstrap request.
  */
-export const startApp = injectContext( (feature, app) => createLogic({
+export const startApp = managedExpansion( (feature, app) => createLogic({
 
   name: `${feature.name}.startApp`,
   type: String(actions.bootstrap),
@@ -31,7 +31,7 @@ export const startApp = injectContext( (feature, app) => createLogic({
 /**
  * Load our system fonts.
  */
-export const loadFonts = injectContext( (feature, app) => createLogic({
+export const loadFonts = managedExpansion( (feature, app) => createLogic({
 
   name: `${feature.name}.loadFonts`,
   type: String(actions.loadFonts),
@@ -55,7 +55,7 @@ export const loadFonts = injectContext( (feature, app) => createLogic({
 /**
  * Geo locate our device.
  */
-export const locateDevice = injectContext( (feature, app) => createLogic({
+export const locateDevice = managedExpansion( (feature, app) => createLogic({
 
   name: `${feature.name}.locateDevice`,
   type: String(actions.locateDevice),
@@ -131,7 +131,7 @@ export const locateDevice = injectContext( (feature, app) => createLogic({
 /**
  * Monitor our startup progress, syncing the device status.
  */
-export const monitorStartupProgress = injectContext( (feature, app) => createLogic({
+export const monitorStartupProgress = managedExpansion( (feature, app) => createLogic({
 
   name: `${feature.name}.monitorStartupProgress`,
   type: /startup.*.(complete|fail)/,
@@ -174,7 +174,7 @@ export const monitorStartupProgress = injectContext( (feature, app) => createLog
 /**
  * Start our authorization process when our device is ready.
  */
-export const startAppAuthProcess = injectContext( (feature, app) => createLogic({
+export const startAppAuthProcess = managedExpansion( (feature, app) => createLogic({
 
   name: `${feature.name}.startAppAuthProcess`,
   type: String(actions.statusUpdate),
@@ -192,7 +192,7 @@ export const startAppAuthProcess = injectContext( (feature, app) => createLogic(
 
 // promote all logic modules for this feature
 // ... NOTE: individual logic modules are unit tested using the named exports.
-export default injectContext( (feature, app) => [
+export default managedExpansion( (feature, app) => [
   startApp(feature, app),
   loadFonts(feature, app),
   locateDevice(feature, app),

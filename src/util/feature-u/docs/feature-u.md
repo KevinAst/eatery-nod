@@ -52,13 +52,13 @@ useful concepts that can be *(at minimum)* followed by your project.
     - [App Life Cycle Hooks](#app-life-cycle-hooks)
   * [Feature Resources](#feature-resources)
     - [Accessing Feature Resources](#accessing-feature-resources)
-    - [injectContext()](#injectcontext)
+    - [managedExpansion()](#managedexpansion)
     - [Access Summary](#access-summary)
 
 - [API](api.md)
   * [`createFeature()`](api.md#createFeature)
   * [`shapedReducer()`](api.md#shapedReducer)
-  * [`injectContext()`](api.md#injectContext)
+  * [`managedExpansion()`](api.md#managedExpansion)
   * [`createRoute()`](api.md#createRoute)
   * [`runApp()`](api.md#runApp)
 
@@ -333,9 +333,9 @@ practices would strive to minimize the public promotion of feature
 state outside the feature boundary*.
 
 Because reducers may require feature-based context information,
-**this parameter can also be a contextCallback** - *a function that
+**this parameter can also be a contextCB** - *a function that
 returns the reducerFn* (please refer to
-[injectContext()](#injectcontext) for more information).
+[managedExpansion()](#managedexpansion) for more information).
 
 
 #### Selectors (encapsolating state)
@@ -371,9 +371,9 @@ modules are opaque functional assets, **feature-u's interest in them
 is to merely register them to the redux-logic agent**.
 
 Because logic modules may require feature-based context information,
-**this parameter can also be a contextCallback** - *a function that
+**this parameter can also be a contextCB** - *a function that
 returns the set of logic modules* (please refer to
-[injectContext()](#injectcontext) for more information).
+[managedExpansion()](#managedexpansion) for more information).
 
 
 #### Components
@@ -545,9 +545,9 @@ aspect to dynamically determine if the feature is active or not.
 ```
 
 Because publicAPI may require feature-based context information,
-**this parameter can also be a contextCallback** - *a function that
+**this parameter can also be a contextCB** - *a function that
 returns the PublicAPI object* (please refer to
-[injectContext()](#injectcontext) for more information).
+[managedExpansion()](#managedexpansion) for more information).
 
 
 #### App Life Cycle Hooks
@@ -730,7 +730,7 @@ There are several ways to access feature resources:
 
 With that said, **there are two issues that make access to these
 resources problematic** (*which are addressed by*
-[`injectContext()`](#injectcontext) **discussed below**):
+[`managedExpansion()`](#managedexpansion) **discussed below**):
 
  1. in-line expansion of code
 
@@ -793,7 +793,7 @@ in-line.  **feature-u addresses both of these issues (above) by:**
 
  - providing a technique to inject feature context (both App and
    Feature) into the code definition (at code expansion time)
-   ... please refer to [`injectContext()`](#injectcontext) (below).
+   ... please refer to [`managedExpansion()`](#managedexpansion) (below).
 
  - controlling the expansion of feature assets in such a way that
    gaurentees the publicAPI of ALL features are available prior to any
@@ -804,34 +804,34 @@ benifit** of feature-u that aleviates a lot of problems in your code,
 making your features truly plug-and-play.
 
 
-#### injectContext()
+#### managedExpansion()
 
 When aspect definitions require feature resources at code expansion
-time, you can wrap the aspect definition in a contextCallback
+time, you can wrap the aspect definition in a contextCB
 function.  In other words, your aspects can either be the raw aspect
 itself (ex: a reducer), or a function that returns the aspect.
 
 Your callback function should conform to the following signature:
 
 ```js
-  contextCallback(feature, app): feature-aspect
+  contextCB(feature, app): feature-aspect
 ```
 
-When this is done, feature-u will invoke the contextCallback in a
+When this is done, feature-u will invoke the contextCB in a
 controlled way, passing in the feature context as parameters (both
 Feature and App objects).
 
-To accomplish this, you must use the injectContext() function ... the
+To accomplish this, you must use the managedExpansion() function ... the
 reason being that feature-u must be able to distinguish a
-contextCallback function from other functions (ex: reducers).
+contextCB function from other functions (ex: reducers).
 
 Here is the same example (from above) that that fixes all of our
-problems by replacing the imports with injectContext():
+problems by replacing the imports with managedExpansion():
 
 **`src/feature/featureA/logic.js`**
 ```js
                          // *1*
-export const startApp = injectContext( (feature, app) => createLogic({
+export const startApp = managedExpansion( (feature, app) => createLogic({
 
   name: `${feature.name}.myLogicModuleName`,     // *2*
   type: String(app.featureB.actions.fooBar),     // *3*
@@ -843,16 +843,16 @@ export const startApp = injectContext( (feature, app) => createLogic({
 }));
 ```
 
- - `*1*`: `injectContext()` replaces the import of feature/app solving
+ - `*1*`: `managedExpansion()` replaces the import of feature/app solving
    all our problems (keep reading).
 
  - `*2*`: we can now use `feature` as a single-source-of-truth to
    append our feature name to our logic module, BECAUSE it is now
-   available (thanks to feature-u's `injectContext()`).
+   available (thanks to feature-u's `managedExpansion()`).
 
  - `*3*`: we can now monitor a different feature's action (using
    feature-u's publicAPI), because `app` is provided by
-   `injectContext()`.
+   `managedExpansion()`.
 
  - `*4*`: we no longer have to worry about the order of aspect
    expansion, because feature-u gaurentees the publicAPI of ALL
@@ -868,11 +868,11 @@ In summary, you may access Feature Resources in one of 3 ways:
 
 2. Simply import the feature or app
 
-3. Use the feature/app supplied through `injectContext()`
+3. Use the feature/app supplied through `managedExpansion()`
 
 **NOTE**: It is possible that a module may be using more than one of
 these techniques.  As an example a logic module may have to use
-`injectContext()` to access app at expansion time, but is also
+`managedExpansion()` to access app at expansion time, but is also
 supplied app as a parameter in it's functional hook.  This is
 perfectly fine, as they will be referencing the exact same app object
 instance.

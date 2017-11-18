@@ -1,8 +1,8 @@
-import createFeature  from './createFeature';
-import shapedReducer  from './shapedReducer';
-import injectContext  from './injectContext';
-import runApp         from './runApp';
-import createRoute    from './createRoute';
+import createFeature     from './createFeature';
+import shapedReducer     from './shapedReducer';
+import managedExpansion  from './managedExpansion';
+import runApp            from './runApp';
+import createRoute       from './createRoute';
 
 //*** 
 //*** Promote all feature-u utilities through a centralized module.
@@ -16,7 +16,7 @@ import createRoute    from './createRoute';
 export {
   createFeature,
   shapedReducer,
-  injectContext,
+  managedExpansion,
   createRoute,
   runApp,
 };
@@ -29,7 +29,7 @@ export {
 export default {
   createFeature,
   shapedReducer,
-  injectContext,
+  managedExpansion,
   createRoute,
   runApp,
 };

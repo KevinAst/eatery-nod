@@ -6,7 +6,7 @@
  * (i.e. `feature.name`), accessed in one of several ways:
  * 
  *  1. import feature
- *  2. feature-u's injectContext()
+ *  2. feature-u's managedExpansion()
  * 
  * Specifically, this featureName.js module is required by actions.js
  * (to prefix all actions with our feature name), as actions.js
@@ -17,10 +17,10 @@
  *     the feature object is NOT resolved at time of actions.js
  *     expansion
  *
- *  2. feature-u's injectContext() is not supported for actions
+ *  2. feature-u's managedExpansion() is not supported for actions
  *     because:
  *     a: actions are NOT managed by feature-u, and
- *     b: injectContext() would be problematic for actions (even if it
+ *     b: managedExpansion() would be problematic for actions (even if it
  *        were somehow supported), because they need to be directly
  *        imported throughout our code-base (without an extra level of
  *        indirection)

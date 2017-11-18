@@ -1,6 +1,5 @@
 import {createLogic}      from 'redux-logic';
 import firebase           from 'firebase';
-import {injectContext}    from '../../util/feature-u';
 import featureName        from './featureName';
 import actions            from './actions';
 import * as sel           from './state';

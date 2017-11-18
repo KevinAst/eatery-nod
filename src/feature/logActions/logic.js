@@ -1,5 +1,5 @@
 import {createLogic}      from 'redux-logic';
-import {injectContext}    from '../../util/feature-u';
+import featureName        from './featureName';
 
 let lastState = null;
 
@@ -11,9 +11,9 @@ let lastState = null;
  *         - TRACE:   see dispatched actions
  *         - VERBOSE: see dispatched actions INCLUDING action content (CAUTION: action content can be BIG)
  */
-export const actionLogger = injectContext( (feature, app) => createLogic({
+export const actionLogger = createLogic({
 
-  name: `${feature.name}.actionLogger`,
+  name: `${featureName}.actionLogger`,
   type: '*', // monitor ALL action types
 
   transform({getState, action}, next) {
@@ -33,7 +33,7 @@ export const actionLogger = injectContext( (feature, app) => createLogic({
     next(action);
   },
 
-  process({getState, action, appPOOP}, dispatch, done) {
+  process({getState, action, app}, dispatch, done) {
     const curState = getState();
     if (curState === lastState) {
       console.log('Current State: UNCHANGED');
@@ -45,12 +45,11 @@ export const actionLogger = injectContext( (feature, app) => createLogic({
     done();
   },
 
-
-}) );
+});
 
 
 // promote all logic modules for this feature
 // ... NOTE: individual logic modules are unit tested using the named exports.
-export default injectContext( (feature, app) => [
-  actionLogger(feature, app),
-]);
+export default [
+  actionLogger,
+];

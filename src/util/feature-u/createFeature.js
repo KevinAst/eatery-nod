@@ -9,8 +9,8 @@ import shapedReducer     from './shapedReducer';
  * @function createFeature
  * @description
  *
- * Create a new Feature object, that accumulates various feature
- * aspects to be consumed by feature-u runApp().
+ * Create a new Feature object, that accumulates various 
+ * FeatureAspects to be consumed by feature-u runApp().
  *
  * Example:
  * ```js
@@ -32,17 +32,17 @@ import shapedReducer     from './shapedReducer';
  * @param {boolean} [enabled=true] an indicator as to
  * whether this feature is enabled (true) or not (false).
  *
- * @param {Any|contextCallback} [publicAPI] an optional
+ * @param {Any|contextCB} [publicAPI] an optional
  * resource exposed in app.{featureName}.{publicAPI} (emitted from
  * runApp()), promoting cross-communication between features.  Please
  * refer to the feature-u `Public API` documentation for more
  * detail.
  *
  * Because some publicAPI may require feature-based context
- * information, this parameter can also be a contextCallback - a
- * function that returns the publicAPI (see injectContext()).
+ * information, this parameter can also be a contextCB - a
+ * function that returns the publicAPI (see managedExpansion()).
  *
- * @param {reducerFn|contextCallback} [reducer] an optional
+ * @param {reducerFn|contextCB} [reducer] an optional
  * reducer that maintains redux state (if any) for this feature.
  * feature-u patches each reducer into the overall app state, by
  * default using the `feature.name`, but can be explicitly defined
@@ -51,17 +51,17 @@ import shapedReducer     from './shapedReducer';
  * documentation for more detail.
  *
  * Because some reducers may require feature-based context
- * information, this parameter can also be a contextCallback - a
- * function that returns the reducerFn (see injectContext()).
+ * information, this parameter can also be a contextCB - a
+ * function that returns the reducerFn (see managedExpansion()).
  *
- * @param {Logic[]|contextCallback} [logic] an optional set
+ * @param {Logic[]|contextCB} [logic] an optional set
  * of business logic modules (if any) to be registered to redux-logic
  * in support of this feature. Please refer to the feature-u `Logic`
  * documentation for more detail.
  *
  * Because some logic modules may require feature-based context
- * information, this parameter can also be a contextCallback - a
- * function that returns the Logic[] (see injectContext()).
+ * information, this parameter can also be a contextCB - a
+ * function that returns the Logic[] (see managedExpansion()).
  *
  * @param {Route} [route] the optional route callback (see
  * createRoute()) that promotes feature-based top-level screen
@@ -108,10 +108,10 @@ export default function createFeature({name,
 
   check(enabled===true||enabled===false, 'enabled must be a boolean');
 
-  // publicAPI: nothing to validate (it can be anything, INCLUDING a .injectContext function)
+  // publicAPI: nothing to validate (it can be anything, INCLUDING a .managedExpansion function)
 
   if (reducer) {
-    check(isFunction(reducer) || reducer.injectContext, 'reducer (when supplied) must be a function -or- a contextCallback');
+    check(isFunction(reducer) || reducer.managedExpansion, 'reducer (when supplied) must be a function -or- a contextCB');
 
     // default reducer shape to our feature name
     if (!reducer.shape) {
@@ -120,7 +120,7 @@ export default function createFeature({name,
   }
 
   if (logic) {
-    check(Array.isArray(logic) || logic.injectContext, 'logic (when supplied) must be an array of redux-logic modules -or- a contextCallback');
+    check(Array.isArray(logic) || logic.managedExpansion, 'logic (when supplied) must be an array of redux-logic modules -or- a contextCB');
   }
 
   if (route) {
@@ -147,7 +147,7 @@ export default function createFeature({name,
   // NOTES:
   //  *P*: we pre-register all "raw" feature aspects
   //  *E*: some of which may NOT yet be fully expanded
-  //       ... ones that support (and use) the injectContext() callback wrapper
+  //       ... ones that support (and use) the managedExpansion() callback wrapper
   //       ... this expansion is controlled by runApp() 
   //           to insure the publicAPI of ALL features are expanded FIRST,
   //           for other feature aspect expansion to use
@@ -172,7 +172,7 @@ export default function createFeature({name,
  * @private
  * 
  * Expand the publicAPI aspect of the supplied feature, when it is
- * employing the injectContext() callback wrapper (see *E* above).
+ * employing the managedExpansion() callback wrapper (see *E* above).
  * 
  * This is invoked by runApp() to insure the publicAPI of ALL features
  * are expanded FIRST, so that other feature aspect expansion can use
@@ -189,7 +189,7 @@ export default function createFeature({name,
  * @param {App} app the App object (emitted by runApp()).
  */
 export function expandFeatureAspect_publicAPI(feature, app) {
-  if (feature.publicAPI && feature.publicAPI.injectContext) {
+  if (feature.publicAPI && feature.publicAPI.managedExpansion) {
     feature.publicAPI = feature.publicAPI(feature, app);
   }
 }
@@ -199,7 +199,7 @@ export function expandFeatureAspect_publicAPI(feature, app) {
  * @private
  *
  * Expand all other aspects of the supplied feature, when they are
- * employing the injectContext() callback wrapper (see *E* above).
+ * employing the managedExpansion() callback wrapper (see *E* above).
  * 
  * This is invoked by runApp() to insure the publicAPI of ALL features
  * are expanded BEFORE all other aspects, so that they can use the
@@ -222,7 +222,9 @@ export function expandFeatureAspects(feature, app) {
   //       - like pass in un-attached reducers, 
   //       - giving other features the oppertunity to include them?
   // ... reducer
-  if (feature.reducer && feature.reducer.injectContext) {
+  if (feature.reducer && feature.reducer.managedExpansion) {
+
+    // TODO: unsure, but this complexity may be removed if runApp() can retain shape before resolution ... because now the getShapedState() WILL BE a completly an internal detail of each feature
 
     // hold on to our reducer shape
     // ... we know shape is available, because WE default it (above)
@@ -233,8 +235,8 @@ export function expandFeatureAspects(feature, app) {
 
     // validate that no incompatable shape has been defined within our resolved reducer
     if (feature.reducer.shape) {
-      verify(feature.reducer.shape === shape, `createFeature() parameter violation: reducer contextCallback shape: '${shape}' is different from resolved reducer shape: '${feature.reducer.shape}'.
-SideBar: When BOTH shapedReducer() and injectContext() are needed, shapedReducer() should be adorned ONLY in the outer function passed to createFunction().`);
+      verify(feature.reducer.shape === shape, `createFeature() parameter violation: reducer contextCB shape: '${shape}' is different from resolved reducer shape: '${feature.reducer.shape}'.
+SideBar: When BOTH shapedReducer() and managedExpansion() are needed, shapedReducer() should be adorned ONLY in the outer function passed to createFunction().`);
     }
 
     // apply same shape to our final resolved reducer
@@ -243,8 +245,23 @@ SideBar: When BOTH shapedReducer() and injectContext() are needed, shapedReducer
   }
 
   // ... logic
-  if (feature.logic && feature.logic.injectContext) {
+  if (feature.logic && feature.logic.managedExpansion) {
     feature.logic = feature.logic(feature, app);
   }
 
 }
+
+
+//***
+//*** Specification: FeatureAspect
+//***
+
+/**
+ * @typedef {*} FeatureAspect
+ * 
+ * In feature-u, "aspects" (FeatureAspect) is a general term used to refer to the
+ * various ingredients that, when combined, constitute your app. 
+ * 
+ * A FeatureAspect can refere to actions, reducers, components,
+ * routes, logic, etc.
+ */

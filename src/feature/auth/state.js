@@ -1,6 +1,7 @@
 import {combineReducers}  from 'redux';
 import {reducerHash}      from 'astx-redux-util';
-import {shapedReducer}    from '../../util/feature-u';
+import {shapedReducer,
+        managedExpansion} from '../../util/feature-u';
 import featureName        from './featureName';
 import signInFormMeta     from './signInFormMeta';
 import actions            from './actions';
@@ -9,7 +10,10 @@ import actions            from './actions';
 // *** Our feature reducer, managing state for our authoration process.
 // ***
 
-const reducer = shapedReducer(featureName, combineReducers({
+// NOTE: managedExpansion() is used NOT for app injection,
+//       but RATHER to delay expansion (avoiding circular dependancies
+//       in selector access from signInFormMeta.js)
+const reducer = shapedReducer(featureName, managedExpansion( () => combineReducers({
 
   user: combineReducers({
 
@@ -45,7 +49,7 @@ const reducer = shapedReducer(featureName, combineReducers({
 
   // inject the standard SignIn form-based reducer
   signInForm: signInFormMeta.registrar.formReducer(),
-}) );
+}) ) );
 
 export default reducer;
 
@@ -70,4 +74,4 @@ export const getUserName               = (appState) => gfs(appState).user.name;
 export const getUserEmail              = (appState) => gfs(appState).user.email;
 export const getUserPool               = (appState) => gfs(appState).user.pool;
 
-export const getUserSignInForm         = (appState) => gfs(appState).user.signInForm;
+export const getUserSignInForm         = (appState) => gfs(appState).signInForm;
