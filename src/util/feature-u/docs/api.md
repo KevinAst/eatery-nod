@@ -55,6 +55,36 @@ Mark the supplied function as a "callback injected with featurecontext", distin
 
 <br/><br/><br/>
 
+<a id="delayExpansion"></a>
+
+<h5 style="margin: 10px 0px; border-width: 5px 0px; padding: 5px; border-style: solid;">
+  delayExpansion(delayCallback) ⇒ function</h5>
+?? BETTER WORDSAlias to `injectContext()` (to show intent), that doesn't needcontext, rather merely delays expansion of an asset, typically toavoid circular import dependencies.The callback function should conform to the following signature:```jsdelayCallback(): feature-aspect```Example (reducer):```js  export default delayExpansion( () => combineReducers({...reducer...} ) );```SideBar: For reducer aspects, when BOTH shapedReducer() and         delayExpansion() are used, shapedReducer() should be         adorned in the outer function passed to createFunction().Example (logic):```js  export const startAppAuthProcess = delayExpansion( () => createLogic({    ...logic...  }));```Please refer to the feature-u `delayExpansion()` documentation for more detail.
+
+
+| Param | Type | Description |
+| --- | --- | --- |
+| delayCallback | function | the callback function to be invoked by feature-u, returning the appropriate feature aspect. |
+
+**Returns**: function - the supplied delayCallback, marked appropriatly.  
+
+<br/><br/><br/>
+
+<a id="managedExpansion"></a>
+
+<h5 style="margin: 10px 0px; border-width: 5px 0px; padding: 5px; border-style: solid;">
+  managedExpansion(contextCB) ⇒ [`contextFnCB`](#contextFnCB)</h5>
+Mark the supplied contextCB as a "managed expansion callback",distinguishing it from other functions (such as reducer functions).Managed Expansion Callbacks (i.e. contextCB) are merely functionsthat when invoked, return a featureAspect (ex: reducer, logicmodule, etc.).  In feature-u, you may communicate yourfeatureAspects directly, or through a contextCB.  The latter 1:supports cross-feature communication (through app objectinjection), and 2: minimizes circular dependancy issues (of ES6modules).  Please see the full User Guide for more details on thistopic.??? more specifics in User Guide:In feature-u, you may communicate your featureAspects directly, orthrough a contextCB.  There are two reasons you would use the latter: 1. cross-feature communication (i.e. app object injection)    There are cases where a given featureAspect needs resources    from other features.  This is accomplished through the app    object's promotion of the publicAPI for each feature.  This is    especially useful when the resource is needed during the    expansion of a featureAspect, because feature-u insures all    publicAPI's are resolved prior to other aspects (removing any    order dependency concerns). 2. minimizing circular dependancy issues (of ES6 modules)    There are cases where circular dependancies of ES6 modules are    unavoidable.  Depending on the specifics, this is not    universally bad design - rather one of packaging.    managedExpansion() aids in this process by delaying the    expansion of non-digestable resources until they are absolutely    needed.    As an example, reducers are typically packaged together with    selectors.  There are cases where a selector may be referenced    as part of the expansion of another resource, potentially    causing unresolved references in the expansion of the reducer    (say for example, action references).  This can be aleviated by    delaying the expansion of the reducer, till it is absolutely    needed (i.e. at redux configuration time, controled by    feature-u's runApp()).The contextCB function should conform to the following signature:```jscontextCB(feature, app): FeatureAspect```Example (reducer):```js  export default managedExpansion( (feature, app) => combineReducers({...reducer-code-using-app...} ) );```SideBar: For reducer aspects, when BOTH shapedReducer() and         managedExpansion() are used, shapedReducer() should be         adorned in the outer function passed to createFunction().Example (logic):```js  export const startAppAuthProcess = managedExpansion( (feature, app) => createLogic({    ...logic-code-using-app...  }));```Please refer to the feature-u `managedExpansion()` documentation for more detail.
+
+
+| Param | Type | Description |
+| --- | --- | --- |
+| contextCB | [`contextFnCB`](#contextFnCB) | the callback function that when invoked (by feature-u) expands/returns the desired featureAspect. |
+
+**Returns**: [`contextFnCB`](#contextFnCB) - the supplied contextCB, marked as a "managedexpansion callback".  
+
+<br/><br/><br/>
+
 <a id="createRoute"></a>
 
 <h5 style="margin: 10px 0px; border-width: 5px 0px; padding: 5px; border-style: solid;">
@@ -84,3 +114,18 @@ Launch an app by assembling/configuring the supplied app features.The runApp()
 | api | API | an app-specific API object (to be injected into the redux middleware). |
 
 **Returns**: App - an app object which used in featurecross-communication (as follows):```js {   ?? document }```  
+
+<br/><br/><br/>
+
+<a id="contextFnCB"></a>
+
+<h5 style="margin: 10px 0px; border-width: 5px 0px; padding: 5px; border-style: solid;">
+  contextFnCB ⇒ featureAspect</h5>
+A "managed expansion callback" that when invoked (by feature-u)expands/returns the desired featureAspect.
+
+
+| Param | Type | Description |
+| --- | --- | --- |
+| app | App | The feature-u app object, promoting the publicAPI of each feature. |
+
+**Returns**: featureAspect - The desired featureAspect (ex: reducer,logic module, etc.).  
