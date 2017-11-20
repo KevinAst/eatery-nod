@@ -27,19 +27,19 @@ const reducer = shapedReducer(featureName, managedExpansion( () => combineReduce
       [actions.signOut]:                   (state, action) => 'signedOut',
     }, 'signedOut'), // initialState
 
-    // user.name: string (from firebase DB userProfile)
+    // user.name: string (what UI calls this user you - from firebase DB userProfile ... null profile read)
     name: reducerHash({
       [actions.userProfileChanged]:  (state, action) => action.userProfile.name,
-      [actions.signOut]:          (state, action) => null,
+      [actions.signOut]:             (state, action) => null,
     }, null), // initialState
 
-    // user.email: string (from signed-in firebase user)
+    // user.email: string (user's email sign-in credentials - from firebase user)
     email: reducerHash({
       [actions.signIn.complete]: (state, action) => action.user.email,
       [actions.signOut]:         (state, action) => null,
     }, null), // initialState
 
-    // user.pool: string (from firebase DB userProfile)
+    // user.pool: string (eatery pool identifier - from firebase DB userProfile ... null profile read)
     pool: reducerHash({
       [actions.userProfileChanged]: (state, action) => action.userProfile.pool,
       [actions.signOut]:            (state, action) => null,
@@ -47,8 +47,9 @@ const reducer = shapedReducer(featureName, managedExpansion( () => combineReduce
 
   }),
 
-  // inject the standard SignIn form-based reducer
+  // SignIn iForm's reducer ... null indicates form is inactive
   signInForm: signInFormMeta.registrar.formReducer(),
+
 }) ) );
 
 export default reducer;

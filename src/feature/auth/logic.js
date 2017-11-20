@@ -117,12 +117,12 @@ export const signIn = createLogic({
               if (!invalidCredentials) {
                 toast.error({  // ... will auto close -OR- when "details" is clicked
                   msg:     unexpectedMsg,
-                               actions: [
-                                 { txt:    'detail',
-                                   action: () => {
-                                     alert.error({ msg: ''+err });
-                                   }},
-                               ]
+                  actions: [
+                    { txt:    'detail',
+                      action: () => {
+                        alert.error({ msg: ''+err });
+                      }},
+                  ]
                 });
               }
 
@@ -132,47 +132,6 @@ export const signIn = createLogic({
 
               done();
             });
-  },
-
-});
-
-
-/**
- * SignOut logic.
- */
-export const signOut = createLogic({
-
-  name: `${featureName}.signOut`,
-  type: String(actions.signOut),
-
-  process({getState, action, api}, dispatch, done) {
-    firebase.auth().signOut()
-            .catch( (err) => {
-              // simply report unexpected error to user
-              toast.error({  // ... will auto close -OR- when "details" is clicked
-                msg:     'A problem was encountered trying to signOut of firebase.',
-                             actions: [
-                               { txt:    'detail',
-                                 action: () => {
-                                   alert.error({ msg: ''+err });
-                                 }},
-                             ]
-              });
-            });
-    api.device.removeCredentials()
-       .catch( (err) => {
-         // simply report unexpected error to user
-         toast.error({  // ... will auto close -OR- when "details" is clicked
-           msg:     'A problem was encountered trying to remove your credentials from the device.',
-                        actions: [
-                          { txt:    'detail',
-                            action: () => {
-                              alert.error({ msg: ''+err });
-                            }},
-                        ]
-         });
-       });
-    done();
   },
 
 });
@@ -292,6 +251,47 @@ export const resendEmailVerification = createLogic({
 });
 
 
+/**
+ * SignOut logic.
+ */
+export const signOut = createLogic({
+
+  name: `${featureName}.signOut`,
+  type: String(actions.signOut),
+
+  process({getState, action, api}, dispatch, done) {
+    firebase.auth().signOut()
+            .catch( (err) => {
+              // simply report unexpected error to user
+              toast.error({  // ... will auto close -OR- when "details" is clicked
+                msg:     'A problem was encountered trying to signOut of firebase.',
+                actions: [
+                  { txt:    'detail',
+                    action: () => {
+                      alert.error({ msg: ''+err });
+                    }},
+                ]
+              });
+            });
+    api.device.removeCredentials()
+       .catch( (err) => {
+         // simply report unexpected error to user
+         toast.error({  // ... will auto close -OR- when "details" is clicked
+           msg:     'A problem was encountered trying to remove your credentials from the device.',
+           actions: [
+             { txt:    'detail',
+               action: () => {
+                 alert.error({ msg: ''+err });
+               }},
+           ]
+         });
+       });
+    done();
+  },
+
+});
+
+
 
 // promote all logic modules for this feature
 // ... NOTE: individual logic modules are unit tested using the named exports.
@@ -309,9 +309,8 @@ export default [
   supplementSignInComplete,
   signInCleanup,
 
-  signOut,
-
   checkEmailVerified,
   resendEmailVerification,
 
+  signOut,
 ];
