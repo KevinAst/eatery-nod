@@ -1,0 +1,105 @@
+********************************************************************************
+* State Transition
+********************************************************************************
+
+This document highlights how actions, logic, and reducers interact
+together to maintain this feature's state (a text document is used to
+accommodate the wide free-format content).
+
+
+Actions (see: actions.js)                        Logic (see: logic.js)                                          Reducer (see: state.js)
+==============================================   ============================================================   ===============================
+
+??? sample template: ????????????????????????????????????????????????????????????????????????????????
+auth                                             
+  .bootstrap() ...............................   ............................................................   - NONE
+                                                 checkDeviceCredentials:
+                                                 ======================
+                                                   async: api.device.fetchCredentials() via localStorage() 
+                                                          - YES: DISPATCH .haveDeviceCredentials(encodedCredentials)  
+                                                          - NO:  DISPATCH .noDeviceCredentials()           
+                                                          - ERR: DISPATCH .fail(err)                       
+
+??? retrofit this: ????????????????????????????????????????????????????????????????????????????????
+
+                                                     > logic/eateries.js
+eateries
+
+  .dbPool
+                                                      postProcessDbPool:
+    .changed(eateries)                                  - dispatch eateries.applyFilter()                        - retain appState.eateries.dbPool (from action.eateries)
+ 
+    .add(eateryId)                                    addToPoolPrep:                                            - NO NEED TO DO ANYTHING, due to Firebase real-time notifications
+                                                        - issue discoveryAPI.getEateryDetail(eateryId)            ... we attempted to retain appState.eateries.dbPool[eateryId] with temporary entry
+                                                            work: dispatch .eateryDetail(eatery)                      in an attempt to makt "discovery check box" faster (but IT DIDN'T HELP)
+                                                            fail: dispatch .eateryDetail.fail(eateryId, err)          ... src/appState/dbPool.js
+                                                                                                                          // temporal entry DONE STICTLY to show up faster in "discovery check box"
+                                                                                                                          // ... will be followed up by real entry (from Firebase real-time notifications)
+                                                                                                                          [actions.eateries.dbPool.add]: (state, action) => ( {...state, [action.eateryId]: tempEatery(action.eateryId)} ),
+                                                                                                                          ...
+                                                                                                                          const tempMsg = 'temporary entry (waiting for Firebase)';
+                                                                                                                          const tempEatery = (id) => ({
+                                                                                                                            id,
+                                                                                                                            name:    tempMsg,
+                                                                                                                            phone:   tempMsg,
+                                                                                                                            loc:     {lat:1, lng:1},
+                                                                                                                            addr:    tempMsg,
+                                                                                                                            navUrl:  tempMsg,
+                                                                                                                            website: tempMsg,
+                                                                                                                          });
+ 
+      .eateryDetail(eatery)                           addToPool:                                                - NO NEED TO DO ANYTHING, due to Firebase real-time notifications
+                                                        - issue firebase set
+ 
+        .fail(eateryId, err)                          NOTE: auto reported to user via logic:
+                                                            diag.communicateUnexpectedErrors
+                                                            MONITORING ALL .fail actions
+ 
+ 
+    .remove(eateryId)                                 removeFromPool:                                           - NO NEED TO DO ANYTHING, due to Firebase real-time notifications
+                                                                                                                  ... we tried deleting appState.eateries.dbPool[eateryId] of temporary entry
+                                                        - issue firebase set(null)                                    in an attempt to makt "discovery check box" faster (but IT DIDN'T HELP)
+ 
+ 
+  .applyFilter([filter])                              applyFilter (transform):                                   - retain appState.eateries.listView.entries (from action.entries)
+                                                        - supplementing optional action.filter                   - retain appState.eateries.listView.filter  (from action.filter)
+                                                        - apply filter/sort
+                                                        - supplement action.entries
+ 
+    > iForm logic (auto-generated)                > iForm logic (auto-generated)                                 > iForm logic (auto-generated)
+    .open([domain] [,formMsg])                    
+    .fieldChanged(fieldName, value)               
+    .fieldTouched(fieldName)                      
+    .process(values, domain)                      
+                                                      processFilter:
+                                                        dispatch .applyFilter(action.domain ... i.e. filter)
+                                                        dispatch view.change('eatery')
+                                                        dispatch eatery.applyFilter.close()
+      .reject(msgs)
+    .close()
+ 
+ 
+  .viewDetail(eateryId)                                                                                          - retain appState.eateries.detailView (from action.eateryId)
+    .close()                                                                                                     - retain appState.eateries.detailView = null
+ 
+ 
+  .spin                                               spin:
+                                                        transform():                                             - retain appState.eateries.spin (from action.spinMsg)
+                                                          supplement action.spinMsg
+                                                        process():
+                                                          timeout (x secs)
+                                                            dispatch actions.eateries.spin.complete(eateryId)
+ 
+    .complete(eateryId)                               spinComplete:                                              - retain appState.eateries.spin = null
+                                                        dispatch actions.eateries.viewDetail(eateryId)
+
+
+
+** cross-feature-communication: **
+app.auth.actions
+  .userProfileChanged(userProfile({name,pool})) ...............................................................  - NONE
+                                                    > logic/eateries.js
+                                                        monitorDbPool:
+                                                          monitor firebase DB pool changes (via firebase .database().ref(...pool).on
+                                                          DISPATCH eateries.changed(eateries[]) ?? TODO (DB Monitor tested via logs)
+

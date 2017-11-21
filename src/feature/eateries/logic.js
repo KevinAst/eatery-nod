@@ -72,13 +72,14 @@ export const monitorDbPool = managedExpansion( (feature, app) => createLogic({
 
       // broadcast notification of new eateries
       // console.log(`xx logic eateries.monitorDbPool: eateries changed for pool '${curDbPoolMonitor.pool}': `, eateries);
-      dispatch( actions.dbPool.changed(eateries) );
+      dispatch( actions.dbPool.changed(eateries) ); // ?? I think this can be eliminated by reselect of filtered entries
     });
   },
 
 }) );
 
 
+// ?? I think this can be eliminated by reselect of filtered entries
 export const postProcessDbPool = createLogic({
 
   name: `${featureName}.postProcessDbPool`,
@@ -152,6 +153,7 @@ export const processFilter = createLogic({
 });
 
 
+// ?? I think this can be eliminated by reselect of filtered entries
 export const applyFilter = createLogic({
 
   name: `${featureName}.applyFilter`,
