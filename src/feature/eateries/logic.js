@@ -3,16 +3,9 @@ import firebase             from 'firebase';
 import geodist              from 'geodist';
 import eateryFilterFormMeta from './eateryFilterFormMeta';
 import featureName          from './featureName';
+import * as sel             from './state';
 import actions              from './actions';
 import {managedExpansion}   from '../../util/feature-u';
-
-
-// ?? trash comment
-// DONE: inject our featureName
-// DONE: CHANGE actions.eateries actions
-// DONE: appState. MARK needing selector
-// DONE: getState() MARK needing selector
-// DONE: should be MINIMAL eateries
 
 /**
  * Monitor our persistent data changes associated to a given pool.
@@ -27,7 +20,6 @@ let curDbPoolMonitor = { // existing "pool" monitor (if any)
 export const monitorDbPool = managedExpansion( (feature, app) => createLogic({
 
   name:        `${featureName}.monitorDbPool`,
-               // ??$$ DONE: now from managedExpansion ... WAS: actions.profile.changed
   type:        String(app.auth.actions.userProfileChanged), // NOTE: action contains: action.userProfile.pool
   warnTimeout: 0, // long-running logic
 
@@ -64,7 +56,7 @@ export const monitorDbPool = managedExpansion( (feature, app) => createLogic({
       const eateries = snapshot.val();
 
       // supplement eateries with distance from device (as the crow flies)
-      const deviceLoc = getState().device.loc; // ?? need selector FROM app.startup publicAPI
+      const deviceLoc = app.startup.selectors.getDeviceLoc(getState());
       for (const eateryId in eateries) {
         const eatery = eateries[eateryId];
         eatery.distance = geodist([eatery.loc.lat, eatery.loc.lng], [deviceLoc.lat, deviceLoc.lng]);
@@ -106,7 +98,7 @@ export const defaultFilter = createLogic({
 
   transform({getState, action, api}, next) {
     if (!action.domain) {
-      action.domain = getState().eateries.listView.filter; // ?? need selector
+      action.domain = sel.getListViewFilter(getState());
     }
     next(action);
   },
@@ -165,11 +157,11 @@ export const applyFilter = createLogic({
 
     // supplement action filter (when not supplied is taken from state)
     // ... allows us to store latest filter in state
-    const filter  = action.filter || appState.eateries.listView.filter; // ?? need selector
+    const filter  = action.filter || sel.getListViewFilter(appState);
     action.filter = filter;
 
     // apply our filter (either supplied or from state)
-    const dbPool  = appState.eateries.dbPool; // ?? need selector
+    const dbPool  = sel.getDbPool(appState);
     const entries = Object.values(dbPool)
                           .filter(entry => { // filter entries
                             // apply distance (when supplied in filter)
@@ -202,7 +194,7 @@ export const spin = createLogic({
   transform({getState, action, api}, next, reject) {
 
     const appState = getState();
-    const entries  = appState.eateries.listView.entries; // ?? need selector
+    const entries  = sel.getListViewEntries(appState);
 
     // supplement action with spinMsg
     action.spinMsg = `... selecting your eatery from ${entries.length} entries!`;
@@ -214,7 +206,7 @@ export const spin = createLogic({
     setTimeout( () => {
 
       const appState = getState();
-      const entries  = appState.eateries.listView.entries; // ?? need selector
+      const entries  = sel.getListViewEntries(appState);
 
       // algorighm from MDN ... https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math/random
       const min      = Math.ceil(0);                // min is inclusive (in usage below)
@@ -275,7 +267,7 @@ export const addToPool = createLogic({
   transform({getState, action, api}, next, reject) {
 
     const appState = getState();
-    const pool     = appState.auth.user.pool; // ?? need selector
+    const pool     = app.auth.sel.getUserPool(appState);
 
     // console.log(`xx adding eatery: /pools/${pool}/${action.eatery.id}`);
     const dbRef = firebase.database().ref(`/pools/${pool}/${action.eatery.id}`);
@@ -295,7 +287,7 @@ export const removeFromPool = createLogic({
   transform({getState, action, api}, next, reject) {
 
     const appState = getState();
-    const pool     = appState.auth.user.pool; // ?? need selector
+    const pool     = app.auth.sel.getUserPool(appState);
 
     // console.log(`xx removing eatery: /pools/${pool}/${action.eateryId}`);
     const dbRef = firebase.database().ref(`/pools/${pool}/${action.eateryId}`);

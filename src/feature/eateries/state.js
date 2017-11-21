@@ -13,35 +13,40 @@ import actions               from './actions';
 // NOTE: managedExpansion() is used NOT for app injection,
 //       but RATHER to delay expansion (avoiding circular dependancies
 //       in selector access from eateryFilterFormMeta.js)
-// ?? once selectors are in place ... change shape to: `view.${featureName}`
-const reducer = shapedReducer(featureName, managedExpansion( () => combineReducers({
+const reducer = shapedReducer(`view.${featureName}`, managedExpansion( () => combineReducers({
 
+  // raw eatery entries synced from firebase realtime DB
   dbPool: reducerHash({
     [actions.dbPool.changed]: (state, action) => action.eateries,
   }, null), // initialState
 
   listView: combineReducers({
 
-    filterForm: eateryFilterFormMeta.registrar.formReducer(), // standard iForm reducer for our EateryFilterForm
+    // standard iForm for our EateryFilterForm
+    filterForm: eateryFilterFormMeta.registrar.formReducer(),
 
-    filter: reducerHash({ // filter applied to visual listView
+    // filter used in visualizing listView
+    filter: reducerHash({
       [actions.applyFilter]: (state, action) => action.filter,
     }, { // initialState
       distance: null,    // distance in miles (default: null - for any distance)
-         sortOrder: 'name', // sortOrder: 'name'/'distance'
+      sortOrder: 'name', // sortOrder: 'name'/'distance'
     }),
 
-    entries: reducerHash({ // filtered entries displayed in visual listView
+    // filtered entries displayed in visual listView
+    entries: reducerHash({
       [actions.applyFilter]: (state, action) => action.entries,
     }, null), // initialState
 
   }),
 
+  // detailView: eateryId ... id of eatery to "display details for" (null for none)
   detailView: reducerHash({
     [actions.viewDetail]:       (state, action) => action.eateryId,
     [actions.viewDetail.close]: (state, action) => null,
   }, null), // initialState
 
+  // spin: string ... msg to display when spin operation is in place, null for spin NOT in place
   spin: reducerHash({
     [actions.spin]:          (state, action) => action.spinMsg,
     [actions.spin.complete]: (state, action) => null,
@@ -56,20 +61,22 @@ export default reducer;
 // *** Various Selectors
 // ***
 
-                                     /** Our feature state root (via shapedReducer as a single-source-of-truth) */
-const getFeatureState              = (appState) => reducer.getShapedState(appState);
-const gfs = getFeatureState;         // ... concise alias (used internally)
+                                   /** Our feature state root (via shapedReducer as a single-source-of-truth) */
+const getFeatureState            = (appState) => reducer.getShapedState(appState);
+const gfs = getFeatureState;       // ... concise alias (used internally)
 
-// ?? TRASH TEMPLATE
-//? export const getUserStatus             = (appState) => gfs(appState).user.status;
-//? export const isUserUnverifiedSignedIn  = (appState) => getUserStatus(appState) === 'signedInUnverified';
-//? export const isUserSignedIn            = (appState) => getUserStatus(appState) === 'signedIn';
-//? export const isUserSignedOut           = (appState) => getUserStatus(appState) === 'signedOut';
-//? 
-//? export const isSignInFormActive        = (appState) => gfs(appState).signInForm ? true : false;
-//? 
-//? export const getUserName               = (appState) => gfs(appState).user.name;
-//? export const getUserEmail              = (appState) => gfs(appState).user.email;
-//? export const getUserPool               = (appState) => gfs(appState).user.pool;
-//? 
-//? export const getUserSignInForm         = (appState) => gfs(appState).signInForm;
+export const getDbPool           = (appState) => gfs(appState).dbPool;
+
+export const isFormFilterActive  = (appState) => gfs(appState).listView.filterForm ? true : false;
+export const getFormFilter       = (appState) => gfs(appState).listView.filterForm;
+
+export const getListViewFilter   = (appState) => gfs(appState).listView.filter;
+
+export const getListViewEntries  = (appState) => gfs(appState).listView.entries;
+
+export const getSelectedEatery   = (appState) => {
+  const  selectedEateryId = gfs(appState).detailView;
+  return selectedEateryId ? gfs(appState).dbPool[selectedEateryId] : null;
+};
+
+export const getSpinMsg          = (appState) => gfs(appState).spin;

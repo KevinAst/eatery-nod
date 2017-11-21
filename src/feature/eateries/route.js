@@ -1,5 +1,5 @@
 import React               from 'react';
-//import * as sel            from './state'; // ?? L8TR
+import * as sel            from './state';
 import {createRoute}       from '../../util/feature-u';
 import featureName         from './featureName';
 import EateriesListScreen  from './comp/EateriesListScreen';
@@ -13,20 +13,14 @@ import SplashScreen        from '../../util/comp/SplashScreen';
 
 export default createRoute({
 
-  // ?? mark items needing selector
-
-  priorityContent(app, appState) {
+  content(app, appState) {
 
     // display EateryFilterScreen, when form is active (accomplished by our logic)
     // ... this is done as a priority route, because this screen can be used to
     //     actually change the view - so we display it regarless of the state of the active view
-    if (appState.eateries.listView.filterForm) { // ?? need selector
+    if (sel.isFormFilterActive(appState)) {
       return <EateryFilterScreen/>;
     }
-
-  },
-
-  content(app, appState) {
 
     // allow other down-stream features to route, when the active view is NOT ours
     if (app.view.sel.getView(appState) !== featureName) {
@@ -38,14 +32,15 @@ export default createRoute({
     // ***
 
     // display anotated SplashScreen, when the spin operation is active
-    if (appState.eateries.spin) { // ?? need selector
-      return <SplashScreen msg={appState.eateries.spin}/>;
+    const spinMsg = sel.getSpinMsg(appState);
+    if (spinMsg) {
+      return <SplashScreen msg={spinMsg}/>;
     }
 
-    // display our detailed view, when it is active
-    if (appState.eateries.detailView) { // ?? need selector
-      const eatery = appState.eateries.dbPool[appState.eateries.detailView];
-      return <EateryDetailScreen eatery={eatery}/>;
+    // display an eatery detail, when one is selected
+    const selectedEatery = sel.getSelectedEatery(appState);
+    if (selectedEatery) {
+      return <EateryDetailScreen eatery={selectedEatery}/>;
     }
 
     // fallback: display our EateriesListScreen

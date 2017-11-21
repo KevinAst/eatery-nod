@@ -1,7 +1,7 @@
 import Yup        from 'yup';
 import IFormMeta  from '../../util/iForms/IFormMeta';
 import actions    from './actions';
-//import * as sel   from './state'; // ?? L8TR
+import * as sel   from './state';
 
 const distanceMsg  = 'Miles should be a positive number (when supplied)';
 const sortOrderMsg = "Sort order should be either 'name' or 'distance'";
@@ -16,5 +16,5 @@ export default IFormMeta({
 
   }),
   formActionsAccessor: ()         => actions.applyFilter,
-  formStateSelector:   (appState) => appState.eateries.listView.filterForm, // ?? need selector
+  formStateSelector:   (appState) => sel.getFormFilter(appState),
 });

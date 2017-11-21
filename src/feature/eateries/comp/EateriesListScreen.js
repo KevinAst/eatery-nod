@@ -18,7 +18,8 @@ import {Body,
 import SplashScreen  from '../../../util/comp/SplashScreen';
 import commonStyles  from '../../commonStyles';
 import actions       from '../actions';
-import {openSideBar} from '../../leftNav/comp/SideBar';
+import * as sel      from '../state';
+import app           from '../../../app';
 
 /**
  * EateriesListScreen displaying a set of eateries (possibly filtered).
@@ -71,7 +72,7 @@ function EateriesListScreen({entries, dbPool, filter, showDetail, handleSpin}) {
     <Container style={commonStyles.container}>
       <Header>
         <Left>
-          <Button transparent onPress={openSideBar}>
+          <Button transparent onPress={app.leftNav.api.open}>
             <Icon name="menu"/>
           </Button>
         </Left>
@@ -103,9 +104,9 @@ function EateriesListScreen({entries, dbPool, filter, showDetail, handleSpin}) {
 export default connectRedux(EateriesListScreen, {
   mapStateToProps(appState) {
     return {
-      entries:  appState.eateries.listView.entries, // ?? apply selectors
-      dbPool:   appState.eateries.dbPool,           // ?? apply selectors
-      filter:   appState.eateries.listView.filter,  // ?? apply selectors
+      entries:  sel.getListViewEntries(appState),
+      dbPool:   sel.getDbPool(appState),
+      filter:   sel.getListViewFilter(appState),
     };
   },
   mapDispatchToProps(dispatch) {
