@@ -56,7 +56,7 @@ export const monitorDbPool = managedExpansion( (feature, app) => createLogic({
       const eateries = snapshot.val();
 
       // supplement eateries with distance from device (as the crow flies)
-      const deviceLoc = app.startup.selectors.getDeviceLoc(getState());
+      const deviceLoc = app.startup.sel.getDeviceLoc(getState());
       for (const eateryId in eateries) {
         const eatery = eateries[eateryId];
         eatery.distance = geodist([eatery.loc.lat, eatery.loc.lng], [deviceLoc.lat, deviceLoc.lng]);

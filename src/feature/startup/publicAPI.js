@@ -6,7 +6,7 @@ import {areFontsLoaded,
  * The public API promoted by this feature through: app.startup...
  */
 export default {
-  selectors: {
+  sel: {
     areFontsLoaded,
     isDeviceReady,
     getDeviceLoc,
