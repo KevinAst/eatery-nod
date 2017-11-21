@@ -59,10 +59,9 @@ export default reducer;
 // *** Various Selectors
 // ***
 
-// our standard selector accessing the root of our feature state
-// ... uses single-source-of-truth from our shapedReducer
-// ... WITH convenient gfs alias
-const getFeatureState = gfs            = (appState) => reducer.getShapedState(appState);
+                                         /** Our feature state root (via shapedReducer as a single-source-of-truth) */
+const getFeatureState                  = (appState) => reducer.getShapedState(appState);
+const gfs = getFeatureState;             // ... concise alias (used internally)
 
 export const getUserStatus             = (appState) => gfs(appState).user.status;
 export const isUserUnverifiedSignedIn  = (appState) => getUserStatus(appState) === 'signedInUnverified';
