@@ -22,7 +22,9 @@ const defaultCB = () => null;
  *
  * One or two routeCBs can be registered, one with priority and one
  * without.  The priority routeCBs are given precedence across all
- * registered routes before the non-priority routeCBs are invoked.
+ * registered routes before the non-priority routeCBs are invoked, and
+ * are useful in some cases to minimize the feature registration
+ * order.
  *
  * @param {routeCB} [namedArgs.content] the non-priority route routeCB (if any)
  * ... see: desc above.
