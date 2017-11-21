@@ -13,7 +13,7 @@ import publicAPI        from './publicAPI';
  *  2. get the currentView ... `app.view.sel.getView(appState)`
  * 
  * It is up to the various view-specific features to set/interpret.  A
- * "best practice" would be to maintain the currentView value
+ * **best practice** would be to maintain the currentView value
  * (`viewName`) using the active feature name.
  *
  * **State Transition**
