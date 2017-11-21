@@ -1,14 +1,13 @@
 import {combineReducers}  from 'redux';
 import {reducerHash}      from 'astx-redux-util';
-import feature            from '.';
+import {shapedReducer}    from '../../util/feature-u';
 import actions            from './actions';
 import isString           from 'lodash.isstring';
 
 // ***
 // *** Our feature reducer, managing state for our device.
 // ***
-
-export default combineReducers({
+const reducer = shapedReducer('device', combineReducers({
 
   status: reducerHash({ // string: 'Waiting for bla bla bla' -or- 'READY'
     [actions.statusUpdate]: (state, action) => action.statusMsg,
@@ -23,16 +22,18 @@ export default combineReducers({
     [actions.locateDevice.complete]: (state, action) => action.loc,
   }, null), // initialState
 
-});
+}) );
+
+export default reducer;
 
 
 // ***
 // *** Various Selectors
 // ***
 
-                                     /** Our standard selector accessing the root of our feature state */
-export const getFeatureState       = (appState) => feature.reducer.getShapedState(appState); // uses single-source-of-truth from our feature object
-const  gfs = getFeatureState;        // ... convenient alias (used internally)
+                                     /** Our feature state root (via shapedReducer as a single-source-of-truth) */
+const getFeatureState              = (appState) => reducer.getShapedState(appState);
+const gfs = getFeatureState;         // ... concise alias (used internally)
 
 
                                      /** Is device ready to run app (based on it's status): boolean */

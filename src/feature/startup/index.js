@@ -1,5 +1,4 @@
-import {createFeature,
-        shapedReducer}  from '../../util/feature-u';
+import {createFeature}  from '../../util/feature-u';
 import name             from './featureName';
 import reducer          from './state';
 import publicAPI        from './publicAPI';
@@ -20,7 +19,7 @@ import appDidStart      from './appDidStart';
  */
 export default createFeature({
   name,
-  reducer:  shapedReducer('device', reducer),
+  reducer,
 
   publicAPI,
 
