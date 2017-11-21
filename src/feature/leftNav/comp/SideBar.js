@@ -14,27 +14,27 @@ import {Body,
         Title}      from 'native-base';
 import app          from '../../../app';
 import commonStyles from '../../commonStyles';
-import {notify, 
+import {notify,     // ?? used in Sandbox (remove when pulled out in isolated feature)
         toast,
         alert,
         confirm}    from '../../../util/notify';
 
-// TODO: ?? RETROFIT: ALL props, actions, state, MUST be retrofitted to use use app.{feature} .selector.xxx -and- .actions.xxx
-
 /**
- * SideBar: our left-nav SideBar, exposed through the Drawer.
+ * SideBar: our leftNav component, exposed through the Drawer.
  */
-// ?? RETROFIT: props here (see note above)
-function SideBar({deviceReady, changeView, handleFilterDiscovery, handleFilterEatery, handleSignOut}) {
+function SideBar({deviceReady, changeView, handleFilterEatery, handleFilterDiscovery, handleSignOut}) {
 
-  if (!deviceReady) { // ... render placebo, until system fonts have been loaded
+  // when device is NOT ready, render a placebo
+  // ... ex: system fonts must be loaded
+  if (!deviceReady) {
     return (
       <Text style={commonStyles.container}>
-        Device NOT ready (waiting for fonts to load)
+        Device NOT ready (i.e. waiting for fonts to load)
       </Text>
     );
   }
-  
+
+  // normal render
   return (
     <Container style={{...commonStyles.container, backgroundColor:'white'}}>
       <Header>
@@ -257,22 +257,21 @@ export default connectRedux(SideBar, {
   mapStateToProps(appState) {
     return {
       deviceReady: app.startup.selectors.isDeviceReady(appState),
-      // ?? RETROFIT: appState/actions (see note above)
     };
   },
   mapDispatchToProps(dispatch) {
     return {
-      // ?? RETROFIT: appState/actions (see note above)
-      // ? changeView(view) {
-      // ?   dispatch( actions.view.change(view) );
-      // ?   closeSideBar();
-      // ? },
+      changeView(viewName) {
+        dispatch( app.view.actions.changeView(viewName) );
+        closeSideBar();
+      },
+      handleFilterEatery() {
+        dispatch( app.eateries.actions.openFilterDialog() );
+        closeSideBar();
+      },
+      // ?? RETROFIT: appState/actions
       // ? handleFilterDiscovery() {
       // ?   dispatch( actions.discovery.filter.open() );
-      // ?   closeSideBar();
-      // ? },
-      // ? handleFilterEatery() {
-      // ?   dispatch( actions.eateries.applyFilter.open() );
       // ?   closeSideBar();
       // ? },
       // ? handleSignOut() {

@@ -122,7 +122,7 @@ export const processFilter = createLogic({
   name: `${featureName}.processFilter`,
   type: String(actions.applyFilter.process),
   
-  process({getState, action, api}, dispatch, done) {
+  process({getState, action, app}, dispatch, done) {
 
     // console.log(`xx logic: eatery.processFilter, action is: `, action);
     //   action: {
@@ -142,7 +142,7 @@ export const processFilter = createLogic({
     dispatch( actions.applyFilter(filter) );
     
     // show our view view
-    // ? dispatch( actions.view.change(featureName) ); // ??$$ this is a seperate feature
+    dispatch( app.view.actions.changeView(featureName) );
 
     // close eatery form filter
     dispatch( actions.applyFilter.close() );
