@@ -13,7 +13,7 @@ import SplashScreen        from '../../util/comp/SplashScreen';
 
 export default createRoute({
 
-  content(app, appState) {
+  priorityContent(app, appState) {
 
     // display EateryFilterScreen, when form is active (accomplished by our logic)
     // ... this is done as a priority route, because this screen can be used to
@@ -21,6 +21,9 @@ export default createRoute({
     if (sel.isFormFilterActive(appState)) {
       return <EateryFilterScreen/>;
     }
+  },
+
+  content(app, appState) {
 
     // allow other down-stream features to route, when the active view is NOT ours
     if (app.view.sel.getView(appState) !== featureName) {
