@@ -5,6 +5,7 @@ import reducer          from './state';
 // import publicAPI     from './publicAPI'; // ?? L8TR: if needed
 import logic            from './logic';
 import route            from './route';
+import appDidStart      from './appDidStart';
 
 /**
  * The **'eateries'** feature ??? bla bla bla
@@ -26,4 +27,6 @@ export default createFeature({
 
   logic,
   route,
+
+  appDidStart,
 });

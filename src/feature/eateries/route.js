@@ -29,10 +29,9 @@ export default createRoute({
   content(app, appState) {
 
     // allow other down-stream features to route, when the active view is NOT ours
-    // ?? TEMPORARLY NO-OP ... this is coming from 'activeView' feature's public API
-    //? if (appState.view !== featureName) {
-    //?   return null;
-    //? }
+    if (app.view.sel.getView(appState) !== featureName) {
+      return null;
+    }
 
     // ***
     // *** at this point we know the active view is ours

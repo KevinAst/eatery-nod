@@ -13,6 +13,7 @@ import actions               from './actions';
 // NOTE: managedExpansion() is used NOT for app injection,
 //       but RATHER to delay expansion (avoiding circular dependancies
 //       in selector access from eateryFilterFormMeta.js)
+// ?? once selectors are in place ... change shape to: `view.${featureName}`
 const reducer = shapedReducer(featureName, managedExpansion( () => combineReducers({
 
   dbPool: reducerHash({
