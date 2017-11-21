@@ -436,8 +436,8 @@ export default createFeature({
 
   reducer,
   logic,
-  route: priorityContent({
-    content(app, appState) {
+  route: createRoute({
+    priorityContent(app, appState) {
       if (!isDeviceReady(appState)) {
         return <SplashScreen msg={getDeviceStatusMsg(appState)}/>;
       }
