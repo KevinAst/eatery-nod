@@ -80,27 +80,27 @@ class Router extends React.Component {
     //x   // ... this is our real app screens (after authorization)
     //x   case 'signedIn':
     //x 
-    //?     if (p.appState.discovery.filterForm) { // ... kinda unexpected: isolated from other Discovery feature (how would this work in "pods" concept?
-    //?       return <DiscoveryFilterScreen/>;
-    //?     }
-    //?     else if (p.appState.eateries.listView.filterForm) { // ... kinda unexpected: isolated from other Eatery feature (how would this work in "pods" concept?
-    //?       return <EateryFilterScreen/>;
-    //?     }
-    //?     else if (p.appState.view === 'eateries') {
-    //?       if (p.appState.eateries.spin) {
-    //?         return <SplashScreen msg={p.appState.eateries.spin}/>;
-    //?       }
-    //?       else if (p.appState.eateries.detailView) {
-    //?         const eatery = p.appState.eateries.dbPool[p.appState.eateries.detailView];
-    //?         return <EateryDetailScreen eatery={eatery}/>;
-    //?       }
-    //?       else {
-    //?         return <EateriesListScreen/>;
-    //?       }
-    //?     }
-    //?     else if (p.appState.view === 'discovery') {
-    //?       return <DiscoveryListScreen/>;
-    //?     }
+    //??    if (p.appState.discovery.filterForm) { // ... kinda unexpected: isolated from other Discovery feature (how would this work in "pods" concept?
+    //??      return <DiscoveryFilterScreen/>;
+    //??    }
+    //x     else if (p.appState.eateries.listView.filterForm) { // ... kinda unexpected: isolated from other Eatery feature (how would this work in "pods" concept?
+    //x       return <EateryFilterScreen/>;
+    //x     }
+    //x     else if (p.appState.view === 'eateries') {
+    //x       if (p.appState.eateries.spin) {
+    //x         return <SplashScreen msg={p.appState.eateries.spin}/>;
+    //x       }
+    //x       else if (p.appState.eateries.detailView) {
+    //x         const eatery = p.appState.eateries.dbPool[p.appState.eateries.detailView];
+    //x         return <EateryDetailScreen eatery={eatery}/>;
+    //x       }
+    //x       else {
+    //x         return <EateriesListScreen/>;
+    //x       }
+    //x     }
+    //??    else if (p.appState.view === 'discovery') {
+    //??      return <DiscoveryListScreen/>;
+    //??    }
     //x 
     //x   // user is: unauthorized (either explicit or status unknown)
     //x   case 'signedOut':
