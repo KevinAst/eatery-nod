@@ -72,7 +72,7 @@ function EateriesListScreen({entries, dbPool, filter, showDetail, handleSpin}) {
     <Container style={commonStyles.container}>
       <Header>
         <Left>
-          <Button transparent onPress={app.leftNav.api.open}>
+          <Button transparent onPress={app.leftNav.open}>
             <Icon name="menu"/>
           </Button>
         </Left>

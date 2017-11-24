@@ -5,8 +5,6 @@ import {openSideBar,
  * The public API promoted by this feature through: app.leftNav...
  */
 export default {
-  api: {
-    open:  openSideBar,  // open():  void ... open  the SideBar
-    close: closeSideBar, // close(): void ... close the SideBar // ??? this may NOT be needed
-  },
+  open:  openSideBar,  // open():  void ... open  the SideBar
+  close: closeSideBar, // close(): void ... close the SideBar // ??? this may NOT be needed
 };

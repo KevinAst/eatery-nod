@@ -46,7 +46,7 @@ function SplashScreen({msg, fontsLoaded}) {
         <Text>{msg}</Text>
         {/* ??? VERY TEMP */}
         <Button transparent
-                onPress={app.leftNav.api.open}>
+                onPress={app.leftNav.open}>
           <Text>TEMPORARY left-nav</Text>
         </Button>
 
