@@ -174,6 +174,7 @@ export const monitorStartupProgress = managedExpansion( (feature, app) => create
 /**
  * Start our authorization process when our device is ready.
  */
+// ?? change this to be authComplete
 export const startAppAuthProcess = managedExpansion( (feature, app) => createLogic({
 
   name: `${feature.name}.startAppAuthProcess`,

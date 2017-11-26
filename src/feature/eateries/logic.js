@@ -64,7 +64,7 @@ export const monitorDbPool = managedExpansion( (feature, app) => createLogic({
 
       // broadcast notification of new eateries
       // console.log(`xx logic eateries.monitorDbPool: eateries changed for pool '${curDbPoolMonitor.pool}': `, eateries);
-      dispatch( actions.dbPool.changed(eateries) ); // ?? I think this can be eliminated by reselect of filtered entries
+      dispatch( actions.dbPool.changed(eateries) );
     });
   },
 
