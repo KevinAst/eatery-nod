@@ -18,7 +18,7 @@ export const loadResources = managedExpansion( (feature, app) => createLogic({
   name: `${featureName}.loadResources`,
   type: String(actions.bootstrap),
   
-  process({getState, action, api}, dispatch, done) {
+  process({getState, action}, dispatch, done) {
     // start our app - by kicking off resource retrievals needed by our app
     dispatch( actions.loadFonts() );
     dispatch( actions.locateDevice() );
@@ -35,9 +35,9 @@ export const loadFonts = managedExpansion( (feature, app) => createLogic({
   name: `${featureName}.loadFonts`,
   type: String(actions.loadFonts),
   
-  process({getState, action, api}, dispatch, done) {
+  process({getState, action, app}, dispatch, done) {
     // asynchronously load our system resources
-    api.system.loadResources()
+    app.device.api.loadFonts()
        .then( () => {
          dispatch( actions.loadFonts.complete() );
          done();
@@ -60,7 +60,7 @@ export const locateDevice = managedExpansion( (feature, app) => createLogic({
   type: String(actions.locateDevice),
   warnTimeout: 0, // long-running logic (due to user interaction)
   
-  process({getState, action, api}, dispatch, done) {
+  process({getState, action}, dispatch, done) {
 
     // issue handler
     function handleIssue(msg, err=null) {
@@ -135,7 +135,7 @@ export const monitorInitProgress = managedExpansion( (feature, app) => createLog
   name: `${featureName}.monitorInitProgress`,
   type: /device.*.(complete|fail)/,
   
-  process({getState, action, api}, dispatch, done) {
+  process({getState, action}, dispatch, done) {
 
     const appState           = getState();
     const fontsLoaded        = areFontsLoaded(appState);
@@ -179,7 +179,7 @@ export const startAppAuthProcess = managedExpansion( (feature, app) => createLog
   name: `${featureName}.startAppAuthProcess`,
   type: String(actions.statusUpdate),
   
-  process({getState, action, api}, dispatch, done) {
+  process({getState, action, app}, dispatch, done) {
 
     // when our device is ready, kick off our authorization process
     if ( isDeviceReady(getState()) ) {

@@ -13,7 +13,7 @@ auth
   .bootstrap() ...............................   ............................................................   - NONE
                                                  checkDeviceCredentials:
                                                  ======================
-                                                   async: api.device.fetchCredentials() via localStorage() 
+                                                   async: app.device.api.fetchCredentials() via localStorage() 
                                                           - YES: DISPATCH .haveDeviceCredentials(encodedCredentials)  
                                                           - NO:  DISPATCH .noDeviceCredentials()           
                                                           - ERR: DISPATCH .fail(err)                       
@@ -37,7 +37,7 @@ auth
                                                  ======
                                                    async: firebase.auth()
                                                           .signInWithEmailAndPassword(email, pass)         
-                                                          - SUCCESS: api.device.storeCredentials(action.email, action.pass)
+                                                          - SUCCESS: app.device.api.storeCredentials(action.email, action.pass)
                                                                      DISPATCH .complete(user)              
                                                           - FAIL:    toast.error(msg)
                                                                      DISPATCH signIn.open(action, msg)
@@ -93,7 +93,7 @@ auth
                                                  =======
                                                    async: firebase.auth().signOut()                                       
                                                           - ERR: toast.error(msg)
-                                                   async: api.device.removeCredentials()
+                                                   async: app.device.api.removeCredentials()
                                                           - ERR: toast.error(msg)
 
   .userProfileChanged(userProfile) .........................................................................   - set user.name FROM action payload

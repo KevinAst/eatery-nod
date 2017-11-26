@@ -1,4 +1,22 @@
+import Expo from 'expo';
 import {AsyncStorage} from 'react-native';
+
+/**
+ * Load device fonts needed to run our app (NativeBase UI requirement)
+ */
+export function loadFonts() {
+
+  // L8TR: Expo.Font.loadAsync() docs are lacking, may return a promise that will eventually error
+  //       ... https://docs.expo.io/versions/v17.0.0/sdk/font.html#exponentfontloadasync
+  // L8TR: May need to wrap in our own promise ESPECIALLY at a point when multiple resources are needed.
+
+  // NativeBase UI needs these custom fonts
+  return Expo.Font.loadAsync({
+    'Roboto':        require('native-base/Fonts/Roboto.ttf'),
+    'Roboto_medium': require('native-base/Fonts/Roboto_medium.ttf'),
+  });
+}
+
 
 /**
  * Fetch credentials stored on local device (if any).

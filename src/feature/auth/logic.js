@@ -14,8 +14,8 @@ export const checkDeviceCredentials = createLogic({
   name: `${featureName}.checkDeviceCredentials`,
   type: String(actions.bootstrap),
 
-  process({getState, action, api}, dispatch, done) {
-    api.device.fetchCredentials()
+  process({getState, action, app}, dispatch, done) {
+    app.device.api.fetchCredentials()
        .then( (encodedCredentials) => {
          if (encodedCredentials) {
            dispatch( actions.bootstrap.haveDeviceCredentials(encodedCredentials) );
@@ -42,8 +42,8 @@ export const autoSignIn = createLogic({
   name: `${featureName}.autoSignIn`,
   type: String(actions.bootstrap.haveDeviceCredentials),
   
-  process({getState, action, api}, dispatch, done) {
-    const {email, pass} = api.device.decodeCredentials(action.encodedCredentials);
+  process({getState, action, app}, dispatch, done) {
+    const {email, pass} = app.device.api.decodeCredentials(action.encodedCredentials);
     dispatch( actions.signIn(email, pass) );
     done();
   },
@@ -62,7 +62,7 @@ export const manualSignIn = createLogic({
     String(actions.signOut),
   ],
 
-  process({getState, action, api}, dispatch, done) {
+  process({getState, action}, dispatch, done) {
     dispatch( actions.signIn.open() );
     done();
   },
@@ -78,7 +78,7 @@ export const processSignIn = createLogic({
   name: `${featureName}.processSignIn`,
   type: String(actions.signIn.process),
   
-  process({getState, action, api}, dispatch, done) {
+  process({getState, action}, dispatch, done) {
     dispatch( actions.signIn(action.values.email, action.values.pass) );
     done();
   },
@@ -94,11 +94,11 @@ export const signIn = createLogic({
   name: `${featureName}.signIn`,
   type: String(actions.signIn),
 
-  process({getState, action, api}, dispatch, done) {
+  process({getState, action, app}, dispatch, done) {
     firebase.auth().signInWithEmailAndPassword(action.email, action.pass)
             .then( user => {
               // console.log(`xx logic ${featureName}.signIn: signInWithEmailAndPassword() WORKED, user: `, user);
-              api.device.storeCredentials(action.email, action.pass)
+              app.device.api.storeCredentials(action.email, action.pass)
                  .catch( (err) => {
                    // hmmmm ... nested errors in a promise are caught in the outer catch (need to better understand this)
                  });
@@ -148,7 +148,7 @@ export const supplementSignInComplete = createLogic({
 
   // NOTE: action.user is available, we supplement action.userProfile
   // NOTE: We accomplish this in logic transform, to simulate an Atomic operation (as from the server).
-  transform({getState, action, api}, next, reject) {
+  transform({getState, action}, next, reject) {
 
     const handleFetchProfileProblem = (err=null) => {
       // revert action to one that will re-display signIn with error message
@@ -180,7 +180,7 @@ export const supplementSignInComplete = createLogic({
          });
   },
 
-  process({getState, action, api}, dispatch, done) {
+  process({getState, action}, dispatch, done) {
     dispatch( actions.userProfileChanged(action.userProfile) );
     done();
   },
@@ -197,7 +197,7 @@ export const signInCleanup = createLogic({
   name: `${featureName}.signInCleanup`,
   type: String(actions.signIn.complete),
 
-  process({getState, action, api}, dispatch, done) {
+  process({getState, action}, dispatch, done) {
     // console.log(`xx logic ${featureName}.signInCleanup: user.status: '${sel.getUserStatus(getState())}'`);
     dispatch( actions.signIn.close() ); // we are done with our signIn form
     done();
@@ -215,7 +215,7 @@ export const checkEmailVerified = createLogic({
   name: `${featureName}.checkEmailVerified`,
   type: String(actions.signIn.checkEmailVerified),
 
-  transform({getState, action, api}, next, reject) {
+  transform({getState, action}, next, reject) {
 
     // fetch the most up-to-date user
     firebase.auth().currentUser.reload()
@@ -243,7 +243,7 @@ export const resendEmailVerification = createLogic({
   name: `${featureName}.resendEmailVerification`,
   type: String(actions.signIn.resendEmailVerification),
 
-  transform({getState, action, api}, next) {
+  transform({getState, action}, next) {
     firebase.auth().currentUser.sendEmailVerification();
     next(action);
   },
@@ -259,7 +259,7 @@ export const signOut = createLogic({
   name: `${featureName}.signOut`,
   type: String(actions.signOut),
 
-  process({getState, action, api}, dispatch, done) {
+  process({getState, action, app}, dispatch, done) {
     firebase.auth().signOut()
             .catch( (err) => {
               // simply report unexpected error to user
@@ -273,7 +273,7 @@ export const signOut = createLogic({
                 ]
               });
             });
-    api.device.removeCredentials()
+    app.device.api.removeCredentials()
        .catch( (err) => {
          // simply report unexpected error to user
          toast.error({  // ... will auto close -OR- when "details" is clicked
