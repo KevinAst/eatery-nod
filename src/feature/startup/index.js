@@ -10,7 +10,7 @@ import appDidStart      from './appDidStart';
 /**
  * The 'startup' feature bootstraps our entire app by:
  *  - dispatches our bootstrap action that starts the entire app (appDidStart)
- *  - performs initialization: platform-setup, firebase, notify (appWillStart)
+ *  - performs initialization: platform-setup, notify (appWillStart)
  *  - starts app running on bootstrap action (logic)
  *  - fetches resources: fonts, geo location (logic, action, reducer)
  *  - monitors startup process, syncing the device status (logic, action, reducer)
