@@ -2,6 +2,7 @@ import {createLogic}      from 'redux-logic';
 import {Location,
         Permissions}      from 'expo';
 import {managedExpansion} from '../../util/feature-u';
+import featureName        from './featureName';
 import actions            from './actions';
 import {isDeviceReady,
         areFontsLoaded,
@@ -9,14 +10,12 @@ import {isDeviceReady,
         getDeviceLoc}     from './state';
 import {toast}            from '../../util/notify';
 
-
-
 /**
- * Start the app running upon bootstrap request.
+ * Load resources needed for our device.
  */
-export const startApp = managedExpansion( (feature, app) => createLogic({
+export const loadResources = managedExpansion( (feature, app) => createLogic({
 
-  name: `${feature.name}.startApp`,
+  name: `${featureName}.loadResources`,
   type: String(actions.bootstrap),
   
   process({getState, action, api}, dispatch, done) {
@@ -33,7 +32,7 @@ export const startApp = managedExpansion( (feature, app) => createLogic({
  */
 export const loadFonts = managedExpansion( (feature, app) => createLogic({
 
-  name: `${feature.name}.loadFonts`,
+  name: `${featureName}.loadFonts`,
   type: String(actions.loadFonts),
   
   process({getState, action, api}, dispatch, done) {
@@ -57,7 +56,7 @@ export const loadFonts = managedExpansion( (feature, app) => createLogic({
  */
 export const locateDevice = managedExpansion( (feature, app) => createLogic({
 
-  name: `${feature.name}.locateDevice`,
+  name: `${featureName}.locateDevice`,
   type: String(actions.locateDevice),
   warnTimeout: 0, // long-running logic (due to user interaction)
   
@@ -129,12 +128,12 @@ export const locateDevice = managedExpansion( (feature, app) => createLogic({
 
 
 /**
- * Monitor our startup progress, syncing the device status.
+ * Monitor the device initialization progress, syncing the device status.
  */
-export const monitorStartupProgress = managedExpansion( (feature, app) => createLogic({
+export const monitorInitProgress = managedExpansion( (feature, app) => createLogic({
 
-  name: `${feature.name}.monitorStartupProgress`,
-  type: /startup.*.(complete|fail)/,
+  name: `${featureName}.monitorInitProgress`,
+  type: /device.*.(complete|fail)/,
   
   process({getState, action, api}, dispatch, done) {
 
@@ -174,10 +173,10 @@ export const monitorStartupProgress = managedExpansion( (feature, app) => create
 /**
  * Start our authorization process when our device is ready.
  */
-// ?? change this to be authComplete
+// ?? emit notification: deviceInitializationComplete ?? once acomplished NO need for managedExpansion() HERE
 export const startAppAuthProcess = managedExpansion( (feature, app) => createLogic({
 
-  name: `${feature.name}.startAppAuthProcess`,
+  name: `${featureName}.startAppAuthProcess`,
   type: String(actions.statusUpdate),
   
   process({getState, action, api}, dispatch, done) {
@@ -194,9 +193,9 @@ export const startAppAuthProcess = managedExpansion( (feature, app) => createLog
 // promote all logic modules for this feature
 // ... NOTE: individual logic modules are unit tested using the named exports.
 export default managedExpansion( (feature, app) => [
-  startApp(feature, app),
+  loadResources(feature, app),
   loadFonts(feature, app),
   locateDevice(feature, app),
-  monitorStartupProgress(feature, app),
+  monitorInitProgress(feature, app),
   startAppAuthProcess(feature, app),
 ]);

@@ -25,4 +25,4 @@
  *        imported throughout our code-base (without an extra level of
  *        indirection)
  */
-export default 'startup';
+export default 'device';

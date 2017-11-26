@@ -722,7 +722,7 @@ There are several ways to access feature resources:
   export default connectRedux(ScreenA, {
     mapStateToProps(appState) {
       return {
-        deviceStatus: app.startup.selectors.deviceStatus(appState),
+        deviceStatus: app.device.selectors.deviceStatus(appState),
       };
     },
   });

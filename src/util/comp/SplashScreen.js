@@ -68,7 +68,7 @@ export default connectRedux(SplashScreen, {
   mapStateToProps(appState) {
     return {
       // hmmm ... inappropriate coupling: common component <SplashScreen> using app-specific info
-      fontsLoaded: app.startup.sel.areFontsLoaded(appState),
+      fontsLoaded: app.device.sel.areFontsLoaded(appState),
     };
   },
 });

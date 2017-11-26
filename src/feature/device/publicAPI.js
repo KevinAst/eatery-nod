@@ -3,7 +3,7 @@ import {areFontsLoaded,
         getDeviceLoc}    from './state';
 
 /**
- * The public API promoted by this feature through: app.startup...
+ * The public API promoted by this feature through: app.device...
  */
 export default {
   sel: {
