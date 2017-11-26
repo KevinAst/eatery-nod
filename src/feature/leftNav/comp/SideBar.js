@@ -274,10 +274,10 @@ export default connectRedux(SideBar, {
       // ?   dispatch( actions.discovery.filter.open() );
       // ?   closeSideBar();
       // ? },
-      // ? handleSignOut() {
-      // ?   dispatch( actions.auth.signOut() );
-      // ?   closeSideBar();
-      // ? },
+      handleSignOut() {
+        dispatch( app.auth.actions.signOut() );
+        closeSideBar();
+      },
     };
   },
 });
