@@ -1,10 +1,31 @@
 import {createLogic}      from 'redux-logic';
 import firebase           from 'firebase';
+import {managedExpansion} from '../../util/feature-u';
 import featureName        from './featureName';
 import actions            from './actions';
 import * as sel           from './state';
 import signInFormMeta     from './signInFormMeta';
 import {alert, toast}     from '../../util/notify';
+
+
+/**
+ * Start our authorization process, once the device is ready.
+ * 
+ * NOTE: We could auto-start our auth process (via feature-u app life cycle handlers),
+ *       except our downstream processes are dependent on device.loc, so we wait and
+ *       trigger the process here.
+ */
+export const startAuthorization = managedExpansion( (feature, app) => createLogic({
+
+  name: `${featureName}.startAuthorization`,
+  type: String(app.device.actions.ready),
+  
+  process({getState, action}, dispatch, done) {
+    dispatch( actions.bootstrap() );
+    done();
+  },
+}));
+
 
 /**
  * Monitor authorization startup, fetching credentials stored on device (if any).
@@ -295,7 +316,9 @@ export const signOut = createLogic({
 
 // promote all logic modules for this feature
 // ... NOTE: individual logic modules are unit tested using the named exports.
-export default [
+export default managedExpansion( (feature, app) => [
+
+  startAuthorization(feature, app),
 
   checkDeviceCredentials,
   autoSignIn,
@@ -313,4 +336,4 @@ export default [
   resendEmailVerification,
 
   signOut,
-];
+]);

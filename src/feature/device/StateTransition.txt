@@ -77,7 +77,10 @@ device
      .fail(err) .............................................................................................   - NONE (not used I THINK - rely on UI alerts)
 
    .statusUpdate(statusMsg) .................................................................................   - set device.status = action.statusMsg
-                                                     startAppAuthProcess:
-                                                     ===================
+                                                     monitorDeviceReadiness:
+                                                     ======================
                                                        if (action.statusMsg === 'READY')
-                                                         dispatch auth.bootstrap()
+                                                         dispatch device.ready
+
+   .ready() .................................................................................................   - NONE (publicly exposed and monitored by 'auth' feature)
+     

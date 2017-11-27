@@ -9,6 +9,11 @@ accommodate the wide free-format content).
 
 Actions (see: actions.js)                        Logic (see: logic.js)                                          Reducer (see: state.js)
 ==============================================   ============================================================   ===============================
+app.device.actions.ready() ..................................................................................   - NONE
+                                                 startAuthorization:
+                                                 ==================
+                                                   DISPATCH .bootstrap()           
+
 auth                                             
   .bootstrap() ...............................   ............................................................   - NONE
                                                  checkDeviceCredentials:

@@ -47,5 +47,10 @@ export default generateActions.root({
                       traits: ['statusMsg'],
                     },
     },
+
+    ready: {   // actions.ready(): Action
+               // > device is ready for app to use
+               actionMeta: {},
+    },
   },
 });

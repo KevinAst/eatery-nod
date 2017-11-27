@@ -6,5 +6,4 @@ import {openSideBar,
  */
 export default {
   open:  openSideBar,  // open():  void ... open  the SideBar
-  close: closeSideBar, // close(): void ... close the SideBar // ??? this may NOT be needed
 };

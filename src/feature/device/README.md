@@ -1,12 +1,13 @@
 # device feature
 
-The **'device'** feature initializes the device for use by our app, by
-accomplishing the following:
+The **'device'** feature initializes the device for use by the app.
+It accomplishes the following:
 
- - dispatches the device bootstrap action that kicks off the entire
-   app **(appDidStart)**
+ - kicks off the entire app, by dispatching a device bootstrap action
+   **(appDidStart)**
 
- - performs initialization: platform-setup, notify **(appWillStart)**
+ - performs device-specific initialization: platform-setup, notify
+   **(appWillStart)**
 
  - loads device resources (fonts, geo location), triggered by
    bootstrap action **(logic, action, reducer)**
@@ -14,11 +15,14 @@ accomplishing the following:
  - monitors the device initialization progress, syncing the device
    status **(logic, action, reducer)**
 
- - displays SplashScreen until the the device is ready **(route)**
+ - disables downstream visuals until the device is ready - displaying
+   a SplashScreen **(route)**
 
- - starts authorization process when our device is ready **(logic)**
-   ?? REPLACE with emit notification: deviceInitializationComplete
-
+ - emits **ready** action (when appropriate by monitoring device
+   status), triggering downstream app process **(logic)**:
+   ```
+   app.device.ready()
+   ```
 
 ## State Transition
 
