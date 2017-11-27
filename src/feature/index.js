@@ -5,6 +5,7 @@ import auth        from './auth';
 import leftNav     from './leftNav';
 import view        from './view';
 import eateries    from './eateries';
+import sandbox     from './sandbox';
 
 /**
  * The **'eatery-nod'** application is composed from following **features**:
@@ -15,6 +16,7 @@ import eateries    from './eateries';
  *  - **'leftNav'**:    promotes the app-specific Drawer/SideBar on the app's left side
  *  - **'view'**:       maintains the currentView with get/set cross-feature communication bindings
  *  - **'eateries'**:   manages and promotes the eateries view
+ *  - **'sandbox'**:    promotes a variety of interactive tests, used in development, that can easily be disabled
  */
 export default [
   logActions,
@@ -24,4 +26,5 @@ export default [
   leftNav,
   view,
   eateries,
+  sandbox,
 ];
