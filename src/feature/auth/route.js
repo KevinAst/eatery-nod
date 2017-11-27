@@ -38,16 +38,19 @@ export default createRoute({
     // display interactive SignUp, when form is active (acomplished by our logic)
     // TODO: check for signUpForm (WHEN SUPPORTED)
     
-
     // fallback: communicate route transition condition
     // NOTES:
-    //  1) we MUST issue a route to prevent downstream features from activating too early
-    //  2) this can occur during transition (between startup/auth features)
-    //     ... where logic is in the process of activating one of the auth form screens
-    //     ... and therefore we cannot consider this an error (in our wording)
-    //     ... however, we provide enough context in msg to highlight what is occuring
-    //         (in case of logic error)
-    const msg = `${featureName} route transition (${sel.getUserStatus(appState)})`
+    //  1) we MUST issue a route to prevent downstream feature visualization too early
+    //  2) it can occur under the following conditions:
+    //     a) a slow server-side sign-in process
+    //        ... and so the message wording should NOT convey an error
+    //     b) during transition between startup/auth features
+    //        ... where logic is in the process of activating one of the auth form screens
+    //        ... and so the message wording should NOT convey an error
+    //     c) an error condition (say some change that impacts our route logic)
+    //        ... this is an unexpected condition
+    //        ... SO, we expose the user-status context in the message (for diagnostics)
+    const msg = `authorization in progress (${sel.getUserStatus(appState)})`;
     return <SplashScreen msg={msg}/>;
   },
 
