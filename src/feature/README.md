@@ -1,7 +1,6 @@
 # eatery-nod app
 
 The **'eatery-nod'** application is composed from following **features**:
-
  - **'logActions'**: logs all dispatched actions and resulting state
  - **'firebase'**:   initializes the google firebase service
  - **'device'**:     initializes the device for use by the app, and promotes a **device api** abstraction
