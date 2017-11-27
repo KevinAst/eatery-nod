@@ -8,10 +8,10 @@ import route            from './route';
 import appDidStart      from './appDidStart';
 
 /**
- * The **'eateries'** feature provides a presentation of eateries ... a
- * list of the pooled (and filtered) restaurants, with the ability to
- * select an eatery through a random spin.  Selected eateries promote the
- * ability to phone them, visit their web site, and navigate to them.
+ * The **'eateries'** feature manages and promotes the eateries view
+ * ... a list of the pooled (and filtered) restaurants, with the ability
+ * to select an eatery through a random spin.  Selected eateries provides
+ * the ability to phone, visit their web site, and navigate to them.
  *
  * **State Transition**
  *

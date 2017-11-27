@@ -31,6 +31,8 @@ import appDidStart      from './appDidStart';
  *    ```
  *    app.device.ready()
  *    ```
+ *  - promotes a **device api** abstraction: `app.device.api...` * 
+ *
  *
  * **State Transition**
  *

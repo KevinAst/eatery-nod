@@ -22,7 +22,9 @@ It accomplishes the following:
    status), triggering downstream app process **(logic)**:
    ```
    app.device.ready()
-   ```
+
+ - promotes a **device api** abstraction: `app.device.api...`
+
 
 ## State Transition
 
