@@ -281,7 +281,7 @@ export function accumAppReducer(features) { // ... named export ONLY used for te
     if (feature.enabled && feature.reducer) {
 
       const reducer = feature.reducer;
-      const shape   = feature.reducer.shape; // createFeature() always embelishes reducer via shapedReducer(), defaulting to the feature name
+      const shape   = feature.reducer.shape; // createFeature() always embelishes reducer via shapedReducer()
 
       // interpret the shape's federated namespace into a structure with depth
       const nodeNames    = shape.split('.');

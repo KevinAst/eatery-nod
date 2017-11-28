@@ -20,7 +20,7 @@ import shapedReducer     from './shapedReducer';
  *     name:       'views',
  *     enabled:    true,
  *     reducer:    shapedReducer('views.currentView', reducer),
- *     ? more
+ *     ?? expand this a bit
  *   };
  * ```
  *
@@ -39,19 +39,19 @@ import shapedReducer     from './shapedReducer';
  * detail.
  *
  * Because some publicAPI may require feature-based context
- * information, this parameter can also be a contextCB - a
+ * information, this parameter may also be a contextCB - a
  * function that returns the publicAPI (see managedExpansion()).
  *
  * @param {reducerFn|contextCB} [reducer] an optional
  * reducer that maintains redux state (if any) for this feature.
- * feature-u patches each reducer into the overall app state, by
- * default using the `feature.name`, but can be explicitly defined
- * through the shapedReducer() (embellishing the reducer with a shape
- * specification).  Please refer to the feature-u `Reducers`
- * documentation for more detail.
+ *
+ * The reducers from all features are combined into one overall app
+ * state, through a required shape specification, embellished on the
+ * reducer through the shapedReducer() function.  Please refer to the
+ * feature-u `Reducers` documentation for more detail.
  *
  * Because some reducers may require feature-based context
- * information, this parameter can also be a contextCB - a
+ * information, this parameter may also be a contextCB - a
  * function that returns the reducerFn (see managedExpansion()).
  *
  * @param {Logic[]|contextCB} [logic] an optional set
@@ -60,7 +60,7 @@ import shapedReducer     from './shapedReducer';
  * documentation for more detail.
  *
  * Because some logic modules may require feature-based context
- * information, this parameter can also be a contextCB - a
+ * information, this parameter may also be a contextCB - a
  * function that returns the Logic[] (see managedExpansion()).
  *
  * @param {Route} [route] the optional route callback (see
@@ -113,10 +113,7 @@ export default function createFeature({name,
   if (reducer) {
     check(isFunction(reducer) || reducer.managedExpansion, 'reducer (when supplied) must be a function -or- a contextCB');
 
-    // default reducer shape to our feature name
-    if (!reducer.shape) {
-      shapedReducer(name, reducer);
-    }
+    check(reducer.shape, 'reducer (when supplied) must be embellished with shapedReducer(). SideBar: shapedReducer() should always wrap the the outer function passed to createFunction() (even when managedExpansion() is used).');
   }
 
   if (logic) {
@@ -220,26 +217,17 @@ export function expandFeatureAspects(feature, app) {
   // reducer
   if (feature.reducer && feature.reducer.managedExpansion) {
 
-    // TODO: unsure, but this complexity may be removed if runApp() can retain shape before resolution ... because now the getShapedState() WILL BE a completly an internal detail of each feature
-
     // hold on to our reducer shape
-    // ... we know shape is available, because WE default it (above)
+    // ... so as to apply it to our final resolved reducer (below)
     const shape = feature.reducer.shape;
 
     // fully resolve our actual reducer
     feature.reducer = feature.reducer(feature, app);
 
-    // validate that no incompatable shape has been defined within our resolved reducer
-    if (feature.reducer.shape) {
-      verify(feature.reducer.shape === shape, `createFeature() parameter violation: reducer contextCB shape: '${shape}' is different from resolved reducer shape: '${feature.reducer.shape}'.
-SideBar: When BOTH shapedReducer() and managedExpansion() are needed, shapedReducer() should be adorned ONLY in the outer function passed to createFunction().`);
-    }
-
     // apply same shape to our final resolved reducer
-    // ... so feature.reducer.getShapedState(appState) is available for public access
+    // ... so it is accessable to our internals (i.e. runApp)
     shapedReducer(shape, feature.reducer);
   }
-
 
   // logic
   if (feature.logic && feature.logic.managedExpansion) {

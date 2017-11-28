@@ -44,6 +44,7 @@ useful concepts that can be *(at minimum)* followed by your project.
   * [Feature Aspects](#feature-aspects)
     - [Actions](#actions)
     - [Reducers (state)](#reducers-state)
+      * [Shaped Reducers](#shaped-reducers)
     - [Selectors (encapsolating state)](#selectors-encapsolating-state)
     - [Logic](#logic)
     - [Components](#components)
@@ -182,7 +183,7 @@ feature, and discover how feature-u manages these items.
 
 #### Actions
 
-Within a [redux] framework,
+Within the [redux] framework,
 [actions](https://redux.js.org/docs/basics/Actions.html) are the basic
 building blocks that facilitate application activity.  
 
@@ -258,7 +259,7 @@ export default generateActions.root({
 
 #### Reducers (state)
 
-Within a [redux] framework,
+Within the [redux] framework,
 [reducers](https://redux.js.org/docs/basics/Reducers.html) monitor
 actions, changing app state, which in turn triggers UI changes.
 
@@ -269,73 +270,77 @@ several items).
 While these reducers are opaque assets that maintain state as an
 internal detail of the feature, **feature-u is interested in them to
 the extent that it must combine all feature states into one overall
-app state, and in turn register them to redux**.
+appState, and in turn register them to redux**.
 
 Each feature (that maintains state) **promotes it's own reducer through a
 `feature.reducer` createFeature() parameter**.  
-
-By default, feature-u injects each reducer into the overall app state
-using a property defined from the `feature.name`.  As an example, if
-you have two features, named featureA/featureB, your appState would
-appear as follows:
-
-```js
-appState: {
-  featureA: {
-    ... state managed by featureA.reducer
-  },
-  featureB: {
-    ... state managed by featureB.reducer
-  },
-}
-```
-
-You can however explicitly control this location by using the
-shapedReducer() utility, which embellishes the reducer with a shape
-property - a federated namespace (delimited by dots) specifying the
-exact location of the state.  As an example, if featureA's reducer was
-embellished with `shapedReducer('views.currentView', reducer)`, your
-appState would appear as follows:
-
-```js
-appState: {
-  views: {
-    currentView {
-      ... state managed by featureA.reducer
-    },
-  },
-  featureB: {
-    ... state managed by featureB.reducer
-  },
-}
-```
-
-Another benefit of `shapedReducer()` is that it also embellishes the
-reducer with a standard selector, that returns the featureState root,
-further isolating this detail in an encapsulation:
-
-```js
-reducer.getShapedState(appState): featureState
-```
-
-**Please Note** that feature-u guarantees that `shapedReducer()` is
-embellished on all it's reducers, so you can rely on
-`feature.reducer.getShapedState(appState)` to ALWAYS be available!
-
-**There are cases where some feature state needs to be promoted outside of
-a feature's implementation**.  When this happens,
-[selectors](https://gist.github.com/abhiaiyer91/aaf6e325cf7fc5fd5ebc70192a1fa170)
-should be used, which encapsulates the raw nature of the state shape
-and business logic interpretation of that state.  These selectors can
-be promoted through the [Public API](#public-api) feature-u aspect.
-Please note that in consideration of feature encapsulation, *best
-practices would strive to minimize the public promotion of feature
-state outside the feature boundary*.
 
 Because reducers may require feature-based context information,
 **this parameter can also be a contextCB** - *a function that
 returns the reducerFn* (please refer to
 [managedExpansion()](#managedexpansion) for more information).
+
+
+##### Shaped Reducers
+
+Because feature-u must combine the reducers from all features into one
+overall appState, it requires that each reducer be embellished through
+the `shapedReducer()` function.  This merely injects a shape property
+on the reducer function, specifying the location of the reducer within
+the top-level appState tree.
+
+As an example, the following definition: 
+
+```js
+const currentView = createFeature({
+  name:     'currentView',
+  reducer:  shapedReducer('view.currentView', currentViewReducer)
+  ...
+});
+
+const fooBar = createFeature({
+  name:     'fooBar',
+  reducer:  shapedReducer('view.fooBar', fooBarReducer)
+  ...
+});
+```
+
+Yeilds the following overall appState:
+
+```js
+appState: {
+  view: {
+    currentView {
+      ... state managed by currentViewReducer
+    },
+    fooBar: {
+      ... state managed by fooBarReducer
+    },
+  },
+}
+```
+
+Another benefit of `shapedReducer()` is that it **also embellishes the
+reducer with a standard selector** that returns the shapedState root:
+
+```js
+reducer.getShapedState(appState): shapedState
+```
+
+In our case this shapedState root is the featureState root, so this
+should be used in all your selectors to further encapsolate this
+detail, **employing a single-source-of-truth concept**.  Here is an
+example:
+
+```js
+                             /** Our feature state root (a single-source-of-truth) */
+const getFeatureState      = (appState) => reducer.getShapedState(appState);
+
+                             /** Is device ready to run app */
+export const isDeviceReady = (appState) => getFeatureState(appState).status === 'READY';
+
+... more selectors
+```
 
 
 #### Selectors (encapsolating state)
@@ -378,7 +383,7 @@ returns the set of logic modules* (please refer to
 
 #### Components
 
-Within a [react] framework,
+Within the [react] framework,
 [components](https://reactjs.org/docs/react-component.html) are the
 User Interface (UI) of your app.
 

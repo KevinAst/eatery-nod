@@ -12,13 +12,10 @@ import isFunction     from 'lodash.isfunction';
  * 
  * Please refer to the Reducers documentation for more information and
  * examples.
- * 
- * SideBar: feature-u will default the location of non-embellished
- *          reducers to the feature name.
- * 
- * SideBar: When BOTH shapedReducer() and managedExpansion() are needed,
- *          shapedReducer() should be adorned in the outer function
- *          passed to createFunction().
+ *
+ * SideBar: For reducer aspects, shapedReducer() should always wrap
+ *          the the outer function passed to createFunction(), even
+ *          when managedExpansion() is used.
  *
  * @param {string} shape the location of the managed state within the
  * overall top-level appState tree.  This can be a federated namespace
@@ -31,7 +28,7 @@ import isFunction     from 'lodash.isfunction';
  * shape and a standard selector:
  * ```js
  * reducer.shape: shape
- * reducer.getShapedState(appState): featureState
+ * reducer.getShapedState(appState): shapedState
  * ```
  */
 export default function shapedReducer(shape, reducer) {
