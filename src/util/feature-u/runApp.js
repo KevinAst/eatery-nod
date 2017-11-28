@@ -119,17 +119,6 @@ export default function runApp(features, api) {
   // *** define our top-level redux appReducer that specifies our overall appState
   // ***
 
-  // TODO: #reducerPartOfOtherFeature: here we stitch together feature reducers into ONE APP REDUCER
-  //       - currently, this is done AFTER we expand reducers
-  //         * I THINK THIS NEEDS TO CHANGE
-  //           - inject it AFTER publicAPI, and BEFORE reducer expansion
-  //           - PROB: chicken/egg, 
-  //                   * MUST be expanded before we accum
-  //           - SOL:  for reducers, integrate the expansion process in the accumAppReducer process!
-  //                   * function renamed to: expandFeatureReducersAndAccumAppReducer(activeFeatures, feature, app) <<< WOW
-  //                   * works well for expansion-on-the-fly (required to avoid order dependancies)
-  //       - DO WE REALLY WANT TO DO THIS: if the external interface is too confusing, it my NOT be worth it
-
   const appReducer = accumAppReducer(activeFeatures);
 
 
@@ -278,8 +267,6 @@ function createAppStore(appReducer, appLogic, app, api) {
  *
  * @private
  */
-// TODO: #reducerPartOfOtherFeature: here we stitch together feature reducers into ONE APP REDUCER
-//       - currently they have already been expanded
 export function accumAppReducer(features) { // ... named export ONLY used for testing
 
   // iterated over all features
@@ -295,9 +282,6 @@ export function accumAppReducer(features) { // ... named export ONLY used for te
 
       const reducer = feature.reducer;
       const shape   = feature.reducer.shape; // createFeature() always embelishes reducer via shapedReducer(), defaulting to the feature name
-
-      // #reducerPartOfOtherFeature: only accum reducers that are injected in app root
-      //                             - for reducers injected in other features, iterate over all features, asking them to inject this reducer
 
       // interpret the shape's federated namespace into a structure with depth
       const nodeNames    = shape.split('.');

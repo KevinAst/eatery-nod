@@ -217,11 +217,7 @@ export function expandFeatureAspect_publicAPI(feature, app) {
  */
 export function expandFeatureAspects(feature, app) {
 
-  // TODO: #reducerPartOfOtherFeature: here we expand the reducers
-  //       - can we somehow do more?
-  //       - like pass in un-attached reducers, 
-  //       - giving other features the oppertunity to include them?
-  // ... reducer
+  // reducer
   if (feature.reducer && feature.reducer.managedExpansion) {
 
     // TODO: unsure, but this complexity may be removed if runApp() can retain shape before resolution ... because now the getShapedState() WILL BE a completly an internal detail of each feature
@@ -244,7 +240,8 @@ SideBar: When BOTH shapedReducer() and managedExpansion() are needed, shapedRedu
     shapedReducer(shape, feature.reducer);
   }
 
-  // ... logic
+
+  // logic
   if (feature.logic && feature.logic.managedExpansion) {
     feature.logic = feature.logic(feature, app);
   }
