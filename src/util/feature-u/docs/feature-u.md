@@ -40,22 +40,26 @@ useful concepts that can be *(at minimum)* followed by your project.
 ## At a Glance
 
 - [Intro](#intro)
-- [A Closer Look](#a-closer-look)
-  * [Feature Aspects](#feature-aspects)
-    - [Actions](#actions)
-    - [Reducers (state)](#reducers-state)
-      * [Shaped Reducers](#shaped-reducers)
-    - [Selectors (encapsolating state)](#selectors-encapsolating-state)
-    - [Logic](#logic)
-    - [Components](#components)
-    - [Routes](#routes)
-    - [Public API](#public-api)
-    - [App Life Cycle Hooks](#app-life-cycle-hooks)
-  * [Feature Resources](#feature-resources)
-    - [Accessing Feature Resources](#accessing-feature-resources)
-    - [managedExpansion()](#managedexpansion)
-    - [Access Summary](#access-summary)
-
+- [Feature Aspects](#feature-aspects)
+  * [Actions](#actions)
+  * [Reducers (state)](#reducers-state)
+    - [Shaped Reducers](#shaped-reducers)
+  * [Selectors (encapsolating state)](#selectors-encapsolating-state)
+  * [Logic](#logic)
+  * [Components](#components)
+  * [Routes](#routes)
+- [Launching Your App](#launching-your-app)
+- [App Life Cycle Hooks](#app-life-cycle-hooks)
+- [Cross Feature Communication](#cross-feature-communication)
+  * [publicAPI](#publicapi)
+  * [App Object](#app-object)
+    - [Accessing the App Object](#accessing-the-app-object)
+      * [managedExpansion()](#managedexpansion)
+      * [App Access Summary](#app-access-summary)
+    - [Checking Feature Dependencies (via App)](#checking-feature-dependencies-via-app))
+- [Single Source of Truth](#single-source-of-truth)
+  * [Feature Name](#feature-name)
+  * [Feature State Location](#feature-state-location)
 - [API](api.md)
   * [`createFeature()`](api.md#createFeature)
   * [`shapedReducer()`](api.md#shapedReducer)
@@ -164,13 +168,7 @@ app: {
 
 
 
-
-## A Closer Look
-
-Let's take a closer look at feature-u ...
-
-
-### Feature Aspects
+## Feature Aspects
 
 In feature-u, "aspect" is a general term used to refer to the various
 ingredients that, when combined, constitute your app.  For example,
@@ -181,7 +179,7 @@ Let's take a closer look at the various aspects that make up a
 feature, and discover how feature-u manages these items.
 
 
-#### Actions
+### Actions
 
 Within the [redux] framework,
 [actions](https://redux.js.org/docs/basics/Actions.html) are the basic
@@ -257,7 +255,7 @@ export default generateActions.root({
 ```
 
 
-#### Reducers (state)
+### Reducers (state)
 
 Within the [redux] framework,
 [reducers](https://redux.js.org/docs/basics/Reducers.html) monitor
@@ -272,8 +270,8 @@ internal detail of the feature, **feature-u is interested in them to
 the extent that it must combine all feature states into one overall
 appState, and in turn register them to redux**.
 
-Each feature (that maintains state) **promotes it's own reducer through a
-`feature.reducer` createFeature() parameter**.  
+Each feature (that maintains state) **promotes it's own reducer
+through the `reducer` createFeature() parameter**.
 
 Because reducers may require feature-based context information,
 **this parameter can also be a contextCB** - *a function that
@@ -281,7 +279,7 @@ returns the reducerFn* (please refer to
 [managedExpansion()](#managedexpansion) for more information).
 
 
-##### Shaped Reducers
+#### Shaped Reducers
 
 Because feature-u must combine the reducers from all features into one
 overall appState, it requires that each reducer be embellished through
@@ -343,7 +341,7 @@ export const isDeviceReady = (appState) => getFeatureState(appState).status === 
 ```
 
 
-#### Selectors (encapsolating state)
+### Selectors (encapsolating state)
 
 [Selectors](https://gist.github.com/abhiaiyer91/aaf6e325cf7fc5fd5ebc70192a1fa170)
 are a best practice which encapsulates the raw nature of the state
@@ -362,7 +360,7 @@ boundary*.
 
 
 
-#### Logic
+### Logic
 
 feature-u assumes the usage of [redux-logic] in managing your business
 logic (a solution that is growing in popularity).  The following
@@ -371,7 +369,7 @@ redux-logic: [Where do I put my business logic in a React-Redux
 application](https://medium.com/@jeffbski/where-do-i-put-my-business-logic-in-a-react-redux-application-9253ef91ce1).
 
 Any feature that has business logic **promotes it's own logic modules
-through the `feature.logic` createFeature() parameter**.  While logic
+through the `logic` createFeature() parameter**.  While logic
 modules are opaque functional assets, **feature-u's interest in them
 is to merely register them to the redux-logic agent**.
 
@@ -381,7 +379,7 @@ returns the set of logic modules* (please refer to
 [managedExpansion()](#managedexpansion) for more information).
 
 
-#### Components
+### Components
 
 Within the [react] framework,
 [components](https://reactjs.org/docs/react-component.html) are the
@@ -406,10 +404,10 @@ for this promotion**.
 
 
 
-#### Routes
+### Routes
 
 Each feature (that maintains components) promotes it's top-level
-screen components through a `feature.route` createFeature()
+screen components through a `route` createFeature()
 parameter, using the createRoute() utility.
 
 The Route object contains one or two function callbacks (routeCB), with
@@ -469,93 +467,12 @@ sync.  This just seems more natural to me.  This is what the feature-u
 Router accomplishes.  *With that said, I am open to the possibility
 that I may be missing something here* :-)
 
+## Launching Your App
 
-#### Public API
-
-Many aspects of a feature are internal to the feature's
-implementation.  For example, most actions are created and consumed
-exclusively by logic/reducers that are internal to the feature.
-
-However, other aspects of a feature may need to be exposed, to promote
-cross-communication between features.  For example, featureA may need
-to know some aspect of featureB (ex: some state through a selector),
-or emit one of it's actions, or in general anything (ex: invoke some
-function that does xyz).
-
-This cross-communication is accomplished through the
-`feature.publicAPI` createFeature() parameter.  This promotes an item
-of any type (typically an object containing functions) and is exposed
-through the feature-u app (emitted from runApp()).
-
-You can think of publicAPI as your feature's public API.
-
-Here is a suggested sampling:
-
-**`src/feature/featureA/index.js`**
-```js
-export default createFeature({
-  name:     'featureA',
-
-  publicAPI: {
-    actions: {   // ... expose JUST actions that needs public access (not all)
-      open: actions.view.open,
-      etc(),
-    },
-    
-    selectors: { // ... expose JUST state that needs public access (not all)
-      currentView: (appState) => ... implementation omitted,
-      deviceReady: (appState) => ... implementation omitted,
-      etc(appState),
-    },
-
-    api: {
-      open:  () => ... implementation omitted,
-      close: () => ... implementation omitted,
-    },
-
-    anyThingElseYouNeed(),  ... etc, etc, etc
-  },
-
-  reducer,
-  logic,
-  route,
-
-  appWillStart,
-  appDidStart,
-});
-```
-
-The above sample is promoted through the feature-u app (returned from
-runApp()), as `app.{featureName}`.  The app object can be accessed in
-a number of ways (see: [Accessing Feature
-Resources](#accessing-feature-resources)), but is typically exported
-from your app.js.  Here is a sample usage:
-
-**`src/feature/featureB/someModule.js`**
-```js
-  import app from './your-app-import'; // exported from runApp()
-  ...
-  app.featureA.selectors.currentView(appState)
-```
-
-Please note that if a feature can be disabled, the corresponding
-app.{featureName} will NOT exist.  External features can use this
-aspect to dynamically determine if the feature is active or not.
-```js
-  import app from './your-app-import';
-  ...
-  if (app.featureA) {
-    do something featureA related
-  }
-```
-
-Because publicAPI may require feature-based context information,
-**this parameter can also be a contextCB** - *a function that
-returns the PublicAPI object* (please refer to
-[managedExpansion()](#managedexpansion) for more information).
+?? new topic discussing runApp()
 
 
-#### App Life Cycle Hooks
+## App Life Cycle Hooks
 
 Because feature-u is in control of starting the app, application life
 cycle hooks can be introduced, allowing features to perform
@@ -619,261 +536,251 @@ Two hooks are provided through the following feature parameters:
    ```
 
 
+## Cross Feature Communication
 
-### Feature Resources
+Most aspects of a feature are internal to the feature's
+implementation.  For example, as a general rule, actions are created
+and consumed exclusively by logic and reducers that are internal to
+that feature.
 
-Aspect definitions need to access various feature resources within
-their implemenation.
+However, there are cases where a feature needs to publicly promote
+some aspects to another feature.  As an example, featureA may:
+ - need to know some aspect of featureB (say some state value through
+   a selector),
+ - or emit/monitor one of it's actions,
+ - or in general anything (i.e. invoke some function that does xyz).
 
-Not all resources accumulated by feature-u are "digestable" by
-application code.  Most feature-u aspects are merely opaque assets
-that are registered to various utilities, and not directly reasoned
-about by application code.  The "digestable" feature resources
-include:
+You can think of this as the feature's Public API, and it promotes
+cross-communication between features.
 
- 1. feature name (for internal consistancy)
+A **best practice** is to treat each of your features as isolated
+implementations.  As a result, a feature **should never** directly
+import resources from other features, **rather** they should utilize
+the public feature promotion of the App object (_discussed here_).  In
+doing this **a:** only the public aspects of a feature are
+exposed/used, and **b:** your features become truly plug-and-play.
 
-    An example of this, is you may wish to prefix all of your logic
-    module names with the feature name: `feature.name`
+### publicAPI
 
- 2. feature state root (again, for internal consistancy)
+This cross-feature-communication is accomplished through the
+`publicAPI` createFeature() parameter.  
 
-    Because feature-u knows where the feature state lives (using
-    shapedReducer()) a standard selector can be used to consistenly
-    locate it: `feature.reducer.getShapedState(appState)`
+A feature can expose whatever it deems necessary through it's `publicAPI`.
+There are no real constraints on this resource.  It is truly open.
+Typically it is a container of functions of some sort.
 
- 3. feature publicAPI (for cross feature communication), things like
-    - actions
-    - selectors
-    - API
-    - etc.
+Here is a suggested sampling:
 
-From this list, the **first two items** can be classified as
-**internal resources**, and is promoted through the Feature object.
-In other words, they are resources for a given feature, defined by and
-used in the feature definition.  This is employing a
-single-source-of-truth concept.  As an example, if the feature name
-changes or it's state location moves, this can be reflected in one
-place (i.e. the Feature object).
-
-The **third item** is considered an **external resource**, and is
-available through feature-u's [Public API](#public-api), provided
-through the App object (*promoting cross feature communication*).
-
-
-#### Accessing Feature Resources
-
-There are several ways to access feature resources:
-
-- Within feature-u's programatic APIs, the `app` object is supplied as a
-  parameter.
-
-  * route:
-    ```js
-    routeCB(app, appState): rendered-component (null for none)
-    ```
-  * app life-cycle functions:
-    ```js
-    appWillStart(app, children): optional-top-level-content
-    appDidStart({app, appState, dispatch}): void                        
-    ```
-
-  * logic hooks:
-    ```js
-    createLogic({
-      ...
-      transform({getState, action, app}, next) {
-        ...
-      },
-      process({getState, action, app}, dispatch, done) {
-        ...
-      }
-    })
-    ```
-
-- For other cases, the simplest way to access Feature Resources is to
-  merely import the feature or app (cooresponding to internal/externall
-  access).  This actually works well for run-time functions (such as
-  Component rendering), where the code is executed after all aspect
-  expansion has completed.
-
-  The following example is a component that is displaying a
-  `deviceStatus` obtained from an external 'startup' feature using
-  it's public API ... by simply importing app:
-
-  ```js
-  import app from '../../../app';
-  
-  function ScreenA({deviceStatus}) {
-    return (
-      <Container>
-        <Header>
-          <Body>
-            <Title>Screen A</Title>
-          </Body>
-          <Right>
-            <Text>
-              {deviceStatus}
-            </Text>
-          </Right>
-        </Header>
-        <Content>
-          ...
-        </Content>
-      </Container>
-    );
-  }
-  
-  export default connectRedux(ScreenA, {
-    mapStateToProps(appState) {
-      return {
-        deviceStatus: app.device.selectors.deviceStatus(appState),
-      };
-    },
-  });
-  ```
-
-With that said, **there are two issues that make access to these
-resources problematic** (*which are addressed by*
-[`managedExpansion()`](#managedexpansion) **discussed below**):
-
- 1. in-line expansion of code
-
-    In some cases, this resource access is required by code that is
-    expanded in-line, making it problematic as to when the resource is
-    available.
-
- 2. order dependancies (across features)
-
-    The last thing you want to be concerned about are timing issues
-    regarding when a resource has been resolved (i.e. expanded) and
-    available for use.  This is especially true for code that is
-    expanded in-line.
-
-The following example is a logic module definition, highlighting
-several problems with importing feature/app:
-
-**`src/feature/featureA/logic.js`**
 ```js
-import feature from '.';                         // *1*
-import app     from '../../app';
+export default createFeature({
+  name:     'featureA',
 
-export const startApp = createLogic({
+  publicAPI: {
 
-  name: `${feature.name}.myLogicModuleName`,     // *2*
-  type: String(app.featureB.actions.fooBar),     // *3*
-  
-  process({getState, action}, dispatch, done) {
-    dispatch( app.featureC.actions.fooBee() );   // *4*
-    done();
+    actions: {   // ... JUST action creators that need public promotion (i.e. NOT ALL)
+      open: actions.view.open,
+    },
+    
+    sel: { // ... JUST selectors that need public promotion (i.e. NOT ALL)
+      currentView:   selector.currentView,
+      isDeviceReady: selector.isDeviceReady,
+    },
+
+    api,
+
   },
+
+  ...
 });
 ```
 
- - `*1*`: importing feature/app has it's limitations (keep reading)
+The following sections discuss how this publicAPI is exposed and
+accessed.
 
- - `*2*`: we want to use a single-source-of-truth by appending our
-   feature name to all of our logic modules, HOWEVER `feature` is NOT
-   yet defined (from our import) because this code is being
-   interpreted at in-line expansion time
 
- - `*3*`: we want to monitor a different feature's action (using
-   feature-u's publicAPI), but have the same problem highlighted in
-   point `*2*`, because `app` is NOT yet defined (via our import)
-   because (again) this code is being interpreted at in-line expansion
-   time
+### App Object
 
- - `*4*`: we want to dispatch a different feature's action (using
-   feature-u's publicAPI).  Because we are within the process()
-   function (outside of the scope of in-line expansion), this should
-   work.  HOWEVER, what if featureC is expanded AFTER featureA?  This
-   is problematic!
+The `publicAPI` of all features are accumulated and exposed through
+the App object (emitted from runApp()), as follows:
+`app.{featureName}.{publicAPI}`.
+
+As an example, the sample above can be referenced like this: 
+
+```js
+  app.featureA.sel.isDeviceReady(appState)
+```
+
+#### Accessing the App Object
+
+The App object can be accessed in several different ways.
+
+1. The simplest way to access the App object is to merely import it.
+
+   Your application mainline exports the `runApp()` return
+   value ... which is the App object.
+
+   **`src/app.js`**
+   ```js
+   import {runApp}  from 'feature-u';
+   import features  from './feature';
+
+   export default runApp(features);
+   ```
+
+   Importing the app object is a viable technique for run-time
+   functions (_such as UI Components_), where the code is
+   **a:** _not under the direct control of feature-u, and_
+   **b:** _executed after all aspect expansion has completed._
+
+   The following example is a UI Component that displays a
+   `deviceStatus` obtained from an external `startup` feature
+   ... **_accessing the app through an import:_**
    
+   ```js
+   import app from '~/app';
+   
+   function ScreenA({deviceStatus}) {
+     return (
+       <Container>
+         ...
+         <Text>{deviceStatus}</Text>
+         ...
+       </Container>
+     );
+   }
+   
+   export default connectRedux(ScreenA, {
+     mapStateToProps(appState) {
+       return {
+         deviceStatus: app.device.sel.deviceStatus(appState),
+       };
+     },
+   });
+   ```
 
-**SOLUTION**:
+2. Another way to access the App object is through the programmatic
+   APIs of feature-u, where the `app` object is supplied as a
+   parameter.
+   
+   * route:
+     ```js
+     routeCB(app, appState): rendered-component (null for none)
+     ```
+   * app life-cycle hooks:
+     ```js
+     appWillStart(app, children): optional-top-level-content
+     appDidStart({app, appState, dispatch}): void                        
+     ```
+   
+   * logic hooks:
+     ```js
+     createLogic({
+       ...
+       transform({getState, action, app}, next) {
+         ...
+       },
+       process({getState, action, app}, dispatch, done) {
+         ...
+       }
+     })
+     ```
 
-feature-u provides mechnisms that eliminate issues related to feature
-dependancy order, EVEN references found in code that are expanded
-in-line.  **feature-u addresses both of these issues (above) by:**
-
- - providing a technique to inject feature context (both App and
-   Feature) into the code definition (at code expansion time)
-   ... please refer to [`managedExpansion()`](#managedexpansion) (below).
-
- - controlling the expansion of feature assets in such a way that
-   gaurentees the publicAPI of ALL features are available prior to any
-   other aspect expansion
-
-**Accessing Feature Resources in a seamless way is a rudementary
-benifit** of feature-u that aleviates a lot of problems in your code,
-making your features truly plug-and-play.
+3. There is a third technique to access the App object, that provides
+   **early access** _during code expansion time_, that is provided
+   through the [managedExpansion()](#managedexpansion) function (_see
+   next section_).
 
 
 #### managedExpansion()
 
-When aspect definitions require feature resources at code expansion
-time, you can wrap the aspect definition in a contextCB
-function.  In other words, your aspects can either be the raw aspect
-itself (ex: a reducer), or a function that returns the aspect.
+In the previous discussion, we detailed two ways to access the App
+object, and referred to a third technique (_discussed here_).
+
+There are two situations that make accessing the `app` object
+problematic, which are: **a:** _in-line code expansion (where the app
+may not be fully defined)_, and **b:** _order dependencies (across
+features)_.
+
+To illustrate this, the following logic module is monitoring an action
+defined by an external feature (see `*1*`).  Because this `app`
+reference is made during code expansion time, the import will not
+work, because the `app` object has not yet been fully defined.  This
+is a timing issue.
+
+```js
+import app from '~/app'; // *1*
+
+export const myLogicModule = createLogic({
+
+  name: 'myLogicModule',
+  type: String(app.featureB.actions.fooBar), // *1* app NOT defined during in-line expansion
+  
+  process({getState, action}, dispatch, done) {
+    ... 
+  },
+
+});
+```
+
+When aspect definitions require `app` references at code expansion
+time, you can wrap the aspect definition in a contextCB function.  In
+other words, your aspects can either be the actual aspect itself (ex:
+a reducer), or a function that returns the aspect (e.g. the reducer).
 
 Your callback function should conform to the following signature:
 
 ```js
-  contextCB(feature, app): feature-aspect
+contextCB(app): feature-aspect
 ```
 
-When this is done, feature-u will invoke the contextCB in a
-controlled way, passing in the feature context as parameters (both
-Feature and App objects).
+When this is done, feature-u will invoke the contextCB in a controlled
+way, passing the `app` object in a parameter.
 
-To accomplish this, you must use the managedExpansion() function ... the
-reason being that feature-u must be able to distinguish a
-contextCB function from other functions (ex: reducers).
+To accomplish this, you must embellish your contextCB using the
+`managedExpansion()` function.  The reason for this is that feature-u
+must be able to distinguish a contextCB function from other functions
+(ex: reducers).
 
-Here is the same example (from above) that that fixes all of our
-problems by replacing the imports with managedExpansion():
+Here is the same example (from above) that that fixes our
+problem by replacing the `app` import with managedExpansion():
 
-**`src/feature/featureA/logic.js`**
 ```js
-                         // *1*
-export const startApp = managedExpansion( (feature, app) => createLogic({
+                             // *1* we replace app import with managedExpansion()
+export const myLogicModule = managedExpansion( (app) => createLogic({
 
-  name: `${feature.name}.myLogicModuleName`,     // *2*
-  type: String(app.featureB.actions.fooBar),     // *3*
+  name: 'myLogicModule',
+  type: String(app.featureB.actions.fooBar), // *1* app now is fully defined
   
   process({getState, action}, dispatch, done) {
-    dispatch( app.featureC.actions.fooBee() );   // *4*
-    done();
+    ... 
   },
-}));
+
+}) );
 ```
 
- - `*1*`: `managedExpansion()` replaces the import of feature/app solving
-   all our problems (keep reading).
+Because the contextCB() is invoked in a controlled way (by feature-u),
+the supplied `app` parameter is guaranteed to be defined (_issue
+**a**_).  Not only that, but the supplied `app` object is guaranteed to
+have all features publicAPI definitions resolved (_issue **b**_).
 
- - `*2*`: we can now use `feature` as a single-source-of-truth to
-   append our feature name to our logic module, BECAUSE it is now
-   available (thanks to feature-u's `managedExpansion()`).
-
- - `*3*`: we can now monitor a different feature's action (using
-   feature-u's publicAPI), because `app` is provided by
-   `managedExpansion()`.
-
- - `*4*`: we no longer have to worry about the order of aspect
-   expansion, because feature-u gaurentees the publicAPI of ALL
-   features are available prior to any other aspect expansion.
+**Accessing Feature Resources in a seamless way is a rudimentary
+benefit** of feature-u that alleviates a lot of problems in your code,
+making your features truly plug-and-play.
 
 
-#### Access Summary
+#### App Access Summary
 
-In summary, you may access Feature Resources in one of 3 ways:
+To summarize our discussion of how to access the App object, it is
+really very simple:
 
-1. Use the app parameter supplied through feature-u's programmatic APIs
-   (route, live-cycle hooks, and logic hooks)
+1. Simply import the app (_for run-time functions outide the control
+   of feature-u_).
 
-2. Simply import the feature or app
+2. Use the app parameter supplied through feature-u's programmatic
+   APIs (_when using route, live-cycle hooks, or logic hooks_).
 
-3. Use the feature/app supplied through `managedExpansion()`
+3. Use the app parameter supplied through `managedExpansion()`
+   (_when app is required during in-line expansion of code_).
 
 **NOTE**: It is possible that a module may be using more than one of
 these techniques.  As an example a logic module may have to use
@@ -883,6 +790,108 @@ perfectly fine, as they will be referencing the exact same app object
 instance.
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+#### Checking Feature Dependencies (via App)
+
+In regard to feature dependencies, the App object can be used to
+determine if a feature is present or not.  If a feature does not
+exist, or has been disabled, the corresponding `app.{featureName}`
+will NOT exist.
+
+ - It could be that `featureA` will conditionally use `featureB` if it
+   is present.
+
+   ```js
+   if (app.featureB) {
+     ... do something featureB related
+   }
+   ```
+
+ - It could be that `featureC` unconditionally requires that `featureD`
+   is present.  This can be checked in the `appWillStart()` life cycle
+   hook.
+
+   ```js
+   appWillStart(app, children) {
+     assert(app.featureD, '***ERROR*** I NEED featureD');
+   }
+   ```
+
+
+## Single Source of Truth
+
+Each of your feature implementations should strive to follow the
+single-source-of-truth principle.  In doing this, a single line
+modification can propagate to many areas of your implementation.
+
+Please note that this discussion is merely a **best practice**,
+because it is up to you to implement (i.e. feature-u is not in control
+of this).
+
+In regard to features, there are two single-source items of interest:
+ - Feature Name
+ - Feature State Location
+
+### Feature Name
+
+The featureName is a critical item that can be used throughout your
+feature implementation to promote a consistent feature identity.
+
+A key aspect of the featureName is that feature-u guarantees it's
+uniqueness.  As a result, it can be used to qualify the identity of
+several feature aspects.  For example:
+
+ - prefixing all action types with featureName, guaranteeing their uniqueness app-wide
+ - prefixing all logic module names with featureName, helps to identify where that module lives
+ - depending on the context, the featureName can be used as the root of your feature state's shape
+
+While the feature name is part of the Feature object (emitted from
+createFeature()), there are race conditions where the Feature object
+will not be defined (during in-line code expansion).
+
+As a result, a best practice is to expose the featureName as a
+constant, through a `featureName.js` mini-meta module that is
+"importable" in all use-cases (i.e. a single-source-of-truth).
+
+**`src/feature/foo/featureName.js`**
+```js
+/**
+ * Expose our featureName through a mini-meta module that is
+ * "importable" in all use-cases (a single-source-of-truth).
+ */
+export default 'foo';
+```
+
+### Feature State Location
+
+Because feature-u relies on `shapedReducer()`, a best practice is to
+use the reducer's embellished selector to qualify your feature state
+root in all your selector definitions.  As a result the shape
+definition is maintained in one spot.
+
+Here is an example: 
+
+```js
+                             /** Our feature state root (a single-source-of-truth) */
+const getFeatureState      = (appState) => reducer.getShapedState(appState);
+
+                             /** Is device ready to run app */
+export const isDeviceReady = (appState) => getFeatureState(appState).status === 'READY';
+
+... more selectors
+```
 
 
 [react]:          https://reactjs.org/
