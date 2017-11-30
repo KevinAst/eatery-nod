@@ -3,30 +3,47 @@
 feature-u is a library that facilitates feature-based project
 organization for your [react] project.  It assists in organizing your
 project by individual features.  There are many good articles that
-discuss this topic, but I wanted a utility that streamlines and
+discuss this topic, but this is a utility that streamlines and
 manages the process.
 
-Essentially, feature-u accumulates all features (and their aspects)
-that comprise an app (ex: actions, reducers, components, routes,
-logic, etc.), managing and registering these items to the appropriate
-concerns (ex: redux, redux-logic, routes, etc.), and then launches the
-app, relegating your mainline to a single line of code.  The following
-benefits are promoted:
+In a nutshell, feature-u:
 
- - Feature encapsulation within it's own isolated implementation
- - Inner communication between features (through a public API)
- - Eliminates feature dependency order issues - EVEN in code that
+- **manages all aspects** of the features that comprise an application
+  (_things like actions, reducers, components, routes, logic, etc._),
+
+- **establishing the underlying infrastructure** (_e.g. redux,
+  redux-logic, router, etc._), 
+
+- and **launches the app**
+
+- making each **feature plug-and-play**, 
+
+- and relagating the mainline to a **single line of code**!
+
+The following benefits are promoted:
+
+ - **Feature Encapsulation** _within it's own isolated implementation_
+
+ - promotes **Cross Feature Communication** _through a publicAPI_
+
+ - **minimizes feature dependency order issues** - EVEN in code that
    is expanded in-line
- - Feature enablement/disablement (through a run-time switch)
- - Application life cycle hooks, allowing features to inject
-   app-specific initialization, and even introduce components
-   into the root of the app
- - Feature-based route management (based on app state), promoting
-   feature-based commponents
- - Facilitates single-source-of-truth (within a feature's implementation)
- - A simplified mainline (i.e. a single line of code)
 
-**This truly makes individual features plug-and-play within an app.**
+ - supports **feature enablement** _through a run-time switch_
+
+ - provides **App Life Cycle Hooks**, _allowing features to inject
+   app-specific initialization, and even introduce components
+   into the root of the app_
+
+ - provides **Feature-based Route Management** (based on app state),
+   _promoting feature-based commponents_
+
+ - facilitates **single-source-of-truth** _within a feature's
+   implementation_
+
+ - promotes a **simplified mainline** (i.e. a single line of code)
+
+This truly makes individual **features plug-and-play** within an app.
 
 feature-u is experimental in the sense that it is not yet published
 ... rather it merely lives in one of my projects ([eatery-nod]) as a
@@ -48,8 +65,10 @@ useful concepts that can be *(at minimum)* followed by your project.
   * [Logic](#logic)
   * [Components](#components)
   * [Routes](#routes)
-- [Launching Your App](#launching-your-app)
 - [App Life Cycle Hooks](#app-life-cycle-hooks)
+  * [appWillStart](#appwillstart)
+  * [appDidStart](#appdidstart)
+- [Launching Your App](#launching-your-app)
 - [Cross Feature Communication](#cross-feature-communication)
   * [publicAPI](#publicapi)
   * [App Object](#app-object)
@@ -172,11 +191,15 @@ app: {
 
 In feature-u, "aspect" is a general term used to refer to the various
 ingredients that, when combined, constitute your app.  For example,
-"aspects" can refer to actions, reducers, components, routes, logic,
+"aspects" may refer to actions, reducers, components, routes, logic,
 etc.
 
+Some aspects are of interest to feature-u while others are not ...
+**feature-u is only interested in aspects that it configures and
+manages** (_for example to: redux, redux-logic, router, etc_).
+
 Let's take a closer look at the various aspects that make up a
-feature, and discover how feature-u manages these items.
+feature, and discuss feature-u's interest in each.
 
 
 ### Actions
@@ -467,73 +490,119 @@ sync.  This just seems more natural to me.  This is what the feature-u
 Router accomplishes.  *With that said, I am open to the possibility
 that I may be missing something here* :-)
 
-## Launching Your App
-
-?? new topic discussing runApp()
-
 
 ## App Life Cycle Hooks
 
-Because feature-u is in control of starting the app, application life
+Because feature-u is in control of launching the app, application life
 cycle hooks can be introduced, allowing features to perform
 app-specific initialization, and even introduce components into the
 root of the app.
 
 Two hooks are provided through the following feature parameters:
 
-1. **appWillStart** - invoked one time at app startup time.
+1. **appWillStart** - invoked one time at app startup time
+2. **appDidStart** - invoked one time immediatly after app has started
 
-   ```js
-   API: appWillStart(app, children): optional-top-level-content (undefined for none)
-   ```
+### appWillStart
 
-   This life-cycle hook can do any type of initialization.  For
-   example: initialize FireBase.
+The **appWillStart** life-cycle hook is invoked one time at app startup time.
 
-   In addition, this life-cycle hook can optionally supplement the
-   app's top-level content (using a non-null return).  Typically,
-   nothing is returned (i.e. undefined).  However any return value is
-   interpreted as the content to inject at the top of the app, between
-   the redux Provider and feature-u's Router.  **IMPORTANT**: If you
-   return top-level content, it is your responsiblity to include the
-   supplied children in your render.  Otherwise NO app content will be
-   displayed (because children contains the feature-u Router, which
-   decides what screen to display).
-   
-   Here is an example that injects new root-level content:
-   ```js
-   appWillStart(app, children) {
-     ... any other initialization ...
-     return (
-       <Drawer ...>
-         {children}
-       </Drawer>
-     );
-   }
-   ```
-   
-   Here is an example of injecting a new sibling to children:
-   ```js
-   appWillStart: (app, children) => [React.Children.toArray(children), <Notify key="Notify"/>]
-   ```
-   
-2. **appDidStart** - invoked one time immediatly after app has started.
-   
-   ```js
-   API: appDidStart({app, appState, dispatch}): void
-   ```
+```js
+API: appWillStart(app, children): optional-top-level-content (undefined for none)
+```
 
-   Because the app is up-and-running at this time, you have access to
-   the appState and the dispatch function.
+This life-cycle hook can do any type of initialization.  For
+example: initialize FireBase.
 
-   A typical usage for this hook is to dispatch some type of bootstrap
-   action.  Here is a startup feature, that issues a bootstrap action:
+In addition, this life-cycle hook can optionally supplement the
+app's top-level content (using a non-null return).  Typically,
+nothing is returned (i.e. undefined).  However any return value is
+interpreted as the content to inject at the top of the app, between
+the redux Provider and feature-u's Router.  **IMPORTANT**: If you
+return top-level content, it is your responsiblity to include the
+supplied children in your render.  Otherwise NO app content will be
+displayed (because children contains the feature-u Router, which
+decides what screen to display).
 
-   ```js
-   appDidStart({app, appState, dispatch}) {
-     dispatch( actions.bootstrap() );
-   }
-   ```
+Here is an example that injects new root-level content:
+```js
+appWillStart(app, children) {
+  ... any other initialization ...
+  return (
+    <Drawer ...>
+      {children}
+    </Drawer>
+  );
+}
+```
+
+Here is an example of injecting a new sibling to children:
+```js
+appWillStart: (app, children) => [React.Children.toArray(children), <Notify key="Notify"/>]
+```
+
+
+### appDidStart
+
+The **appDidStart** life-cycle hook is invoked one time immediatly
+after app has started.
+
+```js
+API: appDidStart({app, appState, dispatch}): void
+```
+
+Because the app is up-and-running at this time, you have access to
+the appState and the dispatch function.
+
+A typical usage for this hook is to dispatch some type of bootstrap
+action.  Here is a startup feature, that issues a bootstrap action:
+
+```js
+appDidStart({app, appState, dispatch}) {
+  dispatch( actions.bootstrap() );
+}
+```
+
+
+## Launching Your App
+
+Because feature-u has knowledge of the various aspects that comprise
+an application, it can easily configure the underlying infrastructure
+(e.g. redux, redux-logic, router, etc.) and launch the app.
+
+Features can even inject content in the top-level document hierarchy
+(through feature-u's app life-cycle hooks).
+
+As a result, your application mainline merely invokes the `runApp()`
+function, passing a collection of features that make up your app.
+
+In other words, your mainline is a single line of code!
+
+**`src/app.js`**
+```js
+import {runApp}  from 'feature-u';
+import features  from './feature';
+
+export default runApp(features);
+```
+
+runApp() returns an App object, which accumulates the publicAPI of all
+features (in named feature nodes), supporting cross-communication
+between features.  For this reason, the app object should be exported
+by your mainline (_exposing it to various code modules_).
+
+Under the covers, `runApp()` is managing the following details:
+
+- insures uniqueness of all feature names
+- interprets feature enablement (i.e. disabling non-active features)
+- setup (and return) the App object (promoting all features publicAPI)
+- manages the expansion of all assets in a controlled way (via `managedExpansion()`)
+- configures redux, accumulating all feature reducers into one app reducer (defining one overall appState)
+- configures redux-logic, accumulating all feature logic modules
+- configures the feature-u router, accumulating all feature routes
+- manages app life-cycle hooks found in all features (both `appWillStart()` and `appDidStart()`)
+- activates the app by registering the top-level app component to Expo
+
 
 
 ## Cross Feature Communication
