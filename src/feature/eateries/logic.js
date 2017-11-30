@@ -17,7 +17,7 @@ let curDbPoolMonitor = { // existing "pool" monitor (if any)
   wrapUp: () => 'no-op', // type: function(): void ... wrap-up monitor (both firebase -and- logic)
 };
 
-export const monitorDbPool = managedExpansion( (feature, app) => createLogic({
+export const monitorDbPool = managedExpansion( (app) => createLogic({
 
   name:        `${featureName}.monitorDbPool`,
   type:        String(app.auth.actions.userProfileChanged), // NOTE: action contains: action.userProfile.pool
@@ -301,8 +301,8 @@ export const removeFromPool = createLogic({
 
 // promote all logic (accumulated in index.js)
 // ... named exports (above) are used by unit tests :-)
-export default managedExpansion( (feature, app) => [
-  monitorDbPool(feature, app),
+export default managedExpansion( (app) => [
+  monitorDbPool(app),
   postProcessDbPool,
   ...eateryFilterFormMeta.registrar.formLogic(), // inject the standard eatery filter form-based logic modules
   defaultFilter,

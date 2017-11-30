@@ -15,7 +15,7 @@ import {alert, toast}     from '../../util/notify';
  *       except our downstream processes are dependent on device.loc, so we wait and
  *       trigger the process here.
  */
-export const startAuthorization = managedExpansion( (feature, app) => createLogic({
+export const startAuthorization = managedExpansion( (app) => createLogic({
 
   name: `${featureName}.startAuthorization`,
   type: String(app.device.actions.ready),
@@ -316,9 +316,9 @@ export const signOut = createLogic({
 
 // promote all logic modules for this feature
 // ... NOTE: individual logic modules are unit tested using the named exports.
-export default managedExpansion( (feature, app) => [
+export default managedExpansion( (app) => [
 
-  startAuthorization(feature, app),
+  startAuthorization(app),
 
   checkDeviceCredentials,
   autoSignIn,

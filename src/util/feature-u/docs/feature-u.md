@@ -763,9 +763,10 @@ the supplied `app` parameter is guaranteed to be defined (_issue
 **a**_).  Not only that, but the supplied `app` object is guaranteed to
 have all features publicAPI definitions resolved (_issue **b**_).
 
-**Accessing Feature Resources in a seamless way is a rudimentary
-benefit** of feature-u that alleviates a lot of problems in your code,
-making your features truly plug-and-play.
+**_SideBar_**: A secondary reason `managedExpansion()` may be used
+(_over and above app injection during code expansion_) is to **delay
+code expansion**, which can avoid issues related to (_legitimate but
+somewhat obscure_) circular dependencies.
 
 
 #### App Access Summary
@@ -781,6 +782,10 @@ really very simple:
 
 3. Use the app parameter supplied through `managedExpansion()`
    (_when app is required during in-line expansion of code_).
+
+Accessing Feature Resources in a seamless way is a **rudimentary
+benefit of feature-u** that alleviates a number of problems in your
+code, making your features truly plug-and-play.
 
 **NOTE**: It is possible that a module may be using more than one of
 these techniques.  As an example a logic module may have to use

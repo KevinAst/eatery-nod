@@ -187,7 +187,9 @@ export default function createFeature({name,
  */
 export function expandFeatureAspect_publicAPI(feature, app) {
   if (feature.publicAPI && feature.publicAPI.managedExpansion) {
-    feature.publicAPI = feature.publicAPI(feature, app);
+    // fully resolve the actual publicAPI
+    // ... by invoking the contextCB(app) embellished by managedExpansion(contextCB)
+    feature.publicAPI = feature.publicAPI(app);
   }
 }
 
@@ -221,8 +223,9 @@ export function expandFeatureAspects(feature, app) {
     // ... so as to apply it to our final resolved reducer (below)
     const shape = feature.reducer.shape;
 
-    // fully resolve our actual reducer
-    feature.reducer = feature.reducer(feature, app);
+    // fully resolve the actual reducer
+    // ... by invoking the contextCB(app) embellished by managedExpansion(contextCB)
+    feature.reducer = feature.reducer(app);
 
     // apply same shape to our final resolved reducer
     // ... so it is accessable to our internals (i.e. runApp)
@@ -231,7 +234,9 @@ export function expandFeatureAspects(feature, app) {
 
   // logic
   if (feature.logic && feature.logic.managedExpansion) {
-    feature.logic = feature.logic(feature, app);
+    // fully resolve the actual logic module
+    // ... by invoking the contextCB(app) embellished by managedExpansion(contextCB)
+    feature.logic = feature.logic(app);
   }
 
 }
