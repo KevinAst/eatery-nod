@@ -8,4 +8,5 @@ The **'eatery-nod'** application is composed from following **features**:
  - **'leftNav'**:    promotes the app-specific Drawer/SideBar on the app's left side
  - **'view'**:       maintains the currentView with get/set cross-feature communication bindings
  - **'eateries'**:   manages and promotes the eateries view
+ - **'discovery'**:  manages and promotes the discovery view
  - **'sandbox'**:    promotes a variety of interactive tests, used in development, that can easily be disabled
