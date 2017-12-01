@@ -41,7 +41,7 @@ export const defaultFilter = createLogic({
   name: `${featureName}.defaultFilter`,
   type: String(actions.filter.open),
 
-  transform({getState, action, api}, next) {
+  transform({getState, action, app}, next) {
     if (!action.domain) {
       action.domain = sel.getFilter(getState());
     }

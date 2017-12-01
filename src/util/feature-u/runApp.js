@@ -34,14 +34,12 @@ import verify                  from '../verify';
  * ```js
  *   import {runApp} from 'feature-u';
  *   import features from '../features';
+ *
  *   export default runApp(features);
  * ```
  *
  * @param {Feature[]} features the features that comprise this
  * application.
- *
- * @param {API} api an app-specific API object (to be injected into
- * the redux middleware).
  *
  * @return {App} an app object which used in feature
  * cross-communication (as follows):
@@ -51,7 +49,7 @@ import verify                  from '../verify';
  *  }
  * ```
  */
-export default function runApp(features, api) {
+export default function runApp(features) {
 
   // ***
   // *** validate parameters
@@ -138,7 +136,7 @@ export default function runApp(features, api) {
   // *** define our top-level redux appStore, WITH our registered redux-logic
   // ***
   
-  const appStore = createAppStore(appReducer, appLogic, app, api);
+  const appStore = createAppStore(appReducer, appLogic, app);
 
 
   // ***
@@ -228,18 +226,14 @@ export default function runApp(features, api) {
  * @param {App} app the feature-u app object used in feature
  * cross-communication (to be injected into the redux middleware)
  *
- * @param {API} api an app-specific API object (to be injected into
- * the redux middleware)
- *
  * @return {ReduxStore} the top-levl redux appStore.
  */
-function createAppStore(appReducer, appLogic, app, api) {
+function createAppStore(appReducer, appLogic, app) {
 
-  // register our redux-logic modules, and inject app/api
+  // register our redux-logic modules, and inject app
   const logicMiddleware = createLogicMiddleware(appLogic,
                                                 { // injected dependancies
                                                   app,
-                                                  api,
                                                 });
 
   // define our Redux app-wide store, WITH our middleware registration

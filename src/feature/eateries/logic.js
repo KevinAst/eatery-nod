@@ -23,7 +23,7 @@ export const monitorDbPool = managedExpansion( (app) => createLogic({
   type:        String(app.auth.actions.userProfileChanged), // NOTE: action contains: action.userProfile.pool
   warnTimeout: 0, // long-running logic
 
-  validate({getState, action, api}, allow, reject) {
+  validate({getState, action, app}, allow, reject) {
 
     // no-op if we are alreay monitoring this same pool
     if (action.userProfile.pool === curDbPoolMonitor.pool) {
@@ -77,7 +77,7 @@ export const postProcessDbPool = createLogic({
   name: `${featureName}.postProcessDbPool`,
   type: String(actions.dbPool.changed),
 
-  process({getState, action, api}, dispatch, done) {
+  process({getState, action, app}, dispatch, done) {
     dispatch( actions.applyFilter() );
     done();
   },
@@ -96,7 +96,7 @@ export const defaultFilter = createLogic({
   name: `${featureName}.defaultFilter`,
   type: String(actions.applyFilter.open),
 
-  transform({getState, action, api}, next) {
+  transform({getState, action, app}, next) {
     if (!action.domain) {
       action.domain = sel.getListViewFilter(getState());
     }
@@ -151,7 +151,7 @@ export const applyFilter = createLogic({
   name: `${featureName}.applyFilter`,
   type: String(actions.applyFilter),
 
-  transform({getState, action, api}, next, reject) {
+  transform({getState, action, app}, next, reject) {
 
     const appState = getState();
 
@@ -191,7 +191,7 @@ export const spin = createLogic({
   name: `${featureName}.spin`,
   type: String(actions.spin),
 
-  transform({getState, action, api}, next, reject) {
+  transform({getState, action, app}, next, reject) {
 
     const appState = getState();
     const entries  = sel.getListViewEntries(appState);
@@ -201,7 +201,7 @@ export const spin = createLogic({
     next(action);
   },
 
-  process({getState, action, api}, dispatch, done) {
+  process({getState, action, app}, dispatch, done) {
 
     setTimeout( () => {
 
@@ -229,7 +229,7 @@ export const spinComplete = createLogic({
   name: `${featureName}.spinComplete`,
   type: String(actions.spin.complete),
 
-  process({getState, action, api}, dispatch, done) {
+  process({getState, action, app}, dispatch, done) {
     dispatch( actions.viewDetail(action.eateryId) );
     done();
   },

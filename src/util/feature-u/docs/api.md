@@ -54,14 +54,13 @@ Create a new Route object, that provides a generalized run-timeAPI to abstractl
 **Returns**: Route - a new Route object (to be consumed by feature-u'sRouter via runApp()).  
 <a name="runApp"></a>
 
-## runApp(features, api) ⇒ App
+## runApp(features) ⇒ App
 Launch an app by assembling/configuring the supplied app features.The runApp() function manages the configuration of all featureaspects including: actions, logic, reducers, routing, etc.  Inaddition it drives various app life-cycle methods (on the Featureobject), allowing selected features to inject initializationconstructs, etc.The runApp() function maintains an App object, which facilitatescross-communication between features.  The App object is promotedthrough redux-logic inject, and is also returned from this runApp()invocation (which can be exported to facilitate othercommunication).Example:```js  import {runApp} from 'feature-u';  import features from '../features';  export default runApp(features);```
 
 
 | Param | Type | Description |
 | --- | --- | --- |
 | features | Array.&lt;Feature&gt; | the features that comprise this application. |
-| api | API | an app-specific API object (to be injected into the redux middleware). |
 
 **Returns**: App - an app object which used in featurecross-communication (as follows):```js {   ?? document }```  
 <a name="FeatureAspect"></a>
