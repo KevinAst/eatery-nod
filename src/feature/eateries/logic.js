@@ -35,7 +35,7 @@ export const monitorDbPool = managedExpansion( (app) => createLogic({
     allow(action);
   },
 
-  process({getState, action, api}, dispatch, done) {
+  process({getState, action, app}, dispatch, done) {
 
     // close prior monitor, if any (both firebase -and- logic)
     curDbPoolMonitor.wrapUp();
@@ -242,9 +242,9 @@ export const addToPoolPrep = createLogic({
   name: `${featureName}.addToPoolPrep`,
   type: String(actions.dbPool.add),
 
-  process({getState, action, api}, dispatch, done) {
+  process({getState, action, app}, dispatch, done) {
 
-    api.discovery.getEateryDetail(action.eateryId)
+    app.discovery.api.getEateryDetail(action.eateryId)
       .then(eatery => {
         dispatch( actions.dbPool.add.eateryDetail(eatery) );
         done();
@@ -264,7 +264,7 @@ export const addToPool = createLogic({
   name: `${featureName}.addToPool`,
   type: String(actions.dbPool.add.eateryDetail),
 
-  transform({getState, action, api}, next, reject) {
+  transform({getState, action, app}, next, reject) {
 
     const appState = getState();
     const pool     = app.auth.sel.getUserPool(appState);
@@ -284,7 +284,7 @@ export const removeFromPool = createLogic({
   name: `${featureName}.removeFromPool`,
   type: String(actions.dbPool.remove),
 
-  transform({getState, action, api}, next, reject) {
+  transform({getState, action, app}, next, reject) {
 
     const appState = getState();
     const pool     = app.auth.sel.getUserPool(appState);

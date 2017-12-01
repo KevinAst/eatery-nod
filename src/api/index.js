@@ -1,5 +1,4 @@
-import * as discovery     from './discovery';
-
+// ?? OBSOLETE THIS
 export default {
-  discovery,
+  poop: 'yikes',
 };

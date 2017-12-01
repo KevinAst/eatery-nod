@@ -4,17 +4,6 @@ import PropTypes             from 'prop-types';
 import connectRedux          from '../connectRedux';
 import SplashScreen          from '../comp/SplashScreen';
 
-// ?? obsolete imports
-//? import Expo                  from 'expo';
-//? import SignInScreen          from '../comp/SignInScreen';
-//? import SignInVerifyScreen    from '../comp/SignInVerifyScreen';
-//? import EateriesListScreen    from '../comp/EateriesListScreen';
-//? import EateryFilterScreen    from '../comp/EateryFilterScreen';
-//? import EateryDetailScreen    from '../comp/EateryDetailScreen';
-//? import DiscoveryListScreen   from '../comp/DiscoveryListScreen';
-//? import DiscoveryFilterScreen from '../comp/DiscoveryFilterScreen';
-
-
 /**
  * Our top-level App component that serves as a simple
  * router/navigator, driven by our app-level redux state!
@@ -54,67 +43,6 @@ class Router extends React.Component {
 
     // fallback to a SplashScreen
     return <SplashScreen msg="I'm trying to think but it hurts!"/>;
-    
-    // ?? OBSOLETE (pull into various features)
-
-
-    //x DENOTES logic moved into new structure ?? trash this when complete
-    //
-    //? /* eslint-disable curly */
-    //
-    //x // promote a simple SplashScreen (with status) until our system is ready
-    //x // NOTE: Errors related to system resources are promoted through independent user notifications
-    //x if (!p.device.fontsLoaded)   // ... before our fonts are loaded,
-    //x   return <Expo.AppLoading/>; //     we must use the Expo spash screen (no dependancy on yet-to-be-loaded fonts)
-    //x if (p.device.status !== 'READY')
-    //x   return <SplashScreen msg={p.device.status}/>;
-    //x 
-    //x // primary route logic, based on user authorization
-    //x switch (p.userStatus) {
-    //x 
-    //x   // user is: signed in BUT email verification in-progress
-    //x   case 'signedInUnverified':
-    //x     return <SignInVerifyScreen/> // screen requesting email verification completion
-    //x 
-    //x   // user is: fully signed in (authorized/verified/profiled)
-    //x   // ... this is our real app screens (after authorization)
-    //x   case 'signedIn':
-    //x 
-    //??    if (p.appState.discovery.filterForm) { // ... kinda unexpected: isolated from other Discovery feature (how would this work in "pods" concept?
-    //??      return <DiscoveryFilterScreen/>;
-    //??    }
-    //x     else if (p.appState.eateries.listView.filterForm) { // ... kinda unexpected: isolated from other Eatery feature (how would this work in "pods" concept?
-    //x       return <EateryFilterScreen/>;
-    //x     }
-    //x     else if (p.appState.view === 'eateries') {
-    //x       if (p.appState.eateries.spin) {
-    //x         return <SplashScreen msg={p.appState.eateries.spin}/>;
-    //x       }
-    //x       else if (p.appState.eateries.detailView) {
-    //x         const eatery = p.appState.eateries.dbPool[p.appState.eateries.detailView];
-    //x         return <EateryDetailScreen eatery={eatery}/>;
-    //x       }
-    //x       else {
-    //x         return <EateriesListScreen/>;
-    //x       }
-    //x     }
-    //??    else if (p.appState.view === 'discovery') {
-    //??      return <DiscoveryListScreen/>;
-    //??    }
-    //x 
-    //x   // user is: unauthorized (either explicit or status unknown)
-    //x   case 'signedOut':
-    //x   default:
-    //x     // display interactive SignIn, when form is active
-    //x     if (p.signInForm) {
-    //x       return <SignInScreen/>;
-    //x     }
-    //x     // ?? check for signUpForm
-    //x }
-    //x 
-    //x // fallback is our SplashScreen
-    //x return <SplashScreen msg="Router Fallback"/>;
-
   }
 }
 
@@ -128,10 +56,6 @@ export default connectRedux(Router, {
   mapStateToProps(appState) {
     return {
       appState,
-      // ?? obsolete
-      //? device:       appState.device,
-      //? userStatus:   appState.auth.user.status,
-      //? signInForm:   appState.auth.signInForm,
     };
   },
 });

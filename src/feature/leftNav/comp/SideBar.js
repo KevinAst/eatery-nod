@@ -120,11 +120,10 @@ export default connectRedux(SideBar, {
         dispatch( app.eateries.actions.openFilterDialog() );
         closeSideBar();
       },
-      // ?? RETROFIT: appState/actions
-      // ? handleFilterDiscovery() {
-      // ?   dispatch( actions.discovery.filter.open() );
-      // ?   closeSideBar();
-      // ? },
+      handleFilterDiscovery() {
+        dispatch( app.discovery.actions.openFilterDialog() );
+        closeSideBar();
+      },
       handleSignOut() {
         dispatch( app.auth.actions.signOut() );
         closeSideBar();

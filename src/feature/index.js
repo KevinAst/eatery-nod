@@ -5,6 +5,7 @@ import auth        from './auth';
 import leftNav     from './leftNav';
 import view        from './view';
 import eateries    from './eateries';
+import discovery    from './discovery';
 import sandbox     from './sandbox';
 
 /**
@@ -16,6 +17,7 @@ import sandbox     from './sandbox';
  *  - **'leftNav'**:    promotes the app-specific Drawer/SideBar on the app's left side
  *  - **'view'**:       maintains the currentView with get/set cross-feature communication bindings
  *  - **'eateries'**:   manages and promotes the eateries view
+ *  - **'discovery'**:  manages and promotes the discovery view
  *  - **'sandbox'**:    promotes a variety of interactive tests, used in development, that can easily be disabled
  */
 export default [
@@ -26,5 +28,6 @@ export default [
   leftNav,
   view,
   eateries,
+  discovery,
   sandbox,
 ];
