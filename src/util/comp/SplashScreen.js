@@ -2,9 +2,7 @@ import Expo         from 'expo';
 import React        from 'react';
 import connectRedux from '../connectRedux';
 import {Image}      from 'react-native';
-// ?? Button is: VERY TEMP
 import {Body,
-        Button,
         Container,
         Content,
         Header,
@@ -44,12 +42,6 @@ function SplashScreen({msg, fontsLoaded}) {
                source={require("../../../assets/icons/eatery.png")}/>
         <Spinner color="blue"/>
         <Text>{msg}</Text>
-        {/* ??? VERY TEMP */}
-        <Button transparent
-                onPress={app.leftNav.open}>
-          <Text>TEMPORARY left-nav</Text>
-        </Button>
-
       </Content>
     </Container>
   );
