@@ -41,3 +41,12 @@ Within the discovery view, you simply toggle the check next to the
 entry.  **Red** entries are in your pool, **Grey** entries are not.
 
 ![Screen Flow](src/feature/discovery/docs/ScreenFlow.png)
+
+
+### Autorization
+
+Authorization is provided through the [auth
+feature](src/feature/auth), requiring a validated email/password
+before promoting any application screens.
+
+![Screen Flow](src/feature/auth/docs/ScreenFlow.png)
