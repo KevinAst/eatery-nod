@@ -12,7 +12,8 @@ using [Expo](https://expo.io/).
 
 ### Eatery Pool
 
-The main screen of eatery-nod is the [Eatery Pool](src/feature/eateries).  
+The main screen of eatery-nod is the **Eatery Pool** (_please refer to
+the [eateries feature](src/feature/eateries)_).
 
 This visualizes your persistent pool of restaurants to select from
 (the list can optionally be filtered).
@@ -24,3 +25,19 @@ The "detailed" view provides direct communication to the establishment
 (phone them, visit their web site, or navigate to their address).
 
 ![Screen Flow](src/feature/eateries/docs/ScreenFlow.png)
+
+
+### Discovery
+
+Your pool of eateries is maintained through **Discovery** (_please
+refer to the [discovery feature](src/feature/discovery)_).
+
+You don't have to maintain the details of your pool by hand.  Rather,
+you simply search the restaurants using the **disovery** feature.
+This is the same source that is used when you issue a Google Search
+(based on [Google Places](https://developers.google.com/places/)).
+
+Within the discovery view, you simply toggle the check next to the
+entry.  **Red** entries are in your pool, **Grey** entries are not.
+
+![Screen Flow](src/feature/discovery/docs/ScreenFlow.png)
