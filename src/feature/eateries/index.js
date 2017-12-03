@@ -17,7 +17,11 @@ import appDidStart      from './appDidStart';
  *
  * For a high-level overview of how actions, logic, and reducers
  * interact together to maintain this feature's state, please refer to
- * `StateTransition.txt`.
+ * `docs/StateTransition.txt`.
+ *
+ * **Screen Flow**
+ *
+ * You can see a Screen Flow diagram at: `docs/ScreenFlow.png`.
  */
 export default createFeature({
   name,

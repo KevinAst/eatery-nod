@@ -9,4 +9,8 @@ the ability to phone, visit their web site, and navigate to them.
 
 For a high-level overview of how actions, logic, and reducers interact
 together to maintain this feature's state, please refer to the [State
-Transition](StateTransition.txt) diagram.
+Transition](docs/StateTransition.txt) diagram.
+
+## Screen Flow
+
+![Screen Flow](docs/ScreenFlow.png)
