@@ -113,7 +113,7 @@ export default connectRedux(SideBar, {
   mapDispatchToProps(dispatch) {
     return {
       changeView(viewName) {
-        dispatch( app.view.actions.changeView(viewName) );
+        dispatch( app.currentView.actions.changeView(viewName) );
         closeSideBar();
       },
       handleFilterEatery() {

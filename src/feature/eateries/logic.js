@@ -134,7 +134,7 @@ export const processFilter = createLogic({
     dispatch( actions.applyFilter(filter) );
     
     // show our view view
-    dispatch( app.view.actions.changeView(featureName) );
+    dispatch( app.currentView.actions.changeView(featureName) );
 
     // close eatery form filter
     dispatch( actions.applyFilter.close() );

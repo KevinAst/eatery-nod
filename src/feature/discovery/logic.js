@@ -11,7 +11,7 @@ import {managedExpansion}      from '../../util/feature-u';0
 export const initialRetrieve = managedExpansion( (app) => createLogic({
 
   name: `${featureName}.initialRetrieve`,
-  type: String(app.view.actions.changeView),
+  type: String(app.currentView.actions.changeView),
 
   process({getState, action, app}, dispatch, done) {
 
@@ -69,7 +69,7 @@ export const processFilter = createLogic({
                                 loc: [deviceLoc.lat, deviceLoc.lng]}) );
     
     // show our view view
-    dispatch( app.view.actions.changeView(featureName) );
+    dispatch( app.currentView.actions.changeView(featureName) );
 
     // close our form filter
     dispatch( actions.filter.close() );

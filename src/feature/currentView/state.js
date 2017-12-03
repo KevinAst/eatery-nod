@@ -4,7 +4,7 @@ import featureName        from './featureName';
 import actions            from './actions';
 
 // ***
-// *** Our feature reducer, managing our view state.
+// *** Our feature reducer, managing our currentView state.
 // ***
 
 const reducer = shapedReducer(`${featureName}.currentView`, reducerHash({
@@ -18,6 +18,6 @@ export default reducer;
 // *** Various Selectors
 // ***
 
-                        // NOTE: in this case, our feature state root IS our view (very simple)!
+                        // NOTE: in this case, our feature state root IS our currentView (very simple)!
                         //       ... we use shapedReducer as a single-source-of-truth
 export const getView  = (appState) => reducer.getShapedState(appState);
