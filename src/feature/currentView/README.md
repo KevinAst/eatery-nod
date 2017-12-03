@@ -16,4 +16,4 @@ It is up to the various view-specific features to set/interpret.  A
 
 For a high-level overview of how actions, logic, and reducers interact
 together to maintain this feature's state, please refer to the [State
-Transition](StateTransition.txt) diagram.
+Transition](docs/StateTransition.txt) diagram.

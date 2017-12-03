@@ -20,7 +20,7 @@ import publicAPI        from './publicAPI';
  *
  * For a high-level overview of how actions, logic, and reducers
  * interact together to maintain this feature's state, please refer to
- * `StateTransition.txt`.
+ * `docs/StateTransition.txt`.
  */
 export default createFeature({
   name,
