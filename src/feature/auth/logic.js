@@ -114,6 +114,7 @@ export const signIn = createLogic({
 
   name: `${featureName}.signIn`,
   type: String(actions.signIn),
+  warnTimeout: 0, // long-running logic ... UNFORTUNATELY firebase is sometimes EXCRUCIATINGLY SLOW!
 
   process({getState, action, app}, dispatch, done) {
     firebase.auth().signInWithEmailAndPassword(action.email, action.pass)
