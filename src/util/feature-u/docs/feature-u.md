@@ -201,6 +201,14 @@ manages** (_for example to: redux, redux-logic, router, etc_).
 Let's take a closer look at the various aspects that make up a
 feature, and discuss feature-u's interest in each.
 
+  * [Actions](#actions)
+  * [Reducers (state)](#reducers-state)
+    - [Shaped Reducers](#shaped-reducers)
+  * [Selectors (encapsolating state)](#selectors-encapsolating-state)
+  * [Logic](#logic)
+  * [Components](#components)
+  * [Routes](#routes)
+
 
 ### Actions
 
@@ -500,8 +508,10 @@ root of the app.
 
 Two hooks are provided through the following feature parameters:
 
-1. **appWillStart** - invoked one time at app startup time
-2. **appDidStart** - invoked one time immediatly after app has started
+1. [**appWillStart**](#appwillstart) - invoked one time at app startup time
+2. [**appDidStart**](#appdidstart)   - invoked one time immediatly after app has started
+
+
 
 ### appWillStart
 
@@ -629,9 +639,18 @@ the public feature promotion of the App object (_discussed here_).  In
 doing this **a:** only the public aspects of a feature are
 exposed/used, and **b:** your features become truly plug-and-play.
 
+Let's see how Cross Communication is accomplished in feature-u:
+  * [publicFace](#publicface)
+  * [App Object](#app-object)
+    - [Accessing the App Object](#accessing-the-app-object)
+      * [managedExpansion()](#managedexpansion)
+      * [App Access Summary](#app-access-summary)
+    - [Checking Feature Dependencies (via App)](#checking-feature-dependencies-via-app))
+
+
 ### publicFace
 
-This cross-feature-communication is accomplished through the
+In feature-u, this cross-feature-communication is accomplished through the
 `publicFace` createFeature() parameter.  
 
 A feature can expose whatever it deems necessary through it's `publicFace`.
@@ -915,8 +934,9 @@ because it is up to you to implement (i.e. feature-u is not in control
 of this).
 
 In regard to features, there are two single-source items of interest:
- - Feature Name
- - Feature State Location
+ - [Feature Name](#feature-name)
+ - [Feature State Location](#feature-state-location)
+
 
 ### Feature Name
 
@@ -966,6 +986,14 @@ export const isDeviceReady = (appState) => getFeatureState(appState).status === 
 
 ... more selectors
 ```
+
+## API
+
+  * [`createFeature()`](api.md#createFeature)
+  * [`shapedReducer()`](api.md#shapedReducer)
+  * [`managedExpansion()`](api.md#managedExpansion)
+  * [`createRoute()`](api.md#createRoute)
+  * [`runApp()`](api.md#runApp)
 
 
 [react]:          https://reactjs.org/
