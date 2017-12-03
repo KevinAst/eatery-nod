@@ -32,15 +32,15 @@ import shapedReducer     from './shapedReducer';
  * @param {boolean} [enabled=true] an indicator as to
  * whether this feature is enabled (true) or not (false).
  *
- * @param {Any|contextCB} [publicAPI] an optional
- * resource exposed in app.{featureName}.{publicAPI} (emitted from
+ * @param {Any|contextCB} [publicFace] an optional
+ * resource exposed in app.{featureName}.{publicFace} (emitted from
  * runApp()), promoting cross-communication between features.  Please
- * refer to the feature-u `Public API` documentation for more
+ * refer to the feature-u `publicFace` documentation for more
  * detail.
  *
- * Because some publicAPI may require feature-based context
+ * Because some publicFace may require feature-based context
  * information, this parameter may also be a contextCB - a
- * function that returns the publicAPI (see managedExpansion()).
+ * function that returns the publicFace (see managedExpansion()).
  *
  * @param {reducerFn|contextCB} [reducer] an optional
  * reducer that maintains redux state (if any) for this feature.
@@ -87,7 +87,7 @@ import shapedReducer     from './shapedReducer';
 export default function createFeature({name,
                                        enabled=true,
 
-                                       publicAPI,
+                                       publicFace,
 
                                        reducer,
                                        logic,
@@ -108,7 +108,7 @@ export default function createFeature({name,
 
   check(enabled===true||enabled===false, 'enabled must be a boolean');
 
-  // publicAPI: nothing to validate (it can be anything, INCLUDING a .managedExpansion function)
+  // publicFace: nothing to validate (it can be anything, INCLUDING a .managedExpansion function)
 
   if (reducer) {
     check(isFunction(reducer) || reducer.managedExpansion, 'reducer (when supplied) must be a function -or- a contextCB');
@@ -146,7 +146,7 @@ export default function createFeature({name,
   //  *E*: some of which may NOT yet be fully expanded
   //       ... ones that support (and use) the managedExpansion() callback wrapper
   //       ... this expansion is controlled by runApp() 
-  //           to insure the publicAPI of ALL features are expanded FIRST,
+  //           to insure the publicFace of ALL features are expanded FIRST,
   //           for other feature aspect expansion to use
   //  *D*: some aspects contain "digestible" info that can be used internally in 
   //       aspect expansion (for single-source-of-truth)
@@ -154,7 +154,7 @@ export default function createFeature({name,
     name,          // *P* *D*
     enabled,       // *P* *D*
 
-    publicAPI,     // *P* *D* *E* KEY: this aspect is the feature's public API
+    publicFace,    // *P* *D* *E* KEY: this aspect is the feature's public API
 
     reducer,       // *P* *D* *E* NOTE: digestible info for reducers (*D*) are simply reducer.getShapedState(appState)
     logic,         // *P*     *E*
@@ -168,28 +168,28 @@ export default function createFeature({name,
 /**
  * @private
  * 
- * Expand the publicAPI aspect of the supplied feature, when it is
+ * Expand the publicFace aspect of the supplied feature, when it is
  * employing the managedExpansion() callback wrapper (see *E* above).
  * 
- * This is invoked by runApp() to insure the publicAPI of ALL features
+ * This is invoked by runApp() to insure the publicFace of ALL features
  * are expanded FIRST, so that other feature aspect expansion can use
  * it.
  *
  * This eliminates order dependency issues related to feature
  * expansion - EVEN in code that is expanded in-line.  The only
- * exception to this is dependencies in the publicAPI itself (which
+ * exception to this is dependencies in the publicFace itself (which
  * should be an anti-pattern).
  *
  * @param {Feature} feature the Feature object for which to expand the
- * publicAPI.
+ * publicFace.
  *
  * @param {App} app the App object (emitted by runApp()).
  */
-export function expandFeatureAspect_publicAPI(feature, app) {
-  if (feature.publicAPI && feature.publicAPI.managedExpansion) {
-    // fully resolve the actual publicAPI
+export function expandFeatureAspect_publicFace(feature, app) {
+  if (feature.publicFace && feature.publicFace.managedExpansion) {
+    // fully resolve the actual publicFace
     // ... by invoking the contextCB(app) embellished by managedExpansion(contextCB)
-    feature.publicAPI = feature.publicAPI(app);
+    feature.publicFace = feature.publicFace(app);
   }
 }
 
@@ -200,13 +200,13 @@ export function expandFeatureAspect_publicAPI(feature, app) {
  * Expand all other aspects of the supplied feature, when they are
  * employing the managedExpansion() callback wrapper (see *E* above).
  * 
- * This is invoked by runApp() to insure the publicAPI of ALL features
+ * This is invoked by runApp() to insure the publicFace of ALL features
  * are expanded BEFORE all other aspects, so that they can use the
- * publicAPI.
+ * publicFace.
  *
  * This eliminates order dependency issues related to feature
  * expansion - EVEN in code that is expanded in-line.  The only
- * exception to this is dependencies in the publicAPI itself (which
+ * exception to this is dependencies in the publicFace itself (which
  * should be an anti-pattern).
  *
  * @param {Feature} feature the Feature object for which to expand the

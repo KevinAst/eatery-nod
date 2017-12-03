@@ -1,7 +1,7 @@
 # feature-u API
 <a name="createFeature"></a>
 
-## createFeature(name, [enabled], [publicAPI], [reducer], [logic], [route], [appWillStart], [appDidStart]) ⇒ Feature
+## createFeature(name, [enabled], [publicFace], [reducer], [logic], [route], [appWillStart], [appDidStart]) ⇒ Feature
 Create a new Feature object, that accumulates various FeatureAspects to be consumed by feature-u runApp().Example:```js  import {createFeature} from 'feature-u';  import reducer         from './state';  export default createFeature({    name:       'views',    enabled:    true,    reducer:    shapedReducer('views.currentView', reducer),    ?? expand this a bit  };```**Please Note** `createFeature()` accepts named parameters.
 
 
@@ -9,7 +9,7 @@ Create a new Feature object, that accumulates various FeatureAspects to be cons
 | --- | --- | --- | --- |
 | name | string |  | the feature name, used in programmatically delineating various features (ex: 'views'). |
 | [enabled] | boolean | <code>true</code> | an indicator as to whether this feature is enabled (true) or not (false). |
-| [publicAPI] | Any \| [`contextCB`](#contextCB) |  | an optional resource exposed in app.{featureName}.{publicAPI} (emitted from runApp()), promoting cross-communication between features.  Please refer to the feature-u `Public API` documentation for more detail. Because some publicAPI may require feature-based context information, this parameter may also be a contextCB - a function that returns the publicAPI (see managedExpansion()). |
+| [publicFace] | Any \| [`contextCB`](#contextCB) |  | an optional resource exposed in app.{featureName}.{publicFace} (emitted from runApp()), promoting cross-communication between features.  Please refer to the feature-u `publicFace` documentation for more detail. Because some publicFace may require feature-based context information, this parameter may also be a contextCB - a function that returns the publicFace (see managedExpansion()). |
 | [reducer] | reducerFn \| [`contextCB`](#contextCB) |  | an optional reducer that maintains redux state (if any) for this feature. The reducers from all features are combined into one overall app state, through a required shape specification, embellished on the reducer through the shapedReducer() function.  Please refer to the feature-u `Reducers` documentation for more detail. Because some reducers may require feature-based context information, this parameter may also be a contextCB - a function that returns the reducerFn (see managedExpansion()). |
 | [logic] | Array.&lt;Logic&gt; \| [`contextCB`](#contextCB) |  | an optional set of business logic modules (if any) to be registered to redux-logic in support of this feature. Please refer to the feature-u `Logic` documentation for more detail. Because some logic modules may require feature-based context information, this parameter may also be a contextCB - a function that returns the Logic[] (see managedExpansion()). |
 | [route] | Route |  | the optional route callback (see createRoute()) that promotes feature-based top-level screen components based on appState.  Please refer to the feature-u `routes` documentation for more detail. |
@@ -55,7 +55,7 @@ Create a new Route object, that provides a generalized run-timeAPI to abstractl
 <a name="runApp"></a>
 
 ## runApp(features) ⇒ App
-Launch an app by assembling/configuring the supplied app features.The runApp() function manages the configuration of all featureaspects including: actions, logic, reducers, routing, etc.  Inaddition it drives various app life-cycle methods (on the Featureobject), allowing selected features to inject initializationconstructs, etc.The runApp() function maintains an App object, which facilitatescross-communication between features.  The App object is promotedthrough redux-logic inject, and is also returned from this runApp()invocation (which can be exported to facilitate othercommunication).Example:```js  import {runApp} from 'feature-u';  import features from '../features';  export default runApp(features);```
+Launch an app by assembling/configuring the supplied app features.The runApp() function manages the configuration of all featureaspects including: actions, logic, reducers, routing, etc.  Inaddition it drives various app life-cycle methods (on the Featureobject), allowing selected features to inject initializationconstructs, etc.The runApp() function maintains an App object, which facilitatescross-communication between features.  The App object is promotedthrough redux-logic inject, and is also returned from this runApp()invocation (which can be exported to facilitate othercommunication).Example:```js  import {runApp} from 'feature-u';  import features from '../features';  export default runApp(features);```
 
 
 | Param | Type | Description |
@@ -76,6 +76,6 @@ A "managed expansion callback" (defined by managedExpansion) thatwhen invoked (
 
 | Param | Type | Description |
 | --- | --- | --- |
-| app | App | The feature-u app object, promoting the publicAPI of each feature. |
+| app | App | The feature-u app object, promoting the publicFace of each feature. |
 
 **Returns**: [`FeatureAspect`](#FeatureAspect) - The desired FeatureAspect (ex: reducer,logic module, etc.).  

@@ -24,7 +24,7 @@ The following benefits are promoted:
 
  - **Feature Encapsulation** _within it's own isolated implementation_
 
- - promotes **Cross Feature Communication** _through a publicAPI_
+ - promotes **Cross Feature Communication** _through a publicFace_
 
  - **minimizes feature dependency order issues** - EVEN in code that
    is expanded in-line
@@ -70,7 +70,7 @@ useful concepts that can be *(at minimum)* followed by your project.
   * [appDidStart](#appdidstart)
 - [Launching Your App](#launching-your-app)
 - [Cross Feature Communication](#cross-feature-communication)
-  * [publicAPI](#publicapi)
+  * [publicFace](#publicface)
   * [App Object](#app-object)
     - [Accessing the App Object](#accessing-the-app-object)
       * [managedExpansion()](#managedexpansion)
@@ -107,7 +107,7 @@ src/
         ScreenA2.js
       index.js        ... promotes featureA object using createFeature()
       logic.js
-      publicAPI.js
+      publicFace.js
       reducer.js
       route.js
 
@@ -125,7 +125,7 @@ these aspects through a Feature object (using createFeature()):
 **`src/feature/featureA/index.js`**
 ```js
 import {createFeature}  from 'feature-u';
-import publicAPI        from './publicAPI';
+import publicFace       from './publicFace';
 import reducer          from './state';
 import logic            from './logic';
 import route            from './route';
@@ -136,7 +136,7 @@ export default createFeature({
   name:     'featureA',
   enabled:  true,
 
-  publicAPI: {
+  publicFace: {
     api: {
       open:  () => ... implementation omitted,
       close: () => ... implementation omitted,
@@ -154,7 +154,7 @@ export default createFeature({
 
 You can see that featureA defines reducers, logic modules, routes,
 and does some type of initialization (appWillStart/appDidStart).  It
-also promotes a public API (open/close) to other features.
+also promotes a publicFace (open/close) to other features.
 
 The **application mainline**, merely collects all features, and
 launches the app by invoking runApp():
@@ -167,7 +167,7 @@ import features  from './feature';
 export default runApp(features);
 ```
 
-runApp() returns an App object, which accumulates the public API of
+runApp() returns an App object, which accumulates the publicFace of
 all features (in named feature nodes), supporting cross-communication
 between features:
 
@@ -236,7 +236,7 @@ With that said, **there are cases where actions need to be promoted
 outside of a feature's implementation**.  Say, for example, featureA's
 reducer needs to monitor one of featureB's actions, or one of
 featureB's logic modules needs to dispatch a featureA action.  When
-this happens **the [Public API](#public-api) feature-u aspect can be
+this happens **the [publicFace](#publicface) feature-u aspect can be
 used for this promotion**.  Please note that in consideration of
 feature encapsulation, *best practices would strive to minimize the
 public promotion of actions outside the feature boundry*.
@@ -375,11 +375,11 @@ selectors should be promoted/used internally within the feature
 (defined in close proximity to your reducers).
 
 While feature-u does not directly manage anything about selectors, a
-feature may wish to promote some of it's selectors using the [Public
-API](#public-api) feature-u aspect.  Please note that in consideration
-of feature encapsulation, *best practices would strive to minimize the
-public promotion of feature state (and selectors) outside the feature
-boundary*.
+feature may wish to promote some of it's selectors using the
+[publicFace](#publicface) feature-u aspect.  Please note that in
+consideration of feature encapsulation, *best practices would strive
+to minimize the public promotion of feature state (and selectors)
+outside the feature boundary*.
 
 
 
@@ -422,7 +422,7 @@ primary way in which a feature exposes it's components to the app.
 Like other feature aspects, **there may be cases where components need
 to be programatically exposed outside of a feature's implementation**.
 This typically happens for lower-level utility components.  When this
-happens **the [Public API](#public-api) feature-u aspect can be used
+happens **the [publicFace](#publicface) feature-u aspect can be used
 for this promotion**.
 
 
@@ -456,7 +456,7 @@ imports ... omitted for brevity
 export default createFeature({
   name: 'startup',
 
-  publicAPI: {
+  publicFace: {
     ...
   },
 
@@ -586,7 +586,7 @@ import features  from './feature';
 export default runApp(features);
 ```
 
-runApp() returns an App object, which accumulates the publicAPI of all
+runApp() returns an App object, which accumulates the publicFace of all
 features (in named feature nodes), supporting cross-communication
 between features.  For this reason, the app object should be exported
 by your mainline (_exposing it to various code modules_).
@@ -595,7 +595,7 @@ Under the covers, `runApp()` is managing the following details:
 
 - insures uniqueness of all feature names
 - interprets feature enablement (i.e. disabling non-active features)
-- setup (and return) the App object (promoting all features publicAPI)
+- setup (and return) the App object (promoting all features publicFace)
 - manages the expansion of all assets in a controlled way (via `managedExpansion()`)
 - configures redux, accumulating all feature reducers into one app reducer (defining one overall appState)
 - configures redux-logic, accumulating all feature logic modules
@@ -629,12 +629,12 @@ the public feature promotion of the App object (_discussed here_).  In
 doing this **a:** only the public aspects of a feature are
 exposed/used, and **b:** your features become truly plug-and-play.
 
-### publicAPI
+### publicFace
 
 This cross-feature-communication is accomplished through the
-`publicAPI` createFeature() parameter.  
+`publicFace` createFeature() parameter.  
 
-A feature can expose whatever it deems necessary through it's `publicAPI`.
+A feature can expose whatever it deems necessary through it's `publicFace`.
 There are no real constraints on this resource.  It is truly open.
 Typically it is a container of functions of some sort.
 
@@ -644,7 +644,7 @@ Here is a suggested sampling:
 export default createFeature({
   name:     'featureA',
 
-  publicAPI: {
+  publicFace: {
 
     actions: {   // ... JUST action creators that need public promotion (i.e. NOT ALL)
       open: actions.view.open,
@@ -663,15 +663,15 @@ export default createFeature({
 });
 ```
 
-The following sections discuss how this publicAPI is exposed and
+The following sections discuss how this publicFace is exposed and
 accessed.
 
 
 ### App Object
 
-The `publicAPI` of all features are accumulated and exposed through
+The `publicFace` of all features are accumulated and exposed through
 the App object (emitted from runApp()), as follows:
-`app.{featureName}.{publicAPI}`.
+`app.{featureName}.{publicFace}`.
 
 As an example, the sample above can be referenced like this: 
 
@@ -830,7 +830,7 @@ export const myLogicModule = managedExpansion( (app) => createLogic({
 Because the contextCB() is invoked in a controlled way (by feature-u),
 the supplied `app` parameter is guaranteed to be defined (_issue
 **a**_).  Not only that, but the supplied `app` object is guaranteed to
-have all features publicAPI definitions resolved (_issue **b**_).
+have all features publicFace definitions resolved (_issue **b**_).
 
 **_SideBar_**: A secondary reason `managedExpansion()` may be used
 (_over and above app injection during code expansion_) is to **delay

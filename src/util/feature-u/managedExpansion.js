@@ -76,7 +76,7 @@ export default function managedExpansion(contextCB) {
  * @callback contextCB
  * 
  * @param {App} app - The feature-u app object, promoting the
- * publicAPI of each feature.
+ * publicFace of each feature.
  * 
  * @returns {FeatureAspect} The desired FeatureAspect (ex: reducer,
  * logic module, etc.).

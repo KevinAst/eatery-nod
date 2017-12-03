@@ -1,5 +1,5 @@
 import {createFeature}  from '../../util/feature-u';
-import publicAPI        from './publicAPI';
+import publicFace       from './publicFace';
 
 /**
  * The **'sandbox'** feature promotes a variety of interactive tests,
@@ -13,5 +13,6 @@ import publicAPI        from './publicAPI';
 export default createFeature({
   name:    'sandbox',
   enabled: false,
-  publicAPI,
+
+  publicFace,
 });

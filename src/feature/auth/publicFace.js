@@ -2,7 +2,7 @@ import actions  from './actions';
 import * as sel from './state';
 
 /**
- * The public API promoted by this feature through: app.auth...
+ * The publicFace promoted by this feature through: app.auth...
  */
 export default {
   actions: {

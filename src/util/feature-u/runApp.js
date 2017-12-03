@@ -6,7 +6,7 @@ import {applyMiddleware,
         combineReducers}       from 'redux';
 import {createLogicMiddleware} from 'redux-logic';
 import {Provider}              from 'react-redux';
-import {expandFeatureAspect_publicAPI,
+import {expandFeatureAspect_publicFace,
         expandFeatureAspects}  from './createFeature';
 import Router                  from './Router';
 import isFunction              from 'lodash.isfunction';
@@ -91,23 +91,23 @@ export default function runApp(features) {
     // },
   };
 
-  // expand/promote the publicAPI aspect of ALL features FIRST (i.e. before other feature aspects)
+  // expand/promote the publicFace aspect of ALL features FIRST (i.e. before other feature aspects)
   // so the expansion of other feature apects can use it
   // ... this eliminates order dependency issues related to feature
   //     expansion - EVEN in code that is expanded in-line.  The only
-  //     exception to this is dependencies in the publicAPI itself (which
+  //     exception to this is dependencies in the publicFace itself (which
   //     should be an anti-pattern)
   activeFeatures.forEach( feature => {
-    // expand the publicAPI of this feature
-    expandFeatureAspect_publicAPI(feature, app);
+    // expand the publicFace of this feature
+    expandFeatureAspect_publicFace(feature, app);
 
-    // promote the feature publicAPI in our app
+    // promote the feature publicFace in our app
     // ... defaulting to an empty object (indicating the feature is enabled)
-    app[feature.name] = feature.publicAPI || {};
+    app[feature.name] = feature.publicFace || {};
   });
 
   // expand all other aspects of our features
-  // ... now that they have access to the publicAPI of ALL features (via app)
+  // ... now that they have access to the publicFace of ALL features (via app)
   activeFeatures.forEach( feature => {
     expandFeatureAspects(feature, app);
   });

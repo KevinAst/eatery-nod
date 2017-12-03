@@ -1,7 +1,7 @@
 import {createFeature}  from '../../util/feature-u';
 import name             from './featureName';
+import publicFace       from './publicFace';
 import reducer          from './state';
-import publicAPI        from './publicAPI';
 import logic            from './logic';
 import route            from './route';
 import appWillStart     from './appWillStart';
@@ -47,10 +47,10 @@ import appDidStart      from './appDidStart';
  */
 export default createFeature({
   name,
+
+  publicFace,
+
   reducer,
-
-  publicAPI,
-
   logic,
   route,
 

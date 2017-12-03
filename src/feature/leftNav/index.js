@@ -1,5 +1,5 @@
 import {createFeature}  from '../../util/feature-u';
-import publicAPI        from './publicAPI';
+import publicFace       from './publicFace';
 import appWillStart     from './appWillStart';
 
 /**
@@ -18,7 +18,7 @@ import appWillStart     from './appWillStart';
 export default createFeature({
   name: 'leftNav',
 
-  publicAPI,
+  publicFace,
 
   appWillStart,
 });

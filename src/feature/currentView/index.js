@@ -1,7 +1,7 @@
 import {createFeature}  from '../../util/feature-u';
 import name             from './featureName';
+import publicFace       from './publicFace';
 import reducer          from './state';
-import publicAPI        from './publicAPI';
 
 /**
  * The **'currentView'** feature maintains the currentView (as a string).
@@ -24,7 +24,8 @@ import publicAPI        from './publicAPI';
  */
 export default createFeature({
   name,
-  reducer,
 
-  publicAPI,
+  publicFace,
+
+  reducer,
 });

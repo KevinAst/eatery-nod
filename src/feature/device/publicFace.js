@@ -5,7 +5,7 @@ import {areFontsLoaded,
 import actions           from './actions';
 
 /**
- * The public API promoted by this feature through: app.device...
+ * The publicFace promoted by this feature through: app.device...
  */
 export default {
   api,

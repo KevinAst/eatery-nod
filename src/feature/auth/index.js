@@ -1,8 +1,8 @@
 import {createFeature}  from '../../util/feature-u';
 import name             from './featureName';
 import actions          from './actions'; // TODO: QUERKYNESS of IFormMeta (aggravated by feature-u) ... actions MUST be expanded BEFORE IFormMeta instance (signInFormMeta)
+import publicFace       from './publicFace';
 import reducer          from './state';
-import publicAPI        from './publicAPI';
 import logic            from './logic';
 import route            from './route';
 
@@ -45,10 +45,10 @@ import route            from './route';
  */
 export default createFeature({
   name,
+
+  publicFace,
+
   reducer,
-
-  publicAPI,
-
   logic,
   route,
 });
