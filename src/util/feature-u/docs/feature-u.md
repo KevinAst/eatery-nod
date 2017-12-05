@@ -35,8 +35,9 @@ The following benefits are promoted:
    app-specific initialization, and even introduce components
    into the root of the app_
 
- - provides **Feature-based Route Management** (based on app state),
-   _promoting feature-based commponents_
+ - provides [**Feature Based Route
+   Management**](#feature-based-route-management) (based on app
+   state), _promoting feature-based commponents_
 
  - facilitates **single-source-of-truth** _within a feature's
    implementation_
@@ -65,10 +66,11 @@ useful concepts that can be *(at minimum)* followed by your project.
   * [Logic](#logic)
   * [Components](#components)
   * [Routes](#routes)
+- [Launching Your App](#launching-your-app)
+- [Feature Based Route Management](#feature-based-route-management)
 - [App Life Cycle Hooks](#app-life-cycle-hooks)
   * [appWillStart](#appwillstart)
   * [appDidStart](#appdidstart)
-- [Launching Your App](#launching-your-app)
 - [Cross Feature Communication](#cross-feature-communication)
   * [publicFace](#publicface)
   * [App Object](#app-object)
@@ -439,17 +441,102 @@ for this promotion**.
 
 Each feature (that maintains components) promotes it's top-level
 screen components through a `route` createFeature()
-parameter, using the createRoute() utility.
+parameter, using the createRoute() utility.  
 
-The Route object contains one or two function callbacks (routeCB), with
-the following signature:
+A route is simply a function that reasons about the appState, and
+either returns a rendered component, or null to allow downstream
+routes the same opportunity.  Basically the first non-null return
+wins.
+
+Please refer to the [Feature Based Route
+Management](#feature-based-route-management) section for more details.
+
+**NOTE**: Because routes operate on a "first come, first serve" basis,
+this is the one aspect that **may dictate the order of your feature
+registration**.  With that said, *it is not uncommon for your route logic
+to naturally operate independent of this ordering*.
+
+
+## Launching Your App
+
+Because feature-u has knowledge of the various aspects that comprise
+an application, it can easily configure the underlying infrastructure
+(e.g. redux, redux-logic, router, etc.) and launch the app.
+
+Features can even inject content in the top-level document hierarchy
+(through feature-u's app life-cycle hooks).
+
+As a result, your application mainline merely invokes the `runApp()`
+function, passing a collection of features that make up your app.
+
+In other words, your mainline is a single line of code!
+
+**`src/app.js`**
+```js
+import {runApp}  from 'feature-u';
+import features  from './feature';
+
+export default runApp(features);
+```
+
+runApp() returns an App object, which accumulates the publicFace of all
+features (in named feature nodes), supporting cross-communication
+between features.  For this reason, the app object should be exported
+by your mainline (_exposing it to various code modules_).
+
+Under the covers, `runApp()` is managing the following details:
+
+- insures uniqueness of all feature names
+- interprets feature enablement (i.e. disabling non-active features)
+- setup (and return) the App object (promoting all features publicFace)
+- manages the expansion of all assets in a controlled way (via `managedExpansion()`)
+- configures redux, accumulating all feature reducers into one app reducer (defining one overall appState)
+- configures redux-logic, accumulating all feature logic modules
+- configures the feature-u router, accumulating all feature routes
+- manages app life-cycle hooks found in all features (both `appWillStart()` and `appDidStart()`)
+- activates the app by registering the top-level app component to Expo
+
+
+
+## Feature Based Route Management
+
+You may be surprised to discover that feature-u introduces it's own
+flavor of route management.  There are so many router implementations!
+Why introduce yet another?
+
+The feature-u router is _based on a very simple concept_: **allow the
+application state to drive the routes!**
+
+In feature based routing, you will not find the typical "route path to
+component" mapping catalog, where a `route('signIn')` directive causes
+the SignIn screen to display, which in turn causes the system to
+accommodate the request by adjusting it's state appropriately.
+Rather, the appState is analyzed, and if the user is NOT
+authenticated, the SignnIn screen is automatically displayed ... Easy
+Peasy!
+
+Not only is this approach **more natural** (_imho_), but _more
+importantly_, **it allows a feature to promote it's screens in an
+encapsulated and autonomous way**.
+
+**Here is how it works:**
+
+Each feature (that maintains components) promotes it's top-level
+screen components through a `route` createFeature()
+parameter, using the createRoute() utility.  
+
+A route is simply a function that reasons about the appState, and
+either returns a rendered component, or null to allow downstream
+routes the same opportunity.  Basically the first non-null return
+wins.  _If no component is established, the router will fallback to a
+splash screen (not typical but could occur in some startup
+transition)_.
+
+The `route` directive contains one or two function callbacks
+(routeCB), with the following signature:
 ```
   routeCB(app, appState): rendered-component (null for none)
 ```
-
-The routeCB reasons about the supplied appState, and either returns a
-rendered component, or null to allow downstream routes the same
-opportunity.  Basically the first non-null return wins.
 
 One or two routeCBs can be registered, one with priority and one without.
 The priority routeCBs are given precedence across all registered routes
@@ -460,7 +547,6 @@ SplashScreen until the system is ready:
 
 **`src/feature/startup/index.js`**
 ```js
-imports ... omitted for brevity
 export default createFeature({
   name: 'startup',
 
@@ -472,10 +558,10 @@ export default createFeature({
   logic,
   route: createRoute({
     priorityContent(app, appState) {
-      if (!isDeviceReady(appState)) {
-        return <SplashScreen msg={getDeviceStatusMsg(appState)}/>;
+      if (!selector.isDeviceReady(appState)) {
+        return <SplashScreen msg={selector.getDeviceStatusMsg(appState)}/>;
       }
-      return null;
+      return null;  // system IS ready ... allow downstream routes to activate
     },
   }),
 
@@ -489,14 +575,14 @@ this is the one aspect that **may dictate the order of your feature
 registration**.  With that said, *it is not uncommon for your route logic
 to naturally operate independent of this ordering*.
 
-**SideBar**: As you can see, **feature-u provides it's own Router
-implementation**.  This is something you may not have expected, given
-the popularity of various routers.  The reason for this is I wanted
-the app-level redux state to directly drive the screen routes, rather
-than an external router dictate a route, from which the app state must
-sync.  This just seems more natural to me.  This is what the feature-u
-Router accomplishes.  *With that said, I am open to the possibility
-that I may be missing something here* :-)
+**Another important point** is that _feature based routing establishes
+a routing precedence_.  As an example, the 'auth' feature can take
+"routing precedence" over the 'xyz' feature, by simply resolving to an
+appropriate screen until the user is authenticated (say a SignIn
+screen or even a splash screen when appropriate).  This means the the
+'xyz' feature can be assured the user is authenticated!  You will
+never see logic in an 'xyz' screen that redirects to a login screen if
+the user is not authenticated.
 
 
 ## App Life Cycle Hooks
@@ -572,46 +658,6 @@ appDidStart({app, appState, dispatch}) {
   dispatch( actions.bootstrap() );
 }
 ```
-
-
-## Launching Your App
-
-Because feature-u has knowledge of the various aspects that comprise
-an application, it can easily configure the underlying infrastructure
-(e.g. redux, redux-logic, router, etc.) and launch the app.
-
-Features can even inject content in the top-level document hierarchy
-(through feature-u's app life-cycle hooks).
-
-As a result, your application mainline merely invokes the `runApp()`
-function, passing a collection of features that make up your app.
-
-In other words, your mainline is a single line of code!
-
-**`src/app.js`**
-```js
-import {runApp}  from 'feature-u';
-import features  from './feature';
-
-export default runApp(features);
-```
-
-runApp() returns an App object, which accumulates the publicFace of all
-features (in named feature nodes), supporting cross-communication
-between features.  For this reason, the app object should be exported
-by your mainline (_exposing it to various code modules_).
-
-Under the covers, `runApp()` is managing the following details:
-
-- insures uniqueness of all feature names
-- interprets feature enablement (i.e. disabling non-active features)
-- setup (and return) the App object (promoting all features publicFace)
-- manages the expansion of all assets in a controlled way (via `managedExpansion()`)
-- configures redux, accumulating all feature reducers into one app reducer (defining one overall appState)
-- configures redux-logic, accumulating all feature logic modules
-- configures the feature-u router, accumulating all feature routes
-- manages app life-cycle hooks found in all features (both `appWillStart()` and `appDidStart()`)
-- activates the app by registering the top-level app component to Expo
 
 
 
