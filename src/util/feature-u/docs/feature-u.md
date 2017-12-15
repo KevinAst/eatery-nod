@@ -501,23 +501,49 @@ Under the covers, `runApp()` is managing the following details:
 ## Feature Based Route Management
 
 You may be surprised to discover that feature-u introduces it's own
-flavor of route management.  There are so many router implementations!
+flavor of route management. There are so many router implementations!
 Why introduce yet another?
 
+**Don't Worry, Be Happy**
+
+Actually, the feature-u router is a **completely optional aspect**, so
+don't be alarmed if you have already settled on your own
+route/navigation solution.
+
+You are free to use whatever route/navigation solution that meets your
+requirements.
+ - You can use the built-in feature-u routes
+ - You can use XYZ navigation (_fill in the blank with your chosen solution_)
+ - You can even use a combination of feature-u routes and XYZ routes
+
+The only caveat in using another route managements system is that the
+XYZ routes will not be an integral part of feature-u, so your feature
+encapsulation may be somewhat compromised.  This may or may not be a
+concern.  With that said, it is theoretically possible to introduce
+your own feature-u extension supporting XYZ routes, which would bring
+it back into the realm of "the extended" feature-u.  For now, this
+exercise is left up to you, as there are so many route management
+solutions.
+
+**feature-u routes**
+
+The **big benefit of the feature-u router** (_should you choose to use it_)
+is **it allows a feature to promote it's screens in an encapsulated and
+autonomous way**!
 The feature-u router is _based on a very simple concept_: **allow the
 application state to drive the routes!**
 
 In feature based routing, you will not find the typical "route path to
-component" mapping catalog, where a `route('signIn')` directive causes
-the SignIn screen to display, which in turn causes the system to
-accommodate the request by adjusting it's state appropriately.
-Rather, the appState is analyzed, and if the user is NOT
-authenticated, the SignnIn screen is automatically displayed ... Easy
-Peasy!
+component" mapping catalog, where (_for example_) some pseudo
+`route('signIn')` directive causes the SignIn screen to display, which
+in turn causes the system to accommodate the request by adjusting it's
+state appropriately.  Rather, the appState is analyzed, and if the
+user is NOT authenticated, the SignIn screen is automatically
+displayed ... Easy Peasy!
 
-Not only is this approach **more natural** (_imho_), but _more
-importantly_, **it allows a feature to promote it's screens in an
-encapsulated and autonomous way**.
+Depending on your perspective, this approach can be **more natural**,
+but _more importantly_, **it allows features to promote their own
+screens in an encapsulated and autonomous way**!
 
 **Here is how it works:**
 
