@@ -192,16 +192,44 @@ app: {
 ## Feature Aspects
 
 In feature-u, "aspect" is a general term used to refer to the various
-ingredients that, when combined, constitute your app.  For example,
-"aspects" may refer to actions, reducers, components, routes, logic,
-etc.
+ingredients that (when combined) constitute your application.  As an
+example, "aspects" may refer to redux elements (actions, reducers,
+selectors), UI ingredients (components, routes, etc.), logic modules,
+etc, etc, etc.
 
-Some aspects are of interest to feature-u while others are not ...
-**feature-u is only interested in aspects that it configures and
-manages** (_for example to: redux, redux-logic, router, etc_).
+Some aspects are of interest to feature-u while others are internal
+implementation details of a feature.  **feature-u is only concerned
+with aspects that are required to manage and configure other
+frameworks** (_for example: redux, redux-logic, navigation routers,
+etc._).
 
-Let's take a closer look at the various aspects that make up a
-feature, and discuss feature-u's interest in each.
+In essence, aspects are feature-u's plugable wrapper into other
+framework/utilities.  feature-u doesn't change these wrapped
+frameworks in any way.  You use them in the same way, employing their
+promoted APIs.  What aspects accomplishes then is two fold:
+
+  1. It accumulates these framework-specific resources over a cross-cut
+     of multiple features, combining them into an all-inclusive 
+     application resource.
+
+  2. It (_conveniently_) automatically manages and configures these
+     wrapped frameworks, simplifying your application startup process.
+
+Consequently, aspects are packaged separately from feature-u, so you
+can "pick and choose" the ones that match your project's run-time
+stack.
+
+You can even define your own aspect (_if the one you need doesn't
+already exist_), by using feature-u's open and extendable Aspect API.
+
+Let's take a closer look at some example aspects that you may use in
+defining a feature, and discuss feature-u's interest in each.
+
+?? refactor this list by: 
+   - redux (actions/reducers/selectors)
+   - redux-logic
+   - Components
+   - Navigational Routers
 
   * [Actions](#actions)
   * [Reducers (state)](#reducers-state)
