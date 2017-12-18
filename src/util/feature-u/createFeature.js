@@ -9,8 +9,8 @@ import shapedReducer     from './shapedReducer';
  * @function createFeature
  * @description
  *
- * Create a new Feature object, that accumulates various 
- * FeatureAspects to be consumed by feature-u runApp().
+ * Create a new Feature object, accumulating Aspect data to be consumed
+ * by launchApp().
  *
  * Example:
  * ```js
@@ -99,6 +99,8 @@ export default function createFeature({name,
 
   // ***
   // *** validate parameters
+  // ***   NOTE: We can only validate built-in keywords!
+  // ***         All others are validate by the corresponding Aspect!
   // ***
 
   const check = verify.prefix('createFeature() parameter violation: ');
@@ -110,29 +112,35 @@ export default function createFeature({name,
 
   // publicFace: nothing to validate (it can be anything, INCLUDING a .managedExpansion function)
 
+  // ?? should default this so we can invoke unconditionally
+  if (appWillStart) {
+    check(isFunction(appWillStart), 'appWillStart (when supplied) must be a function');
+  }
+
+  // ?? should default this so we can invoke unconditionally
+  if (appDidStart) {
+    check(isFunction(appDidStart), 'appDidStart (when supplied) must be a function');
+  }
+
+  // DONE: NOW accomplished IN Aspect
   if (reducer) {
     check(isFunction(reducer) || reducer.managedExpansion, 'reducer (when supplied) must be a function -or- a contextCB');
 
     check(reducer.shape, 'reducer (when supplied) must be embellished with shapedReducer(). SideBar: shapedReducer() should always wrap the the outer function passed to createFunction() (even when managedExpansion() is used).');
   }
 
+  // DONE: NOW accomplished IN Aspect
   if (logic) {
     check(Array.isArray(logic) || logic.managedExpansion, 'logic (when supplied) must be an array of redux-logic modules -or- a contextCB');
   }
 
+  // DONE: NOW accomplished IN Aspect
   if (route) {
     const routeMsg = isValidRoute(route);
     check(!routeMsg, routeMsg);
   }
 
-  if (appWillStart) {
-    check(isFunction(appWillStart), 'appWillStart (when supplied) must be a function');
-  }
-
-  if (appDidStart) {
-    check(isFunction(appDidStart), 'appDidStart (when supplied) must be a function');
-  }
-
+  // ?? must now pass on unknowns
   const unknownArgKeys = Object.keys(unknownArgs);
   check(unknownArgKeys.length===0,  `unrecognized named parameter(s): ${unknownArgKeys}`);
 
@@ -164,6 +172,29 @@ export default function createFeature({name,
     appDidStart,   // *P*
   };
 }
+
+const builtInFeatureKeywords = {
+  name:         'name',
+  enabled:      'enabled',
+  publicFace:   'publicFace',
+  appWillStart: 'appWillStart',
+  appDidStart:  'appDidStart',
+};
+
+/**
+ * @private
+ * 
+ * Return indicator as to whether the supplied propName is a built-in
+ * Feature keyword.
+ *
+ * @param {string} propName the property name to check.
+ *
+ * @param {boolean} true: is keyword, false: is NOT keyword
+ */
+export function isBuiltInFeatureKeyword(propName) {
+  return builtInFeatureKeywords[propName] ? true : false;
+}
+
 
 /**
  * @private

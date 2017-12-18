@@ -2,7 +2,7 @@
 <a name="createFeature"></a>
 
 ## createFeature(name, [enabled], [publicFace], [reducer], [logic], [route], [appWillStart], [appDidStart]) ⇒ Feature
-Create a new Feature object, that accumulates various FeatureAspects to be consumed by feature-u runApp().Example:```js  import {createFeature} from 'feature-u';  import reducer         from './state';  export default createFeature({    name:       'views',    enabled:    true,    reducer:    shapedReducer('views.currentView', reducer),    ?? expand this a bit  };```**Please Note** `createFeature()` accepts named parameters.
+Create a new Feature object, accumulating Aspect data to be consumedby launchApp().Example:```js  import {createFeature} from 'feature-u';  import reducer         from './state';  export default createFeature({    name:       'views',    enabled:    true,    reducer:    shapedReducer('views.currentView', reducer),    ?? expand this a bit  };```**Please Note** `createFeature()` accepts named parameters.
 
 
 | Param | Type | Default | Description |
@@ -63,6 +63,22 @@ Launch an app by assembling/configuring the supplied app features.The runApp()
 | features | Array.&lt;Feature&gt; | the features that comprise this application. |
 
 **Returns**: App - an app object which used in featurecross-communication (as follows):```js {   ?? document }```  
+<a name="createAspect"></a>
+
+## createAspect(name, validateFeatureContent, assembleFeatureContent, [assembleAspectResources], [injectRootAppElm], [additionalMethods]) ⇒ Aspect
+Create an Aspect object, used to extend feature-u.**Note on App Promotion**: You will notice that the App object isconsistently supplied thoughout the various Aspect methods.  TheApp object is used in promoting cross-communiction betweenfeatures.  While it is most likely an anti-pattern to interaget theApp object directly in the Aspect, it is needed as to "passthrough" to downwstream processes (i.e. as an opaque object).**This is the reason the App object is supplied**.  As examples ofthis: - The "logic" aspect will dependancy inject (DI) the App object   into the redux-logic process. - The "route" aspect communcates the app in it's API (i.e. passes   it through). - etc.**Please Note**: `createAspect()` accepts named parameters.
+
+
+| Param | Type | Description |
+| --- | --- | --- |
+| name | string | the aspect name.  This name is used to "key" aspects of this type in the Feature object: `Feature.{name}: xyz`. As a result, Aspect names must be unique across all aspects that are in-use. |
+| validateFeatureContent | [`validateFeatureContentFn`](#validateFeatureContentFn) | a validation hook allowing this aspect to verify it's content on the supplied feature (which is known to contain this aspect). |
+| assembleFeatureContent | [`assembleFeatureContentFn`](#assembleFeatureContentFn) | the required Aspect method that assembles content for this aspect across all features, retaining needed state for subsequent ops. This method is required because this is the primary task that is accomplished by all aspects. |
+| [assembleAspectResources] | [`assembleAspectResourcesFn`](#assembleAspectResourcesFn) | an optional Aspect method that assemble resources for this aspect across all other aspects, retaining needed state for subsequent ops.  This hook is executed after all the aspects have assembled their feature content (i.e. after `assembleFeatureContent()`). |
+| [injectRootAppElm] | [`injectRootAppElmFn`](#injectRootAppElmFn) | an optional callback hook that promotes some characteristic of this aspect within the app root element (i.e. react component instance). |
+| [additionalMethods] | Any | additional methods (proprietary to specific Aspects), supporting two different requirements: <ol> <li> internal Aspect helper methods, and <li> APIs used in "aspect cross-communication" ... a contract      between one or more aspects.  This is merely an API specified      by one Aspect, and used by another Aspect, that is facilitate      through the `Aspect.assembleAspectResources(aspects, app)`      hook. </ol> |
+
+**Returns**: Aspect - a new Aspect object (to be consumed by launchApp()).  
 <a name="FeatureAspect"></a>
 
 ## FeatureAspect : \*
@@ -79,3 +95,48 @@ A "managed expansion callback" (defined by managedExpansion) thatwhen invoked (
 | app | App | The feature-u app object, promoting the publicFace of each feature. |
 
 **Returns**: [`FeatureAspect`](#FeatureAspect) - The desired FeatureAspect (ex: reducer,logic module, etc.).  
+<a name="validateFeatureContentFn"></a>
+
+## validateFeatureContentFn ⇒ string
+A validation hook allowing this aspect to verify it's content onthe supplied feature (which known to contain this aspect).
+
+
+| Param | Type | Description |
+| --- | --- | --- |
+| feature | Feature | the feature to validate, which is known to contain this aspect. |
+
+**Returns**: string - an error message when the supplied featurecontains invalid content for this aspect (null when valid).  
+<a name="assembleFeatureContentFn"></a>
+
+## assembleFeatureContentFn : function
+The required Aspect method that assembles content for this aspectacross all features, retaining needed state for subsequent ops.This method is required because this is the primary task that isaccomplished by all aspects.
+
+
+| Param | Type | Description |
+| --- | --- | --- |
+| activeFeatures | Array.&lt;Feature&gt; | The set of active (enabled) features that comprise this application. |
+| app | App | the App object used in feature cross-communication. |
+
+<a name="assembleAspectResourcesFn"></a>
+
+## assembleAspectResourcesFn : function
+An optional Aspect method that assemble resources for this aspectacross all other aspects, retaining needed state for subsequentops.  This hook is executed after all the aspects have assembledtheir feature content (i.e. after `assembleFeatureContent()`).This is an optional second-pass (so-to-speak) of Aspect datagathering, that facilitates an "aspect cross-communication"mechanism.  It allows a given aspect to gather resources from otheraspects, through a documented API for a given Aspect (ex:Aspect.getXyz()).As an example of this, the "reducer" aspect (which manages redux),allows other aspects to inject their own redux middleware (ex:redux-logic), through it's documented Aspect.getReduxMiddleware()API.
+
+
+| Param | Type | Description |
+| --- | --- | --- |
+| aspects | Array.&lt;Aspect&gt; | The set of feature-u Aspect objects used in this this application. |
+| app | App | the App object used in feature cross-communication. |
+
+<a name="injectRootAppElmFn"></a>
+
+## injectRootAppElmFn ⇒ reactElm
+An optional callback hook that promotes some characteristic of thisaspect within the app root element (i.e. react component instance).All aspects will either promote themselves through this hook, -or-through some "aspect cross-communication" mechanism.**NOTE**: When this hook is used, the supplied curRootAppElm MUST beincluded as part of this definition!
+
+
+| Param | Type | Description |
+| --- | --- | --- |
+| curRootAppElm | reactElm | the current react app element root. |
+| app | App | the App object used in feature cross-communication. |
+
+**Returns**: reactElm - a new react app element root (which in turn mustcontain the supplied curRootAppElm), or simply the suppliedcurRootAppElm (if no change).  
