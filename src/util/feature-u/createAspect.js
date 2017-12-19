@@ -119,7 +119,11 @@ export default function createAspect({name,
 
 /**
  * A validation hook allowing this aspect to verify it's content on
- * the supplied feature (which known to contain this aspect).
+ * the supplied feature.
+ *
+ * NOTE: To better understand the context in which any returned
+ *       validation messages are used, feature-u will prefix them
+ *       with: 'createFeature() parameter violation: '
  *
  * @callback validateFeatureContentFn
  * 

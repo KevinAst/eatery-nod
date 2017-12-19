@@ -117,6 +117,7 @@ export default function runApp(features) {
   // *** define our top-level redux appReducer that specifies our overall appState
   // ***
 
+  // DONE: has migrated to: src/util/feature-u/aspect/feature-u-redux/reducerAspect.js
   const appReducer = accumAppReducer(activeFeatures);
 
 
@@ -261,6 +262,7 @@ function createAppStore(appReducer, appLogic, app) {
  *
  * @private
  */
+// DONE: has migrated to: src/util/feature-u/aspect/feature-u-redux/reducerAspect.js
 export function accumAppReducer(features) { // ... named export ONLY used for testing
 
   // iterated over all features
@@ -332,6 +334,7 @@ export function accumAppReducer(features) { // ... named export ONLY used for te
  *
  * @private
  */
+// DONE: has migrated to: src/util/feature-u/aspect/feature-u-redux/reducerAspect.js
 export function accumReducer(genesisNode) { // ... named export ONLY used for testing
 
   if (isFunction(genesisNode)) {
