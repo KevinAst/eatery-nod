@@ -81,7 +81,7 @@ export default function createAspect({name,
 
   check(name,            'name is required');
   check(isString(name),  'name must be a string');
-  check(!isBuiltInFeatureKeyword(name), `aspect name: '${name}' is a reserved Feature keyword`);
+  check(!isBuiltInFeatureKeyword(name), `aspect name value: '${name}' is a reserved Feature keyword`);
   // NOTE: we validate Aspect.name uniqueness in launchApp() (once we know all aspects in-use)
 
   check(validateFeatureContent,              'validateFeatureContent is required');
