@@ -1,5 +1,5 @@
 // ? import createFeature     from '../createFeature';
-// ? import shapedReducer     from '../shapedReducer';
+// ? import slicedReducer     from '../slicedReducer';
 // ? import {accumAppReducer} from '../runApp'; // function under test
 // ? 
 // ? const anyAction = {type: 'any'};
@@ -26,13 +26,13 @@
 // ? 
 // ? const feature3 = createFeature({
 // ?   name:    'feature3',
-// ?   reducer: shapedReducer('complex.shape.feature3',
+// ?   reducer: slicedReducer('complex.slice.feature3',
 // ?                          (state='default-feature3', action) => 'state-for-feature3'),
 // ? });
 // ? 
 // ? const feature4 = createFeature({
 // ?   name:    'feature4',
-// ?   reducer: shapedReducer('complex.shape', // is an intermediate duplicate from feature3
+// ?   reducer: slicedReducer('complex.slice', // is an intermediate duplicate from feature3
 // ?                          (state='default-feature4', action) => 'state-for-feature4'),
 // ? });
 // ? 
@@ -60,12 +60,12 @@ describe('feature-u accumAppReducer() tests', () => {
 // ?       });
 // ?   });
 // ? 
-// ?   test('merge complex shapes', () => {
+// ?   test('merge complex slices', () => {
 // ?     expect(applyAppState([feature1, feature3]))
 // ?       .toEqual({
 // ?         feature1: 'state-for-feature1',
 // ?         complex: {
-// ?           shape: {
+// ?           slice: {
 // ?             feature3: 'state-for-feature3',
 // ?           },
 // ?         },
@@ -94,17 +94,17 @@ describe('feature-u accumAppReducer() tests', () => {
 // ?   });
 // ? 
 // ? 
-// ?   test('Error detected for duplicate shapes', () => {
+// ?   test('Error detected for duplicate slices', () => {
 // ?     expect(()=>applyAppState([feature1, feature1]))
 // ?       .toThrow(/cannot be specified by multiple features/);
 // ?   });
 // ? 
-// ?   test('Error detected for duplicate intermediate shapes', () => {
+// ?   test('Error detected for duplicate intermediate slices', () => {
 // ?     expect(()=>applyAppState([feature4, feature3]))
 // ?       .toThrow(/cannot be specified by multiple features/);
 // ?   });
 // ? 
-// ?   test('Error detected for duplicate intermediate shapes (in any order)', () => {
+// ?   test('Error detected for duplicate intermediate slices (in any order)', () => {
 // ?     expect(()=>applyAppState([feature3, feature4]))
 // ?       .toThrow(/cannot be specified by multiple features/);
 // ?   });
@@ -113,19 +113,19 @@ describe('feature-u accumAppReducer() tests', () => {
 // ? 
 // ?     const manageViews = createFeature({
 // ?       name:    'manageViews',
-// ?       reducer: shapedReducer('views.curView',
+// ?       reducer: slicedReducer('views.curView',
 // ?                              (state='default-manageViews', action) => 'state-for-manageViews'),
 // ?     });
 // ? 
 // ?     const eateries = createFeature({
 // ?       name:    'eateries',
-// ?       reducer: shapedReducer('views.eateries',
+// ?       reducer: slicedReducer('views.eateries',
 // ?                              (state='default-eateries', action) => 'state-for-eateries'),
 // ?     });
 // ? 
 // ?     const discovery = createFeature({
 // ?       name:    'discovery',
-// ?       reducer: shapedReducer('views.discovery',
+// ?       reducer: slicedReducer('views.discovery',
 // ?                              (state='default-discovery', action) => 'state-for-discovery'),
 // ?     });
 // ? 

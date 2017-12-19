@@ -25,10 +25,10 @@ import isFunction     from 'lodash.isfunction';
  *
  * Example (reducer):
  * ```js
- *   export default shapedReducer('foo', managedExpansion( (app) => combineReducers({...reducer-code-using-app...} ) ));
+ *   export default slicedReducer('foo', managedExpansion( (app) => combineReducers({...reducer-code-using-app...} ) ));
  * ```
  *
- * SideBar: For reducer aspects, shapedReducer() should always wrap
+ * SideBar: For reducer aspects, slicedReducer() should always wrap
  *          the the outer function passed to createFunction(), even
  *          when managedExpansion() is used.
  *

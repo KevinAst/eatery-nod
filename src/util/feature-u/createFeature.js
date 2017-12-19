@@ -2,7 +2,7 @@ import verify            from '../verify';
 import isString          from 'lodash.isstring';
 import isFunction        from 'lodash.isfunction';
 import {isValidRoute}    from './createRoute';
-import shapedReducer     from './shapedReducer';
+import slicedReducer     from './slicedReducer';
 
 
 /**
@@ -19,7 +19,7 @@ import shapedReducer     from './shapedReducer';
  *   export default createFeature({
  *     name:       'views',
  *     enabled:    true,
- *     reducer:    shapedReducer('views.currentView', reducer),
+ *     reducer:    slicedReducer('views.currentView', reducer),
  *     ?? expand this a bit
  *   };
  * ```
@@ -46,8 +46,8 @@ import shapedReducer     from './shapedReducer';
  * reducer that maintains redux state (if any) for this feature.
  *
  * The reducers from all features are combined into one overall app
- * state, through a required shape specification, embellished on the
- * reducer through the shapedReducer() function.  Please refer to the
+ * state, through a required slice specification, embellished on the
+ * reducer through the slicedReducer() function.  Please refer to the
  * feature-u `Reducers` documentation for more detail.
  *
  * Because some reducers may require feature-based context
@@ -126,7 +126,7 @@ export default function createFeature({name,
   if (reducer) {
     check(isFunction(reducer) || reducer.managedExpansion, 'reducer (when supplied) must be a function -or- a contextCB');
 
-    check(reducer.shape, 'reducer (when supplied) must be embellished with shapedReducer(). SideBar: shapedReducer() should always wrap the the outer function passed to createFunction() (even when managedExpansion() is used).');
+    check(reducer.slice, 'reducer (when supplied) must be embellished with slicedReducer(). SideBar: slicedReducer() should always wrap the the outer function passed to createFunction() (even when managedExpansion() is used).');
   }
 
   // DONE: NOW accomplished IN Aspect
@@ -164,7 +164,7 @@ export default function createFeature({name,
 
     publicFace,    // *P* *D* *E* KEY: this aspect is the feature's public API
 
-    reducer,       // *P* *D* *E* NOTE: digestible info for reducers (*D*) are simply reducer.getShapedState(appState)
+    reducer,       // *P* *D* *E* NOTE: digestible info for reducers (*D*) are simply reducer.getSlicedState(appState)
     logic,         // *P*     *E*
     route,         // *P*
 
@@ -250,17 +250,17 @@ export function expandFeatureAspects(feature, app) {
   // reducer
   if (feature.reducer && feature.reducer.managedExpansion) {
 
-    // hold on to our reducer shape
+    // hold on to our reducer slice
     // ... so as to apply it to our final resolved reducer (below)
-    const shape = feature.reducer.shape;
+    const slice = feature.reducer.slice;
 
     // fully resolve the actual reducer
     // ... by invoking the contextCB(app) embellished by managedExpansion(contextCB)
     feature.reducer = feature.reducer(app);
 
-    // apply same shape to our final resolved reducer
+    // apply same slice to our final resolved reducer
     // ... so it is accessable to our internals (i.e. runApp)
-    shapedReducer(shape, feature.reducer);
+    slicedReducer(slice, feature.reducer);
   }
 
   // logic

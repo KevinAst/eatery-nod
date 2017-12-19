@@ -35,9 +35,9 @@ export default createAspect({
 function validateFeatureContent(feature) {
   const content = feature[this.name];
   return isFunction(content) || content.managedExpansion
-           ? ( content.shape
+           ? ( content.slice
                  ? null
-                 : `${this.name} (when supplied) must be embellished with shapedReducer(). SideBar: shapedReducer() should always wrap the the outer function passed to createFunction() (even when managedExpansion() is used).`
+                 : `${this.name} (when supplied) must be embellished with slicedReducer(). SideBar: slicedReducer() should always wrap the the outer function passed to createFunction() (even when managedExpansion() is used).`
              )
            : `${this.name} (when supplied) must be a function -or- a contextCB`;
 }
@@ -147,7 +147,27 @@ export function accumAppReducer(aspectName, activeFeatures) { // ... named expor
   // iterated over all activeFeatures
   // ... generating the "shaped" genesis structure
   //     used in combining all reducers into a top-level app reducer
-  // ... ?? document example (print out out)
+  // ... EXAMPLE:
+  //     - given following reducers (each from a seperate Feature):
+  //         Feature.reducer: slicedReducer('auth', reducerFn)
+  //         Feature.reducer: slicedReducer('device', reducerFn)
+  //         Feature.reducer: slicedReducer('xxx', reducerFn)
+  //         Feature.reducer: slicedReducer('view.discovery', reducerFn)
+  //         Feature.reducer: slicedReducer('view.eateries', reducerFn)
+  //     - the following shapedGenesis will result
+  //         shapedGenesis: {
+  //           "auth":          [Function combination],
+  //           "currentView": {
+  //             "currentView": [Function anonymous],
+  //           },
+  //           "device":        [Function combination],
+  //           "view": {
+  //             "discovery":   [Function combination],
+  //             "eateries":    [Function combination],
+  //           }
+  //         }
+
+
   const shapedGenesis = {};
   for (const feature of activeFeatures) {
 
@@ -155,10 +175,10 @@ export function accumAppReducer(aspectName, activeFeatures) { // ... named expor
     if (feature[aspectName]) {
 
       const reducer = feature[aspectName]; // our feature content is a reducer!
-      const shape   = reducer.shape;       // our validation ensures embelishment via shapedReducer()
+      const slice   = reducer.slice;       // our validation ensures embelishment via slicedReducer()
 
-      // interpret the shape's federated namespace into a structure with depth
-      const nodeNames    = shape.split('.');
+      // interpret the slice's federated namespace into a structure with depth
+      const nodeNames    = slice.split('.');
       let   runningNode  = shapedGenesis;
       let   runningShape = '';
 
@@ -177,7 +197,7 @@ export function accumAppReducer(aspectName, activeFeatures) { // ... named expor
         // 1: intermediate node cannot be a reducer, because we can't intermix feature reducer with combineReducer (of runApp)
         // 2: all leafs MUST be reducer functions (this is actually FORCED by our code below)
         if ( isFunction(subNode) || (subNodeExisted && leafNode) ) { // TO BE ORDER INDEPENDENT, added: or condition
-          throw new Error(`*** ERROR*** feature-u runApp() constraint violation: reducer shape: '${runningShape}' cannot be specified by multiple features (either as an intermediate node, or an outright duplicate) because we can't intermix feature reducers and combineReducer() from runApp()`);
+          throw new Error(`*** ERROR*** feature-u runApp() constraint violation: reducer slice: '${runningShape}' cannot be specified by multiple features (either as an intermediate node, or an outright duplicate) because we can't intermix feature reducers and combineReducer() from runApp()`);
         }
 
         // inject our new sub-node -or- the reducer for leaf nodes

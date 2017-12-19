@@ -266,9 +266,9 @@ function createAppStore(appReducer, appLogic, app) {
 export function accumAppReducer(features) { // ... named export ONLY used for testing
 
   // iterated over all features
-  // ... generating the "shaped" genesis structure
+  // ... generating the "sliced" genesis structure
   //     used in combining all reducers into a top-level app reducer
-  const shapedGenesis = {};
+  const slicedGenesis = {};
   for (const feature of features) {
 
     // only interpret active features that define reducers
@@ -277,12 +277,12 @@ export function accumAppReducer(features) { // ... named export ONLY used for te
     if (feature.enabled && feature.reducer) {
 
       const reducer = feature.reducer;
-      const shape   = feature.reducer.shape; // createFeature() always embelishes reducer via shapedReducer()
+      const slice   = feature.reducer.slice; // createFeature() always embelishes reducer via slicedReducer()
 
-      // interpret the shape's federated namespace into a structure with depth
-      const nodeNames    = shape.split('.');
-      let   runningNode  = shapedGenesis;
-      let   runningShape = '';
+      // interpret the slice's federated namespace into a structure with depth
+      const nodeNames    = slice.split('.');
+      let   runningNode  = slicedGenesis;
+      let   runningSlice = '';
 
       for (let i=0; i<nodeNames.length; i++) { // need old-styled for loop to interpret index (see: leafNode variable)
         const nodeName = nodeNames[i];
@@ -292,14 +292,14 @@ export function accumAppReducer(features) { // ... named export ONLY used for te
         const subNodeExisted = (runningNode[nodeName]) ? true : false;
         const subNode        = runningNode[nodeName] || {};
 
-        // maintain human readable shape (for error reporting)
-        runningShape += (runningShape?'.':'') + nodeName;
+        // maintain human readable slice (for error reporting)
+        runningSlice += (runningSlice?'.':'') + nodeName;
 
-        // apply validation constraints of our shapedGenesis
+        // apply validation constraints of our slicedGenesis
         // 1: intermediate node cannot be a reducer, because we can't intermix feature reducer with combineReducer (of runApp)
         // 2: all leafs MUST be reducer functions (this is actually FORCED by our code below)
         if ( isFunction(subNode) || (subNodeExisted && leafNode) ) { // TO BE ORDER INDEPENDENT, added: or condition
-          throw new Error(`*** ERROR*** feature-u runApp() constraint violation: reducer shape: '${runningShape}' cannot be specified by multiple features (either as an intermediate node, or an outright duplicate) because we can't intermix feature reducers and combineReducer() from runApp()`);
+          throw new Error(`*** ERROR*** feature-u runApp() constraint violation: reducer slice: '${runningSlice}' cannot be specified by multiple features (either as an intermediate node, or an outright duplicate) because we can't intermix feature reducers and combineReducer() from runApp()`);
         }
 
         // inject our new sub-node -or- the reducer for leaf nodes
@@ -311,11 +311,12 @@ export function accumAppReducer(features) { // ... named export ONLY used for te
     }
   }
 
-  // convert our "shaped" genesis structure into a single top-level app reducer function
-  const  appHasNoSate = Object.keys(shapedGenesis).length === 0;
+  // convert our "sliced" genesis structure into a single top-level app reducer function
+  const  appHasNoSate = Object.keys(slicedGenesis).length === 0;
   const  appReducer   = appHasNoSate 
                           ? (s) => s // identity reducer (for no state)
-                          : accumReducer(shapedGenesis);
+                          : accumReducer(slicedGenesis);
+  console.log(`?? to document this, here is the slicedGenesis: `, slicedGenesis);
   return appReducer;
 }
 
@@ -326,7 +327,7 @@ export function accumAppReducer(features) { // ... named export ONLY used for te
  * A recursive function that acumulates all reducers in the supplied
  * genisisNode into a single reducer function.
  *
- * @param {GenisisStruct} genesisNode a "shaped" genesis structure
+ * @param {GenisisStruct} genesisNode a "sliced" genesis structure
  * used in combining all reducers.
  *
  * @return {reducerFn} a reducer function that recursivally

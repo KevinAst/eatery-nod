@@ -1,5 +1,5 @@
 import createFeature     from './createFeature';
-import shapedReducer     from './shapedReducer';
+import slicedReducer     from './slicedReducer';
 import managedExpansion  from './managedExpansion';
 import runApp            from './runApp';
 import createRoute       from './createRoute';
@@ -15,7 +15,7 @@ import createRoute       from './createRoute';
 //         import * as FeatureU from 'feature-u';
 export {
   createFeature,
-  shapedReducer,
+  slicedReducer,
   managedExpansion,
   createRoute,
   runApp,
@@ -28,7 +28,7 @@ export {
 //         const FeatureU   = require('feature-u');
 export default {
   createFeature,
-  shapedReducer,
+  slicedReducer,
   managedExpansion,
   createRoute,
   runApp,

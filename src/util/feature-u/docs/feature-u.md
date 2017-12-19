@@ -61,7 +61,7 @@ useful concepts that can be *(at minimum)* followed by your project.
 - [Feature Aspects](#feature-aspects)
   * [Actions](#actions)
   * [Reducers (state)](#reducers-state)
-    - [Shaped Reducers](#shaped-reducers)
+    - [Sliced Reducers](#sliced-reducers)
   * [Selectors (encapsolating state)](#selectors-encapsolating-state)
   * [Logic](#logic)
   * [Components](#components)
@@ -83,7 +83,7 @@ useful concepts that can be *(at minimum)* followed by your project.
   * [Feature State Location](#feature-state-location)
 - [API](api.md)
   * [`createFeature()`](api.md#createFeature)
-  * [`shapedReducer()`](api.md#shapedReducer)
+  * [`slicedReducer()`](api.md#slicedReducer)
   * [`managedExpansion()`](api.md#managedExpansion)
   * [`createRoute()`](api.md#createRoute)
   * [`runApp()`](api.md#runApp)
@@ -233,7 +233,7 @@ defining a feature, and discuss feature-u's interest in each.
 
   * [Actions](#actions)
   * [Reducers (state)](#reducers-state)
-    - [Shaped Reducers](#shaped-reducers)
+    - [Sliced Reducers](#sliced-reducers)
   * [Selectors (encapsolating state)](#selectors-encapsolating-state)
   * [Logic](#logic)
   * [Components](#components)
@@ -340,11 +340,11 @@ returns the reducerFn* (please refer to
 [managedExpansion()](#managedexpansion) for more information).
 
 
-#### Shaped Reducers
+#### Sliced Reducers
 
 Because feature-u must combine the reducers from all features into one
 overall appState, it requires that each reducer be embellished through
-the `shapedReducer()` function.  This merely injects a shape property
+the `slicedReducer()` function.  This merely injects a slice property
 on the reducer function, specifying the location of the reducer within
 the top-level appState tree.
 
@@ -353,13 +353,13 @@ As an example, the following definition:
 ```js
 const currentView = createFeature({
   name:     'currentView',
-  reducer:  shapedReducer('view.currentView', currentViewReducer)
+  reducer:  slicedReducer('view.currentView', currentViewReducer)
   ...
 });
 
 const fooBar = createFeature({
   name:     'fooBar',
-  reducer:  shapedReducer('view.fooBar', fooBarReducer)
+  reducer:  slicedReducer('view.fooBar', fooBarReducer)
   ...
 });
 ```
@@ -379,21 +379,21 @@ appState: {
 }
 ```
 
-Another benefit of `shapedReducer()` is that it **also embellishes the
-reducer with a standard selector** that returns the shapedState root:
+Another benefit of `slicedReducer()` is that it **also embellishes the
+reducer with a standard selector** that returns the slicedState root:
 
 ```js
-reducer.getShapedState(appState): shapedState
+reducer.getSlicedState(appState): slicedState
 ```
 
-In our case this shapedState root is the featureState root, so this
+In our case this slicedState root is the featureState root, so this
 should be used in all your selectors to further encapsolate this
 detail, **employing a single-source-of-truth concept**.  Here is an
 example:
 
 ```js
                              /** Our feature state root (a single-source-of-truth) */
-const getFeatureState      = (appState) => reducer.getShapedState(appState);
+const getFeatureState      = (appState) => reducer.getSlicedState(appState);
 
                              /** Is device ready to run app */
 export const isDeviceReady = (appState) => getFeatureState(appState).status === 'READY';
@@ -1070,16 +1070,16 @@ export default 'foo';
 
 ### Feature State Location
 
-Because feature-u relies on `shapedReducer()`, a best practice is to
+Because feature-u relies on `slicedReducer()`, a best practice is to
 use the reducer's embellished selector to qualify your feature state
-root in all your selector definitions.  As a result the shape
+root in all your selector definitions.  As a result the slice
 definition is maintained in one spot.
 
 Here is an example: 
 
 ```js
                              /** Our feature state root (a single-source-of-truth) */
-const getFeatureState      = (appState) => reducer.getShapedState(appState);
+const getFeatureState      = (appState) => reducer.getSlicedState(appState);
 
                              /** Is device ready to run app */
 export const isDeviceReady = (appState) => getFeatureState(appState).status === 'READY';
@@ -1090,7 +1090,7 @@ export const isDeviceReady = (appState) => getFeatureState(appState).status === 
 ## API
 
   * [`createFeature()`](api.md#createFeature)
-  * [`shapedReducer()`](api.md#shapedReducer)
+  * [`slicedReducer()`](api.md#slicedReducer)
   * [`managedExpansion()`](api.md#managedExpansion)
   * [`createRoute()`](api.md#createRoute)
   * [`runApp()`](api.md#runApp)
