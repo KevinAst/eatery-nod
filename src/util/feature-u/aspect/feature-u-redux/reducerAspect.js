@@ -14,7 +14,10 @@ import isFunction         from 'lodash.isfunction';
 // src/util/feature-u/aspect/feature-u-redux/reducerAspect.js inline: createAspect(...)
 // src/util/feature-u/createAspect.js  invoking: isBuiltInFeatureKeyword()
 // src/util/feature-u/createFeature.js <<< prob: hasn't yet initialized KJB I think because the createAspect is kicking off too soon DUE TO pkging of feature-u-redux
-// ??? for now PUNT, and no-op the execution of createAspect() in reducerAspect
+// HMMM: for now PUNT, and no-op the execution of createAspect() in reducerAspect
+// - KJB: I think this will be fixed when createFeature.js is NO LONGER importing slicedReducer()
+//        We are kinda in no-mans land right now
+
 export default 'NOT READY YET';
 // ? export default createAspect({
 // ?   name: 'reducer', // to fully manage all of redux, we ONLY need the reducers (hence our name)!
