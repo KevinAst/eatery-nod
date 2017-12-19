@@ -7,7 +7,7 @@ import actions            from './actions';
 // *** Our feature reducer, managing our currentView state.
 // ***
 
-const reducer = slicedReducer(`${featureName}.currentView`, reducerHash({
+const reducer = slicedReducer(`view.${featureName}`, reducerHash({
   [actions.changeView]: (state, action) => action.viewName,
 }, 'uninitialized') ); // initialState
 

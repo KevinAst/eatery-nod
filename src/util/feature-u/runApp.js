@@ -279,6 +279,8 @@ export function accumAppReducer(features) { // ... named export ONLY used for te
       const reducer = feature.reducer;
       const slice   = feature.reducer.slice; // createFeature() always embelishes reducer via slicedReducer()
 
+      console.log(`?? to document this, here is a reducer slice: `, slice);
+
       // interpret the slice's federated namespace into a structure with depth
       const nodeNames    = slice.split('.');
       let   runningNode  = slicedGenesis;

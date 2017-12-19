@@ -144,30 +144,26 @@ function injectRootAppElm(curRootAppElm, app) {
 // ?? migrate tests
 export function accumAppReducer(aspectName, activeFeatures) { // ... named export ONLY used in testing
 
-  // iterated over all activeFeatures
+  // iterated over all activeFeatures,
   // ... generating the "shaped" genesis structure
   //     used in combining all reducers into a top-level app reducer
-  // ... EXAMPLE:
+  //     EXAMPLE:
   //     - given following reducers (each from a seperate Feature):
-  //         Feature.reducer: slicedReducer('auth', reducerFn)
-  //         Feature.reducer: slicedReducer('device', reducerFn)
-  //         Feature.reducer: slicedReducer('xxx', reducerFn)
-  //         Feature.reducer: slicedReducer('view.discovery', reducerFn)
-  //         Feature.reducer: slicedReducer('view.eateries', reducerFn)
-  //     - the following shapedGenesis will result
+  //         Feature.reducer: slicedReducer('device',           deviceReducerFn)
+  //         Feature.reducer: slicedReducer('auth',             authReducerFn)
+  //         Feature.reducer: slicedReducer('view.currentView', currentViewReducerFn)
+  //         Feature.reducer: slicedReducer('view.discovery',   discoveryReducerFn)
+  //         Feature.reducer: slicedReducer('view.eateries',    eateriesReducerFn)
+  //     - the following shapedGenesis will result:
   //         shapedGenesis: {
-  //           "auth":          [Function combination],
-  //           "currentView": {
-  //             "currentView": [Function anonymous],
-  //           },
-  //           "device":        [Function combination],
-  //           "view": {
-  //             "discovery":   [Function combination],
-  //             "eateries":    [Function combination],
+  //           device:        deviceReducerFn,
+  //           auth:          authReducerFn,
+  //           view: {
+  //             currentView: currentViewReducerFn,
+  //             discovery:   discoveryReducerFn,
+  //             eateries:    eateriesReducerFn,
   //           }
   //         }
-
-
   const shapedGenesis = {};
   for (const feature of activeFeatures) {
 
