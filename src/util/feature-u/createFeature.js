@@ -2,7 +2,7 @@ import verify            from '../verify';
 import isString          from 'lodash.isstring';
 import isFunction        from 'lodash.isfunction';
 import {isValidRoute}    from './createRoute';
-import slicedReducer     from './slicedReducer';
+import {slicedReducer}   from './aspect/feature-u-redux'; // ?? eventually obsolete
 
 
 /**
@@ -173,7 +173,8 @@ export default function createFeature({name,
   };
 }
 
-const builtInFeatureKeywords = {
+// ?? must be var ???
+var builtInFeatureKeywords = {
   name:         'name',
   enabled:      'enabled',
   publicFace:   'publicFace',
@@ -192,6 +193,7 @@ const builtInFeatureKeywords = {
  * @param {boolean} true: is keyword, false: is NOT keyword
  */
 export function isBuiltInFeatureKeyword(propName) {
+  console.log(`??? IN: isBuiltInFeatureKeyword('${propName}') ... builtInFeatureKeywords: `, builtInFeatureKeywords);
   return builtInFeatureKeywords[propName] ? true : false;
 }
 

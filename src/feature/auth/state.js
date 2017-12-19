@@ -1,7 +1,7 @@
 import {combineReducers}  from 'redux';
 import {reducerHash}      from 'astx-redux-util';
-import {slicedReducer,
-        managedExpansion} from '../../util/feature-u';
+import {slicedReducer}    from '../../util/feature-u/aspect/feature-u-redux';
+import {managedExpansion} from '../../util/feature-u';
 import featureName        from './featureName';
 import signInFormMeta     from './signInFormMeta';
 import actions            from './actions';

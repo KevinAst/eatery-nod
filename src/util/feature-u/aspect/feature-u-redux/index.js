@@ -1,4 +1,5 @@
 import reducerAspect  from './reducerAspect';
+import slicedReducer  from './slicedReducer';
 
 //*** 
 //*** Promote all feature-u-redux utilities through this centralized module.
@@ -11,6 +12,7 @@ import reducerAspect  from './reducerAspect';
 //         import * as FeatureURedux from 'feature-u-redux';
 export {
   reducerAspect,
+  slicedReducer,
 };
 
 // NOTE: This default export supports CommonJS modules (otherwise Babel does NOT promote them).
@@ -20,4 +22,5 @@ export {
 //         const FeatureURedux = require('feature-u-redux');
 export default {
   reducerAspect,
+  slicedReducer,
 };

@@ -1,4 +1,4 @@
-import verify         from '../verify';
+import verify         from '../../../verify';
 import isString       from 'lodash.isstring';
 import isFunction     from 'lodash.isfunction';
 
