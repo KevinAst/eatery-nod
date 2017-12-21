@@ -11,7 +11,7 @@ In a nutshell, feature-u:
 - **manages all aspects** of the features that comprise an application
   (_things like actions, reducers, components, routes, logic, etc._),
 
-- **establishing the underlying infrastructure** (_e.g. redux,
+- **configuring the underlying infrastructure** (_e.g. redux,
   redux-logic, router, etc._), 
 
 - and **launches the app**
