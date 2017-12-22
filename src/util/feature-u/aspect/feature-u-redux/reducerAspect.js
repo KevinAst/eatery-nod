@@ -37,12 +37,51 @@ import isFunction         from 'lodash.isfunction';
 export default 'NOT READY YET';
 // ? export default createAspect({
 // ?   name: 'reducer', // to fully manage all of redux, we ONLY need the reducers (hence our name)!
+// ?   expandFeatureContent,
 // ?   validateFeatureContent,
 // ?   assembleFeatureContent,
 // ?   assembleAspectResources,
 // ?   getReduxStore,
 // ?   injectRootAppElm,
 // ? });
+
+
+/**
+ * Expand the reducer content in the supplied feature -AND- transfer
+ * the slice property from the expansion function to the expanded
+ * reducer.
+ * 
+ * @param {Feature} feature - the feature which is known to contain
+ * this aspect **and** is in need of expansion (as defined by
+ * managedExpansion()).
+ *
+ * @param {App} app the App object used in feature
+ * cross-communication.
+ *
+ * @return {string} an optional error message when the supplied
+ * feature contains invalid content for this aspect (falsy when
+ * valid).  This is a specialized validation of the expansion
+ * function, over-and-above what is checked in the standard
+ * validateFeatureContent() hook.
+ */
+function expandFeatureContent(feature, app) {
+  // hold on to our reducer slice
+  // ... so as to apply it to our final resolved reducer (below)
+  const slice = feature.reducer.slice;
+
+  // insure the slice is defined
+  if (!slice) {
+    return `${this.name} (when supplied) must be embellished with slicedReducer(). SideBar: slicedReducer() should always wrap the the outer function passed to createFunction() (even when managedExpansion() is used).`;
+  }
+
+  // expand self's content in the supplied feature
+  // ... by invoking the contextCB(app) embellished by managedExpansion(contextCB)
+  feature[this.name] = feature[this.name](app);
+
+  // apply same slice to our final resolved reducer
+  // ... so it is accessable to our internals (i.e. launchApp)
+  slicedReducer(slice, feature[this.name]);
+}
 
 
 /**
@@ -62,12 +101,12 @@ export default 'NOT READY YET';
  */
 function validateFeatureContent(feature) {
   const content = feature[this.name];
-  return isFunction(content) || content.managedExpansion
+  return isFunction(content)
            ? ( content.slice
                  ? null
                  : `${this.name} (when supplied) must be embellished with slicedReducer(). SideBar: slicedReducer() should always wrap the the outer function passed to createFunction() (even when managedExpansion() is used).`
              )
-           : `${this.name} (when supplied) must be a function -or- a contextCB`;
+           : `${this.name} (when supplied) must be a function`;
 }
 
 /**

@@ -247,6 +247,7 @@ export function expandFeatureAspect_publicFace(feature, app) {
  *
  * @param {App} app the App object (emitted by runApp()).
  */
+// DONE: OBSOLETE: now accomplished in src/util/feature-u/aspect/feature-u-redux/reducerAspect.js
 export function expandFeatureAspects(feature, app) {
 
   // reducer
@@ -273,18 +274,3 @@ export function expandFeatureAspects(feature, app) {
   }
 
 }
-
-
-//***
-//*** Specification: FeatureAspect
-//***
-
-/**
- * @typedef {*} FeatureAspect
- * 
- * In feature-u, "aspects" (FeatureAspect) is a general term used to refer to the
- * various ingredients that, when combined, constitute your app. 
- * 
- * A FeatureAspect can refere to actions, reducers, components,
- * routes, logic, etc.
- */
