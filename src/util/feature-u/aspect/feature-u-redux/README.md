@@ -1,15 +1,15 @@
-# feature-u-redux *(redux integration to feature-u)*
+# feature-u-redux *(redux integration in feature-u)*
 
-feature-u-redux promotes a `reducer` Aspect (a feature-u plugin) that
+**feature-u-redux** promotes a `reducer` Aspect (a **feature-u** plugin) that
 facilitates redux integration to your features.
 
-feature-u is a utility that facilitates feature-based project
+**feature-u** is a utility that facilitates feature-based project
 organization for your react project. It helps organize your project by
-individual features.  feature-u is extendable. It operates under an
+individual features.  **feature-u** is extendable. It operates under an
 open plugin architecture where Aspects provide the feature integration
 to other framework/utilities that match your specific run-time stack.
 
-feature-u-redux is your feature-u integration point to redux!
+**feature-u-redux** is your **feature-u** integration point to redux!
 
 ?? TODO: DOC AI: insure feature-u links are valid ONCE feature-u docs have stabilized!
 
@@ -38,8 +38,8 @@ npm install --save feature-u-redux
 ```
 
 **Please Note**: the following **peerDependencies** are in effect:
-- feature-u (_??ver_)
-- redux (_??ver_)
+- **feature-u** (_??ver_)
+- **redux** (_??ver_)
 - other ??
 
 ## Usage
@@ -69,8 +69,14 @@ npm install --save feature-u-redux
    });
    ```
 
-2. Now you can specify the `reducer` Feature property in any of your
-   features that maintain state (_see: **NOTE** below_):
+2. Now you can specify a `reducer` `createFeature()` named parameter
+   (_in any of your features that maintain state_) referencing the
+   reducer function that manages the feature state (_see: **NOTE**
+   below_).
+
+   Because your feature state is combined into one overall appState
+   (for all features), the reducer must identify it's root location,
+   through the `slicedReducer()` function.
 
    **myXyzFeature.js**
    ```js
@@ -85,10 +91,6 @@ npm install --save feature-u-redux
    });
    ```
 
-   Because **feature-u-redux** combines the state of all your features
-   into one overall appState, you must specify where each feature
-   state lives (through the `slicedReducer()` function).
-
 In the nutshell, that's most everything you need to know to use
 **feature-u-redux**!  _Go forth and compute!_
 
@@ -100,7 +102,7 @@ In working with the [redux] framework, you deal with [actions],
 
 **feature-u-redux** is only concerned with the characteristics of
 redux that are required to configure it (_a generalized principle of
-all feature-u Aspects_).  As a result, **feature-u-redux** is only
+all **feature-u** Aspects_).  As a result, **feature-u-redux** is only
 interested in your reducers, because that is what it needs to
 configure redux.  All other redux items are considered internal
 details of your feature code.
@@ -151,7 +153,7 @@ With that said, **there are cases where actions need to be promoted
 outside of a feature's implementation**.  Say, for example, featureA's
 reducer needs to monitor one of featureB's actions, or one of
 featureB's logic module needs to dispatch a featureA action.  When
-this happens **the [publicFace](#publicface) feature-u aspect can be
+this happens **the [publicFace](#publicface) **feature-u** aspect can be
 used for this promotion**.  Please note that in consideration of
 feature encapsulation, *best practices would strive to minimize the
 public promotion of actions outside the feature boundary*.
@@ -159,7 +161,7 @@ public promotion of actions outside the feature boundary*.
 In regard to actions, one characteristic that must be adhered to is
 **action types must to be unique across the entire app**, *because
 they are interpreted at an app-level scope*.  This uniqueness is the
-responsibility of your implementation, because feature-u does not
+responsibility of your implementation, because **feature-u** does not
 inject itself in the action definition process.  This may simply
 naturally happen in your implementation.  If however, you wish to
 systematically insure this uniqueness, the simplest thing to do is to
@@ -208,9 +210,9 @@ maintaining it's own feature-based state (typically a sub-tree of
 several items).
 
 While these reducers are opaque assets that maintain state as an
-internal detail of the feature, ****feature-u-redux** is interested in
+internal detail of the feature, **feature-u-redux** is interested in
 them to the extent that it must combine all feature states into one
-overall appState, and in turn register them to redux**.
+overall appState, and in turn register them to redux.
 
 Each feature (that maintains state) **promotes it's own reducer
 through the `reducer` createFeature() parameter**.
@@ -271,9 +273,9 @@ Selectors should be used to encapsulate all your state.  Most
 selectors should be promoted/used internally within the feature
 (defined in close proximity to your reducers).
 
-While feature-u does not directly manage anything about selectors, a
+While **feature-u** does not directly manage anything about selectors, a
 feature may wish to promote some of it's selectors using the
-[publicFace](#publicface) feature-u aspect.  Please note that in
+[publicFace](#publicface) **feature-u** aspect.  Please note that in
 consideration of feature encapsulation, *best practices would strive
 to minimize the public promotion of feature state (and selectors)
 outside the feature boundary*.
@@ -360,8 +362,6 @@ configuration of the redux app store.  The interface to this store
 
 
 ## API
-
-  ?? TODO: DOC AI: generate/interface to this aspect's API
 
   * [`reducerAspect`](api.md#reducerAspect)
   * [`slicedReducer()`](api.md#slicedReducer)

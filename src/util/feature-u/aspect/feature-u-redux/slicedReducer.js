@@ -7,15 +7,19 @@ import isFunction     from 'lodash.isfunction';
  * @description
  *
  * Embellish the supplied reducer with a slice property - a
- * specification (interpreted by feature-u) as to the location of the
- * reducer within the top-level appState tree.
- * 
- * Please refer to the full documentation for more information and
+ * specification (interpreted by **feature-u-redux**) as to the
+ * location of the reducer within the top-level appState tree.
+ *
+ * **Please refer to the User Docs** for a complete description with
  * examples.
  *
- * SideBar: For reducer aspects, slicedReducer() should always wrap
- *          the the outer function passed to createFeature(), even
- *          when managedExpansion() is used.
+ * **SideBar**: For reducer aspects, `slicedReducer()` should always
+ *              wrap the the outer function passed to
+ *              `createFeature()`, even when `managedExpansion()` is
+ *              used.  This gives your app code access to the
+ *              embellished `getSlicedState()` selector, even prior to
+ *              expansion occurring (_used as a single-source-of-truth
+ *              in your selector definitions_).
  *
  * @param {string} slice the location of the managed state within the
  * overall top-level appState tree.  This can be a federated namespace
@@ -25,7 +29,7 @@ import isFunction     from 'lodash.isfunction';
  * embellished with the slice specification.
  *
  * @return {reducerFn} the supplied reducer, embellished with both the
- * slice and a selector:
+ * slice and a convenience selector:
  * ```js
  * reducer.slice: slice
  * reducer.getSlicedState(appState): slicedState

@@ -7,9 +7,26 @@ import createAspect       from '../../createAspect'; // ?? EVENTUALLY peerDepend
 import isFunction         from 'lodash.isfunction';
 
 /**
- * ?? document ... somewhat dup of readme
+ * @typedef {Aspect} reducerAspect
+ * 
+ * The reducerAspect is a **feature-u** plugin that facilitates redux
+ * integration to your features.
+ * 
+ * To use this aspect:
+ * 
+ *  1. Register it as one of your aspects to **feature-u**'s `launchApp()`.
+ *  
+ *  2. Specify a `reducer` `createFeature()` named parameter (_in any
+ *     of your features that maintain state_) referencing the reducer
+ *     function that manages the feature state.
+ *  
+ *     Because your feature state is combined into one overall
+ *     appState (for all features), the reducer must identify it's
+ *     root location, through the `slicedReducer()` function.
+ * 
+ * **Please refer to the User Docs** for a complete description with
+ * examples.
  */
-
 // ?? problem in in-line expansion
 // src/util/feature-u/aspect/feature-u-redux/reducerAspect.js inline: createAspect(...)
 // src/util/feature-u/createAspect.js  invoking: isBuiltInFeatureKeyword()
@@ -17,7 +34,6 @@ import isFunction         from 'lodash.isfunction';
 // HMMM: for now PUNT, and no-op the execution of createAspect() in reducerAspect
 // - KJB: I think this will be fixed when createFeature.js is NO LONGER importing slicedReducer()
 //        We are kinda in no-mans land right now
-
 export default 'NOT READY YET';
 // ? export default createAspect({
 // ?   name: 'reducer', // to fully manage all of redux, we ONLY need the reducers (hence our name)!
@@ -33,7 +49,7 @@ export default 'NOT READY YET';
  * Validate self's aspect content on supplied feature.
  *
  * NOTE: To better understand the context in which any returned
- *       validation messages are used, feature-u will prefix them
+ *       validation messages are used, **feature-u** will prefix them
  *       with: 'createFeature() parameter violation: '
  *
  * @param {Feature} feature - the feature to validate, which is known
@@ -41,6 +57,8 @@ export default 'NOT READY YET';
  *
  * @return {string} an error message when the supplied feature
  * contains invalid content for this aspect (null when valid).
+ *
+ * @private
  */
 function validateFeatureContent(feature) {
   const content = feature[this.name];
@@ -60,6 +78,8 @@ function validateFeatureContent(feature) {
  * features that comprise this application.
  *
  * @param {App} app the App object used in feature cross-communication.
+ *
+ * @private
  */
 function assembleFeatureContent(activeFeatures, app) {
 
@@ -77,10 +97,12 @@ function assembleFeatureContent(activeFeatures, app) {
  * documented Aspect.getReduxMiddleware() API (an"aspect
  * cross-communication" mechanism).
  *
- * @param {Aspect[]} aspects - The set of feature-u Aspect objects
+ * @param {Aspect[]} aspects - The set of **feature-u** Aspect objects
  * used in this this application.
  *
  * @param {App} app the App object used in feature cross-communication.
+ *
+ * @private
  */
 function assembleAspectResources(aspects, app) {
 
@@ -106,6 +128,8 @@ function assembleAspectResources(aspects, app) {
 /**
  * Promote our redux store (for good measure), just in case some 
  * external process needs it.
+ *
+ * @private
  */
 function getReduxStore() {
   return this.appStore;
@@ -124,6 +148,8 @@ function getReduxStore() {
  * @return {reactElm} a new react app element root (which in turn must
  * contain the supplied curRootAppElm), or simply the supplied
  * curRootAppElm (if no change).
+ *
+ * @private
  */
 function injectRootAppElm(curRootAppElm, app) {
   return (
@@ -148,8 +174,6 @@ function injectRootAppElm(curRootAppElm, app) {
  * comprise this application.
  *
  * @return {appReducerFn} a top-level app reducer function.
- *
- * @private
  */
 // ?? migrate tests
 export function accumAppReducer(aspectName, activeFeatures) { // ... named export ONLY used in testing
@@ -225,8 +249,6 @@ export function accumAppReducer(aspectName, activeFeatures) { // ... named expor
 
 
 /**
- * @private
- *
  * A recursive function that acumulates all reducers in the supplied
  * genisisNode into a single reducer function.
  *
