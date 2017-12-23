@@ -143,7 +143,7 @@ feature**, and therefore are **NOT managed by feature-u**.  In other
 words, *each feature will define and use it's own set of actions*.
 
 This allows you to manage your actions however you wish.  Best
-practices prescribe that actions should be created by [action
+practices prescribe that actions be created by [action
 creators](https://redux.js.org/docs/basics/Actions.html#action-creators)
 (functions that return actions).  It is common to manage your action
 creators and action types through a library like [action-u] or
@@ -269,8 +269,8 @@ appState: {
 [Selectors] are a best practice which encapsulates the raw nature of
 the state shape and business logic interpretation of that state.
 
-Selectors should be used to encapsulate all your state.  Most
-selectors should be promoted/used internally within the feature
+Selectors are used to encapsulate all your state.  Most
+selectors are promoted/used internally within the feature
 (defined in close proximity to your reducers).
 
 While **feature-u** does not directly manage anything about selectors, a
@@ -312,33 +312,37 @@ export const isDeviceReady = (appState) => getFeatureState(appState).status === 
 
 ## Interface Points
 
-The primary undertaking of **feature-u-redux** is the creation and
-configuration of the redux app store.  The interface to this store
-(i.e. it's inputs and outputs) are as follows:
+The primary accomplishment of **feature-u-redux** is the creation
+(_and configuration_) of the [**redux app
+store**](https://redux.js.org/docs/api/Store.html).  The **Aspect
+Interface** to this process (_i.e. the inputs and outputs_) are
+documented here.
 
 ### Inputs
 
 1. **Primary Input**:
 
    The primary input to **feature-u-redux** is the set of reducers
-   that make up the overall application reducer.  This is specified by
-   each of your features (that maintain state) through the
-   `Feature.reducer` property, containing a `slicedReducer` that
+   that make up the overall app reducer.  This is specified by each of
+   your features (_that maintain state_) through the `Feature.reducer`
+   property, containing a [`slicedReducer`](api.md#slicedReducer) that
    manages the state of that corresponding feature.
 
 2. **Middleware Integration**:
 
    Because **feature-u-redux** manages redux, other Aspects can
-   promote their redux middleware through the
-   Aspect.getReduxMiddleware() API (using an "aspect
-   cross-communication mechanism").
+   promote their redux middleware through **feature-u-redux**'s
+   `Aspect.getReduxMiddleware()` API (an "aspect cross-communication
+   mechanism").  As an example, the **feature-u-redux-logic** Aspect
+   integrates **redux-logic**.
+
 
 ### Exposure
 
 1. **Primary Output**:
 
-   The primary way in which redux is exposed to your app is by
-   injecting the standard redux
+   The primary way in which **feature-u-redux** exposes redux to your
+   app is by injecting the standard redux
    [`Provider`](https://github.com/reactjs/react-redux/blob/master/docs/api.md#provider-store)
    component at the root of your application DOM.  This enables app
    component access to the redux store (along with it's `dispatch()`
@@ -346,11 +350,12 @@ configuration of the redux app store.  The interface to this store
    [`connect()`](https://github.com/reactjs/react-redux/blob/master/docs/api.md#connectmapstatetoprops-mapdispatchtoprops-mergeprops-options)
    function.
 
-2. **Middleware Integration**:
+2. **Middleware Features**:
 
    Because **feature-u-redux** allows other aspects to inject their
-   redux middleware, whatever that middleware exposes is also
-   applicable.
+   redux middleware, whatever that middleware exposes is made
+   available.  As an example, the **feature-u-redux-logic** Aspect
+   injects **redux-logic**.
    
 3. **Other**:
 
