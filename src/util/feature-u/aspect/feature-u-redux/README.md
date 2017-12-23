@@ -1,7 +1,7 @@
 # feature-u-redux *(redux integration in feature-u)*
 
 **feature-u-redux** promotes a `reducer` Aspect (a **feature-u** plugin) that
-facilitates redux integration to your features.
+facilitates [redux] integration to your features.
 
 **feature-u** is a utility that facilitates feature-based project
 organization for your react project. It helps organize your project by
@@ -9,7 +9,7 @@ individual features.  **feature-u** is extendable. It operates under an
 open plugin architecture where Aspects provide the feature integration
 to other framework/utilities that match your specific run-time stack.
 
-**feature-u-redux** is your **feature-u** integration point to redux!
+**feature-u-redux** is your **feature-u** integration point to [redux]!
 
 ?? TODO: DOC AI: insure feature-u links are valid ONCE feature-u docs have stabilized!
 
@@ -39,7 +39,7 @@ npm install --save feature-u-redux
 
 **Please Note**: the following **peerDependencies** are in effect:
 - **feature-u** (_??ver_)
-- **redux** (_??ver_)
+- **[redux]** (_??ver_)
 - other ??
 
 ## Usage
@@ -322,7 +322,7 @@ documented here.
 
 1. **Primary Input**:
 
-   The primary input to **feature-u-redux** is the set of reducers
+   The primary input to **feature-u-redux** is the set of [reducers]
    that make up the overall app reducer.  This is specified by each of
    your features (_that maintain state_) through the `Feature.reducer`
    property, containing a [`slicedReducer`](api.md#slicedReducer) that
@@ -330,8 +330,8 @@ documented here.
 
 2. **Middleware Integration**:
 
-   Because **feature-u-redux** manages redux, other Aspects can
-   promote their redux middleware through **feature-u-redux**'s
+   Because **feature-u-redux** manages [redux], other Aspects can
+   promote their [redux middleware] through **feature-u-redux**'s
    `Aspect.getReduxMiddleware()` API (an "aspect cross-communication
    mechanism").  As an example, the **feature-u-redux-logic** Aspect
    integrates **redux-logic**.
@@ -341,11 +341,11 @@ documented here.
 
 1. **Primary Output**:
 
-   The primary way in which **feature-u-redux** exposes redux to your
+   The primary way in which **feature-u-redux** exposes [redux] to your
    app is by injecting the standard redux
    [`Provider`](https://github.com/reactjs/react-redux/blob/master/docs/api.md#provider-store)
    component at the root of your application DOM.  This enables app
-   component access to the redux store (along with it's `dispatch()`
+   component access to the [redux store] (along with it's `dispatch()`
    and `getState()`) through the standard redux
    [`connect()`](https://github.com/reactjs/react-redux/blob/master/docs/api.md#connectmapstatetoprops-mapdispatchtoprops-mergeprops-options)
    function.
@@ -353,13 +353,13 @@ documented here.
 2. **Middleware Features**:
 
    Because **feature-u-redux** allows other aspects to inject their
-   redux middleware, whatever that middleware exposes is made
+   [redux middleware], whatever that middleware exposes is made
    available.  As an example, the **feature-u-redux-logic** Aspect
    injects **redux-logic**.
    
 3. **Other**:
 
-   For good measure, **feature-u-redux** promotes the redux store
+   For good measure, **feature-u-redux** promotes the [redux store]
    through the `Aspect.getReduxStore()` method (once again, an "aspect
    cross-communication mechanism").  While this may be considered
    somewhat unconventional, it is available should an external process
@@ -375,9 +375,11 @@ documented here.
 
 
 
-[action-u]:       https://www.npmjs.com/package/action-u
-[actions]:        https://redux.js.org/docs/basics/Actions.html
-[reducers]:       https://redux.js.org/docs/basics/Reducers.html
-[redux-actions]:  https://www.npmjs.com/package/redux-actions
-[redux]:          http://redux.js.org/
-[selectors]:      https://gist.github.com/abhiaiyer91/aaf6e325cf7fc5fd5ebc70192a1fa170
+[action-u]:         https://www.npmjs.com/package/action-u
+[actions]:          https://redux.js.org/docs/basics/Actions.html
+[reducers]:         https://redux.js.org/docs/basics/Reducers.html
+[redux-actions]:    https://www.npmjs.com/package/redux-actions
+[redux]:            http://redux.js.org/
+[redux middleware]: https://redux.js.org/docs/advanced/Middleware.html
+[redux store]:      https://redux.js.org/docs/api/Store.html
+[selectors]:        https://gist.github.com/abhiaiyer91/aaf6e325cf7fc5fd5ebc70192a1fa170
