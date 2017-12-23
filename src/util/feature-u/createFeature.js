@@ -140,9 +140,9 @@ export default function createFeature({name,
     check(!routeMsg, routeMsg);
   }
 
-  // ?? must now pass on unknowns
-  const unknownArgKeys = Object.keys(unknownArgs);
-  check(unknownArgKeys.length===0,  `unrecognized named parameter(s): ${unknownArgKeys}`);
+  // ??$$ must now pass on unknowns ... DISABLE NOW to get new tests working
+  // const unknownArgKeys = Object.keys(unknownArgs);
+  // check(unknownArgKeys.length===0,  `unrecognized named parameter(s): ${unknownArgKeys}`);
 
 
   // ***
@@ -170,6 +170,10 @@ export default function createFeature({name,
 
     appWillStart,  // *P*
     appDidStart,   // *P*
+
+    // ??$$ must now pass on unknowns ... DONE NOW to get new tests working
+    ...unknownArgs,
+
   };
 }
 

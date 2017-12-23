@@ -1,4 +1,6 @@
-import createAspect  from '../createAspect'; // module under test
+import createAspect     from '../createAspect'; // module under test
+import createFeature    from '../createFeature';
+import managedExpansion from '../managedExpansion';
 
 const identityFn = p => p;
 
@@ -7,6 +9,7 @@ describe('feature-u createAspect() tests', () => {
   describe('VERIFY content pass through', () => {
     const aspect = createAspect({
       name:                    'myAspectName',
+      expandFeatureContent:    () => 'MY expandFeatureContent',
       validateFeatureContent:  () => 'MY validateFeatureContent',
       assembleFeatureContent:  () => 'MY assembleFeatureContent',
       assembleAspectResources: () => 'MY assembleAspectResources',
@@ -15,6 +18,10 @@ describe('feature-u createAspect() tests', () => {
 
     test('aspect.name', () => {
       expect(aspect.name).toEqual('myAspectName');
+    });
+
+    test('aspect.expandFeatureContent', () => {
+      expect(aspect.expandFeatureContent()).toEqual('MY expandFeatureContent');
     });
 
     test('aspect.validateFeatureContent', () => {
@@ -53,6 +60,7 @@ describe('feature-u createAspect() tests', () => {
   describe('VERIFY DEFAULT SEMANTICS', () => {
     const aspect = createAspect({
       name:                   'myAspectName',
+      // expandFeatureContent,    // USE DEFAULT (tested in MANAGED EXPANSION - below)
       validateFeatureContent: identityFn,
       assembleFeatureContent: identityFn,
       // assembleAspectResources, // USE DEFAULT
@@ -66,6 +74,35 @@ describe('feature-u createAspect() tests', () => {
     test('aspect.injectRootAppElm', () => {
       expect(aspect.injectRootAppElm('injectRootAppElm')).toEqual('injectRootAppElm');
     });
+  });
+
+
+  describe('VERIFY MANAGED EXPANSION DEFAULT SEMANTICS', () => {
+    const aspect = createAspect({
+      name:                   'myAspectName',
+      // expandFeatureContent,    // DEFAULT SEMANTICS - UNDER TEST
+      validateFeatureContent: identityFn,
+      assembleFeatureContent: identityFn,
+      // assembleAspectResources, // USE DEFAULT
+      // injectRootAppElm,        // USE DEFAULT
+    });
+
+    const feature = createFeature({
+      name:         'myFeatureName',
+      myAspectName: managedExpansion( (app) => 'myAspectContent' ), // UNDER TEST: needs expansion
+    });
+
+    const app = null; // null ok for this test ... just being passed through
+
+    test('aspect.expandFeatureContent', () => {
+
+      // expand feature
+      aspect.expandFeatureContent(feature, null);
+
+      // prove the expansion has occurred
+      expect(feature.myAspectName).toEqual('myAspectContent');
+    });
+
   });
 
 
@@ -85,7 +122,6 @@ describe('feature-u createAspect() tests', () => {
         .toThrow(/aspect name value.* is a reserved Feature keyword/);
     });
   });
-
 
   describe('VERIFY aspect.validateFeatureContent', () => {
     const genisis = {
