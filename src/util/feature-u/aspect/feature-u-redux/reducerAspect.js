@@ -214,7 +214,6 @@ function injectRootAppElm(curRootAppElm, app) {
  *
  * @return {appReducerFn} a top-level app reducer function.
  */
-// ?? migrate tests
 export function accumAppReducer(aspectName, activeFeatures) { // ... named export ONLY used in testing
 
   // iterated over all activeFeatures,

@@ -193,7 +193,6 @@ var builtInFeatureKeywords = {
  * @param {boolean} true: is keyword, false: is NOT keyword
  */
 export function isBuiltInFeatureKeyword(propName) {
-  console.log(`??? IN: isBuiltInFeatureKeyword('${propName}') ... builtInFeatureKeywords: `, builtInFeatureKeywords);
   return builtInFeatureKeywords[propName] ? true : false;
 }
 
