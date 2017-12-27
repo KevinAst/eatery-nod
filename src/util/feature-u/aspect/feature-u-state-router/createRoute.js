@@ -1,4 +1,4 @@
-import verify         from '../verify';
+import verify         from '../../../verify';
 import isFunction     from 'lodash.isfunction';
 
 const defaultCB = () => null;
@@ -26,14 +26,24 @@ const defaultCB = () => null;
  * are useful in some cases to minimize the feature registration
  * order.
  *
- * @param {routeCB} [namedArgs.content] the non-priority route routeCB (if any)
+ * **Aspect Configuration** ... see User Guide for details
+ *
+ * 1. fallbackElm (REQUIRED): the fallback elm representing a
+ *    SplashScreen (of sorts) when no routes are in effect.
+ *
+ * 2. componentWillUpdateHook (OPTIONAL): invoked in
+ *    componentWillUpdate() life-cycle hook.  Initially developed to
+ *    support ReactNative animation.
+ *
+ * **Please Note**: `createRoute()` accepts named parameters.
+ *
+ * @param {routeCB} [content] the non-priority route routeCB (if any)
  * ... see: desc above.
  *
- * @param {routeCB} [namedArgs.priorityContent] the priority route routeCB (if
+ * @param {routeCB} [priorityContent] the priority route routeCB (if
  * any) ... see: desc above.
  *
- * @return {Route} a new Route object (to be consumed by feature-u's
- * Router via runApp()).
+ * @return {Route} a new Route object.
  */
 export default function createRoute({content=defaultCB,
                                      priorityContent=defaultCB,
@@ -105,3 +115,34 @@ export function isValidRoute(route) {
   // that's all folks
   return errors.length===0 ? null : `route has the following error(s): ${errors}`;
 }
+
+
+//***
+//*** Specification: routeCB
+//***
+
+/**
+ * A functional callback hook (specified in createRoute()) that
+ * reasons about the supplied appState, and either returns a rendered
+ * component screen, or null to allow downstream routes the same
+ * opportunity.
+ * 
+ * Basically the first non-null return (within all registered
+ * routeCBs) wins.
+ *
+ * One or two routeCBs can be registered (through createRoute()), one
+ * with priority and one without.  The priority routeCBs are given
+ * precedence across all registered routes before the non-priority
+ * routeCBs are invoked, and are useful in some cases to minimize the
+ * feature registration order.
+ *
+ * @callback routeCB
+ *
+ * @param {App} app the App object used in feature cross-communication.
+ * 
+ * @param {Any} appState - the top-level application state.
+ *
+ * @return {reactElm} a rendered component (i.e. react element)
+ * representing the screen to display, or null for none (allowing
+ * downstream routes an opportunity).
+ */
