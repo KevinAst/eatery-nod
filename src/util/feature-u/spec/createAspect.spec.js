@@ -9,6 +9,7 @@ describe('feature-u createAspect() tests', () => {
   describe('VERIFY content pass through', () => {
     const aspect = createAspect({
       name:                    'myAspectName',
+      validateConfiguration:   () => 'MY validateConfiguration',
       expandFeatureContent:    () => 'MY expandFeatureContent',
       validateFeatureContent:  () => 'MY validateFeatureContent',
       assembleFeatureContent:  () => 'MY assembleFeatureContent',
@@ -18,6 +19,10 @@ describe('feature-u createAspect() tests', () => {
 
     test('aspect.name', () => {
       expect(aspect.name).toEqual('myAspectName');
+    });
+
+    test('aspect.validateConfiguration', () => {
+      expect(aspect.validateConfiguration()).toEqual('MY validateConfiguration');
     });
 
     test('aspect.expandFeatureContent', () => {
@@ -80,6 +85,7 @@ describe('feature-u createAspect() tests', () => {
   describe('VERIFY MANAGED EXPANSION DEFAULT SEMANTICS', () => {
     const aspect = createAspect({
       name:                   'myAspectName',
+      // validateConfiguration:   // USE DEFAULT
       // expandFeatureContent,    // DEFAULT SEMANTICS - UNDER TEST
       validateFeatureContent: identityFn,
       assembleFeatureContent: identityFn,

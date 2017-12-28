@@ -41,6 +41,11 @@ function default_expandFeatureContent(feature, app) {
  * As a result, Aspect names must be unique across all aspects that
  * are in-use.
  *
+ * @param {validateConfigurationFn} [validateConfiguration] an
+ * optional validation hook allowing this aspect to verify it's own
+ * required configuration (if any).  Some aspects may require certain
+ * settings in self for them to operate.
+ *
  * @param {expandFeatureContentFn} [expandFeatureContent] an optional
  * aspect expansion hook, defaulting to the algorithm defined by
  * managedExpansion().  This function rarely needs to be overridden.
@@ -81,6 +86,7 @@ function default_expandFeatureContent(feature, app) {
  * @return {Aspect} a new Aspect object (to be consumed by launchApp()).
  */
 export default function createAspect({name,
+                                      validateConfiguration=noOp,
                                       expandFeatureContent=default_expandFeatureContent,
                                       validateFeatureContent,
                                       assembleFeatureContent,
@@ -97,10 +103,11 @@ export default function createAspect({name,
   check(name,            'name is required');
   check(isString(name),  'name must be a string');
   check(!isBuiltInFeatureKeyword(name), `aspect name value: '${name}' is a reserved Feature keyword`);
-  // NOTE: we validate Aspect.name uniqueness in launchApp() (once we know all aspects in-use)
+  // NOTE: Aspect.name uniqueness is validated in launchApp() (once we know all aspects in-use)
 
-  check(expandFeatureContent,                'expandFeatureContent is required');
-  check(isFunction(expandFeatureContent),    'expandFeatureContent must be a function');
+  check(isFunction(validateConfiguration),   'validateConfiguration (when supplied) must be a function');
+
+  check(isFunction(expandFeatureContent),    'expandFeatureContent (when supplied) must be a function');
 
   check(validateFeatureContent,              'validateFeatureContent is required');
   check(isFunction(validateFeatureContent),  'validateFeatureContent must be a function');
@@ -120,6 +127,7 @@ export default function createAspect({name,
 
   return {
     name,
+    validateConfiguration,
     expandFeatureContent,
     validateFeatureContent,
     assembleFeatureContent,
@@ -140,6 +148,26 @@ export default function createAspect({name,
  *
  * Aspect objects (emitted from `createAspect()`) are used to extend
  * feature-u.
+ */
+
+
+//***
+//*** Specification: validateConfigurationFn
+//***
+
+/**
+ * A validation hook allowing this aspect to verify it's own required
+ * configuration (if any).  Some aspects may require certain settings
+ * in self for them to operate.
+ *
+ * NOTE: To better understand the context in which any returned
+ *       validation messages are used, feature-u will prefix them
+ *       with: 'launchApp() parameter violation: '
+ *
+ * @callback validateConfigurationFn
+ *
+ * @return {string} an error message when self is in an invalid state
+ * (falsy when valid).
  */
 
 

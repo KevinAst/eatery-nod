@@ -1,7 +1,7 @@
 import verify            from '../verify';
 import isString          from 'lodash.isstring';
 import isFunction        from 'lodash.isfunction';
-import {isValidRoute}    from './createRoute';
+// import {isValidRoute}    from './createRoute'; // ?? OBSOLETE
 import {slicedReducer}   from './aspect/feature-u-redux'; // ?? eventually obsolete
 
 
