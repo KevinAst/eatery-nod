@@ -658,37 +658,36 @@ Two hooks are provided through the following feature parameters:
 The **appWillStart** life-cycle hook is invoked one time at app startup time.
 
 ```js
-API: appWillStart(app, children): optional-top-level-content (undefined for none)
+API: appWillStart(app, curRootAppElm): optional-top-level-content (falsy for none)
 ```
 
 This life-cycle hook can do any type of initialization.  For
 example: initialize FireBase.
 
-In addition, this life-cycle hook can optionally supplement the
-app's top-level content (using a non-null return).  Typically,
-nothing is returned (i.e. undefined).  However any return value is
-interpreted as the content to inject at the top of the app, between
-the redux Provider and feature-u's Router.  **IMPORTANT**: If you
-return top-level content, it is your responsiblity to include the
-supplied children in your render.  Otherwise NO app content will be
-displayed (because children contains the feature-u Router, which
-decides what screen to display).
+In addition, this life-cycle hook can optionally supplement the app's
+top-level content (using a non-null return). Typically, nothing is
+returned (i.e. falsy). However any return value is interpreted as the
+content to inject at the top of the app, between the redux Provider
+and feature-u's Router.  **IMPORTANT**: If you return top-level
+content, the supplied curRootAppElm MUST be included as part of this
+definition (this accommodates the accumulative process of other
+feature injections)!
 
 Here is an example that injects new root-level content:
 ```js
-appWillStart(app, children) {
+appWillStart(app, curRootAppElm) {
   ... any other initialization ...
   return (
     <Drawer ...>
-      {children}
+      {curRootAppElm}
     </Drawer>
   );
 }
 ```
 
-Here is an example of injecting a new sibling to children:
+Here is an example of injecting a new sibling to curRootAppElm:
 ```js
-appWillStart: (app, children) => [React.Children.toArray(children), <Notify key="Notify"/>]
+appWillStart: (app, curRootAppElm) => [React.Children.toArray(curRootAppElm), <Notify key="Notify"/>]
 ```
 
 
@@ -701,8 +700,11 @@ after app has started.
 API: appDidStart({app, appState, dispatch}): void
 ```
 
+**Please Note** `appDidStart()` utilizes named parameters.
+
 Because the app is up-and-running at this time, you have access to
-the appState and the dispatch function.
+the appState and dispatch() function ... assuming you are using
+redux (when detected by feature-u's plugable aspects).
 
 A typical usage for this hook is to dispatch some type of bootstrap
 action.  Here is a startup feature, that issues a bootstrap action:
@@ -856,7 +858,7 @@ The App object can be accessed in several different ways.
      ```
    * app life-cycle hooks:
      ```js
-     appWillStart(app, children): optional-top-level-content
+     appWillStart(app, curRootAppElm): optional-top-level-content
      appDidStart({app, appState, dispatch}): void                        
      ```
    
@@ -1017,7 +1019,7 @@ will NOT exist.
    hook.
 
    ```js
-   appWillStart(app, children) {
+   appWillStart(app, curRootAppElm) {
      assert(app.featureD, '***ERROR*** I NEED featureD');
    }
    ```

@@ -1,22 +1,20 @@
 # feature-u API
 <a name="createFeature"></a>
 
-## createFeature(name, [enabled], [publicFace], [reducer], [logic], [route], [appWillStart], [appDidStart]) ⇒ Feature
-Create a new Feature object, accumulating Aspect content to be consumedby launchApp().Example:```js  import {createFeature} from 'feature-u';  import reducer         from './state';  export default createFeature({    name:       'views',    enabled:    true,    reducer:    slicedReducer('views.currentView', reducer),    ?? expand this a bit  };```**Please Note** `createFeature()` accepts named parameters.
+## createFeature(name, [enabled], [publicFace], [appWillStart], [appDidStart], [pluggableAspects]) ⇒ Feature
+Create a new Feature object, accumulating Aspect content to be consumedby launchApp().**Please Note** `createFeature()` accepts named parameters.
 
 
 | Param | Type | Default | Description |
 | --- | --- | --- | --- |
 | name | string |  | the feature name, used in programmatically delineating various features (ex: 'views'). |
 | [enabled] | boolean | <code>true</code> | an indicator as to whether this feature is enabled (true) or not (false). |
-| [publicFace] | Any \| [`contextCB`](#contextCB) |  | an optional resource exposed in app.{featureName}.{publicFace} (emitted from runApp()), promoting cross-communication between features.  Please refer to the feature-u `publicFace` documentation for more detail. Because some publicFace may require feature-based context information, this parameter may also be a contextCB - a function that returns the publicFace (see managedExpansion()). |
-| [reducer] | reducerFn \| [`contextCB`](#contextCB) |  | an optional reducer that maintains redux state (if any) for this feature. The reducers from all features are combined into one overall app state, through a required slice specification, embellished on the reducer through the slicedReducer() function.  Please refer to the feature-u `Reducers` documentation for more detail. Because some reducers may require feature-based context information, this parameter may also be a contextCB - a function that returns the reducerFn (see managedExpansion()). |
-| [logic] | Array.&lt;Logic&gt; \| [`contextCB`](#contextCB) |  | an optional set of business logic modules (if any) to be registered to redux-logic in support of this feature. Please refer to the feature-u `Logic` documentation for more detail. Because some logic modules may require feature-based context information, this parameter may also be a contextCB - a function that returns the Logic[] (see managedExpansion()). |
-| [route] | Route |  | the optional route callback (see createRoute()) that promotes feature-based top-level screen components based on appState.  Please refer to the feature-u `routes` documentation for more detail. |
-| [appWillStart] | function |  | an optional app life-cycle hook invoked one-time at app startup time.  `API: appWillStart(app, children): optional-top-level-content` This life-cycle hook can do any type of initialization, and/or optionally supplement the app's top-level content (using a non-null return).  Please refer to the feature-u `App Life Cycle Hooks` documentation for more detail. |
-| [appDidStart] | function |  | an optional app life-cycle hook invoked one-time immediately after app has started.  `API: appDidStart({app, appState, dispatch}): void` Because the app is up-and-running at this time, you have access to the appState and the dispatch function.  Please refer to the feature-u `App Life Cycle Hooks` documentation for more detail. |
+| [publicFace] | Any |  | an optional resource exposed in app.{featureName}.{publicFace} (emitted from launchApp()), promoting cross-communication between features.  Please refer to the feature-u `publicFace` documentation for more detail. ?? DONE: formal parameter -AND- ??$$ DEFAULTED |
+| [appWillStart] | [`appWillStartFn`](#appWillStartFn) |  | an optional app life-cycle hook invoked one-time at app startup time.  This life-cycle hook can do any type of initialization, and/or optionally supplement the app's top-level content (using a non-null return).  Please refer to the feature-u `App Life Cycle Hooks` documentation for more detail. ?? DONE: formal parameter -AND- ??$$ DEFAULTED |
+| [appDidStart] | [`appDidStartFn`](#appDidStartFn) |  | an optional app life-cycle hook invoked one-time immediately after app has started.  Because the app is up-and-running at this time, you have access to the appState and the dispatch() function ... assuming you are using redux (when detected by feature-u's plugable aspects).  Please refer to the feature-u `App Life Cycle Hooks` documentation for more detail. |
+| [pluggableAspects] | [`Aspect`](#Aspect) |  | additional aspects, as defined by the feature-u's pluggable Aspect extension. |
 
-**Returns**: Feature - a new Feature object (to be consumed by feature-u runApp()).  
+**Returns**: Feature - a new Feature object (to be consumed by feature-ulaunchApp()).  
 <a name="managedExpansion"></a>
 
 ## managedExpansion(contextCB) ⇒ [`contextCB`](#contextCB)
@@ -57,6 +55,30 @@ Create an Aspect object, used to extend feature-u.**Note on App Promotion**: Y
 | [additionalMethods] | Any | additional methods (proprietary to specific Aspects), supporting two different requirements: <ol> <li> internal Aspect helper methods, and <li> APIs used in "aspect cross-communication" ... a contract      between one or more aspects.  This is merely an API specified      by one Aspect, and used by another Aspect, that is facilitate      through the `Aspect.assembleAspectResources(aspects, app)`      hook. </ol> |
 
 **Returns**: [`Aspect`](#Aspect) - a new Aspect object (to be consumed by launchApp()).  
+<a name="appWillStartFn"></a>
+
+## appWillStartFn ⇒ reactElm
+An optional app life-cycle hook invoked one-time at app startuptime.This life-cycle hook can do any type of initialization. Forexample: initialize FireBase.In addition, this life-cycle hook can optionally supplement theapp's top-level content (using a non-null return). Typically,nothing is returned (i.e. falsy). However any return value isinterpreted as the content to inject at the top of the app, betweenthe redux Provider and feature-u's Router.  **IMPORTANT**: If youreturn top-level content, the supplied curRootAppElm MUST beincluded as part of this definition (this accommodates theaccumulative process of other feature injections)!
+
+
+| Param | Type | Description |
+| --- | --- | --- |
+| app | App | the App object used in feature cross-communication. |
+| curRootAppElm | reactElm | the current react app element root. |
+
+**Returns**: reactElm - optionally, new top-level content (which in turnmust contain the supplied curRootAppElm), or falsy for unchanged.  
+<a name="appDidStartFn"></a>
+
+## appDidStartFn : function
+An optional app life-cycle hook invoked one-time immediately afterapp has started.Because the app is up-and-running at this time, you have access tothe appState and dispatch() function ... assuming you are usingredux (when detected by feature-u's plugable aspects).**Please Note** `appDidStart()` utilizes named parameters.
+
+
+| Param | Type | Description |
+| --- | --- | --- |
+| app | App | the App object used in feature cross-communication. |
+| [appState] | Any | the redux top-level app state (when redux is in use). |
+| [dispatch] | function | the redux dispatch() function (when redux is in use). |
+
 <a name="contextCB"></a>
 
 ## contextCB ⇒ FeatureAspect
