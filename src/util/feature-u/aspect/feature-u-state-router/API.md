@@ -14,7 +14,7 @@ Create a new Route object, that provides a generalized run-timeAPI to abstractl
 <a name="routeAspect"></a>
 
 ## routeAspect : Aspect
-The routeAspect is a **feature-u** plugin that facilitates StateRouterintegration to your features.To use this aspect: 1. Register it as one of your aspects to **feature-u**'s `launchApp()`.  2. Specify a `route` `createFeature()` named parameter (_in any    of your features that maintain routes_) referencing a route     (using `createRoute()`).**Please refer to the User Docs** for a complete description withexamples.
+The routeAspect is a **feature-u** plugin that facilitates StateRouterintegration to your features.To use this aspect: 1. Configure the `routeAspect.fallbackElm` representing a    SplashScreen (of sorts) when no routes are in effect. 2. Register `routeAspect` as one of your aspects to    **feature-u**'s `launchApp()`.  3. Specify a `route` `createFeature()` named parameter (_in any    of your features that maintain routes_) referencing a route     defined by `createRoute()`.**Please refer to the User Docs** for a complete description withexamples.
 
 <a name="routeCB"></a>
 
