@@ -67,10 +67,10 @@ npm install --save feature-u-state-router
    import SplashScreen   from './wherever/SplashScreen';
    import features       from './feature';
 
-   export default launchApp({
+   // see: Configuration section (below)
+   routeAspect.fallbackElm = <SplashScreen msg="I'm trying to think but it hurts!"/>;
 
-     // see: Configuration section (below)
-     routeAspect.fallbackElm = <SplashScreen msg="I'm trying to think but it hurts!"/>;
+   export default launchApp({
 
      aspects: [
        routeAspect,    // *** NOTE 1 ***
@@ -126,7 +126,7 @@ another?
 As it turns out, **feature-u** does not dictate any one
 navigation/router solution.  You are free to use whatever
 route/navigation solution that meets your requirements.
- - You can use the recomended **Feature Routes**
+ - You can use the recomended **Feature Routes** _(i.e. this package)_
  - You can use XYZ navigation (_fill in the blank with your chosen solution_)
  - You can even use a combination of **Feature Routes** routes and XYZ routes
 
