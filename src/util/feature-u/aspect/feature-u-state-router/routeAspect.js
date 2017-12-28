@@ -10,21 +10,43 @@ import StateRouter     from './StateRouter';
  * 
  * To use this aspect:
  * 
- *  1. Register it as one of your aspects to **feature-u**'s `launchApp()`.
+ *  1. Configure the `routeAspect.fallbackElm` representing a
+ *     SplashScreen (of sorts) when no routes are in effect.
+ *
+ *  2. Register `routeAspect` as one of your aspects to
+ *     **feature-u**'s `launchApp()`.
  *  
- *  2. Specify a `route` `createFeature()` named parameter (_in any
+ *  3. Specify a `route` `createFeature()` named parameter (_in any
  *     of your features that maintain routes_) referencing a route 
- *     (using `createRoute()`).
+ *     defined by `createRoute()`.
  * 
  * **Please refer to the User Docs** for a complete description with
  * examples.
  */
 export default createAspect({
   name: 'route',
+  validateConfiguration,
   validateFeatureContent,
   assembleFeatureContent,
   injectRootAppElm,
 });
+
+
+/**
+ * Validate self's required configuration.
+ *
+ * NOTE: To better understand the context in which any returned
+ *       validation messages are used, feature-u will prefix them
+ *       with: 'launchApp() parameter violation: '
+ *
+ * @return {string} an error message when self is in an invalid state
+ * (falsy when valid).
+ *
+ * @private
+ */
+function validateConfiguration() {
+  return this.fallbackElm ? null : `the ${this.name} aspect requires fallbackElm to be configured (at run-time)!`;
+}
 
 
 /**
