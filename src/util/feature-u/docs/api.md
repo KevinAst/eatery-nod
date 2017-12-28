@@ -2,7 +2,7 @@
 <a name="createFeature"></a>
 
 ## createFeature(name, [enabled], [publicFace], [reducer], [logic], [route], [appWillStart], [appDidStart]) ⇒ Feature
-Create a new Feature object, accumulating Aspect data to be consumedby launchApp().Example:```js  import {createFeature} from 'feature-u';  import reducer         from './state';  export default createFeature({    name:       'views',    enabled:    true,    reducer:    slicedReducer('views.currentView', reducer),    ?? expand this a bit  };```**Please Note** `createFeature()` accepts named parameters.
+Create a new Feature object, accumulating Aspect content to be consumedby launchApp().Example:```js  import {createFeature} from 'feature-u';  import reducer         from './state';  export default createFeature({    name:       'views',    enabled:    true,    reducer:    slicedReducer('views.currentView', reducer),    ?? expand this a bit  };```**Please Note** `createFeature()` accepts named parameters.
 
 
 | Param | Type | Default | Description |
@@ -28,18 +28,6 @@ Mark the supplied contextCB as a "managed expansion callback",distinguishing it
 | contextCB | [`contextCB`](#contextCB) | the callback function that when invoked (by feature-u) expands/returns the desired FeatureAspect. |
 
 **Returns**: [`contextCB`](#contextCB) - the supplied contextCB, marked as a "managedexpansion callback".  
-<a name="createRoute"></a>
-
-## createRoute() ⇒ Route
-Create a new Route object, that provides a generalized run-timeAPI to abstractly expose component rendering, based on appState.The Route object contains one or two function callbacks (routeCB), withthe following signature:```js  routeCB(app, appState): rendered-component (null for none)```The routeCB reasons about the supplied appState, and either returns arendered component, or null to allow downstream routes the sameopportunity.  Basically the first non-null return wins.One or two routeCBs can be registered, one with priority and onewithout.  The priority routeCBs are given precedence across allregistered routes before the non-priority routeCBs are invoked, andare useful in some cases to minimize the feature registrationorder.
-
-
-| Param | Type | Description |
-| --- | --- | --- |
-| [namedArgs.content] | routeCB | the non-priority route routeCB (if any) ... see: desc above. |
-| [namedArgs.priorityContent] | routeCB | the priority route routeCB (if any) ... see: desc above. |
-
-**Returns**: Route - a new Route object (to be consumed by feature-u'sRouter via runApp()).  
 <a name="runApp"></a>
 
 ## runApp(features) ⇒ App
@@ -53,13 +41,14 @@ Launch an app by assembling/configuring the supplied app features.The runApp()
 **Returns**: App - an app object which used in featurecross-communication (as follows):```js {   ?? document }```  
 <a name="createAspect"></a>
 
-## createAspect(name, [expandFeatureContent], validateFeatureContent, assembleFeatureContent, [assembleAspectResources], [injectRootAppElm], [additionalMethods]) ⇒ [`Aspect`](#Aspect)
+## createAspect(name, [validateConfiguration], [expandFeatureContent], validateFeatureContent, assembleFeatureContent, [assembleAspectResources], [injectRootAppElm], [additionalMethods]) ⇒ [`Aspect`](#Aspect)
 Create an Aspect object, used to extend feature-u.**Note on App Promotion**: You will notice that the App object isconsistently supplied thoughout the various Aspect methods.  TheApp object is used in promoting cross-communiction betweenfeatures.  While it is most likely an anti-pattern to interaget theApp object directly in the Aspect, it is needed as to "passthrough" to downwstream processes (i.e. as an opaque object).**This is the reason the App object is supplied**.  As examples ofthis: - The "logic" aspect will dependancy inject (DI) the App object   into the redux-logic process. - The "route" aspect communcates the app in it's API (i.e. passes   it through). - etc.**Please Note**: `createAspect()` accepts named parameters.
 
 
 | Param | Type | Description |
 | --- | --- | --- |
 | name | string | the aspect name.  This name is used to "key" aspects of this type in the Feature object: `Feature.{name}: xyz`. As a result, Aspect names must be unique across all aspects that are in-use. |
+| [validateConfiguration] | [`validateConfigurationFn`](#validateConfigurationFn) | an optional validation hook allowing this aspect to verify it's own required configuration (if any).  Some aspects may require certain settings in self for them to operate. |
 | [expandFeatureContent] | [`expandFeatureContentFn`](#expandFeatureContentFn) | an optional aspect expansion hook, defaulting to the algorithm defined by managedExpansion().  This function rarely needs to be overridden. It provides a hook to aspects that need to transfer additional content from the expansion function to the expanded content. |
 | validateFeatureContent | [`validateFeatureContentFn`](#validateFeatureContentFn) | a validation hook allowing this aspect to verify it's content on the supplied feature (which is known to contain this aspect). |
 | assembleFeatureContent | [`assembleFeatureContentFn`](#assembleFeatureContentFn) | the required Aspect method that assembles content for this aspect across all features, retaining needed state for subsequent ops. This method is required because this is the primary task that is accomplished by all aspects. |
@@ -84,6 +73,12 @@ A "managed expansion callback" (defined by managedExpansion) thatwhen invoked (
 ## Aspect : Any
 Aspect objects (emitted from `createAspect()`) are used to extendfeature-u.
 
+<a name="validateConfigurationFn"></a>
+
+## validateConfigurationFn ⇒ string
+A validation hook allowing this aspect to verify it's own requiredconfiguration (if any).  Some aspects may require certain settingsin self for them to operate.NOTE: To better understand the context in which any returned      validation messages are used, feature-u will prefix them      with: 'launchApp() parameter violation: '
+
+**Returns**: string - an error message when self is in an invalid state(falsy when valid).  
 <a name="expandFeatureContentFn"></a>
 
 ## expandFeatureContentFn ⇒ string
