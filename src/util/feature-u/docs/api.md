@@ -9,8 +9,8 @@ Create a new Feature object, accumulating Aspect content to be consumedby launc
 | --- | --- | --- | --- |
 | name | string |  | the feature name, used in programmatically delineating various features (ex: 'views'). |
 | [enabled] | boolean | <code>true</code> | an indicator as to whether this feature is enabled (true) or not (false). |
-| [publicFace] | Any |  | an optional resource exposed in app.{featureName}.{publicFace} (emitted from launchApp()), promoting cross-communication between features.  Please refer to the feature-u `publicFace` documentation for more detail. ?? DONE: formal parameter -AND- ??$$ DEFAULTED |
-| [appWillStart] | [`appWillStartFn`](#appWillStartFn) |  | an optional app life-cycle hook invoked one-time at app startup time.  This life-cycle hook can do any type of initialization, and/or optionally supplement the app's top-level content (using a non-null return).  Please refer to the feature-u `App Life Cycle Hooks` documentation for more detail. ?? DONE: formal parameter -AND- ??$$ DEFAULTED |
+| [publicFace] | Any |  | an optional resource exposed in app.{featureName}.{publicFace} (emitted from launchApp()), promoting cross-communication between features.  Please refer to the feature-u `publicFace` documentation for more detail. |
+| [appWillStart] | [`appWillStartFn`](#appWillStartFn) |  | an optional app life-cycle hook invoked one-time at app startup time.  This life-cycle hook can do any type of initialization, and/or optionally supplement the app's top-level content (using a non-null return).  Please refer to the feature-u `App Life Cycle Hooks` documentation for more detail. |
 | [appDidStart] | [`appDidStartFn`](#appDidStartFn) |  | an optional app life-cycle hook invoked one-time immediately after app has started.  Because the app is up-and-running at this time, you have access to the appState and the dispatch() function ... assuming you are using redux (when detected by feature-u's plugable aspects).  Please refer to the feature-u `App Life Cycle Hooks` documentation for more detail. |
 | [pluggableAspects] | [`Aspect`](#Aspect) |  | additional aspects, as defined by the feature-u's pluggable Aspect extension. |
 
@@ -26,17 +26,19 @@ Mark the supplied contextCB as a "managed expansion callback",distinguishing it
 | contextCB | [`contextCB`](#contextCB) | the callback function that when invoked (by feature-u) expands/returns the desired FeatureAspect. |
 
 **Returns**: [`contextCB`](#contextCB) - the supplied contextCB, marked as a "managedexpansion callback".  
-<a name="runApp"></a>
+<a name="launchApp"></a>
 
-## runApp(features) ⇒ App
-Launch an app by assembling/configuring the supplied app features.The runApp() function manages the configuration of all featureaspects including: actions, logic, reducers, routing, etc.  Inaddition it drives various app life-cycle methods (on the Featureobject), allowing selected features to inject initializationconstructs, etc.The runApp() function maintains an App object, which facilitatescross-communication between features.  The App object is promotedthrough redux-logic inject, and is also returned from this runApp()invocation (which can be exported to facilitate othercommunication).Example:```js  import {runApp} from 'feature-u';  import features from '../features';  export default runApp(features);```
+## launchApp([aspects], features, registerRootAppElm) ⇒ App
+Launch an app by assembling and configuring the supplied features,using the supplied set of pluggable aspects.  - It manages the setup and configuration of all your feature  aspects, including things like: state management, logic, routing,  etc.- It facilitates app life-cycle methods on the Feature object,  allowing features to manage things like: initialization and  inject root UI elements, etc.- It creates and promotes the App object which contains the  publicFace of all features, facilating a cross-communication  between features.Please refer to the user documenation for more details and completeexamples.**Please Note** `launchApp()` accepts named parameters.
 
 
 | Param | Type | Description |
 | --- | --- | --- |
+| [aspects] | [`Array.&lt;Aspect&gt;`](#Aspect) | the set of plugable aspects that extend feature-u, integrating other frameworks to match your specific run-time stack.  When NO aspects are supplied (an atypical case), only the very basic feature-u characteristics are in effect (like publicFace and life-cycle hooks). |
 | features | Array.&lt;Feature&gt; | the features that comprise this application. |
+| registerRootAppElm | [`registerRootAppElmFn`](#registerRootAppElmFn) | the callback hook that registers the supplied root application hook to the specific React framework used by your app.  Because this registration is accomplished by app-specific code, feature-u can operate in any number of containing frameworks, like: React Web, React Native, Expo, etc. |
 
-**Returns**: App - an app object which used in featurecross-communication (as follows):```js {   ?? document }```  
+**Returns**: App - the App object used to promote featurecross-communication.  
 <a name="createAspect"></a>
 
 ## createAspect(name, [validateConfiguration], [expandFeatureContent], validateFeatureContent, assembleFeatureContent, [assembleAspectResources], [injectRootAppElm], [additionalMethods]) ⇒ [`Aspect`](#Aspect)
@@ -90,6 +92,16 @@ A "managed expansion callback" (defined by managedExpansion) thatwhen invoked (
 | app | App | The feature-u app object, promoting the publicFace of each feature. |
 
 **Returns**: FeatureAspect - The desired FeatureAspect (ex: reducer,logic module, etc.).  
+<a name="registerRootAppElmFn"></a>
+
+## registerRootAppElmFn : function
+The launchApp() callback hook that registers the supplied rootapplication hook to the specific React framework used by your app.Because this registration is accomplished by app-specific code,feature-u can operate in any number of containing frameworks, like:React Web, React Native, Expo, etc.**NOTE on rootAppElm:**- Typically the supplied rootAppElm will have definition, based on  the Aspects and Features that are in use.  In this case, it is the  responsibility of this callback to register this content in  some way (either directly or indirectly).- However, there are atypical isolated cases where the supplied  rootAppElm can be null.  This can happen when the app chooses NOT  to use Aspects/Features that inject any UI content.  In this case,  the callback is free to register it's own content.Please refer to the user documentation for more details andcomplete examples.
+
+
+| Param | Type | Description |
+| --- | --- | --- |
+| rootAppElm | reactElm | the root application element to be registered. |
+
 <a name="Aspect"></a>
 
 ## Aspect : Any

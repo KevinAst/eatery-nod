@@ -1,7 +1,7 @@
+import createAspect      from './createAspect';
 import createFeature     from './createFeature';
 import managedExpansion  from './managedExpansion';
-import runApp            from './runApp';
-import createRoute       from './createRoute';
+import launchApp         from './launchApp';
 
 //*** 
 //*** Promote all feature-u utilities through a centralized module.
@@ -13,10 +13,10 @@ import createRoute       from './createRoute';
 //       -or-
 //         import * as FeatureU from 'feature-u';
 export {
+  createAspect,
   createFeature,
   managedExpansion,
-  createRoute,
-  runApp,
+  launchApp,
 };
 
 // NOTE: This default export supports CommonJS modules (otherwise Babel does NOT promote them).
@@ -25,9 +25,9 @@ export {
 //       -or-
 //         const FeatureU   = require('feature-u');
 export default {
+  createAspect,
   createFeature,
   managedExpansion,
-  createRoute,
-  runApp,
+  launchApp,
 };
 

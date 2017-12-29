@@ -48,7 +48,7 @@ const noOp = () => null;
 export default function createFeature({name,
                                        enabled=true,
 
-                                       publicFace={},
+                                       publicFace={}, // default to empty object, providing a consistent indicator in app object (that the feature is present/enabled)
 
                                        appWillStart=noOp,
                                        appDidStart=noOp,
