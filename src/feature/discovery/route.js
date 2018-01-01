@@ -1,6 +1,6 @@
 import React                  from 'react';
 import * as sel               from './state';
-import {createRoute}          from '../../util/feature-u';
+import {createRoute}          from '../../util/feature-u/aspect/feature-u-state-router';
 import featureName            from './featureName';
 import DiscoveryFilterScreen  from './comp/DiscoveryFilterScreen';
 import DiscoveryListScreen    from './comp/DiscoveryListScreen';

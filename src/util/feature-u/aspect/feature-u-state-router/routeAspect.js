@@ -1,3 +1,4 @@
+import React           from 'react';              // ?? peerDependancies
 import createAspect    from '../../createAspect'; // ?? EVENTUALLY peerDependency: import {createAspect} from 'feature-u';
 import {isValidRoute}  from './createRoute';
 import StateRouter     from './StateRouter';
@@ -114,7 +115,7 @@ function injectRootAppElm(curRootAppElm, app) {
   // insure we don't clober any supplied content
   // ... by design, <StateRouter> doesn't support children
   if (curRootAppElm) {
-    throw new Error('*** ERROR*** Please register feature-u-state-router Aspect before other Aspects ' +
+    throw new Error('*** ERROR*** Please register routeAspect (from feature-u-state-router) before other Aspects ' +
                     'that inject content in the root app elm ... <StateRouter> does NOT support children.');
   }
 

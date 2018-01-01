@@ -66,7 +66,7 @@ function assembleFeatureContent(activeFeatures, app) {
   // accumulate logic modules across all features
   const appLogic = activeFeatures.reduce( (accum, feature) => {
     if (feature[this.name]) {
-      accum.push( feature[this.name] );
+      accum = [...accum, ...feature[this.name]];
     }
     return accum;
   }, []);

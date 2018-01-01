@@ -1,5 +1,6 @@
-import isFunction  from 'lodash.isfunction';
-import verify      from '../verify';
+import isFunction                from 'lodash.isfunction';
+import verify                    from '../verify';
+import {isBuiltInFeatureKeyword} from './createFeature';
 
 /**
  * @function launchApp
@@ -82,7 +83,7 @@ export default function launchApp({aspects=[],
   check(unknownArgKeys.length === 0,  `unrecognized named parameter(s): ${unknownArgKeys}`);
 
   // ... unrecognized positional parameter
-  check(arguments.length > 1,  'unrecognized positional parameters (only named parameters can be specified)');
+  check(arguments.length === 1,  'unrecognized positional parameters (only named parameters can be specified)');
 
 
   // peform "Feature" property validation
@@ -119,8 +120,10 @@ export default function launchApp({aspects=[],
   });
 
   // prune to activeFeatures, insuring all feature.names are unique
+  const allFeatureNames = {};
   const activeFeatures = features.filter( feature => {
-    check(!allNames[feature.name], `feature.name: '${feature.name}' is NOT unique`);
+    check(!allFeatureNames[feature.name], `feature.name: '${feature.name}' is NOT unique`);
+    allFeatureNames[feature.name] = true;
     return feature.enabled;
   });
 
@@ -191,27 +194,42 @@ export default function launchApp({aspects=[],
     aspect.assembleAspectResources(aspects, app);
   });
 
-  // define our rootAppElm from one (or more) of our aspects
-  let rootAppElm = aspects.reduce( (curRootAppElm, aspect) => aspect.injectRootAppElm(curRootAppElm, app), null );
-  // NOTE: rootAppElm ...
-  //       At this point, we could validate rootAppElm to insure it is non-null,
-  //       because presumably there will be nothing to display!
-  //       HOWEVER:
-  //        - each feature has an oppertunity to inject content (see next steps below)!
-  //       ALSO:
-  //        - ULTIMATLY the app code (found in the registerRootAppElm() hook) may decide to display whatever it wants!
+  // ??$$ there is a whole issue with the ordering of rootAppElm injection BETWEEN Feature/Aspect
 
-  // apply appWillStart(app, rootAppElm) life-cycle hook
-  // ... can perform ANY initialization
-  //     -AND- supplement our top-level content (using a non-null return)
+  // ??$$ FIRST ATTEMPT: 
+  // ? // define our rootAppElm from one (or more) of our aspects
+  // ? let rootAppElm = aspects.reduce( (curRootAppElm, aspect) => aspect.injectRootAppElm(curRootAppElm, app), null );
+  // ? // NOTE: rootAppElm ...
+  // ? //       At this point, we could validate rootAppElm to insure it is non-null,
+  // ? //       because presumably there will be nothing to display!
+  // ? //       HOWEVER:
+  // ? //        - each feature has an oppertunity to inject content (see next steps below)!
+  // ? //       ALSO:
+  // ? //        - ULTIMATLY the app code (found in the registerRootAppElm() hook) may decide to display whatever it wants!
+  // ? 
+  // ? // apply appWillStart(app, rootAppElm) life-cycle hook
+  // ? // ... can perform ANY initialization
+  // ? //     -AND- supplement our top-level content (using a non-null return)
+  // ? activeFeatures.forEach( feature => {
+  // ?   if (feature.appWillStart) {
+  // ?     rootAppElm = feature.appWillStart(app, rootAppElm) || rootAppElm;
+  // ?   }
+  // ? });
+  // ? // NOTE: rootAppElm ... ditto note (above)
+
+  // ??$$ SECOND ATTEMPT ... Feature FIRST so Aspect can be on top!
+  // ?? if works, rework, and document better
+  let rootAppElm = null;
   activeFeatures.forEach( feature => {
     if (feature.appWillStart) {
       rootAppElm = feature.appWillStart(app, rootAppElm) || rootAppElm;
     }
   });
-  // NOTE: rootAppElm ... ditto note (above)
+  rootAppElm = aspects.reduce( (curRootAppElm, aspect) => aspect.injectRootAppElm(curRootAppElm, app), rootAppElm );
+
 
   // register our rootAppElm to our App (via the supplied callback hook)
+  // ... this actually starts our app!
   registerRootAppElm(rootAppElm);
 
   // locate the redux app store (if any) from our aspects
@@ -221,6 +239,7 @@ export default function launchApp({aspects=[],
   const [appState, dispatch] = reduxAspect 
                                 ? [reduxAspect.getReduxStore().getState(), reduxAspect.getReduxStore().dispatch]
                                 : [undefined, undefined];
+  // console.log(`??$$ launchApp ... invoking appDidStart(): `, {appState, dispatch});
 
   // apply appDidStart({app, appState, dispatch}) life-cycle hooks
   activeFeatures.forEach( feature => {

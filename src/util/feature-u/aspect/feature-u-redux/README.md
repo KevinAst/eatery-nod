@@ -40,7 +40,7 @@ npm install --save feature-u-redux
 **Please Note**: the following **peerDependencies** are in effect:
 - **feature-u** (_??ver_)
 - **[redux]** (_??ver_)
-- other ??
+- **react** (??ver) ... because of react component injection (in our case jsx )
 
 ## Usage
 

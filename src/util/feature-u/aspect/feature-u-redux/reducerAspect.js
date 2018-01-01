@@ -1,9 +1,11 @@
+import React              from 'react';              // ?? EVENTUALLY peerDependency
 import {applyMiddleware,
         compose,
         createStore,
         combineReducers}  from 'redux';              // ?? EVENTUALLY peerDependency
 import {Provider}         from 'react-redux';        // ?? EVENTUALLY peerDependency
 import createAspect       from '../../createAspect'; // ?? EVENTUALLY peerDependency: import {createAspect} from 'feature-u';
+import slicedReducer      from './slicedReducer';
 import isFunction         from 'lodash.isfunction';
 
 /**
@@ -27,23 +29,15 @@ import isFunction         from 'lodash.isfunction';
  * **Please refer to the User Docs** for a complete description with
  * examples.
  */
-// ?? problem in in-line expansion
-// src/util/feature-u/aspect/feature-u-redux/reducerAspect.js inline: createAspect(...)
-// src/util/feature-u/createAspect.js  invoking: isBuiltInFeatureKeyword()
-// src/util/feature-u/createFeature.js <<< prob: hasn't yet initialized KJB I think because the createAspect is kicking off too soon DUE TO pkging of feature-u-redux
-// HMMM: for now PUNT, and no-op the execution of createAspect() in reducerAspect
-// - KJB: I think this will be fixed when createFeature.js is NO LONGER importing slicedReducer()
-//        We are kinda in no-mans land right now
-export default 'NOT READY YET';
-// ? export default createAspect({
-// ?   name: 'reducer', // to fully manage all of redux, we ONLY need the reducers (hence our name)!
-// ?   expandFeatureContent,
-// ?   validateFeatureContent,
-// ?   assembleFeatureContent,
-// ?   assembleAspectResources,
-// ?   getReduxStore,
-// ?   injectRootAppElm,
-// ? });
+export default createAspect({
+  name: 'reducer', // to fully manage all of redux, we ONLY need the reducers (hence our name)!
+  expandFeatureContent,
+  validateFeatureContent,
+  assembleFeatureContent,
+  assembleAspectResources,
+  getReduxStore,
+  injectRootAppElm,
+});
 
 
 /**
