@@ -6,6 +6,8 @@ import logic            from './logic';
 import route            from './route';
 import appWillStart     from './appWillStart';
 import appDidStart      from './appDidStart';
+import injectRootAppElmForStateRouter from './injectRootAppElmForStateRouter';
+
 
 /**
  * The **'device'** feature initializes the device for use by the app.
@@ -14,8 +16,11 @@ import appDidStart      from './appDidStart';
  *  - kicks off the entire app, by dispatching a device bootstrap action
  *    **(appDidStart)**
  * 
- *  - performs device-specific initialization: platform-setup, notify
+ *  - performs device-specific initialization: platform-setup
  *    **(appWillStart)**
+ * 
+ *  - inject our notify utility in the root DOM
+ *    **(injectRootAppElmForStateRouter)**
  * 
  *  - loads device resources (fonts, geo location), triggered by
  *    bootstrap action **(logic, action, reducer)**
@@ -56,4 +61,6 @@ export default createFeature({
 
   appWillStart,
   appDidStart,
+
+  injectRootAppElmForStateRouter,
 });

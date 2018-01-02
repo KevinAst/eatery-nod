@@ -6,8 +6,11 @@ It accomplishes the following:
  - kicks off the entire app, by dispatching a device bootstrap action
    **(appDidStart)**
 
- - performs device-specific initialization: platform-setup, notify
+ - performs device-specific initialization: platform-setup
    **(appWillStart)**
+
+ - inject our notify utility in the root DOM
+   **(injectRootAppElmForStateRouter)**
 
  - loads device resources (fonts, geo location), triggered by
    bootstrap action **(logic, action, reducer)**

@@ -1,5 +1,5 @@
 import React           from 'react';              // ?? peerDependancies
-import createAspect    from '../../createAspect'; // ?? EVENTUALLY peerDependency: import {createAspect} from 'feature-u';
+import createAspect    from '../../createAspect'; // ?? peerDependancies: import {createAspect} from 'feature-u';
 import {isValidRoute}  from './createRoute';
 import StateRouter     from './StateRouter';
 
@@ -106,12 +106,18 @@ function assembleFeatureContent(activeFeatures, app) {
  * @param {reactElm} curRootAppElm - the current react app element root.
  *
  * @param {App} app the App object used in feature cross-communication.
+ * 
+ * @param {Feature[]} activeFeatures - The set of active (enabled)
+ * features that comprise this application.  This can be used in an
+ * optional Aspect/Feature cross-communication.  As an example, an Xyz
+ * Aspect may define a Feature API by which a Feature can inject DOM
+ * in conjunction with the Xyz Aspect DOM injection.
  *
  * @return {reactElm} our StateRouter element.
  *
  * @private
  */
-function injectRootAppElm(curRootAppElm, app) {
+function injectRootAppElm(curRootAppElm, app, activeFeatures) {
   // insure we don't clober any supplied content
   // ... by design, <StateRouter> doesn't support children
   if (curRootAppElm) {
@@ -119,9 +125,23 @@ function injectRootAppElm(curRootAppElm, app) {
                     'that inject content in the root app elm ... <StateRouter> does NOT support children.');
   }
 
-  // inject our StateRouter component at the root app element.
-  return <StateRouter app={app}
-                      routes={this.routes}
-                      fallbackElm={this.fallbackElm}
-                      componentWillUpdateHook={this.componentWillUpdateHook}/>;
+  // seed our routerRootAppElm with our StateRouter
+  let routerRootAppElm = <StateRouter app={app}
+                                      routes={this.routes}
+                                      fallbackElm={this.fallbackElm}
+                                      componentWillUpdateHook={this.componentWillUpdateHook}/>;
+
+  // allow features to suplement this top-level router
+  // ... through our OWN Feature API: injectRootAppElmForStateRouter(curRootAppElm, app): newRootAppElm
+  routerRootAppElm = activeFeatures.reduce( (cur_routerRootAppElm, feature) => {
+    if (feature.injectRootAppElmForStateRouter) {
+      return feature.injectRootAppElmForStateRouter(cur_routerRootAppElm, app);
+    }
+    else {
+      return cur_routerRootAppElm;
+    }
+  }, routerRootAppElm );
+
+  // that's all folks
+  return routerRootAppElm;
 }

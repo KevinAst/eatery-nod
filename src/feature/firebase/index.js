@@ -8,7 +8,7 @@ import initFireBase     from './init/initFireBase';
 export default createFeature({
   name: 'firebase',
 
-  appWillStart(app, children) {
+  appWillStart(app, curRootAppElm) {
     initFireBase(); // initialize FireBase
   },
 });

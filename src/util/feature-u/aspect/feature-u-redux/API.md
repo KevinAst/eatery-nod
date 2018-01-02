@@ -1,4 +1,16 @@
 # feature-u-redux API
+<a name="expandFeatureContent"></a>
+
+## expandFeatureContent(feature, app) ⇒ string
+Expand the reducer content in the supplied feature -AND- transferthe slice property from the expansion function to the expandedreducer.
+
+
+| Param | Type | Description |
+| --- | --- | --- |
+| feature | Feature | the feature which is known to contain this aspect **and** is in need of expansion (as defined by managedExpansion()). |
+| app | App | the App object used in feature cross-communication. |
+
+**Returns**: string - an optional error message when the suppliedfeature contains invalid content for this aspect (falsy whenvalid).  This is a specialized validation of the expansionfunction, over-and-above what is checked in the standardvalidateFeatureContent() hook.  
 <a name="slicedReducer"></a>
 
 ## slicedReducer(slice, reducer) ⇒ reducerFn

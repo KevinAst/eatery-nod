@@ -168,5 +168,6 @@ An optional callback hook that promotes some characteristic of thisaspect withi
 | --- | --- | --- |
 | curRootAppElm | reactElm | the current react app element root. |
 | app | App | the App object used in feature cross-communication. |
+| activeFeatures | Array.&lt;Feature&gt; | The set of active (enabled) features that comprise this application.  This can be used in an optional Aspect/Feature cross-communication.  As an example, an Xyz Aspect may define a Feature API by which a Feature can inject DOM in conjunction with the Xyz Aspect DOM injection. |
 
 **Returns**: reactElm - a new react app element root (which in turn mustcontain the supplied curRootAppElm), or simply the suppliedcurRootAppElm (if no change).  

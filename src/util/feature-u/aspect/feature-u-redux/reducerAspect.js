@@ -177,6 +177,12 @@ function getReduxStore() {
  * @param {reactElm} curRootAppElm - the current react app element root.
  *
  * @param {App} app the App object used in feature cross-communication.
+ * 
+ * @param {Feature[]} activeFeatures - The set of active (enabled)
+ * features that comprise this application.  This can be used in an
+ * optional Aspect/Feature cross-communication.  As an example, an Xyz
+ * Aspect may define a Feature API by which a Feature can inject DOM
+ * in conjunction with the Xyz Aspect DOM injection.
  *
  * @return {reactElm} a new react app element root (which in turn must
  * contain the supplied curRootAppElm), or simply the supplied
@@ -184,7 +190,7 @@ function getReduxStore() {
  *
  * @private
  */
-function injectRootAppElm(curRootAppElm, app) {
+function injectRootAppElm(curRootAppElm, app, activeFeatures) {
   return (
     <Provider store={this.appStore}>
       {curRootAppElm}

@@ -103,7 +103,8 @@ export default function launchApp({aspects=[],
         const aspect = aspectMap[propName];
 
         // handle unrecognized aspect
-        checkFeature(aspect, `unrecognized keyword: ${propName} (no aspect is registered to handle this)!`);
+        // ??$$ because of routeAspect genning up it's own Feature API, can't check this ... hmmmm
+        // ? checkFeature(aspect, `unrecognized keyword: ${propName} (no aspect is registered to handle this)!`);
 
         // delay validation when expansion is needed
         // ... is accomplished in subsequent step (after expansion has occurred)
@@ -112,8 +113,10 @@ export default function launchApp({aspects=[],
 
           // allow the aspect to validate it's content
           // ... ex: a reducer MUST be a function (or managedExpansion) and it must have a shape!
-          const errMsg = aspect.validateFeatureContent(feature); // validate self's aspect on supplied feature (which is known to contain this aspect)
-          checkFeature(!errMsg, errMsg); // non-null is considered a validation error
+          if (aspect) { // ??$$ temp conditional ... see above
+            const errMsg = aspect.validateFeatureContent(feature); // validate self's aspect on supplied feature (which is known to contain this aspect)
+            checkFeature(!errMsg, errMsg); // non-null is considered a validation error
+          }
         }
       }
     }
@@ -194,42 +197,27 @@ export default function launchApp({aspects=[],
     aspect.assembleAspectResources(aspects, app);
   });
 
-  // ??$$ there is a whole issue with the ordering of rootAppElm injection BETWEEN Feature/Aspect
-
-  // ??$$ FIRST ATTEMPT: 
-  // ? // define our rootAppElm from one (or more) of our aspects
-  // ? let rootAppElm = aspects.reduce( (curRootAppElm, aspect) => aspect.injectRootAppElm(curRootAppElm, app), null );
-  // ? // NOTE: rootAppElm ...
-  // ? //       At this point, we could validate rootAppElm to insure it is non-null,
-  // ? //       because presumably there will be nothing to display!
-  // ? //       HOWEVER:
-  // ? //        - each feature has an oppertunity to inject content (see next steps below)!
-  // ? //       ALSO:
-  // ? //        - ULTIMATLY the app code (found in the registerRootAppElm() hook) may decide to display whatever it wants!
-  // ? 
-  // ? // apply appWillStart(app, rootAppElm) life-cycle hook
-  // ? // ... can perform ANY initialization
-  // ? //     -AND- supplement our top-level content (using a non-null return)
-  // ? activeFeatures.forEach( feature => {
-  // ?   if (feature.appWillStart) {
-  // ?     rootAppElm = feature.appWillStart(app, rootAppElm) || rootAppElm;
-  // ?   }
-  // ? });
-  // ? // NOTE: rootAppElm ... ditto note (above)
-
-  // ??$$ SECOND ATTEMPT ... Feature FIRST so Aspect can be on top!
-  // ?? if works, rework, and document better
+  // apply Feature.appWillStart() life-cycle hook
+  // AND define our rootAppElm from a combination Features/Aspects DOM injections
   let rootAppElm = null;
-  activeFeatures.forEach( feature => {
-    if (feature.appWillStart) {
-      rootAppElm = feature.appWillStart(app, rootAppElm) || rootAppElm;
-    }
+  // ... FIRST: feature DOM injection via Feature.appWillStart() life-cycle hook
+  //            - Can perform ANY initialization
+  //            - AND supplement our top-level content (using a non-null return)
+  //              ... accomplished FIRST because (in general) it is thought Aspects should inject higher in the DOM
+  activeFeatures.forEach( feature => { // ?? why is the forEach ... it could be reduce (like below)
+    rootAppElm = feature.appWillStart(app, rootAppElm) || rootAppElm;
   });
-  rootAppElm = aspects.reduce( (curRootAppElm, aspect) => aspect.injectRootAppElm(curRootAppElm, app), rootAppElm );
+  // ... SECOND: aspect DOM injection via Aspect.injectRootAppElm()
+  rootAppElm = aspects.reduce( (curRootAppElm, aspect) => aspect.injectRootAppElm(curRootAppElm, app, activeFeatures), rootAppElm );
+  // ... NOTE: We do NOT validate rootAppElm to insure it is non-null!
+  //           - at first glance it would appear that a null rootAppElm would render NOTHING
+  //           - HOWEVER, ULTIMATLY the app code (found in the registerRootAppElm() hook) 
+  //             can display whatever it wants ... a given app may have chosen to inject it's own rootAppElm
 
-
-  // register our rootAppElm to our App (via the supplied callback hook)
-  // ... this actually starts our app!
+  // start our app by registering our rootAppElm to the appropriate react framework
+  // ... because this is accomplished by app-specific code, 
+  //     feature-u can operate in any number of containing react frameworks,
+  //     like: React Web, React Native, Expo, etc.
   registerRootAppElm(rootAppElm);
 
   // locate the redux app store (if any) from our aspects
@@ -239,9 +227,9 @@ export default function launchApp({aspects=[],
   const [appState, dispatch] = reduxAspect 
                                 ? [reduxAspect.getReduxStore().getState(), reduxAspect.getReduxStore().dispatch]
                                 : [undefined, undefined];
-  // console.log(`??$$ launchApp ... invoking appDidStart(): `, {appState, dispatch});
+  // console.log(`xx launchApp ... invoking appDidStart(): `, {appState, dispatch});
 
-  // apply appDidStart({app, appState, dispatch}) life-cycle hooks
+  // apply Feature.appDidStart() life-cycle hooks
   activeFeatures.forEach( feature => {
     if (feature.appDidStart) {
       feature.appDidStart({

@@ -1,6 +1,6 @@
 import {createFeature}  from '../../util/feature-u';
 import publicFace       from './publicFace';
-import appWillStart     from './appWillStart';
+import injectRootAppElmForStateRouter  from './injectRootAppElmForStateRouter';
 
 /**
  * The **'leftNav'** feature promotes the app-specific Drawer/SideBar
@@ -20,5 +20,5 @@ export default createFeature({
 
   publicFace,
 
-  appWillStart,
+  injectRootAppElmForStateRouter,
 });

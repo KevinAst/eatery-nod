@@ -49,7 +49,7 @@ export default function slicedReducer(slice, reducer) {
   // auto generate a standard selector for our sliced state
   const nodeNames = slice.split('.');
   function getSlicedState(appState) {
-    // console.log(`??$$ in selector getSlicedState(): `, {nodeNames, appState});
+    // console.log(`xx in selector getSlicedState(): `, {nodeNames, appState});
     return nodeNames.reduce( (runningNode, nodeName) => runningNode[nodeName], appState );
   }
 

@@ -28,16 +28,6 @@ class StateRouter extends React.Component {
 
     const {app, routes, appState, fallbackElm} = this.props;
 
-    // ??$$ startup condition?
-    // ? WHY is StateRouter being invoked even before the point where redux state has been defined?
-    // ?  - launchApp is invoking appDidStart() life-cycle-method WITH state
-    // ?  - is this a long-time problem, where router aspect need to be re-positioned
-    // ?  - or an initialization problem ... HERE: try adding startup logic to StateRouter, checking for undefined appState
-    if (!appState) {
-      console.log(`??$$ StateRouter startup condition NO appState ... revert to fallback`);
-      return fallbackElm;
-    }
-
     // apply priority routes (if any)
     for (const route of routes) {
       const content = route.priorityContent(app, appState);
@@ -73,4 +63,4 @@ class StateRouter extends React.Component {
 // };
 
 // access redux appState, via redux connect()
-export default connect( (appState) => appState)(StateRouter);
+export default connect( (appState) => ({appState}))(StateRouter);
