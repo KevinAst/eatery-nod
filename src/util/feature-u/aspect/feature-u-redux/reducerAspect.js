@@ -262,10 +262,10 @@ export function accumAppReducer(aspectName, activeFeatures) { // ... named expor
         runningShape += (runningShape?'.':'') + nodeName;
 
         // apply validation constraints of our shapedGenesis
-        // 1: intermediate node cannot be a reducer, because we can't intermix feature reducer with combineReducer (of runApp)
+        // 1: intermediate node cannot be a reducer, because we can't intermix feature reducer with combineReducer (of launchApp)
         // 2: all leafs MUST be reducer functions (this is actually FORCED by our code below)
         if ( isFunction(subNode) || (subNodeExisted && leafNode) ) { // TO BE ORDER INDEPENDENT, added: or condition
-          throw new Error(`*** ERROR*** feature-u runApp() constraint violation: reducer slice: '${runningShape}' cannot be specified by multiple features (either as an intermediate node, or an outright duplicate) because we can't intermix feature reducers and combineReducer() from runApp()`);
+          throw new Error(`*** ERROR*** feature-u launchApp() constraint violation: reducer slice: '${runningShape}' cannot be specified by multiple features (either as an intermediate node, or an outright duplicate) because we can't intermix feature reducers and combineReducer() from launchApp()`);
         }
 
         // inject our new sub-node -or- the reducer for leaf nodes

@@ -1,5 +1,7 @@
 # feature-u *(Feature Based Project Organization for React)*
 
+TODO: ?? mucho retrofit docs (including replacing runApp() with launchApp())
+
 feature-u is a library that facilitates feature-based project
 organization for your [react] project.  It assists in organizing your
 project by individual features.  There are many good articles that
@@ -86,7 +88,7 @@ useful concepts that can be *(at minimum)* followed by your project.
   * [`slicedReducer()`](api.md#slicedReducer)
   * [`managedExpansion()`](api.md#managedExpansion)
   * [`createRoute()`](api.md#createRoute)
-  * [`runApp()`](api.md#runApp)
+  * [`launchApp()`](api.md#launchApp)
 
 
 ## Intro
@@ -95,7 +97,7 @@ Here is a sample directory structure of an app that uses feature-u:
 
 ```
 src/
-  app.js              ... launches app using runApp()
+  app.js              ... launches app using launchApp()
 
   feature/
     index.js          ... accumulate/promote all app features
@@ -1095,7 +1097,7 @@ export const isDeviceReady = (appState) => getFeatureState(appState).status === 
   * [`slicedReducer()`](api.md#slicedReducer)
   * [`managedExpansion()`](api.md#managedExpansion)
   * [`createRoute()`](api.md#createRoute)
-  * [`runApp()`](api.md#runApp)
+  * [`launchApp()`](api.md#launchApp)
 
 
 [react]:          https://reactjs.org/
