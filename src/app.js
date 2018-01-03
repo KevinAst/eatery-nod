@@ -1,4 +1,4 @@
-import React             from 'react'; // required for JSX rendering
+import React             from 'react';
 import Expo              from 'expo';
 import {LayoutAnimation} from 'react-native';
 import {routeAspect}     from './util/feature-u/aspect/feature-u-state-router';
@@ -8,6 +8,7 @@ import {launchApp}       from './util/feature-u';
 import SplashScreen      from './util/comp/SplashScreen';
 import features          from './feature';
 
+
 // define our set of "plugable" feature-u Aspects, conforming to our app's run-time stack
 const aspects = [
   routeAspect,   // StateRouter ... order: early, because <StateRouter> DOM injection does NOT support children
@@ -15,11 +16,13 @@ const aspects = [
   logicAspect,   // redux-logic ... order: N/A,   because NO DOM injection
 ];
 
+
 // configure our Aspects (as needed)
 // ... StateRouter fallback screen (when no routes are in effect)
 routeAspect.fallbackElm = <SplashScreen msg="I'm trying to think but it hurts!"/>;
 // ... StateRouter animation hook
 routeAspect.componentWillUpdateHook = () => LayoutAnimation.configureNext(LayoutAnimation.Presets.spring);
+
 
 // launch our app, exposing the feature-u App object (facilitating cross-feature communication)!
 export default launchApp({
