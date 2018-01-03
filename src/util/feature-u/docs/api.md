@@ -15,6 +15,16 @@ Create a new Feature object, accumulating Aspect content to be consumedby launc
 | [pluggableAspects] | [`Aspect`](#Aspect) |  | additional aspects, as defined by the feature-u's pluggable Aspect extension. |
 
 **Returns**: Feature - a new Feature object (to be consumed by feature-ulaunchApp()).  
+<a name="addBuiltInFeatureKeyword"></a>
+
+## addBuiltInFeatureKeyword(keyword)
+Add additional Feature keyword (typically used by Aspect extensionsto Feature).
+
+
+| Param | Type | Description |
+| --- | --- | --- |
+| keyword | string | the keyword name to add. |
+
 <a name="managedExpansion"></a>
 
 ## managedExpansion(contextCB) ⇒ [`contextCB`](#contextCB)

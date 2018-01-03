@@ -103,8 +103,7 @@ export default function launchApp({aspects=[],
         const aspect = aspectMap[propName];
 
         // handle unrecognized aspect
-        // ??$$ because of routeAspect genning up it's own Feature API, can't check this ... hmmmm
-        // ? checkFeature(aspect, `unrecognized keyword: ${propName} (no aspect is registered to handle this)!`);
+        checkFeature(aspect, `unrecognized keyword: ${propName} (no aspect is registered to handle this)!`);
 
         // delay validation when expansion is needed
         // ... is accomplished in subsequent step (after expansion has occurred)
@@ -113,10 +112,8 @@ export default function launchApp({aspects=[],
 
           // allow the aspect to validate it's content
           // ... ex: a reducer MUST be a function (or managedExpansion) and it must have a shape!
-          if (aspect) { // ??$$ temp conditional ... see above
-            const errMsg = aspect.validateFeatureContent(feature); // validate self's aspect on supplied feature (which is known to contain this aspect)
-            checkFeature(!errMsg, errMsg); // non-null is considered a validation error
-          }
+          const errMsg = aspect.validateFeatureContent(feature); // validate self's aspect on supplied feature (which is known to contain this aspect)
+          checkFeature(!errMsg, errMsg); // non-null is considered a validation error
         }
       }
     }

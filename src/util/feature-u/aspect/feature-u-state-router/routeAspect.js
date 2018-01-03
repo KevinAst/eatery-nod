@@ -1,7 +1,8 @@
-import React           from 'react';              // ?? peerDependancies
-import createAspect    from '../../createAspect'; // ?? peerDependancies: import {createAspect} from 'feature-u';
-import {isValidRoute}  from './createRoute';
-import StateRouter     from './StateRouter';
+import React                      from 'react';  // ?? peerDependancies
+import {createAspect,
+        addBuiltInFeatureKeyword} from '../../'; // ?? peerDependancies: 'feature-u'
+import {isValidRoute}             from './createRoute';
+import StateRouter                from './StateRouter';
 
 /**
  * @typedef {Aspect} routeAspect
@@ -31,6 +32,10 @@ export default createAspect({
   assembleFeatureContent,
   injectRootAppElm,
 });
+
+
+// register our OWN Feature API: injectRootAppElmForStateRouter(curRootAppElm, app): newRootAppElm
+addBuiltInFeatureKeyword('injectRootAppElmForStateRouter');
 
 
 /**

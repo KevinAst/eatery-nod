@@ -90,27 +90,36 @@ export default function createFeature({name,
   };
 }
 
-// ?? must be var ?? I think this was causing problems at run-time ?? once running, make this a const to see if it is OK
-var builtInFeatureKeywords = {
-  name:         'name',
-  enabled:      'enabled',
-  publicFace:   'publicFace',
-  appWillStart: 'appWillStart',
-  appDidStart:  'appDidStart',
+const builtInFeatureKeywords = {
+  name:         true,
+  enabled:      true,
+  publicFace:   true,
+  appWillStart: true,
+  appDidStart:  true,
 };
 
 /**
  * @private
  * 
- * Return indicator as to whether the supplied propName is a built-in
+ * Return indicator as to whether the supplied keyword is a built-in
  * Feature keyword.
  *
- * @param {string} propName the property name to check.
+ * @param {string} keyword the keyword name to check.
  *
  * @param {boolean} true: is keyword, false: is NOT keyword
  */
-export function isBuiltInFeatureKeyword(propName) {
-  return builtInFeatureKeywords[propName] ? true : false;
+export function isBuiltInFeatureKeyword(keyword) {
+  return builtInFeatureKeywords[keyword] || false;
+}
+
+/**
+ * Add additional Feature keyword (typically used by Aspect extensions
+ * to Feature).
+ *
+ * @param {string} keyword the keyword name to add.
+ */
+export function addBuiltInFeatureKeyword(keyword) {
+  builtInFeatureKeywords[keyword] = true;
 }
 
 

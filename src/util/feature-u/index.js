@@ -1,7 +1,8 @@
-import createAspect      from './createAspect';
-import createFeature     from './createFeature';
-import managedExpansion  from './managedExpansion';
-import launchApp         from './launchApp';
+import createAspect               from './createAspect';
+import createFeature,
+       {addBuiltInFeatureKeyword} from './createFeature';
+import managedExpansion           from './managedExpansion';
+import launchApp                  from './launchApp';
 
 //*** 
 //*** Promote all feature-u utilities through a centralized module.
@@ -15,6 +16,7 @@ import launchApp         from './launchApp';
 export {
   createAspect,
   createFeature,
+  addBuiltInFeatureKeyword,
   managedExpansion,
   launchApp,
 };
@@ -27,6 +29,7 @@ export {
 export default {
   createAspect,
   createFeature,
+  addBuiltInFeatureKeyword,
   managedExpansion,
   launchApp,
 };
