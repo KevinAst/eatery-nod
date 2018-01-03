@@ -1,11 +1,12 @@
-import Expo            from 'expo';
-import React           from 'react'; // required for JSX rendering
-import {routeAspect}   from './util/feature-u/aspect/feature-u-state-router';
-import {reducerAspect} from './util/feature-u/aspect/feature-u-redux';
-import {logicAspect}   from './util/feature-u/aspect/feature-u-redux-logic';
-import {launchApp}     from './util/feature-u';
-import SplashScreen    from './util/comp/SplashScreen';
-import features        from './feature';
+import React             from 'react'; // required for JSX rendering
+import Expo              from 'expo';
+import {LayoutAnimation} from 'react-native';
+import {routeAspect}     from './util/feature-u/aspect/feature-u-state-router';
+import {reducerAspect}   from './util/feature-u/aspect/feature-u-redux';
+import {logicAspect}     from './util/feature-u/aspect/feature-u-redux-logic';
+import {launchApp}       from './util/feature-u';
+import SplashScreen      from './util/comp/SplashScreen';
+import features          from './feature';
 
 // define our set of "plugable" feature-u Aspects, conforming to our app's run-time stack
 const aspects = [
@@ -15,8 +16,11 @@ const aspects = [
 ];
 
 // configure our Aspects (as needed)
+// ... StateRouter fallback screen (when no routes are in effect)
 routeAspect.fallbackElm = <SplashScreen msg="I'm trying to think but it hurts!"/>;
-// ?? also add animation hooks
+// ... StateRouter animation hook
+routeAspect.componentWillUpdateHook = () => LayoutAnimation.configureNext(LayoutAnimation.Presets.spring);
+
 
 // launch our app, exposing the feature-u App object (facilitating cross-feature communication)!
 export default launchApp({

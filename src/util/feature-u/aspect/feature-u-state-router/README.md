@@ -262,7 +262,7 @@ follows:
 import {routeAspect}     from 'feature-u-state-router';
 import {LayoutAnimation} from 'react-native';
 ...
-routeAspect.componentWillUpdateHook = () => RN.LayoutAnimation.configureNext(LayoutAnimation.Presets.spring);
+routeAspect.componentWillUpdateHook = () => LayoutAnimation.configureNext(LayoutAnimation.Presets.spring);
 ...
 ```
 
