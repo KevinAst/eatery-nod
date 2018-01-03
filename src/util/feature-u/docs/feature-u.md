@@ -85,10 +85,10 @@ useful concepts that can be *(at minimum)* followed by your project.
   * [Feature State Location](#feature-state-location)
 - [API](api.md)
   * [`createFeature()`](api.md#createFeature)
-  * [`slicedReducer()`](api.md#slicedReducer)
   * [`managedExpansion()`](api.md#managedExpansion)
-  * [`createRoute()`](api.md#createRoute)
   * [`launchApp()`](api.md#launchApp)
+  * [`createAspect()`](api.md#createAspect)
+  * [`addBuiltInFeatureKeyword()`](api.md#addBuiltInFeatureKeyword)
 
 
 ## Intro
@@ -1094,10 +1094,10 @@ export const isDeviceReady = (appState) => getFeatureState(appState).status === 
 ## API
 
   * [`createFeature()`](api.md#createFeature)
-  * [`slicedReducer()`](api.md#slicedReducer)
   * [`managedExpansion()`](api.md#managedExpansion)
-  * [`createRoute()`](api.md#createRoute)
   * [`launchApp()`](api.md#launchApp)
+  * [`createAspect()`](api.md#createAspect)
+  * [`addBuiltInFeatureKeyword()`](api.md#addBuiltInFeatureKeyword)
 
 
 [react]:          https://reactjs.org/
