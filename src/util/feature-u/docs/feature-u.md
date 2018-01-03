@@ -87,8 +87,9 @@ useful concepts that can be *(at minimum)* followed by your project.
   * [`createFeature()`](api.md#createFeature)
   * [`managedExpansion()`](api.md#managedExpansion)
   * [`launchApp()`](api.md#launchApp)
-  * [`createAspect()`](api.md#createAspect)
-  * [`addBuiltInFeatureKeyword()`](api.md#addBuiltInFeatureKeyword)
+  * Extending feature-u
+    - [`createAspect()`](api.md#createAspect)
+    - [`addBuiltInFeatureKeyword()`](api.md#addBuiltInFeatureKeyword)
 
 
 ## Intro
@@ -1096,8 +1097,9 @@ export const isDeviceReady = (appState) => getFeatureState(appState).status === 
   * [`createFeature()`](api.md#createFeature)
   * [`managedExpansion()`](api.md#managedExpansion)
   * [`launchApp()`](api.md#launchApp)
-  * [`createAspect()`](api.md#createAspect)
-  * [`addBuiltInFeatureKeyword()`](api.md#addBuiltInFeatureKeyword)
+  * Extending feature-u
+    - [`createAspect()`](api.md#createAspect)
+    - [`addBuiltInFeatureKeyword()`](api.md#addBuiltInFeatureKeyword)
 
 
 [react]:          https://reactjs.org/
