@@ -21,7 +21,6 @@ routeAspect.fallbackElm = <SplashScreen msg="I'm trying to think but it hurts!"/
 // ... StateRouter animation hook
 routeAspect.componentWillUpdateHook = () => LayoutAnimation.configureNext(LayoutAnimation.Presets.spring);
 
-
 // launch our app, exposing the feature-u App object (facilitating cross-feature communication)!
 export default launchApp({
   aspects,
