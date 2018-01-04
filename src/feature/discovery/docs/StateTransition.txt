@@ -35,6 +35,7 @@ discovery
                                                       fail: DISPATCH .fail(err)
 
    .complete(eateriesResp [with pagetoken/entries]) ................................................  - retain appState.discovery.eateries (from action.eateriesResp)
+                                                                                                      - retain appState.discovery.filter   (from action.filter)
                                                                                                       - retain nextPageToken
                                                                                                       - set appState.discovery.inProgress = null
 
