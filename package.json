@@ -43,6 +43,7 @@
     "react-redux": "^5.0.6",
     "redux": "^3.7.2",
     "redux-logic": "^0.12.3",
+    "reselect": "^3.0.1",
     "yup": "^0.22.0"
   },
   "devDependencies": {

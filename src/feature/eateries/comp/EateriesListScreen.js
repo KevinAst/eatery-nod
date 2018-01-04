@@ -24,19 +24,17 @@ import app           from '../../../app';
 /**
  * EateriesListScreen displaying a set of eateries (possibly filtered).
  */
-function EateriesListScreen({entries, dbPool, filter, showDetail, handleSpin}) {
+function EateriesListScreen({filteredEateries, filter, showDetail, handleSpin}) {
 
-  if (!entries) {
+  if (!filteredEateries) {
     return <SplashScreen msg="... waiting for pool entries"/>;
   }
-
-  const eateries = entries.map( eateryId => dbPool[eateryId] );
 
   let currentDistance = -1;
 
   function listContent() {
     const content = [];
-    eateries.forEach( eatery => {
+    filteredEateries.forEach( eatery => {
       // optionally supply sub-header when ordered by distance
       if (filter.sortOrder === 'distance' && eatery.distance !== currentDistance) {
         currentDistance = eatery.distance;
@@ -104,9 +102,8 @@ function EateriesListScreen({entries, dbPool, filter, showDetail, handleSpin}) {
 export default connectRedux(EateriesListScreen, {
   mapStateToProps(appState) {
     return {
-      entries:  sel.getListViewEntries(appState),
-      dbPool:   sel.getDbPool(appState),
-      filter:   sel.getListViewFilter(appState),
+      filteredEateries: sel.getFilteredEateries(appState),
+      filter:           sel.getListViewFilter(appState),
     };
   },
   mapDispatchToProps(dispatch) {

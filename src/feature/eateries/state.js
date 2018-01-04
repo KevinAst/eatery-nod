@@ -2,6 +2,7 @@ import {combineReducers}     from 'redux';
 import {reducerHash}         from 'astx-redux-util';
 import {slicedReducer}       from '../../util/feature-u/aspect/feature-u-redux';
 import {managedExpansion}    from '../../util/feature-u';
+import {createSelector}      from 'reselect';
 import featureName           from './featureName';
 import eateryFilterFormMeta  from './eateryFilterFormMeta';
 import actions               from './actions';
@@ -27,16 +28,11 @@ const reducer = slicedReducer(`view.${featureName}`, managedExpansion( () => com
 
     // filter used in visualizing listView
     filter: reducerHash({
-      [actions.applyFilter]: (state, action) => action.filter,
+      [actions.filter.process]: (state, action) => action.domain,
     }, { // initialState
       distance: null,    // distance in miles (default: null - for any distance)
       sortOrder: 'name', // sortOrder: 'name'/'distance'
     }),
-
-    // filtered entries displayed in visual listView
-    entries: reducerHash({
-      [actions.applyFilter]: (state, action) => action.entries,
-    }, null), // initialState
 
   }),
 
@@ -72,7 +68,34 @@ export const getFormFilter       = (appState) => gfs(appState).listView.filterFo
 
 export const getListViewFilter   = (appState) => gfs(appState).listView.filter;
 
-export const getListViewEntries  = (appState) => gfs(appState).listView.entries;
+export const getFilteredEateries  = createSelector(
+  getDbPool,
+  getListViewFilter,
+  (dbPool, filter) => {
+
+    if (!dbPool) {
+      return null; // NO dbPool yet ... waiting for pool entries
+    }
+
+    // apply filter to dbPool
+    // filteredEateries: Eatery[]
+    const entries = Object.values(dbPool)
+                          .filter(entry => { // filter entries
+                            // apply distance (when supplied in filter)
+                            return filter.distance ? entry.distance <= filter.distance : true;
+                          })
+                          .sort((e1, e2) => { // sort entries
+                            // ... order by distance (when requested)
+                            let order = filter.sortOrder==='distance' ? e1.distance-e2.distance : 0;
+                            // ... order by name - either secondary (within distance), or primary (when no distance)
+                            if (order === 0)
+                              order = e1.name.localeCompare(e2.name);
+                            return order;
+                          });
+
+    return entries;
+  }
+);
 
 export const getSelectedEatery   = (appState) => {
   const  selectedEateryId = gfs(appState).detailView;
