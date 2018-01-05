@@ -49,7 +49,7 @@ npm install --save feature-u-redux-logic
    **myAppMain.js**
    ```js
    import {launchApp}      from 'feature-u';
-   import {reducerAspect}  from 'feature-u-redux;        // *** NOTE 2 ***
+   import {reducerAspect}  from 'feature-u-redux';       // *** NOTE 2 ***
    import {logicAspect}    from 'feature-u-redux-logic'; // *** NOTE 1 ***
    import features         from './feature';
 
