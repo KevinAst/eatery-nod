@@ -144,7 +144,7 @@ export default function createAspect({name,
 //***
 
 /**
- * @typedef {Any} Aspect
+ * @typedef {Object} Aspect
  *
  * Aspect objects (emitted from `createAspect()`) are used to extend
  * feature-u.

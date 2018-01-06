@@ -114,7 +114,7 @@ The launchApp() callback hook that registers the supplied rootapplication hook 
 
 <a name="Aspect"></a>
 
-## Aspect : Any
+## Aspect : Object
 Aspect objects (emitted from `createAspect()`) are used to extendfeature-u.
 
 <a name="validateConfigurationFn"></a>
