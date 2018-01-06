@@ -66,9 +66,9 @@ eateries
     .close()
  
  
-  .viewDetail(eateryId) ............................................................................  - retain appState.eateries.detailView (from action.eateryId)
+  .viewDetail(eateryId) ............................................................................  - retain appState.eateries.selectedEateryId (from action.eateryId)
 
-    .close() .......................................................................................  - retain appState.eateries.detailView = null
+    .close() .......................................................................................  - retain appState.eateries.selectedEateryId = null
  
  
   .spin ............................................................................................  - retain appState.eateries.spin (from action.spinMsg)

@@ -36,8 +36,8 @@ const reducer = slicedReducer(`view.${featureName}`, managedExpansion( () => com
 
   }),
 
-  // detailView: eateryId ... id of eatery to "display details for" (null for none)
-  detailView: reducerHash({
+  // selectedEateryId: eateryId ... id of selected eatery to "display details for" (null for none)
+  selectedEateryId: reducerHash({
     [actions.viewDetail]:       (state, action) => action.eateryId,
     [actions.viewDetail.close]: (state, action) => null,
   }, null), // initialState
@@ -98,7 +98,7 @@ export const getFilteredEateries  = createSelector(
 );
 
 export const getSelectedEatery   = (appState) => {
-  const  selectedEateryId = gfs(appState).detailView;
+  const  selectedEateryId = gfs(appState).selectedEateryId;
   return selectedEateryId ? gfs(appState).dbPool[selectedEateryId] : null;
 };
 
