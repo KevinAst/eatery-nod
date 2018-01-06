@@ -8,7 +8,7 @@ export default generateActions.root({
 
     // inject the standard iForm auto-generated form actions
     // ... open(), fieldChanged(), fieldTouched(), process(), process.reject(), close()
-    filter: discoveryFilterFormMeta.registrar.formActionGenesis(),
+    filterForm: discoveryFilterFormMeta.registrar.formActionGenesis(),
 
     retrieve: { // actions.retrieve([filter]): Action
                 // > retrieval of discovery eateries using supplied filter

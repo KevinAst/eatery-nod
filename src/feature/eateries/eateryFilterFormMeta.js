@@ -15,6 +15,6 @@ export default IFormMeta({
     sortOrder:  Yup.string().label('Sort').typeError(sortOrderMsg).required().matches(/(name|distance)/, sortOrderMsg),
 
   }),
-  formActionsAccessor: ()         => actions.filter,
+  formActionsAccessor: ()         => actions.filterForm,
   formStateSelector:   (appState) => sel.getFormFilter(appState),
 });

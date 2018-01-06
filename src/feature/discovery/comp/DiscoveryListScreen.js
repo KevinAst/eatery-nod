@@ -182,7 +182,7 @@ export default connectRedux(DiscoveryListScreen, {
         dispatch( actions.nextPage(nextPageToken) );
       },
       handleFilterDiscovery() {
-        dispatch( actions.filter.open() );
+        dispatch( actions.filterForm.open() );
       },
     };
   },

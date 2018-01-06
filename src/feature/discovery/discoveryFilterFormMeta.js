@@ -13,6 +13,6 @@ export default IFormMeta({
     distance:   Yup.number().label('Miles').typeError(distanceMsg).required().min(1, distanceMsg).max(30, distanceMsg),
     minprice:   Yup.string().label('Price').typeError(minpriceMsg).required().matches(/[0-4]/, minpriceMsg),
   }),
-  formActionsAccessor: ()         => actions.filter,
+  formActionsAccessor: ()         => actions.filterForm,
   formStateSelector:   (appState) => sel.getFormFilter(appState),
 });

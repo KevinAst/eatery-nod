@@ -52,7 +52,7 @@ export default generateActions.root({
 
     // inject the standard iForm auto-generated form actions
     // ... open(), fieldChanged(), fieldTouched(), process(), process.reject(), close()
-    filter: eateryFilterFormMeta.registrar.formActionGenesis(),
+    filterForm: eateryFilterFormMeta.registrar.formActionGenesis(),
 
     viewDetail: { // actions.viewDetail(eateryId): Action
                   // > view eatery details (from supplied eateryId)

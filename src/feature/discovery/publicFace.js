@@ -7,6 +7,6 @@ import actions  from './actions';
 export default {
   api,
   actions: {
-    openFilterDialog: actions.filter.open, // openFilterDialog([domain] [,formMsg])
+    openFilterDialog: actions.filterForm.open, // openFilterDialog([domain] [,formMsg])
   },
 };

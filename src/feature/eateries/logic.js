@@ -72,13 +72,13 @@ export const monitorDbPool = managedExpansion( (app) => createLogic({
 
 
 /**
- * Default the actions.filter.open() domain param from the
+ * Default the actions.filterForm.open() domain param from the
  * appState filter.
  */
 export const defaultFilter = createLogic({
 
   name: `${featureName}.defaultFilter`,
-  type: String(actions.filter.open),
+  type: String(actions.filterForm.open),
 
   transform({getState, action, app}, next) {
     if (!action.domain) {
@@ -96,7 +96,7 @@ export const defaultFilter = createLogic({
 export const processFilter = createLogic({
 
   name: `${featureName}.processFilter`,
-  type: String(actions.filter.process),
+  type: String(actions.filterForm.process),
   
   process({getState, action, app}, dispatch, done) {
 
@@ -117,7 +117,7 @@ export const processFilter = createLogic({
     dispatch( app.currentView.actions.changeView(featureName) );
 
     // close eatery form filter
-    dispatch( actions.filter.close() );
+    dispatch( actions.filterForm.close() );
 
     done();
   },

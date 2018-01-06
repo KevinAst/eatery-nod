@@ -35,8 +35,7 @@ const reducer = slicedReducer(`view.${featureName}`, managedExpansion( () => com
   // selection criteria (filter)
   filter: reducerHash({
     [actions.retrieve.complete]: (state, action) => action.filter,
-  },
-  { // initialState
+  }, { // initialState
     searchText: '',
     distance:   10,
     minprice:   '1',

@@ -52,7 +52,7 @@ eateries
                                              - issue firebase set(null)
  
  
-  .filter
+  .filterForm
     > iForm logic (auto-generated)         > iForm logic (auto-generated)                             > iForm logic (auto-generated)
     .open([domain] [,formMsg])                    
     .fieldChanged(fieldName, value)               
@@ -61,7 +61,7 @@ eateries
                                            processFilter:
                                            =============
                                              DISPATCH view.change('eatery')
-                                             DISPATCH eatery.filter.close()
+                                             DISPATCH eatery.filterForm.close()
       .reject(msgs)
     .close()
  

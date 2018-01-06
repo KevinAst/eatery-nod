@@ -28,7 +28,7 @@ const reducer = slicedReducer(`view.${featureName}`, managedExpansion( () => com
 
     // filter used in visualizing listView
     filter: reducerHash({
-      [actions.filter.process]: (state, action) => action.domain,
+      [actions.filterForm.process]: (state, action) => action.domain,
     }, { // initialState
       distance: null,    // distance in miles (default: null - for any distance)
       sortOrder: 'name', // sortOrder: 'name'/'distance'
