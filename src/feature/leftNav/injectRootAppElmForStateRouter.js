@@ -9,7 +9,7 @@ import SideBar,
  * API: `injectRootAppElmForStateRouter()` required when using the
  * `routAspect`.
  */
-export default function injectRootAppElmForStateRouter(curRootAppElm, app) {
+export default function injectRootAppElmForStateRouter(app, curRootAppElm) {
   return (
     <Drawer ref={ ref => registerDrawer(ref) }
             content={<SideBar/>}

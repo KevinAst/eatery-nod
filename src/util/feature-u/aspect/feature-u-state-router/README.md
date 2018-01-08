@@ -317,7 +317,7 @@ supplement the rootAppElm DOM, that is seeded with the `StateRouter`
 component:
 
 ```js
- + Feature.injectRootAppElmForStateRouter(curRootAppElm, app): newRootAppElm
+ + Feature.injectRootAppElmForStateRouter(app, curRootAppElm): newRootAppElm
 ```
 
 If you are using the `routeAspect`, this API should be used to

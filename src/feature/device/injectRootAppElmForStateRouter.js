@@ -6,7 +6,7 @@ import Notify  from '../../util/notify';
  * `injectRootAppElmForStateRouter()` required when using the
  * `routAspect`.
  */
-export default function injectRootAppElmForStateRouter(curRootAppElm, app) {
+export default function injectRootAppElmForStateRouter(app, curRootAppElm) {
   // initialize notify utility, by injecting it in our App root
   return [React.Children.toArray(curRootAppElm), <Notify key="Notify"/>];
 }

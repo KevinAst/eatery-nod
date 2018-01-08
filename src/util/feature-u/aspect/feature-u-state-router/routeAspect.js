@@ -34,7 +34,7 @@ export default createAspect({
 });
 
 
-// register our OWN Feature API: injectRootAppElmForStateRouter(curRootAppElm, app): newRootAppElm
+// register our OWN Feature API: injectRootAppElmForStateRouter(app, curRootAppElm): newRootAppElm
 addBuiltInFeatureKeyword('injectRootAppElmForStateRouter');
 
 
@@ -137,10 +137,10 @@ function injectRootAppElm(curRootAppElm, app, activeFeatures) {
                                       componentWillUpdateHook={this.componentWillUpdateHook}/>;
 
   // allow features to suplement this top-level router
-  // ... through our OWN Feature API: injectRootAppElmForStateRouter(curRootAppElm, app): newRootAppElm
+  // ... through our OWN Feature API: injectRootAppElmForStateRouter(app, curRootAppElm): newRootAppElm
   routerRootAppElm = activeFeatures.reduce( (cur_routerRootAppElm, feature) => {
     if (feature.injectRootAppElmForStateRouter) {
-      return feature.injectRootAppElmForStateRouter(cur_routerRootAppElm, app);
+      return feature.injectRootAppElmForStateRouter(app, cur_routerRootAppElm);
     }
     else {
       return cur_routerRootAppElm;
