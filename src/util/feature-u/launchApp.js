@@ -35,7 +35,7 @@ import {isBuiltInFeatureKeyword} from './createFeature';
  * @param {Feature[]} features the features that comprise this
  * application.
  *
- * @param {registerRootAppElmFn} registerRootAppElm the callback hook
+ * @param {registerRootAppElmCB} registerRootAppElm the callback hook
  * that registers the supplied root application hook to the specific
  * React framework used by your app.  Because this registration is
  * accomplished by app-specific code, feature-u can operate in any
@@ -235,7 +235,7 @@ export default function launchApp({aspects=[],
 
 
 //***
-//*** Specification: registerRootAppElmFn
+//*** Specification: registerRootAppElmCB
 //***
 
 /**
@@ -261,7 +261,7 @@ export default function launchApp({aspects=[],
  * Please refer to the user documentation for more details and
  * complete examples.
  *
- * @callback registerRootAppElmFn
+ * @callback registerRootAppElmCB
  * 
  * @param {reactElm} rootAppElm - the root application element to be
  * registered.
