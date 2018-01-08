@@ -52,7 +52,7 @@ function default_expandFeatureContent(app, feature) {
  * It provides a hook to aspects that need to transfer additional
  * content from the expansion function to the expanded content.
  *
- * @param {validateFeatureContentFn} validateFeatureContent a
+ * @param {validateFeatureContentMeth} validateFeatureContent a
  * validation hook allowing this aspect to verify it's content on the
  * supplied feature (which is known to contain this aspect).
  *
@@ -230,7 +230,7 @@ export default function createAspect({name,
 
 
 //***
-//*** Specification: validateFeatureContentFn
+//*** Specification: validateFeatureContentMeth
 //***
 
 /**
@@ -241,7 +241,7 @@ export default function createAspect({name,
  *       validation messages are used, feature-u will prefix them
  *       with: 'createFeature() parameter violation: '
  *
- * @callback validateFeatureContentFn
+ * @callback validateFeatureContentMeth
  * 
  * @param {Feature} feature - the feature to validate, which is known
  * to contain this aspect.

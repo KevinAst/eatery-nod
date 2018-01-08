@@ -60,7 +60,7 @@ Create an Aspect object, used to extend feature-u.**Note on App Promotion**: Y
 | name | string | the aspect name.  This name is used to "key" aspects of this type in the Feature object: `Feature.{name}: xyz`. As a result, Aspect names must be unique across all aspects that are in-use. |
 | [validateConfiguration] | [`validateConfigurationMeth`](#validateConfigurationMeth) | an optional validation hook allowing this aspect to verify it's own required configuration (if any).  Some aspects may require certain settings in self for them to operate. |
 | [expandFeatureContent] | [`expandFeatureContentMeth`](#expandFeatureContentMeth) | an optional aspect expansion hook, defaulting to the algorithm defined by managedExpansion().  This function rarely needs to be overridden. It provides a hook to aspects that need to transfer additional content from the expansion function to the expanded content. |
-| validateFeatureContent | [`validateFeatureContentFn`](#validateFeatureContentFn) | a validation hook allowing this aspect to verify it's content on the supplied feature (which is known to contain this aspect). |
+| validateFeatureContent | [`validateFeatureContentMeth`](#validateFeatureContentMeth) | a validation hook allowing this aspect to verify it's content on the supplied feature (which is known to contain this aspect). |
 | assembleFeatureContent | [`assembleFeatureContentFn`](#assembleFeatureContentFn) | the required Aspect method that assembles content for this aspect across all features, retaining needed state for subsequent ops. This method is required because this is the primary task that is accomplished by all aspects. |
 | [assembleAspectResources] | [`assembleAspectResourcesFn`](#assembleAspectResourcesFn) | an optional Aspect method that assemble resources for this aspect across all other aspects, retaining needed state for subsequent ops.  This hook is executed after all the aspects have assembled their feature content (i.e. after `assembleFeatureContent()`). |
 | [injectRootAppElm] | [`injectRootAppElmFn`](#injectRootAppElmFn) | an optional callback hook that promotes some characteristic of this aspect within the app root element (i.e. react component instance). |
@@ -140,9 +140,9 @@ Expand self's AspectContent in the supplied feature, replacing thatcontent (wit
 | feature | Feature | the feature which is known to contain this aspect **and** is in need of expansion (as defined by managedExpansion()). |
 
 **Returns**: string - an optional error message when the suppliedfeature contains invalid content for this aspect (falsy whenvalid).  This is a specialized validation of the expansionfunction, over-and-above what is checked in the standardvalidateFeatureContent() hook.  
-<a name="validateFeatureContentFn"></a>
+<a name="validateFeatureContentMeth"></a>
 
-## validateFeatureContentFn ⇒ string
+## validateFeatureContentMeth ⇒ string
 A validation hook allowing this aspect to verify it's content onthe supplied feature.NOTE: To better understand the context in which any returned      validation messages are used, feature-u will prefix them      with: 'createFeature() parameter violation: '
 
 
