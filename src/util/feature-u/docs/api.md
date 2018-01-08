@@ -10,8 +10,8 @@ Create a new Feature object, accumulating Aspect content to be consumedby launc
 | name | string |  | the feature name, used in programmatically delineating various features (ex: 'views'). |
 | [enabled] | boolean | <code>true</code> | an indicator as to whether this feature is enabled (true) or not (false). |
 | [publicFace] | Any |  | an optional resource exposed in app.{featureName}.{publicFace} (emitted from launchApp()), promoting cross-communication between features.  Please refer to the feature-u `publicFace` documentation for more detail. |
-| [appWillStart] | [`appWillStartFn`](#appWillStartFn) |  | an optional app life-cycle hook invoked one-time at app startup time.  This life-cycle hook can do any type of initialization, and/or optionally supplement the app's top-level content (using a non-null return).  Please refer to the feature-u `App Life Cycle Hooks` documentation for more detail. |
-| [appDidStart] | [`appDidStartFn`](#appDidStartFn) |  | an optional app life-cycle hook invoked one-time immediately after app has started.  Because the app is up-and-running at this time, you have access to the appState and the dispatch() function ... assuming you are using redux (when detected by feature-u's plugable aspects).  Please refer to the feature-u `App Life Cycle Hooks` documentation for more detail. |
+| [appWillStart] | [`appWillStartCB`](#appWillStartCB) |  | an optional app life-cycle hook invoked one time, just before the app starts up.  This life-cycle hook can do any type of initialization, and/or optionally supplement the app's top-level content (using a non-null return).  Please refer to the feature-u `App Life Cycle Hooks` documentation for more detail. |
+| [appDidStart] | [`appDidStartFn`](#appDidStartFn) |  | an optional app life-cycle hook invoked one time, immediately after app has started.  Because the app is up-and-running at this time, you have access to the appState and the dispatch() function ... assuming you are using redux (when detected by feature-u's plugable aspects).  Please refer to the feature-u `App Life Cycle Hooks` documentation for more detail. |
 | [pluggableAspects] | [`Aspect`](#Aspect) |  | additional aspects, as defined by the feature-u's pluggable Aspect extension. |
 
 **Returns**: Feature - a new Feature object (to be consumed by feature-ulaunchApp()).  
@@ -67,10 +67,10 @@ Create an Aspect object, used to extend feature-u.**Note on App Promotion**: Y
 | [additionalMethods] | Any | additional methods (proprietary to specific Aspects), supporting two different requirements: <ol> <li> internal Aspect helper methods, and <li> APIs used in "aspect cross-communication" ... a contract      between one or more aspects.  This is merely an API specified      by one Aspect, and used by another Aspect, that is facilitate      through the `Aspect.assembleAspectResources(aspects, app)`      hook. </ol> |
 
 **Returns**: [`Aspect`](#Aspect) - a new Aspect object (to be consumed by launchApp()).  
-<a name="appWillStartFn"></a>
+<a name="appWillStartCB"></a>
 
-## appWillStartFn ⇒ reactElm
-An optional app life-cycle hook invoked one-time at app startuptime.This life-cycle hook can do any type of initialization. Forexample: initialize FireBase.In addition, this life-cycle hook can optionally supplement theapp's top-level content (using a non-null return). Typically,nothing is returned (i.e. falsy). However any return value isinterpreted as the content to inject at the top of the app, betweenthe redux Provider and feature-u's Router.  **IMPORTANT**: If youreturn top-level content, the supplied curRootAppElm MUST beincluded as part of this definition (this accommodates theaccumulative process of other feature injections)!
+## appWillStartCB ⇒ reactElm
+An optional app life-cycle hook invoked one time, just before theapp starts up.This life-cycle hook can do any type of initialization. Forexample: initialize FireBase.In addition, it can optionally supplement the app's top-level rootelement (i.e. react component instance).  Any significant return(truthy) is interpreted as the app's new rootAppElm.**IMPORTANT**: When this is used, the supplied curRootAppElm MUSTbe included as part of this definition (accommodating theaccumulative process of other feature injections)!**Please Note** `appWillStart()` utilizes named parameters.
 
 
 | Param | Type | Description |
@@ -82,7 +82,7 @@ An optional app life-cycle hook invoked one-time at app startuptime.This life
 <a name="appDidStartFn"></a>
 
 ## appDidStartFn : function
-An optional app life-cycle hook invoked one-time immediately afterapp has started.Because the app is up-and-running at this time, you have access tothe appState and dispatch() function ... assuming you are usingredux (when detected by feature-u's plugable aspects).**Please Note** `appDidStart()` utilizes named parameters.
+An optional app life-cycle hook invoked one time, immediately afterthe app has started.Because the app is up-and-running at this time, you have access tothe appState and dispatch() function ... assuming you are usingredux (when detected by feature-u's plugable aspects).**Please Note** `appDidStart()` utilizes named parameters.
 
 
 | Param | Type | Description |

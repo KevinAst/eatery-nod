@@ -658,10 +658,11 @@ Two hooks are provided through the following feature parameters:
 
 ### appWillStart
 
-The **appWillStart** life-cycle hook is invoked one time at app startup time.
+The **appWillStart** life-cycle hook is invoked one time, just before
+the app starts up.
 
 ```js
-API: appWillStart(app, curRootAppElm): optional-top-level-content (falsy for none)
+API: appWillStart({app, curRootAppElm}): optional-top-level-content (falsy for none)
 ```
 
 This life-cycle hook can do any type of initialization.  For
@@ -678,7 +679,7 @@ feature injections)!
 
 Here is an example that injects new root-level content:
 ```js
-appWillStart(app, curRootAppElm) {
+appWillStart({app, curRootAppElm}) {
   ... any other initialization ...
   return (
     <Drawer ...>
@@ -690,7 +691,7 @@ appWillStart(app, curRootAppElm) {
 
 Here is an example of injecting a new sibling to curRootAppElm:
 ```js
-appWillStart: (app, curRootAppElm) => [React.Children.toArray(curRootAppElm), <Notify key="Notify"/>]
+appWillStart: ({app, curRootAppElm}) => [React.Children.toArray(curRootAppElm), <Notify key="Notify"/>]
 ```
 
 
@@ -861,7 +862,7 @@ The App object can be accessed in several different ways.
      ```
    * app life-cycle hooks:
      ```js
-     appWillStart(app, curRootAppElm): optional-top-level-content
+     appWillStart({app, curRootAppElm}): optional-top-level-content
      appDidStart({app, appState, dispatch}): void                        
      ```
    
@@ -1022,7 +1023,7 @@ will NOT exist.
    hook.
 
    ```js
-   appWillStart(app, curRootAppElm) {
+   appWillStart({app, curRootAppElm}) {
      assert(app.featureD, '***ERROR*** I NEED featureD');
    }
    ```

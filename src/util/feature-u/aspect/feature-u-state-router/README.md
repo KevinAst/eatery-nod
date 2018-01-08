@@ -305,7 +305,7 @@ statically defined children do NOT have meaning.
 Actually the rootAppElm DOM is ultimately defined through a
 combination of Feature/Aspect DOM injections in the following order:
 
- 1. `Feature.appWillStart(app, rootAppElm)`
+ 1. `Feature.appWillStart({app, curRootAppElm})`
  2. `Aspect.injectRootAppElm(curRootAppElm, app, activeFeatures)`
 
 As a result, if a Feature attempts to supplement the rootAppElm

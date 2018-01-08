@@ -25,14 +25,15 @@ const noOp = () => null;
  * promoting cross-communication between features.  Please refer to
  * the feature-u `publicFace` documentation for more detail.
  *
- * @param {appWillStartFn} [appWillStart] an optional app life-cycle
- * hook invoked one-time at app startup time.  This life-cycle hook
- * can do any type of initialization, and/or optionally supplement the
- * app's top-level content (using a non-null return).  Please refer to
- * the feature-u `App Life Cycle Hooks` documentation for more detail.
+ * @param {appWillStartCB} [appWillStart] an optional app life-cycle
+ * hook invoked one time, just before the app starts up.  This
+ * life-cycle hook can do any type of initialization, and/or
+ * optionally supplement the app's top-level content (using a non-null
+ * return).  Please refer to the feature-u `App Life Cycle Hooks`
+ * documentation for more detail.
  *
  * @param {appDidStartFn} [appDidStart] an optional app life-cycle
- * hook invoked one-time immediately after app has started.  Because
+ * hook invoked one time, immediately after app has started.  Because
  * the app is up-and-running at this time, you have access to the
  * appState and the dispatch() function ... assuming you are using
  * redux (when detected by feature-u's plugable aspects).  Please
@@ -124,26 +125,26 @@ export function addBuiltInFeatureKeyword(keyword) {
 
 
 //***
-//*** Specification: appWillStartFn
+//*** Specification: appWillStartCB
 //***
 
 /**
- * An optional app life-cycle hook invoked one-time at app startup
- * time.
+ * An optional app life-cycle hook invoked one time, just before the
+ * app starts up.
  *
  * This life-cycle hook can do any type of initialization. For
  * example: initialize FireBase.
  *
- * In addition, this life-cycle hook can optionally supplement the
- * app's top-level content (using a non-null return). Typically,
- * nothing is returned (i.e. falsy). However any return value is
- * interpreted as the content to inject at the top of the app, between
- * the redux Provider and feature-u's Router.  **IMPORTANT**: If you
- * return top-level content, the supplied curRootAppElm MUST be
- * included as part of this definition (this accommodates the
+ * In addition, it can optionally supplement the app's top-level root
+ * element (i.e. react component instance).  Any significant return
+ * (truthy) is interpreted as the app's new rootAppElm.
+ * **IMPORTANT**: When this is used, the supplied curRootAppElm MUST
+ * be included as part of this definition (accommodating the
  * accumulative process of other feature injections)!
  *
- * @callback appWillStartFn
+ * **Please Note** `appWillStart()` utilizes named parameters.
+ *
+ * @callback appWillStartCB
  * 
  * @param {App} app the App object used in feature cross-communication.
  * 
@@ -160,8 +161,8 @@ export function addBuiltInFeatureKeyword(keyword) {
 //***
 
 /**
- * An optional app life-cycle hook invoked one-time immediately after
- * app has started.
+ * An optional app life-cycle hook invoked one time, immediately after
+ * the app has started.
  *
  * Because the app is up-and-running at this time, you have access to
  * the appState and dispatch() function ... assuming you are using

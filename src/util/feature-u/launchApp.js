@@ -198,12 +198,11 @@ export default function launchApp({aspects=[],
   // AND define our rootAppElm from a combination Features/Aspects DOM injections
   let rootAppElm = null;
   // ... FIRST: feature DOM injection via Feature.appWillStart() life-cycle hook
-  //            - Can perform ANY initialization
+  //            - can perform ANY initialization
   //            - AND supplement our top-level content (using a non-null return)
   //              ... accomplished FIRST because (in general) it is thought Aspects should inject higher in the DOM
-  activeFeatures.forEach( feature => { // ?? why is the forEach ... it could be reduce (like below)
-    rootAppElm = feature.appWillStart(app, rootAppElm) || rootAppElm;
-  });
+  rootAppElm = activeFeatures.reduce( (curRootAppElm, feature) => feature.appWillStart({app, curRootAppElm}) || curRootAppElm, rootAppElm );
+
   // ... SECOND: aspect DOM injection via Aspect.injectRootAppElm()
   rootAppElm = aspects.reduce( (curRootAppElm, aspect) => aspect.injectRootAppElm(curRootAppElm, app, activeFeatures), rootAppElm );
   // ... NOTE: We do NOT validate rootAppElm to insure it is non-null!
@@ -227,15 +226,7 @@ export default function launchApp({aspects=[],
   // console.log(`xx launchApp ... invoking appDidStart(): `, {appState, dispatch});
 
   // apply Feature.appDidStart() life-cycle hooks
-  activeFeatures.forEach( feature => {
-    if (feature.appDidStart) {
-      feature.appDidStart({
-        app,
-        appState,
-        dispatch,
-      });
-    }
-  });
+  activeFeatures.forEach( feature => feature.appDidStart({app, appState, dispatch}) );
 
   // expose our new App object (used in feature cross-communication)
   return app;
