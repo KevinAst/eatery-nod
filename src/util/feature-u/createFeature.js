@@ -32,7 +32,7 @@ const noOp = () => null;
  * return).  Please refer to the feature-u `App Life Cycle Hooks`
  * documentation for more detail.
  *
- * @param {appDidStartFn} [appDidStart] an optional app life-cycle
+ * @param {appDidStartCB} [appDidStart] an optional app life-cycle
  * hook invoked one time, immediately after app has started.  Because
  * the app is up-and-running at this time, you have access to the
  * appState and the dispatch() function ... assuming you are using
@@ -157,7 +157,7 @@ export function addBuiltInFeatureKeyword(keyword) {
 
 
 //***
-//*** Specification: appDidStartFn
+//*** Specification: appDidStartCB
 //***
 
 /**
@@ -170,7 +170,7 @@ export function addBuiltInFeatureKeyword(keyword) {
  *
  * **Please Note** `appDidStart()` utilizes named parameters.
  *
- * @callback appDidStartFn
+ * @callback appDidStartCB
  * 
  * @param {App} app the App object used in feature cross-communication.
  * 

@@ -11,7 +11,7 @@ Create a new Feature object, accumulating Aspect content to be consumedby launc
 | [enabled] | boolean | <code>true</code> | an indicator as to whether this feature is enabled (true) or not (false). |
 | [publicFace] | Any |  | an optional resource exposed in app.{featureName}.{publicFace} (emitted from launchApp()), promoting cross-communication between features.  Please refer to the feature-u `publicFace` documentation for more detail. |
 | [appWillStart] | [`appWillStartCB`](#appWillStartCB) |  | an optional app life-cycle hook invoked one time, just before the app starts up.  This life-cycle hook can do any type of initialization, and/or optionally supplement the app's top-level content (using a non-null return).  Please refer to the feature-u `App Life Cycle Hooks` documentation for more detail. |
-| [appDidStart] | [`appDidStartFn`](#appDidStartFn) |  | an optional app life-cycle hook invoked one time, immediately after app has started.  Because the app is up-and-running at this time, you have access to the appState and the dispatch() function ... assuming you are using redux (when detected by feature-u's plugable aspects).  Please refer to the feature-u `App Life Cycle Hooks` documentation for more detail. |
+| [appDidStart] | [`appDidStartCB`](#appDidStartCB) |  | an optional app life-cycle hook invoked one time, immediately after app has started.  Because the app is up-and-running at this time, you have access to the appState and the dispatch() function ... assuming you are using redux (when detected by feature-u's plugable aspects).  Please refer to the feature-u `App Life Cycle Hooks` documentation for more detail. |
 | [pluggableAspects] | [`Aspect`](#Aspect) |  | additional aspects, as defined by the feature-u's pluggable Aspect extension. |
 
 **Returns**: Feature - a new Feature object (to be consumed by feature-ulaunchApp()).  
@@ -79,9 +79,9 @@ An optional app life-cycle hook invoked one time, just before theapp starts up.
 | curRootAppElm | reactElm | the current react app element root. |
 
 **Returns**: reactElm - optionally, new top-level content (which in turnmust contain the supplied curRootAppElm), or falsy for unchanged.  
-<a name="appDidStartFn"></a>
+<a name="appDidStartCB"></a>
 
-## appDidStartFn : function
+## appDidStartCB : function
 An optional app life-cycle hook invoked one time, immediately afterthe app has started.Because the app is up-and-running at this time, you have access tothe appState and dispatch() function ... assuming you are usingredux (when detected by feature-u's plugable aspects).**Please Note** `appDidStart()` utilizes named parameters.
 
 
