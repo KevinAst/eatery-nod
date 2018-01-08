@@ -130,14 +130,14 @@ function assembleFeatureContent(app, activeFeatures) {
  * documented Aspect.getReduxMiddleware() API (an"aspect
  * cross-communication" mechanism).
  *
+ * @param {App} app the App object used in feature cross-communication.
+ *
  * @param {Aspect[]} aspects - The set of **feature-u** Aspect objects
  * used in this this application.
  *
- * @param {App} app the App object used in feature cross-communication.
- *
  * @private
  */
-function assembleAspectResources(aspects, app) {
+function assembleAspectResources(app, aspects) {
 
   // collect any redux middleware from other aspects through OUR Aspect.getReduxMiddleware() API
   const middleware = aspects.reduce( (accum, aspect) => {

@@ -62,7 +62,7 @@ function default_expandFeatureContent(app, feature) {
  * This method is required because this is the primary task that is
  * accomplished by all aspects.
  *
- * @param {assembleAspectResourcesFn} [assembleAspectResources] an
+ * @param {assembleAspectResourcesMeth} [assembleAspectResources] an
  * optional Aspect method that assemble resources for this aspect
  * across all other aspects, retaining needed state for subsequent
  * ops.  This hook is executed after all the aspects have assembled
@@ -79,7 +79,7 @@ function default_expandFeatureContent(app, feature) {
  * <li> APIs used in "aspect cross-communication" ... a contract
  *      between one or more aspects.  This is merely an API specified
  *      by one Aspect, and used by another Aspect, that is facilitate
- *      through the `Aspect.assembleAspectResources(aspects, app)`
+ *      through the `Aspect.assembleAspectResources(app, aspects)`
  *      hook.
  * </ol>
  *
@@ -273,7 +273,7 @@ export default function createAspect({name,
 
 
 //***
-//*** Specification: assembleAspectResourcesFn
+//*** Specification: assembleAspectResourcesMeth
 //***
 
 /**
@@ -293,12 +293,12 @@ export default function createAspect({name,
  * redux-logic), through it's documented Aspect.getReduxMiddleware()
  * API.
  *
- * @callback assembleAspectResourcesFn
+ * @callback assembleAspectResourcesMeth
+ *
+ * @param {App} app the App object used in feature cross-communication.
  * 
  * @param {Aspect[]} aspects - The set of feature-u Aspect objects
  * used in this this application.
- *
- * @param {App} app the App object used in feature cross-communication.
  */
 
 

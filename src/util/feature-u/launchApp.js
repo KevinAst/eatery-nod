@@ -191,7 +191,7 @@ export default function launchApp({aspects=[],
   // assemble resources for each aspect across all other aspects, ONCE ALL aspects have assembled their feature content
   // ... retaining needed state for subsequent ops
   aspects.forEach( aspect => {
-    aspect.assembleAspectResources(aspects, app);
+    aspect.assembleAspectResources(app, aspects);
   });
 
   // apply Feature.appWillStart() life-cycle hook
