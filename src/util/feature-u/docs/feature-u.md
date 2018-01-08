@@ -85,6 +85,9 @@ useful concepts that can be *(at minimum)* followed by your project.
   * [Feature State Location](#feature-state-location)
 - [API](api.md)
   * [`createFeature()`](api.md#createFeature)
+  * [`createFeature({name, [enabled], [publicFace], [appWillStart], [appDidStart], [pluggableAspects]}): Feature`](api.md#createFeature)
+    - [`appWillStartCB({app, curRootAppElm}): rootAppElm || null`](api.md#appWillStartCB)
+    - [`appDidStartCB({app, [appState], [dispatch]}): void`](api.md#appDidStartCB)
   * [`managedExpansion()`](api.md#managedExpansion)
   * [`launchApp()`](api.md#launchApp)
   * Extending feature-u
