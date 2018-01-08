@@ -41,7 +41,7 @@ function default_expandFeatureContent(feature, app) {
  * As a result, Aspect names must be unique across all aspects that
  * are in-use.
  *
- * @param {validateConfigurationFn} [validateConfiguration] an
+ * @param {validateConfigurationMeth} [validateConfiguration] an
  * optional validation hook allowing this aspect to verify it's own
  * required configuration (if any).  Some aspects may require certain
  * settings in self for them to operate.
@@ -170,7 +170,7 @@ export default function createAspect({name,
 
 
 //***
-//*** Specification: validateConfigurationFn
+//*** Specification: validateConfigurationMeth
 //***
 
 /**
@@ -182,7 +182,7 @@ export default function createAspect({name,
  *       validation messages are used, feature-u will prefix them
  *       with: 'launchApp() parameter violation: '
  *
- * @callback validateConfigurationFn
+ * @callback validateConfigurationMeth
  *
  * @return {string} an error message when self is in an invalid state
  * (falsy when valid).

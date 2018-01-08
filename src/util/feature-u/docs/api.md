@@ -58,7 +58,7 @@ Create an Aspect object, used to extend feature-u.**Note on App Promotion**: Y
 | Param | Type | Description |
 | --- | --- | --- |
 | name | string | the aspect name.  This name is used to "key" aspects of this type in the Feature object: `Feature.{name}: xyz`. As a result, Aspect names must be unique across all aspects that are in-use. |
-| [validateConfiguration] | [`validateConfigurationFn`](#validateConfigurationFn) | an optional validation hook allowing this aspect to verify it's own required configuration (if any).  Some aspects may require certain settings in self for them to operate. |
+| [validateConfiguration] | [`validateConfigurationMeth`](#validateConfigurationMeth) | an optional validation hook allowing this aspect to verify it's own required configuration (if any).  Some aspects may require certain settings in self for them to operate. |
 | [expandFeatureContent] | [`expandFeatureContentFn`](#expandFeatureContentFn) | an optional aspect expansion hook, defaulting to the algorithm defined by managedExpansion().  This function rarely needs to be overridden. It provides a hook to aspects that need to transfer additional content from the expansion function to the expanded content. |
 | validateFeatureContent | [`validateFeatureContentFn`](#validateFeatureContentFn) | a validation hook allowing this aspect to verify it's content on the supplied feature (which is known to contain this aspect). |
 | assembleFeatureContent | [`assembleFeatureContentFn`](#assembleFeatureContentFn) | the required Aspect method that assembles content for this aspect across all features, retaining needed state for subsequent ops. This method is required because this is the primary task that is accomplished by all aspects. |
@@ -122,9 +122,9 @@ Aspect objects (emitted from `createAspect()`) are used to extendfeature-u.
 ## AspectContent : Any
 The content (or payload) of an Aspect, specified within a Feature.An Aspect accumulates appropriate information from Features, indexedby the Aspect name.The content type is specific to the Aspect.  For example, a reduxAspect assembles reducers, while a redux-logic Aspect gathers logicmodules.
 
-<a name="validateConfigurationFn"></a>
+<a name="validateConfigurationMeth"></a>
 
-## validateConfigurationFn ⇒ string
+## validateConfigurationMeth ⇒ string
 A validation hook allowing this aspect to verify it's own requiredconfiguration (if any).  Some aspects may require certain settingsin self for them to operate.NOTE: To better understand the context in which any returned      validation messages are used, feature-u will prefix them      with: 'launchApp() parameter violation: '
 
 **Returns**: string - an error message when self is in an invalid state(falsy when valid).  
