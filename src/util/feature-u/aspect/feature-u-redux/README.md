@@ -28,8 +28,7 @@ to other framework/utilities that match your specific run-time stack.
   * [Exposure](#exposure)
 - [API](api.md)
   * [`reducerAspect`](api.md#reducerAspect)
-  * [`slicedReducer()`](api.md#slicedReducer)
-
+  * [`slicedReducer(slice, reducer): reducerFn`](api.md#slicedReducer)
 
 ## Install
 
@@ -369,7 +368,7 @@ documented here.
 ## API
 
   * [`reducerAspect`](api.md#reducerAspect)
-  * [`slicedReducer()`](api.md#slicedReducer)
+  * [`slicedReducer(slice, reducer): reducerFn`](api.md#slicedReducer)
 
 
 

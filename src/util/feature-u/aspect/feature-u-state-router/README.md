@@ -42,7 +42,9 @@ to other framework/utilities that match your specific run-time stack.
   * [Supplementing rootAppElm DOM](#supplementing-rootappelm-dom)
 - [API](api.md)
   * [`routeAspect`](api.md#routeAspect)
-  * [`createRoute`](api.md#createRoute)
+  * [`createRoute({content, priorityContent}): Route`](api.md#createRoute)
+  * [`routeCB({appState, app}): reactElm || null`](api.md#routeCB)
+
 
 ## Install
 
@@ -327,7 +329,8 @@ supplement the rootAppElm DOM.
 ## API
 
   * [`routeAspect`](api.md#routeAspect)
-  * [`createRoute`](api.md#createRoute)
+  * [`createRoute({content, priorityContent}): Route`](api.md#createRoute)
+  * [`routeCB({appState, app}): reactElm || null`](api.md#routeCB)
 
 
 
