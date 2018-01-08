@@ -662,7 +662,7 @@ The **appWillStart** life-cycle hook is invoked one time, just before
 the app starts up.
 
 ```js
-API: appWillStart({app, curRootAppElm}): optional-top-level-content (falsy for none)
+API: appWillStart({app, curRootAppElm}): rootAppElm || null
 ```
 
 This life-cycle hook can do any type of initialization.  For
@@ -858,7 +858,7 @@ The App object can be accessed in several different ways.
 
    * app life-cycle hooks:
      ```js
-     appWillStart({app, curRootAppElm}): optional-top-level-content
+     appWillStart({app, curRootAppElm}): rootAppElm || null
      appDidStart({app, appState, dispatch}): void                        
      ```
    
