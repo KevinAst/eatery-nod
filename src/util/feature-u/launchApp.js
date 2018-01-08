@@ -171,7 +171,7 @@ export default function launchApp({aspects=[],
 
         // perform the expansion
         // ... a simple process, BUT provides the hook to do more (ex: reducer tranfer of slice)
-        errMsg = aspect.expandFeatureContent(feature, app);
+        errMsg = aspect.expandFeatureContent(app, feature);
         // ... specialized validation, over-and-above the validateFeatureContent() hook
         checkFeature(!errMsg, errMsg); // truthy is considered a validation error
 

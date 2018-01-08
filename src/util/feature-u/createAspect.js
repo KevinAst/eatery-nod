@@ -6,8 +6,8 @@ import {isBuiltInFeatureKeyword} from './createFeature';
 // our default no-op (the "identity" function)
 const noOp = p => p;
 
-// our default expandFeatureContentFn
-function default_expandFeatureContent(feature, app) {
+// our default expandFeatureContent
+function default_expandFeatureContent(app, feature) {
   // expand self's content in the supplied feature
   // ... by invoking the managedExpansionCB(app) embellished by managedExpansion(managedExpansionCB)
   feature[this.name] = feature[this.name](app);
@@ -46,7 +46,7 @@ function default_expandFeatureContent(feature, app) {
  * required configuration (if any).  Some aspects may require certain
  * settings in self for them to operate.
  *
- * @param {expandFeatureContentFn} [expandFeatureContent] an optional
+ * @param {expandFeatureContentMeth} [expandFeatureContent] an optional
  * aspect expansion hook, defaulting to the algorithm defined by
  * managedExpansion().  This function rarely needs to be overridden.
  * It provides a hook to aspects that need to transfer additional
@@ -190,11 +190,11 @@ export default function createAspect({name,
 
 
 //***
-//*** Specification: expandFeatureContentFn
+//*** Specification: expandFeatureContentMeth
 //***
 
 /**
- * Expand self's content in the supplied feature, replacing that
+ * Expand self's AspectContent in the supplied feature, replacing that
  * content (within the feature).  Once expansion is complete,
  * feature-u will perform a delayed validation of the expanded
  * content.
@@ -212,14 +212,14 @@ export default function createAspect({name,
  * `reducer` aspect must transfer the slice property from the
  * expansion function to the expanded reducer.
  *
- * @callback expandFeatureContentFn
+ * @callback expandFeatureContentMeth
+ *
+ * @param {App} app the App object used in feature
+ * cross-communication.
  * 
  * @param {Feature} feature - the feature which is known to contain
  * this aspect **and** is in need of expansion (as defined by
  * managedExpansion()).
- *
- * @param {App} app the App object used in feature
- * cross-communication.
  *
  * @return {string} an optional error message when the supplied
  * feature contains invalid content for this aspect (falsy when
