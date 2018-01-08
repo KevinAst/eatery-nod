@@ -173,8 +173,6 @@ function getReduxStore() {
  * Introduce the standard Redux Provider component in the app root
  * element, providing standard access to the redux store (both state
  * and dispatch) through redux connect().
- * 
- * @param {reactElm} curRootAppElm - the current react app element root.
  *
  * @param {App} app the App object used in feature cross-communication.
  * 
@@ -183,6 +181,8 @@ function getReduxStore() {
  * optional Aspect/Feature cross-communication.  As an example, an Xyz
  * Aspect may define a Feature API by which a Feature can inject DOM
  * in conjunction with the Xyz Aspect DOM injection.
+ * 
+ * @param {reactElm} curRootAppElm - the current react app element root.
  *
  * @return {reactElm} a new react app element root (which in turn must
  * contain the supplied curRootAppElm), or simply the supplied
@@ -190,7 +190,7 @@ function getReduxStore() {
  *
  * @private
  */
-function injectRootAppElm(curRootAppElm, app, activeFeatures) {
+function injectRootAppElm(app, activeFeatures, curRootAppElm) {
   return (
     <Provider store={this.appStore}>
       {curRootAppElm}

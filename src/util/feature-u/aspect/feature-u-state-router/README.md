@@ -306,7 +306,7 @@ Actually the rootAppElm DOM is ultimately defined through a
 combination of Feature/Aspect DOM injections in the following order:
 
  1. `Feature.appWillStart({app, curRootAppElm})`
- 2. `Aspect.injectRootAppElm(curRootAppElm, app, activeFeatures)`
+ 2. `Aspect.injectRootAppElm(app, activeFeatures, curRootAppElm)`
 
 As a result, if a Feature attempts to supplement the rootAppElm
 (through the normal `Feature.appWillStart()` life-cycle hook), the

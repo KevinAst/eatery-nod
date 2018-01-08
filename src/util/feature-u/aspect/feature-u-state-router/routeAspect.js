@@ -107,8 +107,6 @@ function assembleFeatureContent(app, activeFeatures) {
 
 /**
  * Inject our StateRouter component at the root app element.
- * 
- * @param {reactElm} curRootAppElm - the current react app element root.
  *
  * @param {App} app the App object used in feature cross-communication.
  * 
@@ -117,12 +115,14 @@ function assembleFeatureContent(app, activeFeatures) {
  * optional Aspect/Feature cross-communication.  As an example, an Xyz
  * Aspect may define a Feature API by which a Feature can inject DOM
  * in conjunction with the Xyz Aspect DOM injection.
+ * 
+ * @param {reactElm} curRootAppElm - the current react app element root.
  *
  * @return {reactElm} our StateRouter element.
  *
  * @private
  */
-function injectRootAppElm(curRootAppElm, app, activeFeatures) {
+function injectRootAppElm(app, activeFeatures, curRootAppElm) {
   // insure we don't clober any supplied content
   // ... by design, <StateRouter> doesn't support children
   if (curRootAppElm) {

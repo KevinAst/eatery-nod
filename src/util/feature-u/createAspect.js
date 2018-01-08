@@ -3,15 +3,17 @@ import isString                  from 'lodash.isstring';
 import isFunction                from 'lodash.isfunction';
 import {isBuiltInFeatureKeyword} from './createFeature';
 
-// our default no-op (the "identity" function)
-const noOp = p => p;
+const default_validateConfiguration = (feature) => null;
 
-// our default expandFeatureContent
 function default_expandFeatureContent(app, feature) {
   // expand self's content in the supplied feature
   // ... by invoking the managedExpansionCB(app) embellished by managedExpansion(managedExpansionCB)
   feature[this.name] = feature[this.name](app);
 }
+
+const default_assembleAspectResources = (app, aspects) => null;
+
+const default_injectRootAppElm = (app, activeFeatures, curRootAppElm) => curRootAppElm;
 
  
 /**
@@ -57,7 +59,7 @@ function default_expandFeatureContent(app, feature) {
  * supplied feature (which is known to contain this aspect).
  *
  * @param {assembleFeatureContentMeth} assembleFeatureContent the
- * required Aspect method that assembles content for this aspect
+ * Aspect method that assembles content for this aspect
  * across all features, retaining needed state for subsequent ops.
  * This method is required because this is the primary task that is
  * accomplished by all aspects.
@@ -68,7 +70,7 @@ function default_expandFeatureContent(app, feature) {
  * ops.  This hook is executed after all the aspects have assembled
  * their feature content (i.e. after `assembleFeatureContent()`).
  *
- * @param {injectRootAppElmFn} [injectRootAppElm] an optional callback
+ * @param {injectRootAppElmMeth} [injectRootAppElm] an optional callback
  * hook that promotes some characteristic of this aspect within the
  * app root element (i.e. react component instance).
  * 
@@ -86,12 +88,12 @@ function default_expandFeatureContent(app, feature) {
  * @return {Aspect} a new Aspect object (to be consumed by launchApp()).
  */
 export default function createAspect({name,
-                                      validateConfiguration=noOp,
+                                      validateConfiguration=default_validateConfiguration,
                                       expandFeatureContent=default_expandFeatureContent,
                                       validateFeatureContent,
                                       assembleFeatureContent,
-                                      assembleAspectResources=noOp,
-                                      injectRootAppElm=noOp,
+                                      assembleAspectResources=default_assembleAspectResources,
+                                      injectRootAppElm=default_injectRootAppElm,
                                       ...additionalMethods}={}) {
 
   // ***
@@ -304,7 +306,7 @@ export default function createAspect({name,
 
 
 //***
-//*** Specification: injectRootAppElmFn
+//*** Specification: injectRootAppElmMeth
 //***
 
 /**
@@ -317,9 +319,7 @@ export default function createAspect({name,
  * **NOTE**: When this hook is used, the supplied curRootAppElm MUST be
  * included as part of this definition!
  *
- * @callback injectRootAppElmFn
- * 
- * @param {reactElm} curRootAppElm - the current react app element root.
+ * @callback injectRootAppElmMeth
  *
  * @param {App} app the App object used in feature cross-communication.
  * 
@@ -328,6 +328,8 @@ export default function createAspect({name,
  * optional Aspect/Feature cross-communication.  As an example, an Xyz
  * Aspect may define a Feature API by which a Feature can inject DOM
  * in conjunction with the Xyz Aspect DOM injection.
+ * 
+ * @param {reactElm} curRootAppElm - the current react app element root.
  *
  * @return {reactElm} a new react app element root (which in turn must
  * contain the supplied curRootAppElm), or simply the supplied

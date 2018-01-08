@@ -63,7 +63,7 @@ Create an Aspect object, used to extend feature-u.**Note on App Promotion**: Y
 | validateFeatureContent | [`validateFeatureContentMeth`](#validateFeatureContentMeth) | a validation hook allowing this aspect to verify it's content on the supplied feature (which is known to contain this aspect). |
 | assembleFeatureContent | [`assembleFeatureContentMeth`](#assembleFeatureContentMeth) | the required Aspect method that assembles content for this aspect across all features, retaining needed state for subsequent ops. This method is required because this is the primary task that is accomplished by all aspects. |
 | [assembleAspectResources] | [`assembleAspectResourcesMeth`](#assembleAspectResourcesMeth) | an optional Aspect method that assemble resources for this aspect across all other aspects, retaining needed state for subsequent ops.  This hook is executed after all the aspects have assembled their feature content (i.e. after `assembleFeatureContent()`). |
-| [injectRootAppElm] | [`injectRootAppElmFn`](#injectRootAppElmFn) | an optional callback hook that promotes some characteristic of this aspect within the app root element (i.e. react component instance). |
+| [injectRootAppElm] | [`injectRootAppElmMeth`](#injectRootAppElmMeth) | an optional callback hook that promotes some characteristic of this aspect within the app root element (i.e. react component instance). |
 | [additionalMethods] | Any | additional methods (proprietary to specific Aspects), supporting two different requirements: <ol> <li> internal Aspect helper methods, and <li> APIs used in "aspect cross-communication" ... a contract      between one or more aspects.  This is merely an API specified      by one Aspect, and used by another Aspect, that is facilitate      through the `Aspect.assembleAspectResources(app, aspects)`      hook. </ol> |
 
 **Returns**: [`Aspect`](#Aspect) - a new Aspect object (to be consumed by launchApp()).  
@@ -173,16 +173,16 @@ An optional Aspect method that assemble resources for this aspectacross all oth
 | app | App | the App object used in feature cross-communication. |
 | aspects | [`Array.&lt;Aspect&gt;`](#Aspect) | The set of feature-u Aspect objects used in this this application. |
 
-<a name="injectRootAppElmFn"></a>
+<a name="injectRootAppElmMeth"></a>
 
-## injectRootAppElmFn ⇒ reactElm
+## injectRootAppElmMeth ⇒ reactElm
 An optional callback hook that promotes some characteristic of thisaspect within the app root element (i.e. react component instance).All aspects will either promote themselves through this hook, -or-through some "aspect cross-communication" mechanism.**NOTE**: When this hook is used, the supplied curRootAppElm MUST beincluded as part of this definition!
 
 
 | Param | Type | Description |
 | --- | --- | --- |
-| curRootAppElm | reactElm | the current react app element root. |
 | app | App | the App object used in feature cross-communication. |
 | activeFeatures | Array.&lt;Feature&gt; | The set of active (enabled) features that comprise this application.  This can be used in an optional Aspect/Feature cross-communication.  As an example, an Xyz Aspect may define a Feature API by which a Feature can inject DOM in conjunction with the Xyz Aspect DOM injection. |
+| curRootAppElm | reactElm | the current react app element root. |
 
 **Returns**: reactElm - a new react app element root (which in turn mustcontain the supplied curRootAppElm), or simply the suppliedcurRootAppElm (if no change).  

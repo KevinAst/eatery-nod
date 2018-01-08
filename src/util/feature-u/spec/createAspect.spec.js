@@ -73,11 +73,11 @@ describe('feature-u createAspect() tests', () => {
     });
 
     test('aspect.assembleAspectResources', () => {
-      expect(aspect.assembleAspectResources('assembleAspectResources')).toEqual('assembleAspectResources');
+      expect(aspect.assembleAspectResources('app', 'aspects')).toEqual(null);
     });
 
     test('aspect.injectRootAppElm', () => {
-      expect(aspect.injectRootAppElm('injectRootAppElm')).toEqual('injectRootAppElm');
+      expect(aspect.injectRootAppElm('app', 'activeFeatures', 'curRootAppElm')).toEqual('curRootAppElm');
     });
   });
 
@@ -128,6 +128,7 @@ describe('feature-u createAspect() tests', () => {
         .toThrow(/aspect name value.* is a reserved Feature keyword/);
     });
   });
+
 
   describe('VERIFY aspect.validateFeatureContent', () => {
     const genisis = {

@@ -204,7 +204,7 @@ export default function launchApp({aspects=[],
   rootAppElm = activeFeatures.reduce( (curRootAppElm, feature) => feature.appWillStart({app, curRootAppElm}) || curRootAppElm, rootAppElm );
 
   // ... SECOND: aspect DOM injection via Aspect.injectRootAppElm()
-  rootAppElm = aspects.reduce( (curRootAppElm, aspect) => aspect.injectRootAppElm(curRootAppElm, app, activeFeatures), rootAppElm );
+  rootAppElm = aspects.reduce( (curRootAppElm, aspect) => aspect.injectRootAppElm(app, activeFeatures, curRootAppElm), rootAppElm );
   // ... NOTE: We do NOT validate rootAppElm to insure it is non-null!
   //           - at first glance it would appear that a null rootAppElm would render NOTHING
   //           - HOWEVER, ULTIMATLY the app code (found in the registerRootAppElm() hook) 
