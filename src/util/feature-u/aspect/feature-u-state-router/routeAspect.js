@@ -78,15 +78,15 @@ function validateFeatureContent(feature) {
 
 /**
  * Accumulate all routes from our features.
+ *
+ * @param {App} app the App object used in feature cross-communication.
  * 
  * @param {Feature[]} activeFeatures - The set of active (enabled)
  * features that comprise this application.
  *
- * @param {App} app the App object used in feature cross-communication.
- *
  * @private
  */
-function assembleFeatureContent(activeFeatures, app) {
+function assembleFeatureContent(app, activeFeatures) {
 
   // accumulate all routes from our features
   const routes = activeFeatures.reduce( (accum, feature) => {

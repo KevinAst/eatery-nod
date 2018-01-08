@@ -106,15 +106,15 @@ function validateFeatureContent(feature) {
 /**
  * Interpret the supplied features, generating our top-level app
  * reducer function.
+ *
+ * @param {App} app the App object used in feature cross-communication.
  * 
  * @param {Feature[]} activeFeatures - The set of active (enabled)
  * features that comprise this application.
  *
- * @param {App} app the App object used in feature cross-communication.
- *
  * @private
  */
-function assembleFeatureContent(activeFeatures, app) {
+function assembleFeatureContent(app, activeFeatures) {
 
   // interpret the supplied features, generating our top-level app reducer function
   const appReducer = accumAppReducer(this.name, activeFeatures);

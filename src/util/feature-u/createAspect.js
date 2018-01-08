@@ -56,7 +56,7 @@ function default_expandFeatureContent(app, feature) {
  * validation hook allowing this aspect to verify it's content on the
  * supplied feature (which is known to contain this aspect).
  *
- * @param {assembleFeatureContentFn} assembleFeatureContent the
+ * @param {assembleFeatureContentMeth} assembleFeatureContent the
  * required Aspect method that assembles content for this aspect
  * across all features, retaining needed state for subsequent ops.
  * This method is required because this is the primary task that is
@@ -253,7 +253,7 @@ export default function createAspect({name,
 
 
 //***
-//*** Specification: assembleFeatureContentFn
+//*** Specification: assembleFeatureContentMeth
 //***
 
 /**
@@ -262,12 +262,12 @@ export default function createAspect({name,
  * This method is required because this is the primary task that is
  * accomplished by all aspects.
  *
- * @callback assembleFeatureContentFn
+ * @callback assembleFeatureContentMeth
+ *
+ * @param {App} app the App object used in feature cross-communication.
  * 
  * @param {Feature[]} activeFeatures - The set of active (enabled)
  * features that comprise this application.
- *
- * @param {App} app the App object used in feature cross-communication.
  */
 
 

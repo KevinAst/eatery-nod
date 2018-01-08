@@ -103,7 +103,7 @@ describe('feature-u createAspect() tests', () => {
     test('aspect.expandFeatureContent', () => {
 
       // expand feature
-      aspect.expandFeatureContent(feature, null);
+      aspect.expandFeatureContent(null, feature);
 
       // prove the expansion has occurred
       expect(feature.myAspectName).toEqual('myAspectContent');

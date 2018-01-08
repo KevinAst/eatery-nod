@@ -61,7 +61,7 @@ Create an Aspect object, used to extend feature-u.**Note on App Promotion**: Y
 | [validateConfiguration] | [`validateConfigurationMeth`](#validateConfigurationMeth) | an optional validation hook allowing this aspect to verify it's own required configuration (if any).  Some aspects may require certain settings in self for them to operate. |
 | [expandFeatureContent] | [`expandFeatureContentMeth`](#expandFeatureContentMeth) | an optional aspect expansion hook, defaulting to the algorithm defined by managedExpansion().  This function rarely needs to be overridden. It provides a hook to aspects that need to transfer additional content from the expansion function to the expanded content. |
 | validateFeatureContent | [`validateFeatureContentMeth`](#validateFeatureContentMeth) | a validation hook allowing this aspect to verify it's content on the supplied feature (which is known to contain this aspect). |
-| assembleFeatureContent | [`assembleFeatureContentFn`](#assembleFeatureContentFn) | the required Aspect method that assembles content for this aspect across all features, retaining needed state for subsequent ops. This method is required because this is the primary task that is accomplished by all aspects. |
+| assembleFeatureContent | [`assembleFeatureContentMeth`](#assembleFeatureContentMeth) | the required Aspect method that assembles content for this aspect across all features, retaining needed state for subsequent ops. This method is required because this is the primary task that is accomplished by all aspects. |
 | [assembleAspectResources] | [`assembleAspectResourcesFn`](#assembleAspectResourcesFn) | an optional Aspect method that assemble resources for this aspect across all other aspects, retaining needed state for subsequent ops.  This hook is executed after all the aspects have assembled their feature content (i.e. after `assembleFeatureContent()`). |
 | [injectRootAppElm] | [`injectRootAppElmFn`](#injectRootAppElmFn) | an optional callback hook that promotes some characteristic of this aspect within the app root element (i.e. react component instance). |
 | [additionalMethods] | Any | additional methods (proprietary to specific Aspects), supporting two different requirements: <ol> <li> internal Aspect helper methods, and <li> APIs used in "aspect cross-communication" ... a contract      between one or more aspects.  This is merely an API specified      by one Aspect, and used by another Aspect, that is facilitate      through the `Aspect.assembleAspectResources(aspects, app)`      hook. </ol> |
@@ -151,16 +151,16 @@ A validation hook allowing this aspect to verify it's content onthe supplied fe
 | feature | Feature | the feature to validate, which is known to contain this aspect. |
 
 **Returns**: string - an error message when the supplied featurecontains invalid content for this aspect (falsy when valid).  
-<a name="assembleFeatureContentFn"></a>
+<a name="assembleFeatureContentMeth"></a>
 
-## assembleFeatureContentFn : function
+## assembleFeatureContentMeth : function
 The required Aspect method that assembles content for this aspectacross all features, retaining needed state for subsequent ops.This method is required because this is the primary task that isaccomplished by all aspects.
 
 
 | Param | Type | Description |
 | --- | --- | --- |
-| activeFeatures | Array.&lt;Feature&gt; | The set of active (enabled) features that comprise this application. |
 | app | App | the App object used in feature cross-communication. |
+| activeFeatures | Array.&lt;Feature&gt; | The set of active (enabled) features that comprise this application. |
 
 <a name="assembleAspectResourcesFn"></a>
 

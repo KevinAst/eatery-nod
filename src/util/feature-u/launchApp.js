@@ -185,7 +185,7 @@ export default function launchApp({aspects=[],
   // assemble content of each aspect across all features
   // ... retaining needed state for subsequent ops
   aspects.forEach( aspect => {
-    aspect.assembleFeatureContent(activeFeatures, app);
+    aspect.assembleFeatureContent(app, activeFeatures);
   });
 
   // assemble resources for each aspect across all other aspects, ONCE ALL aspects have assembled their feature content

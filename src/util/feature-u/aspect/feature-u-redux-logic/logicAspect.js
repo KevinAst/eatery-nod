@@ -53,15 +53,15 @@ function validateFeatureContent(feature) {
 /**
  * Interpret the supplied features, defining our redux middleware 
  * in support of reduc-logic.
+ *
+ * @param {App} app the App object used in feature cross-communication.
  * 
  * @param {Feature[]} activeFeatures - The set of active (enabled)
  * features that comprise this application.
  *
- * @param {App} app the App object used in feature cross-communication.
- *
  * @private
  */
-function assembleFeatureContent(activeFeatures, app) {
+function assembleFeatureContent(app, activeFeatures) {
 
   // accumulate logic modules across all features
   const appLogic = activeFeatures.reduce( (accum, feature) => {
