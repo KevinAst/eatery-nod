@@ -69,7 +69,7 @@ function expandFeatureContent(feature, app) {
   }
 
   // expand self's content in the supplied feature
-  // ... by invoking the contextCB(app) embellished by managedExpansion(contextCB)
+  // ... by invoking the managedExpansionCB(app) embellished by managedExpansion(managedExpansionCB)
   feature[this.name] = feature[this.name](app);
 
   // apply same slice to our final resolved reducer

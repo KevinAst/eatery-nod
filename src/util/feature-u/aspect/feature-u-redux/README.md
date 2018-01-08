@@ -217,8 +217,8 @@ overall appState, and in turn register them to redux.
 Each feature (that maintains state) **promotes it's own reducer
 through the `reducer` createFeature() parameter**.
 
-Because reducers may require feature-based context information,
-**this parameter can also be a contextCB** - *a function that
+Because reducers may require feature-based context information, **this
+parameter can also be a managedExpansionCB** - *a function that
 returns the reducerFn* (please refer to
 [managedExpansion()](#managedexpansion) for more information).
 

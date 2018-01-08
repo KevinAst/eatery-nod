@@ -9,7 +9,7 @@ const noOp = p => p;
 // our default expandFeatureContentFn
 function default_expandFeatureContent(feature, app) {
   // expand self's content in the supplied feature
-  // ... by invoking the contextCB(app) embellished by managedExpansion(contextCB)
+  // ... by invoking the managedExpansionCB(app) embellished by managedExpansion(managedExpansionCB)
   feature[this.name] = feature[this.name](app);
 }
 
@@ -148,6 +148,24 @@ export default function createAspect({name,
  *
  * Aspect objects (emitted from `createAspect()`) are used to extend
  * feature-u.
+ */
+
+
+//***
+//*** Specification: AspectContent
+//***
+
+/**
+ * @typedef {Any} AspectContent
+ * 
+ * The content (or payload) of an Aspect, specified within a Feature.
+ * 
+ * An Aspect accumulates appropriate information from Features, indexed
+ * by the Aspect name.
+ * 
+ * The content type is specific to the Aspect.  For example, a redux
+ * Aspect assembles reducers, while a redux-logic Aspect gathers logic
+ * modules.
  */
 
 

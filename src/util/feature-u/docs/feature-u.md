@@ -337,8 +337,8 @@ appState, and in turn register them to redux**.
 Each feature (that maintains state) **promotes it's own reducer
 through the `reducer` createFeature() parameter**.
 
-Because reducers may require feature-based context information,
-**this parameter can also be a contextCB** - *a function that
+Because reducers may require feature-based context information, **this
+parameter can also be a managedExpansionCB** - *a function that
 returns the reducerFn* (please refer to
 [managedExpansion()](#managedexpansion) for more information).
 
@@ -438,7 +438,7 @@ modules are opaque functional assets, **feature-u's interest in them
 is to merely register them to the redux-logic agent**.
 
 Because logic modules may require feature-based context information,
-**this parameter can also be a contextCB** - *a function that
+**this parameter can also be a managedExpansionCB** - *a function that
 returns the set of logic modules* (please refer to
 [managedExpansion()](#managedexpansion) for more information).
 
@@ -855,18 +855,19 @@ The App object can be accessed in several different ways.
 2. Another way to access the App object is through the programmatic
    APIs of feature-u, where the `app` object is supplied as a
    parameter.
-   
-   * route:
-     ```js
-     routeCB(app, appState): rendered-component (null for none)
-     ```
+
    * app life-cycle hooks:
      ```js
      appWillStart({app, curRootAppElm}): optional-top-level-content
      appDidStart({app, appState, dispatch}): void                        
      ```
    
-   * logic hooks:
+   * route hooks (PKG: `feature-u-state-router`):
+     ```js
+     routeCB(app, appState): rendered-component (null for none)
+     ```
+   
+   * logic hooks (PKG: `feature-u-redux-logic`):
      ```js
      createLogic({
        ...
@@ -895,11 +896,11 @@ problematic, which are: **a:** _in-line code expansion (where the app
 may not be fully defined)_, and **b:** _order dependencies (across
 features)_.
 
-To illustrate this, the following logic module is monitoring an action
-defined by an external feature (see `*1*`).  Because this `app`
-reference is made during code expansion time, the import will not
-work, because the `app` object has not yet been fully defined.  This
-is a timing issue.
+To illustrate this, the following logic module (PKG:
+`feature-u-redux-logic`) is monitoring an action defined by an
+external feature (see `*1*`).  Because this `app` reference is made
+during code expansion time, the import will not work, because the
+`app` object has not yet been fully defined.  This is a timing issue.
 
 ```js
 import app from '~/app'; // *1*
@@ -916,24 +917,26 @@ export const myLogicModule = createLogic({
 });
 ```
 
-When aspect definitions require `app` references at code expansion
-time, you can wrap the aspect definition in a contextCB function.  In
-other words, your aspects can either be the actual aspect itself (ex:
-a reducer), or a function that returns the aspect (e.g. the reducer).
+When aspect content definitions require the `app` object at code
+expansion time, you can wrap the definition in a `managedExpansion()`
+function.  In other words, your aspect content can either be the
+actual content itself (ex: a reducer), or a function that returns the
+content.
 
 Your callback function should conform to the following signature:
 
 ```js
-contextCB(app): feature-aspect
+API: managedExpansionCB(app): AspectContent
 ```
 
-When this is done, feature-u will invoke the contextCB in a controlled
-way, passing the `app` object in a parameter.
+When this is done, feature-u will invoke the managedExpansionCB in a
+controlled way, passing the fully resolved `app` object as a
+parameter.
 
-To accomplish this, you must embellish your contextCB using the
-`managedExpansion()` function.  The reason for this is that feature-u
-must be able to distinguish a contextCB function from other functions
-(ex: reducers).
+To accomplish this, you must wrap your expansion function with the the
+`managedExpansion()` utility.  The reason for this is that feature-u
+must be able to distinguish a managedExpansionCB function from other
+functions (ex: reducers).
 
 Here is the same example (from above) that that fixes our
 problem by replacing the `app` import with managedExpansion():
@@ -952,10 +955,11 @@ export const myLogicModule = managedExpansion( (app) => createLogic({
 }) );
 ```
 
-Because the contextCB() is invoked in a controlled way (by feature-u),
-the supplied `app` parameter is guaranteed to be defined (_issue
-**a**_).  Not only that, but the supplied `app` object is guaranteed to
-have all features publicFace definitions resolved (_issue **b**_).
+Because managedExpansionCB is invoked in a controlled way (by
+feature-u), the supplied `app` parameter is guaranteed to be defined
+(_issue **a**_).  Not only that, but the supplied `app` object is
+guaranteed to have all features publicFace definitions resolved
+(_issue **b**_).
 
 **_SideBar_**: A secondary reason `managedExpansion()` may be used
 (_over and above app injection during code expansion_) is to **delay

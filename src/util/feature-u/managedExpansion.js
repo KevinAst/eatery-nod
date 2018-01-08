@@ -5,79 +5,86 @@ import isFunction     from 'lodash.isfunction';
  * @function managedExpansion
  * @description
  *
- * Mark the supplied contextCB as a "managed expansion callback",
- * distinguishing it from other functions (such as reducer functions).
+ * Mark the supplied managedExpansionCB as a "managed expansion
+ * callback", distinguishing it from other functions (such as reducer
+ * functions).
  *
- * Managed Expansion Callbacks (i.e. contextCB) are merely functions
- * that when invoked, return a FeatureAspect (ex: reducer, logic
- * module, etc.).  In feature-u, you may communicate your
- * FeatureAspects directly, or through a contextCB.  The latter 1:
- * supports cross-feature communication (through app object
- * injection), and 2: minimizes circular dependency issues (of ES6
- * modules).  Please see the full User Guide for more details on this
- * topic.
+ * Features may communicate AspectContent directly, or through a
+ * managedExpansionCB.  The latter:
+ * 
+ *  1. supports cross-feature communication (through app object
+ *     injection), and 
+ *  2. minimizes circular dependency issues (of ES6 modules).
  *
- * The contextCB function should conform to the following signature:
+ * Managed Expansion Callbacks are used when a fully resolved `app`
+ * object is requried during in-line code expansion.  They are merely
+ * functions that are passed the `app` object and return the
+ * expanded AspectContent (ex: reducer, logic modules, etc.).
+ *
+ * The managedExpansionCB function should conform to the following
+ * signature:
  *
  * ```js
- * contextCB(app): FeatureAspect
+ * API: managedExpansionCB(app): AspectContent
  * ```
  *
- * Example (reducer):
+ * Example (feature-u-redux `reducerAspect`):
  * ```js
- *   export default slicedReducer('foo', managedExpansion( (app) => combineReducers({...reducer-code-using-app...} ) ));
+ *   export default slicedReducer('foo', managedExpansion( (app) => combineReducers({...reducer-code-requiring-app...} ) ));
  * ```
  *
  * SideBar: For reducer aspects, slicedReducer() should always wrap
  *          the the outer function passed to createFunction(), even
  *          when managedExpansion() is used.
  *
- * Example (logic):
+ * Example (feature-u-redux-logic `logicAspect`):
  * ```js
  *   export const startAppAuthProcess = managedExpansion( (app) => createLogic({
- *     ...logic-code-using-app...
+ *     ...logic-code-requiring-app...
  *   }));
  * ```
  *
- * Please refer to the feature-u `managedExpansion()` documentation for more detail.
+ * Please refer to the feature-u `managedExpansion()` documentation
+ * for more detail.
  *
- * @param {contextCB} contextCB the callback function that when invoked
- * (by feature-u) expands/returns the desired FeatureAspect.
+ * @param {managedExpansionCB} managedExpansionCB the callback
+ * function that when invoked (by feature-u) expands/returns the
+ * desired AspectContent.
  *
- * @return {contextCB} the supplied contextCB, marked as a "managed
- * expansion callback".
+ * @return {managedExpansionCB} the supplied managedExpansionCB,
+ * marked as a "managed expansion callback".
  */
-export default function managedExpansion(contextCB) {
+export default function managedExpansion(managedExpansionCB) {
 
   // validate parameters
   const check = verify.prefix('managedExpansion() parameter violation: ');
 
-  check(contextCB,             'contextCB is required');
-  check(isFunction(contextCB), 'contextCB must be a function');
+  check(managedExpansionCB,             'managedExpansionCB is required');
+  check(isFunction(managedExpansionCB), 'managedExpansionCB must be a function');
 
   // mark the supplied function as a "managed expansion callback"
   // ... distinguishing it from other functions (such as reducers)
-  contextCB.managedExpansion = true;
+  managedExpansionCB.managedExpansion = true;
 
   // that's all folks
-  return contextCB;
+  return managedExpansionCB;
 }
 
 
 //***
-//*** Specification: contextCB
+//*** Specification: managedExpansionCB
 //***
 
 /**
- * A "managed expansion callback" (defined by managedExpansion) that
+ * A "managed expansion callback" (defined by `managedExpansion()`) that
  * when invoked (by feature-u) expands and returns the desired
- * FeatureAspect.
+ * AspectContent.
  *
- * @callback contextCB
+ * @callback managedExpansionCB
  * 
  * @param {App} app - The feature-u app object, promoting the
  * publicFace of each feature.
  * 
- * @returns {FeatureAspect} The desired FeatureAspect (ex: reducer,
+ * @returns {AspectContent} The desired AspectContent (ex: reducer,
  * logic module, etc.).
  */

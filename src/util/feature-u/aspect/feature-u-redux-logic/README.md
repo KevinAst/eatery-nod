@@ -100,8 +100,8 @@ modules are opaque functional assets, **feature-u's interest in them
 is to merely register them to the [redux-logic] agent**.
 
 Because logic modules may require feature-based context information,
-**this parameter can also be a contextCB** - *a function that returns
-the set of logic modules* (please refer to **feature-u**'s
+**this parameter can also be a managedExpansionCB** - *a function that
+returns the set of logic modules* (please refer to **feature-u**'s
 [managedExpansion()](#managedexpansion) for more information).
 
 

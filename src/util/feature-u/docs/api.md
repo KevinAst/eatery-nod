@@ -27,15 +27,15 @@ Add additional Feature keyword (typically used by Aspect extensionsto Feature).
 
 <a name="managedExpansion"></a>
 
-## managedExpansion(contextCB) ⇒ [`contextCB`](#contextCB)
-Mark the supplied contextCB as a "managed expansion callback",distinguishing it from other functions (such as reducer functions).Managed Expansion Callbacks (i.e. contextCB) are merely functionsthat when invoked, return a FeatureAspect (ex: reducer, logicmodule, etc.).  In feature-u, you may communicate yourFeatureAspects directly, or through a contextCB.  The latter 1:supports cross-feature communication (through app objectinjection), and 2: minimizes circular dependency issues (of ES6modules).  Please see the full User Guide for more details on thistopic.The contextCB function should conform to the following signature:```jscontextCB(app): FeatureAspect```Example (reducer):```js  export default slicedReducer('foo', managedExpansion( (app) => combineReducers({...reducer-code-using-app...} ) ));```SideBar: For reducer aspects, slicedReducer() should always wrap         the the outer function passed to createFunction(), even         when managedExpansion() is used.Example (logic):```js  export const startAppAuthProcess = managedExpansion( (app) => createLogic({    ...logic-code-using-app...  }));```Please refer to the feature-u `managedExpansion()` documentation for more detail.
+## managedExpansion(managedExpansionCB) ⇒ [`managedExpansionCB`](#managedExpansionCB)
+Mark the supplied managedExpansionCB as a "managed expansioncallback", distinguishing it from other functions (such as reducerfunctions).Features may communicate AspectContent directly, or through amanagedExpansionCB.  The latter: 1. supports cross-feature communication (through app object    injection), and  2. minimizes circular dependency issues (of ES6 modules).Managed Expansion Callbacks are used when a fully resolved `app`object is requried during in-line code expansion.  They are merelyfunctions that are passed the `app` object and return theexpanded AspectContent (ex: reducer, logic modules, etc.).The managedExpansionCB function should conform to the followingsignature:```jsAPI: managedExpansionCB(app): AspectContent```Example (feature-u-redux `reducerAspect`):```js  export default slicedReducer('foo', managedExpansion( (app) => combineReducers({...reducer-code-requiring-app...} ) ));```SideBar: For reducer aspects, slicedReducer() should always wrap         the the outer function passed to createFunction(), even         when managedExpansion() is used.Example (feature-u-redux-logic `logicAspect`):```js  export const startAppAuthProcess = managedExpansion( (app) => createLogic({    ...logic-code-requiring-app...  }));```Please refer to the feature-u `managedExpansion()` documentationfor more detail.
 
 
 | Param | Type | Description |
 | --- | --- | --- |
-| contextCB | [`contextCB`](#contextCB) | the callback function that when invoked (by feature-u) expands/returns the desired FeatureAspect. |
+| managedExpansionCB | [`managedExpansionCB`](#managedExpansionCB) | the callback function that when invoked (by feature-u) expands/returns the desired AspectContent. |
 
-**Returns**: [`contextCB`](#contextCB) - the supplied contextCB, marked as a "managedexpansion callback".  
+**Returns**: [`managedExpansionCB`](#managedExpansionCB) - the supplied managedExpansionCB,marked as a "managed expansion callback".  
 <a name="launchApp"></a>
 
 ## launchApp([aspects], features, registerRootAppElm) ⇒ App
@@ -91,17 +91,17 @@ An optional app life-cycle hook invoked one time, immediately afterthe app has 
 | [appState] | Any | the redux top-level app state (when redux is in use). |
 | [dispatch] | function | the redux dispatch() function (when redux is in use). |
 
-<a name="contextCB"></a>
+<a name="managedExpansionCB"></a>
 
-## contextCB ⇒ FeatureAspect
-A "managed expansion callback" (defined by managedExpansion) thatwhen invoked (by feature-u) expands and returns the desiredFeatureAspect.
+## managedExpansionCB ⇒ [`AspectContent`](#AspectContent)
+A "managed expansion callback" (defined by `managedExpansion()`) thatwhen invoked (by feature-u) expands and returns the desiredAspectContent.
 
 
 | Param | Type | Description |
 | --- | --- | --- |
 | app | App | The feature-u app object, promoting the publicFace of each feature. |
 
-**Returns**: FeatureAspect - The desired FeatureAspect (ex: reducer,logic module, etc.).  
+**Returns**: [`AspectContent`](#AspectContent) - The desired AspectContent (ex: reducer,logic module, etc.).  
 <a name="registerRootAppElmFn"></a>
 
 ## registerRootAppElmFn : function
@@ -116,6 +116,11 @@ The launchApp() callback hook that registers the supplied rootapplication hook 
 
 ## Aspect : Object
 Aspect objects (emitted from `createAspect()`) are used to extendfeature-u.
+
+<a name="AspectContent"></a>
+
+## AspectContent : Any
+The content (or payload) of an Aspect, specified within a Feature.An Aspect accumulates appropriate information from Features, indexedby the Aspect name.The content type is specific to the Aspect.  For example, a reduxAspect assembles reducers, while a redux-logic Aspect gathers logicmodules.
 
 <a name="validateConfigurationFn"></a>
 
