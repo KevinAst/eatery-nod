@@ -3,14 +3,20 @@
 **feature-u-redux-logic** promotes the `logic` Aspect (a **feature-u**
 plugin) that facilitates [redux-logic] integration to your features.
 
+**SideBar:**
+<ul>
+
 **feature-u** is a utility that facilitates feature-based project
-organization for your [react] project. It helps organize your project by
-individual features.  **feature-u** is extendable. It operates under an
-open plugin architecture where Aspects provide the feature integration
-to other framework/utilities that match your specific run-time stack.
+organization for your [react] project. It helps organize your
+project by individual features.  **feature-u** is extendable. It
+operates under an open plugin architecture where Aspects integrate
+feature-u to other framework/utilities that match your specific
+run-time stack.
 
 **feature-u-redux-logic** is your **feature-u** integration point to
 [redux-logic]!
+
+</ul>
 
 ?? TODO: DOC AI: insure feature-u links are valid ONCE feature-u docs have stabilized!
 
