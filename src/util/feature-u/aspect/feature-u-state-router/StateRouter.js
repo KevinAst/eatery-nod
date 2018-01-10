@@ -1,5 +1,5 @@
-import React      from 'react';       // ?? peerDependancies
-import {connect}  from 'react-redux'; // ?? peerDependiences
+import React      from 'react';       // ?? peerDependencies
+import {connect}  from 'react-redux'; // ?? peerDependencies
 
 /**
  * A top-level React component that serves as a simple router, driven
@@ -11,6 +11,25 @@ import {connect}  from 'react-redux'; // ?? peerDependiences
  *       (initially developed to support ReactNative animation).
  */
 class StateRouter extends React.Component {
+
+  constructor(props) {
+    super(props);
+    // console.log(`xx constructing StateRouter ONLY ONCE .. here are my props: `, Object.keys(this.props));
+
+    // re-order our routes in their execution order
+    const routes = this.props.routes;
+    // ... retain the original routes order (for sort tie breaker within same routePriority)
+    routes.forEach( (route, indx) => route.originalOrder = indx );
+    // ... sort by 1: routePriority (decending), 2: registration order (ascending)
+    routes.sort( (r1, r2) => {
+      let order = r2.routePriority - r1.routePriority; // ... decending
+      if (order === 0)
+        order = r1.originalOrder - r2.originalOrder;   // ... ascending
+      return order;
+    });
+    // console.log('xx StateRouter route order:')
+    // routes.forEach( (route, indx) => console.log(`xx   ${indx+1}: ${route.featureName}: ${route.routePriority}`) );
+  }
 
   componentWillUpdate() {
     // optionally invoke the componentWillUpdateHook (when specified)
@@ -26,18 +45,11 @@ class StateRouter extends React.Component {
    */
   render() {
 
-    const {app, routes, appState, fallbackElm} = this.props;
+    const {routes, appState, fallbackElm, namedDependencies} = this.props;
 
-    // apply priority routes (if any)
+    // apply routes in order of 1: routePriority, 2: registration order (within same priority)
     for (const route of routes) {
-      const content = route.priorityContent(app, appState);
-      if (content)
-        return content;
-    }
-
-    // apply non-priority routes (if any)
-    for (const route of routes) {
-      const content = route.content(app, appState);
+      const content = route({appState, ...namedDependencies});
       if (content)
         return content;
     }
@@ -49,17 +61,15 @@ class StateRouter extends React.Component {
 
 // NOTE: Because we are invoked within our controlled env, we bypass
 //       prop-types npm pkg, and assume our props are correct!  This
-//       eliminates the need for prop-types peerDependancies (or
+//       eliminates the need for prop-types peerDependencies (or
 //       dependency).
 // import PropTypes from 'prop-types';
 // StateRouter.propTypes = {
-//                                              // NOTE: the app injecttion makes the StateRouter dependent on feature-u
-//                                              //       ... so it could not live on it's own (as is)
-//   app:         PropTypes.object.isRequired,  // feature-u app object (facilitating cross-feature communication)
-//   routes:      PropTypes.array.isRequired,   // all app routes accumulated by feature
+//   routes:      PropTypes.array.isRequired,   // all registered routes: routeCB[]
 //   appState:    PropTypes.object.isRequired,  // appState, from which to reason about routes
 //   fallbackElm: PropTypes.element.isRequired, // fallback elm representing a SplashScreen (of sorts) when no routes are in effect
 //   componentWillUpdateHook: PropTypes.func    // OPTIONAL: invoked in componentWillUpdate() life-cycle hook (initially developed to support ReactNative animation)
+//   namedDependencies: PropTypes.object        // OPTIONAL: object containing named dependencies to be injected into to routeCB() function call ... ex: <StateRouter namedDependencies={{app, api}}/>
 // };
 
 // access redux appState, via redux connect()

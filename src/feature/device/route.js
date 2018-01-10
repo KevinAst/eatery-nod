@@ -1,7 +1,8 @@
 import React                from 'react';
 import {isDeviceReady,
         getDeviceStatusMsg} from './state';
-import {createRoute}        from '../../util/feature-u/aspect/feature-u-state-router';
+import {prioritizedRoute, 
+        PRIORITY}           from '../../util/feature-u/aspect/feature-u-state-router';
 import SplashScreen         from '../../util/comp/SplashScreen';
 
 
@@ -9,9 +10,11 @@ import SplashScreen         from '../../util/comp/SplashScreen';
 // *** The routes for this feature.
 // ***
 
-export default createRoute({
+export default prioritizedRoute({
 
-  priorityContent(app, appState) {
+  priority: PRIORITY.HIGH,
+
+  content({app, appState}) {
 
     // promote a simple SplashScreen (with status) until our system is ready
     // NOTE: Errors related to system resources are promoted through independent user notifications

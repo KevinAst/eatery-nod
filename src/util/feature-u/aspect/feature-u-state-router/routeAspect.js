@@ -1,8 +1,8 @@
-import React                      from 'react';  // ?? peerDependancies
+import React                      from 'react';  // ?? peerDependencies
 import {createAspect,
-        addBuiltInFeatureKeyword} from '../../'; // ?? peerDependancies: 'feature-u'
-import {isValidRoute}             from './createRoute';
+        addBuiltInFeatureKeyword} from '../../'; // ?? peerDependencies: 'feature-u'
 import StateRouter                from './StateRouter';
+import isFunction                 from 'lodash.isfunction';
 
 /**
  * @typedef {Aspect} routeAspect
@@ -19,8 +19,8 @@ import StateRouter                from './StateRouter';
  *     **feature-u**'s `launchApp()`.
  *  
  *  3. Specify a `route` `createFeature()` named parameter (_in any
- *     of your features that maintain routes_) referencing a route 
- *     defined by `createRoute()`.
+ *     of your features that maintain routes_) referencing a routeCB
+ *     or routeCB[] defined by `prioritizedRoute()`.
  * 
  * **Please refer to the User Docs** for a complete description with
  * examples.
@@ -72,7 +72,31 @@ function validateConfiguration() {
  */
 function validateFeatureContent(feature) {
   const content = feature[this.name];
-  return isValidRoute(content);
+  const errMsg  = `${this.name} (when supplied) must be a routeCB or routeCB[] emitted from prioritizedRoute()`;
+
+  if (Array.isArray(content)) {
+    for (const routeCB of content) {
+      if ( !isValid(routeCB) ) {
+        return errMsg;
+      }
+    }
+  }
+  else if ( !isValid(content) ) {
+    return errMsg;
+  }
+  else {
+    return null; // valid
+  }
+}
+
+function isValid(routeCB) {
+  if (! isFunction(routeCB)) {
+    return false; // must be a function
+  }
+  else if ( ! Number.isInteger(routeCB.routePriority) ) {
+    return false; // must be emitted from prioritizedRoute()
+  }
+  else return true; // valid
 }
 
 
@@ -89,10 +113,19 @@ function validateFeatureContent(feature) {
 function assembleFeatureContent(app, activeFeatures) {
 
   // accumulate all routes from our features
+  // ... also embellish each route with the featureName for diagnostic purposes
   const routes = activeFeatures.reduce( (accum, feature) => {
-    if (feature[this.name]) {
+    const routeContent = feature[this.name];
+    if (routeContent) {
       // console.log(`xx acumulating route for ${feature.name}`);
-      accum.push( feature[this.name] );
+      if (Array.isArray(routeContent)) {
+        accum.push(...routeContent);
+        routeContent.forEach( route => route.featureName = feature.name );
+      }
+      else {
+        accum.push(routeContent);
+        routeContent.featureName = feature.name;
+      }
     }
     return accum;
   }, []);
@@ -131,10 +164,10 @@ function injectRootAppElm(app, activeFeatures, curRootAppElm) {
   }
 
   // seed our routerRootAppElm with our StateRouter
-  let routerRootAppElm = <StateRouter app={app}
-                                      routes={this.routes}
+  let routerRootAppElm = <StateRouter routes={this.routes}
                                       fallbackElm={this.fallbackElm}
-                                      componentWillUpdateHook={this.componentWillUpdateHook}/>;
+                                      componentWillUpdateHook={this.componentWillUpdateHook}
+                                      namedDependencies={{app}}/>;
 
   // allow features to suplement this top-level router
   // ... through our OWN Feature API: injectRootAppElmForStateRouter(app, curRootAppElm): newRootAppElm

@@ -14,14 +14,20 @@ an encapsulated and autonomous way!  Because of this,
 **feature-u-state-router** is a preferred routing solution for
 **feature-u**.
 
+**SideBar:**
+<ul>
+
 **feature-u** is a utility that facilitates feature-based project
-organization for your [react] project. It helps organize your project by
-individual features.  **feature-u** is extendable. It operates under an
-open plugin architecture where Aspects provide the feature integration
-to other framework/utilities that match your specific run-time stack.
+organization for your [react] project. It helps organize your
+project by individual features.  **feature-u** is extendable. It
+operates under an open plugin architecture where Aspects integrate
+feature-u to other framework/utilities that match your specific
+run-time stack.
 
 **feature-u-state-router** is your **feature-u** integration point to
 **StateRouter** _(or **Feature Routes**)_!
+
+</ul>
 
 ?? TODO: DOC AI: insure feature-u links are valid ONCE feature-u docs have stabilized!
 
@@ -42,8 +48,8 @@ to other framework/utilities that match your specific run-time stack.
   * [Supplementing rootAppElm DOM](#supplementing-rootappelm-dom)
 - [API](api.md)
   * [`routeAspect`](api.md#routeAspect)
-  * [`createRoute({content, priorityContent}): Route`](api.md#createRoute)
-  * [`routeCB({appState, app}): reactElm || null`](api.md#routeCB)
+  * [`prioritizedRoute({content, [priority]}): routeCB`](api.md#prioritizedRoute)
+  * [`routeCB({app, appState}): reactElm || null`](api.md#routeCB)
 
 
 ## Install
@@ -91,18 +97,21 @@ npm install --save feature-u-state-router
 
 2. Now you can specify a `route` `createFeature()` named parameter
    (_in any of your features that promote UI screens_) referencing the
-   route callback hook specified through the `createRoute()` function
+   routeCB hook specified through the `prioritizedRoute()` function
    (_see: **NOTE** below_).
 
    **src/feature/startup/index.js**
    ```js
    import {createFeature}  from 'feature-u';
+   import {prioritizedRoute, 
+           PRIORITY}       from 'feature-u-state-router';
    
    export default createFeature({
      name:   'startup',
 
-     route: createRoute({  // *** NOTE *** 
-       priorityContent(app, appState) {
+     route: prioritizedRoute({  // *** NOTE *** 
+       priority: PRIORITY.HIGH,
+       content({app, appState}) {
          if (!selector.isDeviceReady(appState)) {
            return <SplashScreen msg={selector.getDeviceStatusMsg(appState)}/>;
          }
@@ -162,7 +171,7 @@ their own screens in an encapsulated and autonomous way**!
 
 Each feature (that maintains UI components) promotes it's top-level
 screens through a `route` `createFeature()` parameter, using the
-`createRoute()` utility.
+`prioritizedRoute()` utility.
 
 A `route` is simply a function that reasons about the appState, and
 either returns a rendered component, or null to allow downstream
@@ -171,18 +180,23 @@ wins.  If no component is established, the router will revert to a
 configured fallback _(not typical but may occur in some startup
 transitions)_.
 
-The `route` directive contains one or two function callbacks
-(routeCB), with the following signature:
+The `route` directive contains one or more function callbacks
+(`routeCB()`), as defined by the `content` parameter of
+`prioritizedRoute()`, with the following signature:
 ```
-  routeCB(app, appState): rendered-component (null for none)
+  routeCB({app, appState}): rendered-component (null for none)
 ```
 
-One or two routeCBs can be registered, one with priority and one without.
-The priority routeCBs are given precedence across all registered routes
-before the non-priority routeCBs are invoked.
+A single routeCB may be specified, or an array of routeCBs with
+varying priorities.  Priority routes are given precedence in their
+execution order. In other words, the order in which a set of routes
+(routeCB[]) are executed are 1: routePriority, 2: registration
+order. This is useful in minimizing the registration order.
 
 Here is a route for a `startup` feature that simply promotes a
 SplashScreen until the system is ready:
+
+TODO: show example specifying multiple routeCB[]
 
 **`src/feature/startup/index.js`**
 ```js
@@ -195,8 +209,10 @@ export default createFeature({
 
   reducer,
   logic,
-  route: createRoute({
-    priorityContent(app, appState) {
+
+  route: prioritizedRoute({
+    priority: PRIORITY.HIGH,
+    content({app, appState}) {
       if (!selector.isDeviceReady(appState)) {
         return <SplashScreen msg={selector.getDeviceStatusMsg(appState)}/>;
       }
@@ -280,7 +296,7 @@ are documented here.
 - The input to **feature-u-state-router** are routing callback hooks.
   This is specified by each of your features (_that maintain UI
   components_) through the `Feature.route` property, referencing
-  functions defined by the `createRoute()` utility.
+  functions defined by the `prioritizedRoute()` utility.
 
 ### Exposure
 
@@ -301,7 +317,7 @@ As mentioned above, the `routeAspect` promotes itself by injecting the
 
 It is important to understand that the `StateRouter` component does NOT
 support children.  The reason for this is that it ultimately dictates
-the complete rendered content through it's `routeCB()` API, so
+the complete rendered content through it's `routeCB` API, so
 statically defined children do NOT have meaning.
 
 Actually the rootAppElm DOM is ultimately defined through a
@@ -329,9 +345,8 @@ supplement the rootAppElm DOM.
 ## API
 
   * [`routeAspect`](api.md#routeAspect)
-  * [`createRoute({content, priorityContent}): Route`](api.md#createRoute)
-  * [`routeCB({appState, app}): reactElm || null`](api.md#routeCB)
-
+  * [`prioritizedRoute({content, [priority]}): routeCB`](api.md#prioritizedRoute)
+  * [`routeCB({app, appState}): reactElm || null`](api.md#routeCB)
 
 
 

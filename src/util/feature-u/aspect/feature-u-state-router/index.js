@@ -1,5 +1,6 @@
-import routeAspect  from './routeAspect';
-import createRoute  from './createRoute';
+import routeAspect       from './routeAspect';
+import prioritizedRoute,
+       {PRIORITY}        from './prioritizedRoute';
 
 //*** 
 //*** Promote all feature-u-redux utilities through this centralized module.
@@ -12,7 +13,8 @@ import createRoute  from './createRoute';
 //         import * as FeatureURedux from 'feature-u-redux';
 export {
   routeAspect,
-  createRoute,
+  prioritizedRoute,
+  PRIORITY,
 };
 
 // NOTE: This default export supports CommonJS modules (otherwise Babel does NOT promote them).
@@ -22,5 +24,6 @@ export {
 //         const FeatureURedux = require('feature-u-redux');
 export default {
   routeAspect,
-  createRoute,
+  prioritizedRoute,
+  PRIORITY,
 };
