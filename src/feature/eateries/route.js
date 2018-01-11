@@ -1,6 +1,6 @@
 import React               from 'react';
 import * as sel            from './state';
-import {prioritizedRoute, 
+import {featureRoute, 
         PRIORITY}          from '../../util/feature-u/aspect/feature-u-state-router';
 import featureName         from './featureName';
 import EateriesListScreen  from './comp/EateriesListScreen';
@@ -14,7 +14,7 @@ import SplashScreen        from '../../util/comp/SplashScreen';
 
 export default [
 
-  prioritizedRoute({
+  featureRoute({
     priority: PRIORITY.HIGH,
     content({app, appState}) {
       // display EateryFilterScreen, when form is active (accomplished by our logic)
@@ -26,7 +26,7 @@ export default [
     }
   }),
 
-  prioritizedRoute({
+  featureRoute({
     content({app, appState}) {
 
       // allow other down-stream features to route, when the active view is NOT ours

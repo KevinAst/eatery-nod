@@ -20,7 +20,7 @@ import isFunction                 from 'lodash.isfunction';
  *  
  *  3. Specify a `route` `createFeature()` named parameter (_in any
  *     of your features that maintain routes_) referencing a routeCB
- *     or routeCB[] defined by `prioritizedRoute()`.
+ *     or routeCB[] defined by `featureRoute()`.
  * 
  * **Please refer to the User Docs** for a complete description with
  * examples.
@@ -72,7 +72,7 @@ function validateConfiguration() {
  */
 function validateFeatureContent(feature) {
   const content = feature[this.name];
-  const errMsg  = `${this.name} (when supplied) must be a routeCB or routeCB[] emitted from prioritizedRoute()`;
+  const errMsg  = `${this.name} (when supplied) must be a routeCB or routeCB[] emitted from featureRoute()`;
 
   if (Array.isArray(content)) {
     for (const routeCB of content) {
@@ -94,7 +94,7 @@ function isValid(routeCB) {
     return false; // must be a function
   }
   else if ( ! Number.isInteger(routeCB.routePriority) ) {
-    return false; // must be emitted from prioritizedRoute()
+    return false; // must be emitted from featureRoute()
   }
   else return true; // valid
 }

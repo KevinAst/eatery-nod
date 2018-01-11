@@ -1,7 +1,7 @@
 import React                from 'react';
 import {isDeviceReady,
         getDeviceStatusMsg} from './state';
-import {prioritizedRoute, 
+import {featureRoute, 
         PRIORITY}           from '../../util/feature-u/aspect/feature-u-state-router';
 import SplashScreen         from '../../util/comp/SplashScreen';
 
@@ -10,7 +10,7 @@ import SplashScreen         from '../../util/comp/SplashScreen';
 // *** The routes for this feature.
 // ***
 
-export default prioritizedRoute({
+export default featureRoute({
 
   priority: PRIORITY.HIGH,
 

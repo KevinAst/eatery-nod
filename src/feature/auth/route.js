@@ -1,6 +1,6 @@
 import React               from 'react';
 import * as sel            from './state';
-import {prioritizedRoute, 
+import {featureRoute, 
         PRIORITY}          from '../../util/feature-u/aspect/feature-u-state-router';
 import featureName         from './featureName';
 import SignInVerifyScreen  from './comp/SignInVerifyScreen';
@@ -11,7 +11,7 @@ import SplashScreen        from '../../util/comp/SplashScreen';
 // *** The routes for this feature.
 // ***
 
-export default prioritizedRoute({
+export default featureRoute({
 
   priority: PRIORITY.HIGH,
 

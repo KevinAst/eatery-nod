@@ -38,7 +38,8 @@ run-time stack.
 - [A Closer Look](#a-closer-look)
   * [Why Feature Routes?](#why-feature-routes)
   * [How Feature Routes Work](#how-feature-routes-work)
-  * [Key Benefit](#key-benefit)
+  * [Feature Order and Routes](#feature-order-and-routes)
+  * [Routing Precedence](#routing-precedence)
 - [Configuration](#configuration)
   * [fallbackElm](#fallbackelm)
   * [componentWillUpdateHook](#componentwillupdatehook)
@@ -48,7 +49,7 @@ run-time stack.
   * [Supplementing rootAppElm DOM](#supplementing-rootappelm-dom)
 - [API](api.md)
   * [`routeAspect`](api.md#routeAspect)
-  * [`prioritizedRoute({content, [priority]}): routeCB`](api.md#prioritizedRoute)
+  * [`featureRoute({content, [priority]}): routeCB`](api.md#featureRoute)
   * [`routeCB({app, appState}): reactElm || null`](api.md#routeCB)
 
 
@@ -97,19 +98,25 @@ npm install --save feature-u-state-router
 
 2. Now you can specify a `route` `createFeature()` named parameter
    (_in any of your features that promote UI screens_) referencing the
-   routeCB hook specified through the `prioritizedRoute()` function
-   (_see: **NOTE** below_).
+   routeCB hook specified through the `featureRoute()` function.
+
+   Here is a route for a `startup` feature that simply promotes a
+   SplashScreen until the system is ready (_see **NOTE** below_):
 
    **src/feature/startup/index.js**
    ```js
+   import React            from 'react';
    import {createFeature}  from 'feature-u';
-   import {prioritizedRoute, 
+   import {featureRoute, 
            PRIORITY}       from 'feature-u-state-router';
+   import * as selector    from './state';
+   import SplashScreen     from '~/util/comp/SplashScreen';
    
    export default createFeature({
+
      name:   'startup',
 
-     route: prioritizedRoute({  // *** NOTE *** 
+     route: featureRoute({  // *** NOTE *** 
        priority: PRIORITY.HIGH,
        content({app, appState}) {
          if (!selector.isDeviceReady(appState)) {
@@ -119,9 +126,12 @@ npm install --save feature-u-state-router
        },
      }),
 
-     ... other props here
+     ... snip snip
    });
    ```
+
+The `route` content can either be a single `featureRoute()` or an
+array with varying priorities.
 
 Hopefully this gives you the basic idea of how
 **feature-u-state-router** operates.  The following sections develop a
@@ -171,75 +181,134 @@ their own screens in an encapsulated and autonomous way**!
 
 Each feature (that maintains UI components) promotes it's top-level
 screens through a `route` `createFeature()` parameter, using the
-`prioritizedRoute()` utility.
+`featureRoute()` utility.
 
 A `route` is simply a function that reasons about the appState, and
 either returns a rendered component, or null to allow downstream
 routes the same opportunity.  Basically the first non-null return
 wins.  If no component is established, the router will revert to a
-configured fallback _(not typical but may occur in some startup
-transitions)_.
+configured fallback - **a Splash Screen of sorts** _(not typical but
+may occur in some startup transitions)_.
 
 The `route` directive contains one or more function callbacks
-(`routeCB()`), as defined by the `content` parameter of
-`prioritizedRoute()`, with the following signature:
+(`routeCB()`), as defined by the `content` callback parameter of
+`featureRoute()`, with the following signature:
 ```
   routeCB({app, appState}): rendered-component (null for none)
 ```
 
 A single routeCB may be specified, or an array of routeCBs with
-varying priorities.  Priority routes are given precedence in their
-execution order. In other words, the order in which a set of routes
-(routeCB[]) are executed are 1: routePriority, 2: registration
-order. This is useful in minimizing the registration order.
+varying priorities.  Priorities are integer values that are used to
+minimize a routes registration order.  Higher priority routes are
+given precedence (i.e. executed before lower priority routes).  Routes
+with the same priority are executed in their registration order.
 
-Here is a route for a `startup` feature that simply promotes a
-SplashScreen until the system is ready:
+While priorities can be used to minimize (or even eliminate) the
+registration order, typically an application does in fact rely on
+registration order and can operate using a small number of priorities
+(_the PRIORITY constants are available for your convenience_).
 
-TODO: show example specifying multiple routeCB[]
+Priorities are particularly useful within feature-u, where a given
+feature is provided one registration slot, but requires it's route
+logic to execute in different priorities.  In that case, the feature
+can promote multiple routes (an array) each with their own priority.
+
+Here is a route for an `Eateries` feature (_displaying a list of
+restaurants_) that employs two seperate routeCBs with varying
+priorities:
 
 **`src/feature/startup/index.js`**
 ```js
+import React               from 'react';
+import {createFeature}     from 'feature-u';
+import {featureRoute,
+        PRIORITY}          from 'feature-u-state-router';
+import * as sel            from './state';
+import featureName         from './featureName';
+import EateriesListScreen  from './comp/EateriesListScreen';
+import EateryDetailScreen  from './comp/EateryDetailScreen';
+import EateryFilterScreen  from './comp/EateryFilterScreen';
+import SplashScreen        from '~/util/comp/SplashScreen';
+
 export default createFeature({
-  name: 'startup',
 
-  publicFace: {
-    ...
-  },
+  name: featureName,
 
-  reducer,
-  logic,
-
-  route: prioritizedRoute({
-    priority: PRIORITY.HIGH,
-    content({app, appState}) {
-      if (!selector.isDeviceReady(appState)) {
-        return <SplashScreen msg={selector.getDeviceStatusMsg(appState)}/>;
+  route: [
+    featureRoute({
+      priority: PRIORITY.HIGH,
+      content({app, appState}) {
+        // display EateryFilterScreen, when form is active (accomplished by our logic)
+        // NOTE: this is done as a priority route, because this screen can be used to
+        //       actually change the view - so we display it regarless of the state of
+        //       the active view
+        if (sel.isFormFilterActive(appState)) {
+          return <EateryFilterScreen/>;
+        }
       }
-      return null;  // system IS ready ... allow downstream routes to activate
-    },
-  }),
+    }),
 
-  appWillStart,
-  appDidStart,
+    featureRoute({
+      content({app, appState}) {
+
+        // allow other down-stream features to route, when the active view is NOT ours
+        if (app.currentView.sel.getView(appState) !== featureName) {
+          return null;
+        }
+        
+        // ***
+        // *** at this point we know the active view is ours
+        // ***
+        
+        // display anotated SplashScreen, when the spin operation is active
+        const spinMsg = sel.getSpinMsg(appState);
+        if (spinMsg) {
+          return <SplashScreen msg={spinMsg}/>;
+        }
+        
+        // display an eatery detail, when one is selected
+        const selectedEatery = sel.getSelectedEatery(appState);
+        if (selectedEatery) {
+          return <EateryDetailScreen eatery={selectedEatery}/>;
+        }
+        
+        // fallback: display our EateriesListScreen
+        return <EateriesListScreen/>;
+      }
+    }),
+
+  ],
+
+  ... snip snip
 });
 ```
 
-**NOTE**: Because routes operate on a "first come, first serve" basis,
-this is one aspect that **may dictate the order of your feature
-registration**.  With that said, *it is not uncommon for your route
-logic to naturally operate independent of this ordering*.
 
-### Key Benefit
+### Feature Order and Routes
 
-A **fundemental princible** to understand is that **feature based
-routing establishes a routing precedence**.  As an example, the 'auth'
-feature can take "routing precedence" over the 'xyz' feature, by
-simply resolving to an appropriate screen until the user is
-authenticated (say a SignIn screen or even a splash screen when
-appropriate).  This means the the 'xyz' feature can be assured the
-user is authenticated!  You will never see logic in an 'xyz' screen
-that redirects to a login screen if the user is not authenticated.
+The `route` aspect **may be one _rare_ characteristic that dictates
+the order of your feature registration**.  It really depends on the
+specifics of your app, and how much it relies on **route priorities**.
+
+With that said, _it is not uncommon for your route logic to naturally
+operate independent of your feature registration order_.
+
+
+
+### Routing Precedence
+
+A **fundamental principle** to understand is that **feature based
+routing establishes a Routing Precedence _as defined by your
+application state_**!
+
+As an example, an `'auth'` feature can take "routing precedence" over
+the `'xyz' feature, by simply resolving to an appropriate screen until
+the user is authenticated (say a SignIn screen or an authorization
+splash screen when appropriate).  
+
+This means the the `'xyz'` feature can be assured the user is
+authenticated!  You will never see logic in an `'xyz'` screen that
+redirects to a login screen if the user is not authenticated.
 
 
 ## Configuration
@@ -296,7 +365,7 @@ are documented here.
 - The input to **feature-u-state-router** are routing callback hooks.
   This is specified by each of your features (_that maintain UI
   components_) through the `Feature.route` property, referencing
-  functions defined by the `prioritizedRoute()` utility.
+  functions defined by the `featureRoute()` utility.
 
 ### Exposure
 
@@ -345,7 +414,7 @@ supplement the rootAppElm DOM.
 ## API
 
   * [`routeAspect`](api.md#routeAspect)
-  * [`prioritizedRoute({content, [priority]}): routeCB`](api.md#prioritizedRoute)
+  * [`featureRoute({content, [priority]}): routeCB`](api.md#featureRoute)
   * [`routeCB({app, appState}): reactElm || null`](api.md#routeCB)
 
 
