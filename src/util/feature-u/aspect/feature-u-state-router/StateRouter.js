@@ -20,13 +20,11 @@ class StateRouter extends React.Component {
     const routes = this.props.routes;
     // ... retain the original routes order (for sort tie breaker within same routePriority)
     routes.forEach( (route, indx) => route.originalOrder = indx );
-    // ... sort by 1: routePriority (decending), 2: registration order (ascending)
-    routes.sort( (r1, r2) => {
-      let order = r2.routePriority - r1.routePriority; // ... decending
-      if (order === 0)
-        order = r1.originalOrder - r2.originalOrder;   // ... ascending
-      return order;
-    });
+    // ... sort by execution order
+    routes.sort( (r1, r2) => (
+      r2.routePriority - r1.routePriority || // ... FIRST:  routePriority (decending)
+      r1.originalOrder - r2.originalOrder    // ... SECOND: registration order (ascending)
+    ));
     // console.log('xx StateRouter route order:')
     // routes.forEach( (route, indx) => console.log(`xx   ${indx+1}: ${route.featureName}: ${route.routePriority}`) );
   }
