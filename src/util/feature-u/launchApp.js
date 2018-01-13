@@ -6,8 +6,9 @@ import {isBuiltInFeatureKeyword} from './createFeature';
  * @function launchApp
  * @description
  *
- * Launch an app by assembling and configuring the supplied features,
- * using the supplied set of pluggable aspects.  
+ * Launch an app by assembling the supplied features, driving the
+ * configuration of the frameworks in use, as orchistrated by the
+ * supplied set of pluggable apsects.
  *
  * - It manages the setup and configuration of all your feature
  *   aspects, including things like: state management, logic, routing,
@@ -36,11 +37,10 @@ import {isBuiltInFeatureKeyword} from './createFeature';
  * application.
  *
  * @param {registerRootAppElmCB} registerRootAppElm the callback hook
- * that registers the supplied root application hook to the specific
- * React framework used by your app.  Because this registration is
- * accomplished by app-specific code, feature-u can operate in any
- * number of containing frameworks, like: React Web, React Native,
- * Expo, etc.
+ * that registers the supplied root application element to the specific
+ * React framework used in the app.  Because this registration is
+ * accomplished by app-specific code, feature-u can operate in any of
+ * the react flavors, such as: React Web, React Native, Expo, etc.
  *
  * @return {App} the App object used to promote feature
  * cross-communication.
@@ -240,10 +240,10 @@ export default function launchApp({aspects=[],
 
 /**
  * The launchApp() callback hook that registers the supplied root
- * application hook to the specific React framework used by your app.
+ * application element to the specific React framework used in the app.
  *
  * Because this registration is accomplished by app-specific code,
- * feature-u can operate in any number of containing frameworks, like:
+ * feature-u can operate in any number of the react flavors, such as:
  * React Web, React Native, Expo, etc.
  * 
  * **NOTE on rootAppElm:**

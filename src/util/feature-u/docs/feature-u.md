@@ -6,36 +6,89 @@ organizing your project by individual features.  There are a number of
 good articles that discuss this topic, but **feature-u** is a utility
 library that manages and streamlines this process.
 
+TODO: Badges HERE!
+
+**_The Problem ..._**
+
+_Sooo ... You have decided to structure your project code in
+segregated feature directories._ **Now what?**
+
+- How do you encapsulate your features, while still allowing them to
+  collaborate with one another?
+
+- How do you configure your chosen frameworks now that your code 
+  is so spread out?
+
+- How do you pull it all together so that your individual features
+  operate as one application?
+
+
+**_The Goal ..._**
+
+The **overriding goal** of **feature-u** is actually two fold:
+
+1. Allow features to **Plug-and-Play!** This encompasses many things,
+   such as: encapsulation, cross communication, enablement,
+   initialization, etc., etc.  We will build on these concepts
+   throughout this documentation.
+
+2. **Automate the startup of your application!!** You have the
+   features.  Allow them to promote their characteristics, so a
+   central utility can **automatically configure the frameworks** used
+   in your app, thereby **launching your application!**
+
+   This task is **accomplished in an extendable way**, _because not everyone
+   uses the same set of frameworks!_
+
+_It is important to understand that **feature-u** does not alter the
+interface to your chosen frameworks in any way.  You use them the same
+way you always have.  **feature-u** merely provides a well defined
+organizational layer, where the frameworks are automatically
+setup and configured by accumulating the necessary resources across all
+your features._
+
+
+
 <!-- ?? sync/order this list consistently to: Why feature-u  -->
 
-The benefits of using feature-u include:
+**_The Benefits ..._**
 
-- **Feature Encapsulation** _within it's own isolated implementation_
+The benefits of using **feature-u** include:
 
-- **Cross Feature Communication** _using a well-defined standard_
+- **Feature Encapsulation** _isolating feature implementations improves code manageability_
+
+- **Cross Feature Communication** _a feature's public API is promoted through a well-defined standard_
 
 - **Feature Enablement** _enable/disable through a run-time switch_
 
 - **App Life Cycle Hooks** _features can initialize themselves without
   relying on an external process_
 
-- facilitate **Single Source of Truth** _within a feature's
-  implementation_
+- **Single Source of Truth** is facilitated in a number of ways
+  _within a feature's implementation_
 
-- **Framework Integration** _using the framework(s) of your choice,
-  matching your run-time-stack (using feature-u's extendable API)_
-
-- **Manages Feature Aspects** _accumulation, setup, configure, etc._
+- **Framework Integration** _configure the framework(s) of your choice
+  (matching your run-time-stack) using **feature-u**'s extendable API_
 
 - **UI Component Promotion** _through Feature Routes_
 
-- **Minimize Feature Order Dependence Issues** _even in code that is
+- **Minimize Feature Order Dependency Issues** _even in code that is
   expanded in-line_
 
 - **Plug-and-Play** _features can be added/removed easily_
 
-- **Simplified Mainline** _feature-u orchestrates all the work,
-  deferring to features (as needed)_
+- **Simplified Mainline** _launcApp() starts the app running by
+  configuring the frameworks in use, all driven by a simple set of
+  features!_
+
+<!-- ?? trash (I think):
+
+- **Manages Feature Aspects** _accumulation, setup, configure, etc._
+
+-->
+
+**feature-u** allows you to **focus your attention on the business end
+of your features!** _Go forth and compute!!_
 
 
 
@@ -45,8 +98,9 @@ The benefits of using feature-u include:
   * [Directory Structure](#directory-structure)
   * [Feature Object](#feature-object)
   * [launchApp()](#launchapp)
+  * [Real Example](#real-example)
 - [Why feature-u](#why-feature-u)
-- [Feature Object (relaying Aspects)](#feature-object-relaying-aspects)
+- [Feature Object (relaying aspects)](#feature-object-relaying-aspects)
   * [Built-In Aspects](#built-in-aspects)
     - [Feature.name](#featurename)
     - [Feature.enabled](#featureenabled)
@@ -199,15 +253,23 @@ more detail later, but for now, just notice that ?? bla bla bla
 ?? bla bla bla
 
 
+### Real Example
+
+Want to see a real feature-u app?  eatery-nod ??link is a React Native Expo
+app that feature-u was developed under. TODO: describe just a bit more
+
+
+
+
 <!-- *** SECTION ********************************************************************************  -->
 
 ## Why feature-u
 
-The primary characteristic that **feature-u** strives to accomplish is
-to maintain features that are encapsulated and autonomous.  The goal
-(as much as possible) is to make features plug-and-play.  
+There are many things to consider when segregating your project code
+into seperate features.  How are a number of different things
+acomplished?
 
-Here are some things to consider.  This list forms the basis of why
+This list represents the considerations that formed the basis of why
 feature-u was developed!
 
 1. Encapsolation:
@@ -292,7 +354,7 @@ feature-u was developed!
 
 <!-- *** SECTION ********************************************************************************  -->
 
-## Feature Object (relaying Aspects)
+## Feature Object (relaying aspects)
 
 In feature-u, "aspect" is a general term used to refer to the various
 ingredients that (when combined) constitute your application.  Aspects
@@ -516,7 +578,7 @@ It is important to understand that **feature-u** does not alter the
 interface to these frameworks in any way.  You use them the same way
 you always have.  feature-u merely provides a well defined
 organizational layer, where the frameworks are automatically
-setup/configured by accumulating the necessary resources across all
+setup and configured by accumulating the necessary resources across all
 your features.
 
 ?? introduce Aspect object and it's accumulation process
