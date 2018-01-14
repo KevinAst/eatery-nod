@@ -8,9 +8,9 @@ library that manages and streamlines this process.
 
 TODO: Badges HERE!
 
-**_The Problem ..._**
+**_the Problem ..._**
 
-_Sooo ... You have decided to structure your project code in
+_sooo ... You have decided to structure your project code in
 segregated feature directories._ **Now what?**
 
 - How do you encapsulate your features, while still allowing them to
@@ -23,7 +23,7 @@ segregated feature directories._ **Now what?**
   operate as one application?
 
 
-**_The Goal ..._**
+**_the Goal ..._**
 
 The **overriding goal** of **feature-u** is actually two fold:
 
@@ -37,8 +37,19 @@ The **overriding goal** of **feature-u** is actually two fold:
    central utility can **automatically configure the frameworks** used
    in your app, thereby **launching your application!**
 
-   This task is **accomplished in an extendable way**, _because not everyone
-   uses the same set of frameworks!_
+   This task **must be accomplished in an extendable way**, _because
+   not everyone uses the same set of frameworks!_
+
+
+**_the Process ..._**
+
+The basic process of feature-u is for each feature to promote a
+`Feature` object that relays the various aspects within that feature.
+In turn, these Feature objects are supplied to `launchApp()`, which
+configures and starts your application, and returns the App object
+which promotes the public API of each feature.
+
+<ul>
 
 _It is important to understand that **feature-u** does not alter the
 interface to your chosen frameworks in any way.  You use them the same
@@ -47,11 +58,12 @@ organizational layer, where the frameworks are automatically
 setup and configured by accumulating the necessary resources across all
 your features._
 
+</ul>
 
 
 <!-- ?? sync/order this list consistently to: Why feature-u  -->
 
-**_The Benefits ..._**
+**_the Benefits ..._**
 
 The benefits of using **feature-u** include:
 
@@ -82,13 +94,11 @@ The benefits of using **feature-u** include:
   features!_
 
 <!-- ?? trash (I think):
-
 - **Manages Feature Aspects** _accumulation, setup, configure, etc._
-
 -->
 
-**feature-u** allows you to **focus your attention on the business end
-of your features!** _Go forth and compute!!_
+**feature-u** allows you to **focus your attention on the "business
+end" of your features!** _Go forth and compute!!_
 
 
 
@@ -100,20 +110,14 @@ of your features!** _Go forth and compute!!_
   * [launchApp()](#launchapp)
   * [Real Example](#real-example)
 - [Why feature-u](#why-feature-u)
-- [Feature Object (relaying aspects)](#feature-object-relaying-aspects)
-  * [Built-In Aspects](#built-in-aspects)
-    - [Feature.name](#featurename)
-    - [Feature.enabled](#featureenabled)
-    - [Feature.publicFace](#featurepublicface)
-    - [Feature.appWillStart](#featureappwillstart)
-    - [Feature.appDidStart](#featureappdidstart)
-  * [Extendable Aspects](#extendable-aspects)
-    - [Feature.reducer: feature-u-redux](#featurereducer-feature-u-redux)
-    - [Feature.logic: feature-u-redux-logic](#featurelogic-feature-u-redux-logic)
-    - [Feature.route: feature-u-state-router](#featureroute-feature-u-state-router)
-- [App Object](#app-object)
-  * [Promoting Feature's Public API (via App)](#promoting-features-public-api-via-app)
-  * [Checking Feature Dependencies (via App)](#checking-feature-dependencies-via-app))
+- [A Closer Look](#a-closer-look)
+  * [aspects](#aspects)
+  * [Feature Object (relaying aspects)](#feature-object-relaying-aspects)
+    - [built-in aspects](#built-in-aspects)
+    - [extendable aspects](#extendable-aspects)
+  * [App Object](#app-object)
+    - [Promoting Feature's Public API (via App)](#promoting-features-public-api-via-app)
+    - [Checking Feature Dependencies (via App)](#checking-feature-dependencies-via-app))
 
 - [Extending feature-u](#extending-feature-u)
 
@@ -255,9 +259,10 @@ more detail later, but for now, just notice that ?? bla bla bla
 
 ### Real Example
 
-Want to see a real feature-u app?  eatery-nod ??link is a React Native Expo
-app that feature-u was developed under. TODO: describe just a bit more
-
+Want to see a real **feature-u** app?
+[eatery-nod](https://github.com/KevinAst/eatery-nod) is a React Native
+Expo app that uses **feature-u**.  It was the project where
+**feature-u** was conceived. TODO: describe just a bit more
 
 
 
@@ -349,35 +354,42 @@ feature-u was developed!
 
 
 
-
-
-
 <!-- *** SECTION ********************************************************************************  -->
 
-## Feature Object (relaying aspects)
+## A Closer Look
 
-In feature-u, "aspect" is a general term used to refer to the various
+The basic process of feature-u is for each feature to promote a
+`Feature` object that relays the various aspects within that feature.
+In turn, these Feature objects are supplied to `launchApp()`, which
+configures and starts your application, and returns the App object
+which promotes the public API of each feature.
+
+_Let's take a closer look at this process ..._
+
+
+<!-- *** SUB-SECTION ********************************************************************************  -->
+### aspects
+
+In feature-u, "aspect" is a generalized term used to refer to the various
 ingredients that (when combined) constitute your application.  Aspects
 can take on many different forms ... for example:
-UI Components and Routes, 
-State Management (actions, reducers, selectors), 
-Business Logic, 
-Startup Code, 
-etc.
 
-Each application feature promotes a `Feature` object that relays the
-various aspects within that feature.  In turn, all Feature objects are
-supplied to the launchApp() function, which configures and starts your
-app.
+  - UI Components and Routes, 
+  - State Management (actions, reducers, selectors), 
+  - Business Logic, 
+  - Startup Initialization Code, 
+  - etc.
 
-feature-u is **not** interested in all aspects of a feature, rather
-only those that are required to configure and start the app.  All
-other aspects are consider to be an internal detail of the feature
-implementation.  As an example: while the redux state manager deals
-with actions, reducers, and selectors ... only reducers are needed to
-setup and configure redux.
+**Not all aspects are of interest to feature-u** ...  _only those that
+are needed to setup and launch the app_ ... all others are
+considered to be an internal implementation detail of the feature.  As
+an example, consider the redux state manager: while it uses actions,
+reducers, and selectors ... only reducers are needed to setup and
+configure redux.
 
-Broadly speaking there are two types of feature-u aspects:
+**feature-u** provides a base set of **built-in aspects** (out-of-the-box)
+but allows additional aspects to be introduced through it's extendable
+API.
 
 1. [**Built-In Aspects**](#built-in-aspects):
 
@@ -395,7 +407,20 @@ Broadly speaking there are two types of feature-u aspects:
    to not introduce unwanted dependencies.
 
 
-### Built-In Aspects
+
+<!-- *** SUB-SECTION ********************************************************************************  -->
+### Feature Object (relaying aspects)
+
+The Feature object is merely a container that holds the aspects that
+are of interest to feature-u.  
+
+Each feature within your application promotes a Feature object (using
+`createFeature()`) that catalogs the aspects of that feature.
+
+Ultimatly, all Feature objects are consumed by `launchApp()`. 
+
+
+#### built-in aspects
 
 Built-in aspects are promoted directly by the base feature-u package.
 They provide very rudimentary capabilities, such as feature
@@ -404,28 +429,32 @@ enablement, public API, and application life-cycle hooks.
 Like all aspects, Built-In Aspects are relayed in the Feature object,
 through the `createFeature()` function.
 
-#### Feature.name
+- **Feature.name**
+  
+  ?? pull from JavaDoc ... discuss uniqueness and useages for single-source of truth ?? REFERENCE OTHER PARTS-OF-DOC
 
-?? pull from JavaDoc ... discuss uniqueness and useages for single-source of truth ?? REFERENCE OTHER PARTS-OF-DOC
+  
+- **Feature.enabled**
+  
+  ?? pull from JavaDoc ... discuss dynamic enablement, AND verifying existance ?? REFERENCE OTHER PARTS-OF-DOC
 
-#### Feature.enabled
+  
+- **Feature.publicFace**
+  
+  ?? pull from JavaDoc ... ?? REFERENCE OTHER PARTS-OF-DOC
 
-?? pull from JavaDoc ... discuss dynamic enablement, AND verifying existance ?? REFERENCE OTHER PARTS-OF-DOC
+  
+- **Feature.appWillStart**
+  
+  ?? pull from JavaDoc ... ?? REFERENCE application life cycle
 
-#### Feature.publicFace
-
-?? pull from JavaDoc ... ?? REFERENCE OTHER PARTS-OF-DOC
-
-#### Feature.appWillStart
-
-?? pull from JavaDoc ... ?? REFERENCE application life cycle
-
-#### Feature.appDidStart
-
-?? pull from JavaDoc ... ?? REFERENCE application life cycle
+  
+- **Feature.appDidStart**
+  
+  ?? pull from JavaDoc ... ?? REFERENCE application life cycle
 
 
-### Extendable Aspects
+#### extendable aspects
 
 Extendable aspects are promoted by external packages (_or self defined
 in your project_).  They provide feature-u integration with other
@@ -441,42 +470,40 @@ You can even define your own aspect (_if the one you need doesn't
 already exist_), by using feature-u's `createAspect()` API
 (_feature-u is extendable_)!
 
-By in large, extendable aspects provide the most value, because
-they fully integrate your features to the framework(s) of your
-choice (_i.e. your run-time stack_).
+By in large, **extendable aspects provide the most value**, because
+they fully integrate your features to the framework(s) of your choice
+(_i.e. your run-time stack_).
 
 Like all aspects, Extendable Aspects are relayed in the Feature
 object, through the `createFeature()` function.
 
-Because Extendable Aspects are not part of the base feature-u package,
-it is problematic to discuss them here (_new ones can be added
-independent of this base_).  **You should search the npm registry with
-the `'feature-u'` keyword** _to find the ones that meet your
-requirements_.  With that said, we will discuss a few of the
-Extendable Aspects that were created in conjunction with the initial
-development of feature-u (_just to give you a feel of what is
-possible_).
+Because Extendable Aspects are not part of the base feature-u
+package, it is a bit problematic to discuss them here (_they are
+either a seperate npm package, or self contained in a project_).
+**You should search the npm registry with the `'feature-u'` keyword**
+_to find the ones that meet your requirements_.  With that said, we
+will discuss a few of the Extendable Aspects that were created in
+conjunction with the initial development of feature-u (_just to give
+you a feel of what is possible_).
 
 
-#### Feature.reducer: feature-u-redux
+- **Feature.reducer: feature-u-redux**
+  
+  ?? summarize docs from external package AND reference that doc
+  
+  
+- **Feature.logic: feature-u-redux-logic**
+  
+  ?? summarize docs from external package AND reference that doc
+ 
+ 
+- **Feature.route: feature-u-state-router**
+  
+  ?? summarize docs from external package AND reference that doc
 
-?? summarize docs from external package AND reference that doc
 
-
-#### Feature.logic: feature-u-redux-logic
-
-?? summarize docs from external package AND reference that doc
-
-#### Feature.route: feature-u-state-router
-
-?? summarize docs from external package AND reference that doc
-
-
-
-
-<!-- *** SECTION ********************************************************************************  -->
-
-## App Object
+<!-- *** SUB-SECTION ********************************************************************************  -->
+### App Object
 
 The App object is emitted from `launchApp()` function, and promotes
 information about the Features within the app:
@@ -484,7 +511,7 @@ information about the Features within the app:
 - both the [feature's public API](#promoting-features-public-api-via-app)
 - and [whether a feature exists or not](#checking-feature-dependencies-via-app)
 
-### Promoting Feature's Public API (via App)
+#### Promoting Feature's Public API (via App)
 
 The App object promotes the feature's Public API (i.e. it's
 publicFace).
@@ -521,7 +548,7 @@ You can see that featureA is promoting a couple of actions (open(),
 close()) in it's publicFace, while featureB has NO publicFace.
 
 
-### Checking Feature Dependencies (via App)
+#### Checking Feature Dependencies (via App)
 
 The App object can be used to determine if a feature is present or
 not.  If a feature does not exist, or has been disabled, the
