@@ -391,13 +391,13 @@ configure redux.
 but allows additional aspects to be introduced through it's extendable
 API.
 
-1. [**Built-In Aspects**](#built-in-aspects):
+1. [**Built-In aspects**](#built-in-aspects):
 
    These aspects are promoted directly by the base feature-u package.
    They provide very rudimentary capabilities, such as feature
    enablement, public API, and application life-cycle hooks.
 
-1. [**Extendable Aspects**](#extendable-aspects):
+1. [**Extendable aspects**](#extendable-aspects):
 
    These aspects are promoted by external packages (_or self defined
    in your project_).  They provide feature-u integration with other
@@ -420,14 +420,14 @@ Each feature within your application promotes a Feature object (using
 Ultimatly, all Feature objects are consumed by `launchApp()`. 
 
 
-#### built-in aspects
+#### Built-In aspects
 
 Built-in aspects are promoted directly by the base feature-u package.
 They provide very rudimentary capabilities, such as feature
 enablement, public API, and application life-cycle hooks.
 
-Like all aspects, Built-In Aspects are relayed in the Feature object,
-through the `createFeature()` function.
+Like all aspects, Built-In aspect content is relayed through Feature
+object properties (via `createFeature()`).
 
 - `Feature.name`
   
@@ -454,36 +454,33 @@ through the `createFeature()` function.
   ?? pull from JavaDoc ... ?? REFERENCE application life cycle
 
 
-#### extendable aspects
+#### Extendable aspects
 
-Extendable aspects are promoted by external packages (_or self defined
-in your project_).  They provide feature-u integration with other
-frameworks (for example [redux] state management, or [redux-logic]
-business logic, etc.).
+**feature-u** is extendable!  Extendable Aspects provide **feature-u**
+integration with other frameworks (for example [redux] state
+management, or [redux-logic] business logic, etc.).  For this reason
+(_by in large_) **they provide the most value**, because they **fully
+integrate your features into your run-time stack!**
 
-Extendable Aspects are created with feature-u's extendable API, and
-are packaged separately, so as to not introduce unwanted
-dependencies.  You pick and choose them based on the framework(s)
-used in your project (_matching your project's run-time stack_).
+They are packaged separately from **feature-u**, so as to not
+introduce unwanted dependencies (_because not everyone uses the same
+frameworks_).  You pick and choose them based on the framework(s) used
+in your project (_matching your project's run-time stack_).
 
-You can even define your own aspect (_if the one you need doesn't
-already exist_), by using feature-u's `createAspect()` API
-(_feature-u is extendable_)!
+Extendable Aspects are created with **feature-u**'s extendable API, using
+`createAspect()`.  You can define your own Aspect (_if the one you
+need doesn't already exist_)!
 
-By in large, **extendable aspects provide the most value**, because
-they fully integrate your features to the framework(s) of your choice
-(_i.e. your run-time stack_).
+Like all aspects, Extendable Aspect content is relayed through Feature
+object properties (via `createFeature()`).
 
-Like all aspects, Extendable Aspects are relayed in the Feature
-object, through the `createFeature()` function.
-
-Because Extendable Aspects are not part of the base feature-u
+Because Extendable Aspects are not part of the base **feature-u**
 package, it is a bit problematic to discuss them here (_they are
-either a seperate npm package, or self contained in a project_).
+either in a seperate npm package, or self contained in your project_).
 **You should search the npm registry with the `'feature-u'` keyword**
 _to find the ones that meet your requirements_.  With that said, we
 will discuss a few of the Extendable Aspects that were created in
-conjunction with the initial development of feature-u (_just to give
+conjunction with the initial development of **feature-u** (_just to give
 you a feel of what is possible_).
 
 
