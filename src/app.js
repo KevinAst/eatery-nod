@@ -6,7 +6,7 @@ import {reducerAspect}   from './util/feature-u/aspect/feature-u-redux';
 import {logicAspect}     from './util/feature-u/aspect/feature-u-redux-logic';
 import {launchApp}       from './util/feature-u';
 import SplashScreen      from './util/comp/SplashScreen';
-import features          from './feature';
+import features          from './feature'; // the set of features that comprise this application
 
 
 // define our set of "plugable" feature-u Aspects, conforming to our app's run-time stack
