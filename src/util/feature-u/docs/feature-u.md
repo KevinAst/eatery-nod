@@ -532,9 +532,27 @@ you a feel of what is possible_).
 
  
 - `Feature.route` via: **feature-u-state-router**
-  
-  ?? summarize docs from external package AND reference that doc
-  ?? also mention UI Components
+
+  **feature-u-state-router** is the **feature-u** integration point to
+  **Feature Routes**!
+
+  It configures **Feature Router** through the `routeAspect` (_to be
+  supplied to_ `launchApp()`), which extends the Feature object,
+  adding support for the `Feature.route` property, referencing routes
+  defined through the `featureRoute()` function.
+
+  **Feature Routes** are _based on a very simple concept_: **allow the
+  application state to drive the routes!** It operates through a
+  series of registered functional callback hooks, which determine the
+  active screen based on an analysis of the the overall appState.
+  This is particulary useful in feature-based routing, because each
+  feature can promote their own UI components in an encapsulated and
+  autonomous way!  Because of this, **feature-u-state-router** is a
+  preferred routing solution for **feature-u**.
+
+  Please refer to the **feature-u-state-router** documentation for complete
+  details.
+
 
 
 <!-- *** SUB-SECTION ********************************************************************************  -->
