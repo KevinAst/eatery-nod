@@ -429,27 +429,27 @@ enablement, public API, and application life-cycle hooks.
 Like all aspects, Built-In Aspects are relayed in the Feature object,
 through the `createFeature()` function.
 
-- **Feature.name**
+- `Feature.name`
   
   ?? pull from JavaDoc ... discuss uniqueness and useages for single-source of truth ?? REFERENCE OTHER PARTS-OF-DOC
 
   
-- **Feature.enabled**
+- `Feature.enabled`
   
   ?? pull from JavaDoc ... discuss dynamic enablement, AND verifying existance ?? REFERENCE OTHER PARTS-OF-DOC
 
   
-- **Feature.publicFace**
+- `Feature.publicFace`
   
   ?? pull from JavaDoc ... ?? REFERENCE OTHER PARTS-OF-DOC
 
   
-- **Feature.appWillStart**
+- `Feature.appWillStart`
   
   ?? pull from JavaDoc ... ?? REFERENCE application life cycle
 
   
-- **Feature.appDidStart**
+- `Feature.appDidStart`
   
   ?? pull from JavaDoc ... ?? REFERENCE application life cycle
 
@@ -487,7 +487,7 @@ conjunction with the initial development of feature-u (_just to give
 you a feel of what is possible_).
 
 
-- **Feature.reducer: feature-u-redux**
+- `Feature.reducer` via: **feature-u-redux**
   
   **feature-u-redux** is the **feature-u** integration point to
   [redux]!
@@ -508,19 +508,19 @@ you a feel of what is possible_).
   top-level application state tree.
 
   Because **feature-u-redux** manages redux, it also provides an
-  integration point to other Aspects that need to inject redux
+  integration hook to other Aspects that need to inject redux
   middleware.
 
   Please refer to the **feature-u-redux** documentation for complete
   details.
   
   
-- **Feature.logic: feature-u-redux-logic**
+- `Feature.logic` via: **feature-u-redux-logic**
   
   ?? summarize docs from external package AND reference that doc
  
  
-- **Feature.route: feature-u-state-router**
+- `Feature.route` via: **feature-u-state-router**
   
   ?? summarize docs from external package AND reference that doc
   ?? also mention UI Components
