@@ -1,7 +1,7 @@
 # feature-u-redux *(redux integration in feature-u)*
 
-**feature-u-redux** promotes a `reducer` Aspect (a **feature-u** plugin) that
-facilitates [redux] integration to your features.
+**feature-u-redux** promotes the `reducerAspect` (a **feature-u**
+plugin) that facilitates [redux] integration in your features.
 
 **SideBar:**
 <ul>
@@ -14,6 +14,32 @@ feature-u to other framework/utilities that match your specific
 run-time stack.
 
 **feature-u-redux** is your **feature-u** integration point to [redux]!
+
+</ul>
+
+**Overview:**
+
+<ul>
+
+**feature-u-redux** configures [redux] through the `reducerAspect`
+(_to be supplied to_ `launchApp()`), which extends the Feature object,
+adding support for the `Feature.reducer` property, referencing
+feature-based reducers.
+
+Only reducers are of interest because that is all that is needed to
+configure [redux].  All other redux items (_actions, selectors, etc._)
+are considered to be an internal implementation detail of the feature.
+
+The `Feature.reducer` content must be embellished by
+`slicedReducer()`, which provides instructions on how to combine
+multiple feature-based reducers in constructing the overall top-level
+application state tree.
+
+Because **feature-u-redux** manages redux, it also provides an
+integration point to other Aspects that need to inject redux
+middleware.
+
+Additional information can be found in the following sections.
 
 </ul>
 

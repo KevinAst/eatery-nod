@@ -489,7 +489,30 @@ you a feel of what is possible_).
 
 - **Feature.reducer: feature-u-redux**
   
-  ?? summarize docs from external package AND reference that doc
+  **feature-u-redux** is the **feature-u** integration point to
+  [redux]!
+
+  It configures [redux] through the `reducerAspect` (_to be
+  supplied to_ `launchApp()`), which extends the Feature object,
+  adding support for the `Feature.reducer` property, referencing
+  feature-based reducers.
+
+  Only reducers are of interest because that is all that is needed to
+  configure [redux].  All other redux items (_actions, selectors,
+  etc._) are considered to be an internal implementation detail of the
+  feature.
+
+  The `Feature.reducer` content must be embellished by
+  `slicedReducer()`, which provides instructions on how to combine
+  multiple feature-based reducers in constructing the overall
+  top-level application state tree.
+
+  Because **feature-u-redux** manages redux, it also provides an
+  integration point to other Aspects that need to inject redux
+  middleware.
+
+  Please refer to the **feature-u-redux** documentation for complete
+  details.
   
   
 - **Feature.logic: feature-u-redux-logic**
@@ -500,6 +523,7 @@ you a feel of what is possible_).
 - **Feature.route: feature-u-state-router**
   
   ?? summarize docs from external package AND reference that doc
+  ?? also mention UI Components
 
 
 <!-- *** SUB-SECTION ********************************************************************************  -->
