@@ -513,9 +513,23 @@ you a feel of what is possible_).
   
   
 - `Feature.logic` via: **feature-u-redux-logic**
-  
-  ?? summarize docs from external package AND reference that doc
- 
+
+  **feature-u-redux-logic** is the **feature-u** integration point to
+  [redux-logic]!
+
+  It configures [redux-logic] through the `logicAspect` (_to be
+  supplied to_ `launchApp()`), which extends the Feature object,
+  adding support for the `Feature.logic` property, referencing
+  feature-based logic modules.
+
+  The following article is an introduction (and motivation) for the
+  development of redux-logic: [Where do I put my business logic in a
+  React-Redux
+  application](https://medium.com/@jeffbski/where-do-i-put-my-business-logic-in-a-react-redux-application-9253ef91ce1).
+
+  Please refer to the **feature-u-redux-logic** documentation for complete
+  details.
+
  
 - `Feature.route` via: **feature-u-state-router**
   

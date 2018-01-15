@@ -18,6 +18,21 @@ run-time stack.
 
 </ul>
 
+
+**Overview:**
+
+<ul>
+
+**feature-u-redux-logic** configures [redux-logic] through the
+`logicAspect` (_to be supplied to_ `launchApp()`), which extends the
+Feature object, adding support for the `Feature.logic` property,
+referencing feature-based logic modules.
+
+Additional information can be found in the following sections.
+
+</ul>
+
+
 ?? TODO: DOC AI: insure feature-u links are valid ONCE feature-u docs have stabilized!
 
 ## At a Glance
