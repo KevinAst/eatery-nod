@@ -140,9 +140,24 @@ WORKING TOC: *******************************************************************
 
 - Usage
 - Why feature-u
-- Feature Aspects
+- aspects
+- Feature Object
 - App Object
 - Launching Your App
+- App Life Cycle Hooks
+  * appWillStart
+  * appDidStart
+- Cross Feature Communication
+  * publicFace
+  * App Object
+    - Accessing the App Object
+      * managedExpansion()
+      * App Access Summary
+    - Checking Feature Dependencies (via App)
+- Single Source of Truth
+  * Feature Name
+  * Feature State Location
+
 
 - ? Feature Based Route Management ?? briefly discuss in the abstract, point to other packages (not part of the base package)
 
@@ -152,22 +167,6 @@ WORKING TOC: *******************************************************************
 - ? extending via Aspects
   * ? use other published npm packages
   * ? writing your extension: createAspect()
-
-- ? App Life Cycle Hooks
-  * appWillStart
-  * appDidStart
-
-- ? Cross Feature Communication
-  * publicFace
-  * App Object
-    - Accessing the App Object
-      * managedExpansion()
-      * App Access Summary
-    - Checking Feature Dependencies (via App)
-
-- ? Single Source of Truth
-  * Feature Name
-  * Feature State Location
 
 - ? API
 
