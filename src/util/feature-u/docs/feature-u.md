@@ -250,24 +250,24 @@ acomplished?
 This list represents the considerations that formed the basis of why
 feature-u was developed!
 
-1. Encapsolation:
+1. **Encapsolation:**
 
    Most characteristics of a feature strive to be self-sufficient and
    independent.  Where possible, they operate within their own
    isolated implementation.
 
-   Solution: Various **feature-u** traits
+   **Solution:** Various **feature-u** traits
 
-1. Feature Collaboration:
+1. **Feature Collaboration:**
 
    Even though a feature's implementation is encapsolated, it still
    needs to interact with it's surroundings.  There is a need for
    collaboration between features.  This however should be acomplished
    through a well-defined feature-based public interface.
 
-   Solution: [Cross Feature Communication](#cross-feature-communication)
+   **Solution:** [Cross Feature Communication](#cross-feature-communication)
 
-1. Initialization:
+1. **Initialization:**
 
    Any given feature should not have to rely on an external startup
    process to perform the initialization that it needs.  Rather, the
@@ -279,20 +279,20 @@ feature-u was developed!
     - dispatch an action that kicks off some startup process
     - etc.
 
-   Solution: [App Life Cycle Hooks](#app-life-cycle-hooks)
+   **Solution:** [App Life Cycle Hooks](#app-life-cycle-hooks)
 
-1. Feature Enablement:
+1. **Feature Enablement:**
 
    You may have the need for selected features to be dynamically
    enabled or disabled.  As an example, certain features may only be
    enabled for paid clients, or other features may only be used for
    diagnostic purposes.
 
-   Solution: Feature Enablement ??link/this-is-new
+   **Solution:** Feature Enablement ??link/this-is-new
 
 1. ??$$$ in-line code expansion and dependency order issues ... managedExpansion()
 
-1. Framework Integration:
+1. **Framework Integration:**
 
    Most likely your application employs a number of different
    frameworks (ex: redux, redux-logic, etc.).  As a result, your
@@ -301,19 +301,24 @@ feature-u was developed!
    How are the resources needed by these frameworks acumulated and
    configured across the many features of your app?
 
-   Solution: [Extendable aspects](#extendable-aspects) -and- [Launching Your App](#launching-your-app)
+   **Solution:** [Extendable aspects](#extendable-aspects) -and- [Launching Your App](#launching-your-app)
 
-1. UI Component Promotion:
+1. **UI Component Promotion:**
 
    Features that maintain their own UI components need a way to promote
    them in the overall app's GUI.  How is this acomplished in an
    autonomous way?
 
-   Solution: Feature Based Route Management (via the pluggable feature-u-state-router routeAspect) ??link-to-external-package
+   **Solution:** Feature Based Route Management (via the pluggable feature-u-state-router routeAspect) ??link-to-external-package
 
-1. ??$$$ facilitate single-source-of-truth within a feature's implementation
+1. **Single Source of Truth:**
 
-1. Simplified App Startup
+   What are some **Best Practices** for "Single Source of Truth" as it
+   relates to features, and how can **feature-u** help?
+
+   **Solution:** [Single Source of Truth](#single-source-of-truth)
+
+1. **Simplified App Startup:**
 
    After breaking your application into pieces (i.e. features), how do
    you pull it all together, and actually start your app running?
@@ -322,7 +327,7 @@ feature-u was developed!
    turns out, however, because of the structure promoted by feature-u,
    it actually is a very simple process.
 
-   Solution: [Launching Your App](#launching-your-app)
+   **Solution:** [Launching Your App](#launching-your-app)
 
 
 
