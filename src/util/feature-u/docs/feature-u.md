@@ -10,20 +10,34 @@ TODO: Badges HERE!
 
 **_the Problem ..._**
 
-_sooo ... You have decided to structure your project code in
-segregated feature directories._ **Now what?**
+_sooo ...  You have decided to structure your project code by
+features.  From a design perspective, there were a lot of
+considerations in determining the feature boundaries.  In general, you
+are feeling good about the progress.  It feels like the feature
+segregation is going to make your code much more manageable.
 
-- How do you encapsulate your features, while still allowing them to
-  collaborate with one another?
+However, there are some issues yet to be resolved ...
 
-- How do you configure your chosen frameworks now that your code 
-  is so spread out?
+- How do you encapsulate and isolate your features, while still
+  allowing them to collaborate with one another?
+
+- How can selected features introduce start-up initialization, without
+  relying on a global startup process (_even injecting utility service
+  in the root DOM_)?
+
+- How do you promote feature-based UI components in an isolated and
+  autonomous way?
+
+- How do you configure your chosen frameworks now that your code is so
+  spread out?
+
+- How do you disable selected features which are either optional, or
+  require a payed upgrade?
 
 - How do you pull it all together so that your individual features
   operate as one application?
 
-
-**_the Goal ..._**
+**_the Goal (what now?) ..._**
 
 The **overriding goal** of **feature-u** is actually two fold:
 
@@ -47,7 +61,7 @@ The basic process of feature-u is for each feature to promote a
 `Feature` object that relays the various aspects within that feature.
 In turn, these Feature objects are supplied to `launchApp()`, which
 configures and starts your application, and returns the [App
-Object](#app-object) which promotes the public API of each feature.
+Object](#app-object) (_which promotes the public API of each feature_).
 
 <ul>
 
