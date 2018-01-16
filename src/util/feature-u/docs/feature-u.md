@@ -11,7 +11,7 @@ TODO: Badges HERE!
 **_the Problem ..._**
 
 _sooo ...  You have decided to structure your project code by
-features.  From a design perspective, there were a lot of
+features_.  From a design perspective, there were a lot of
 considerations in determining the feature boundaries.  In general, you
 are feeling good about the progress.  It feels like the feature
 segregation is going to make your code much more manageable.
@@ -127,8 +127,8 @@ end" of your features!** _Go forth and compute!!_
 - [A Closer Look](#a-closer-look)
 - [aspects](#aspects)
 - [Feature Object (relaying aspects)](#feature-object-relaying-aspects)
-  * [built-in aspects](#built-in-aspects)
-  * [extendable aspects](#extendable-aspects)
+  * [Built-In aspects](#built-in-aspects)
+  * [Extendable aspects](#extendable-aspects)
 - [App Object](#app-object)
   * [Promoting Feature's Public API (via App)](#promoting-features-public-api-via-app)
   * [Checking Feature Dependencies (via App)](#checking-feature-dependencies-via-app))
@@ -147,45 +147,6 @@ end" of your features!** _Go forth and compute!!_
 
 - [Extending feature-u](#extending-feature-u)
 
-
-<!-- ??? 
-
-WORKING TOC: ********************************************************************************
-
-- Usage
-- Why feature-u
-- aspects
-- Feature Object
-- App Object
-- Launching Your App
-- App Life Cycle Hooks
-  * appWillStart
-  * appDidStart
-- Cross Feature Communication
-  * publicFace
-  * App Object
-    - Accessing the App Object
-      * managedExpansion()
-      * App Access Summary
-    - Checking Feature Dependencies (via App)
-- Single Source of Truth
-  * Feature Name
-  * Feature State Location
-
-
-- ? Feature Based Route Management ?? briefly discuss in the abstract, point to other packages (not part of the base package)
-
-?? base capabilities
-- ? managedExpansion() ... minor thing in accessing the App object during in-line code expansion ... basically delaying the expansion under a controlled env
-
-- ? extending via Aspects
-  * ? use other published npm packages
-  * ? writing your extension: createAspect()
-
-- ? API
-
-
-?? pull up for real ...
 - [API](api.md)
   * [`createFeature({name, [enabled], [publicFace], [appWillStart], [appDidStart], [pluggableAspects]}): Feature`](api.md#createFeature)
     - [`appWillStartCB({app, curRootAppElm}): rootAppElm || null`](api.md#appWillStartCB)
@@ -204,6 +165,19 @@ WORKING TOC: *******************************************************************
       * [`injectRootAppElmMeth(app, activeFeatures, curRootAppElm): reactElm`](api.md#injectRootAppElmMeth)
       * [`addBuiltInFeatureKeyword(keyword): void`](api.md#addBuiltInFeatureKeyword)
 
+
+<!-- ??
+
+WORKING TOC: ********************************************************************************
+
+- ??$$$ Feature Enablement ... brief section that summarizes this item
+
+- ??$$$ facilitate single-source-of-truth within a feature's implementation
+
+
+- ? extending via Aspects
+  * ? use other published npm packages
+  * ? writing your extension: createAspect()
 
 -->
 
@@ -239,21 +213,21 @@ The basic usage pattern of feature-u is to:
 
 Here is a typical directory structure of an app that uses feature-u:
 
-??? SAMPLE DIR
+??$$ SAMPLE DIR
 
 Each feature is located in it's own directory, and promotes it's
 characteristics through a Feature object (using createFeature()).
 
 ### Feature Object
 
-?? show createFeature()
+??$$ show createFeature()
 
 You can see that featureA defines ?? bla bla bla ?? we will fill in
 more detail later, but for now, just notice that ?? bla bla bla
 
 ### launchApp()
 
-?? bla bla bla
+??$$ bla bla bla
 
 
 ### Real Example
@@ -291,7 +265,7 @@ feature-u was developed!
    collaboration between features.  This however should be acomplished
    through a well-defined feature-based public interface.
 
-   Solution: Cross Feature Communication ??link
+   Solution: [Cross Feature Communication](#cross-feature-communication)
 
 1. Initialization:
 
@@ -305,7 +279,7 @@ feature-u was developed!
     - dispatch an action that kicks off some startup process
     - etc.
 
-   Solution: App Life Cycle Hooks ??link
+   Solution: [App Life Cycle Hooks](#app-life-cycle-hooks)
 
 1. Feature Enablement:
 
@@ -316,7 +290,7 @@ feature-u was developed!
 
    Solution: Feature Enablement ??link/this-is-new
 
-1. ?? in-line code expansion and dependency order issues ... managedExpansion()
+1. ??$$$ in-line code expansion and dependency order issues ... managedExpansion()
 
 1. Framework Integration:
 
@@ -327,7 +301,7 @@ feature-u was developed!
    How are the resources needed by these frameworks acumulated and
    configured across the many features of your app?
 
-   Solution: Pluggable Aspects ??link -and- launchApp() ??link
+   Solution: [Extendable aspects](#extendable-aspects) -and- [Launching Your App](#launching-your-app)
 
 1. UI Component Promotion:
 
@@ -335,9 +309,9 @@ feature-u was developed!
    them in the overall app's GUI.  How is this acomplished in an
    autonomous way?
 
-   Solution: Feature Based Route Management (via the pluggable feature-u-state-router routeAspect) ??link
+   Solution: Feature Based Route Management (via the pluggable feature-u-state-router routeAspect) ??link-to-external-package
 
-1. ?? facilitate single-source-of-truth within a feature's implementation
+1. ??$$$ facilitate single-source-of-truth within a feature's implementation
 
 1. Simplified App Startup
 
@@ -348,7 +322,7 @@ feature-u was developed!
    turns out, however, because of the structure promoted by feature-u,
    it actually is a very simple process.
 
-   Solution: launchApp() ... Launching Your App ??link
+   Solution: [Launching Your App](#launching-your-app)
 
 
 
@@ -1142,6 +1116,30 @@ your features.
 ?? introduce Aspect object and it's accumulation process
 
 ?? detail createAspect() and each Aspect method
+
+
+
+<!-- *** SECTION ********************************************************************************  -->
+
+## API
+
+  * [`createFeature({name, [enabled], [publicFace], [appWillStart], [appDidStart], [pluggableAspects]}): Feature`](api.md#createFeature)
+    - [`appWillStartCB({app, curRootAppElm}): rootAppElm || null`](api.md#appWillStartCB)
+    - [`appDidStartCB({app, [appState], [dispatch]}): void`](api.md#appDidStartCB)
+  * [`managedExpansion(managedExpansionCB): managedExpansionCB`](api.md#managedExpansion)
+    - [`managedExpansionCB(app): AspectContent`](api.md#managedExpansionCB)
+  * [`launchApp({[aspects], features, registerRootAppElm}): App`](api.md#launchApp)
+    - [`registerRootAppElmCB(rootAppElm): void`](api.md#registerRootAppElmCB)
+  * Extending feature-u
+    - [`createAspect({see-docs}): Aspect`](api.md#createAspect)
+      * [`validateConfigurationMeth(): string`](api.md#validateConfigurationMeth)
+      * [`expandFeatureContentMeth(app, feature): string`](api.md#expandFeatureContentMeth)
+      * [`validateFeatureContentMeth(feature): string`](api.md#validateFeatureContentMeth)
+      * [`assembleFeatureContentMeth(app, activeFeatures): void`](api.md#assembleFeatureContentMeth)
+      * [`assembleAspectResourcesMeth(app, aspects): void`](api.md#assembleAspectResourcesMeth)
+      * [`injectRootAppElmMeth(app, activeFeatures, curRootAppElm): reactElm`](api.md#injectRootAppElmMeth)
+      * [`addBuiltInFeatureKeyword(keyword): void`](api.md#addBuiltInFeatureKeyword)
+
 
 
 
