@@ -85,7 +85,7 @@ The benefits of using **feature-u** include:
 
 - **Cross Feature Communication** _a feature's public API is promoted through a well-defined standard_
 
-- **Feature Enablement** _enable/disable through a run-time switch_
+- **Feature Enablement** _enable/disable features through a run-time switch_
 
 - **App Life Cycle Hooks** _features can initialize themselves without
   relying on an external process_
@@ -136,6 +136,7 @@ end" of your features!** _Go forth and compute!!_
 - [App Life Cycle Hooks](#app-life-cycle-hooks)
   * [appWillStart](#appwillstart)
   * [appDidStart](#appdidstart)
+- [Feature Enablement](#feature-enablement)
 - [Cross Feature Communication](#cross-feature-communication)
   * [publicFace and the App Object](#publicface-and-the-app-object)
   * [Accessing the App Object](#accessing-the-app-object)
@@ -169,8 +170,6 @@ end" of your features!** _Go forth and compute!!_
 <!-- ??
 
 WORKING TOC: ********************************************************************************
-
-- ??$$ Feature Enablement ... brief section that summarizes this item
 
 - ? extending via Aspects
   * ? use other published npm packages
@@ -285,7 +284,7 @@ feature-u was developed!
    enabled for paid clients, or other features may only be used for
    diagnostic purposes.
 
-   **Solution:** Feature Enablement ??link/this-is-new
+   **Solution:** [Feature Enablement](#feature-enablement)
 
 1. **Resource Resolution during Code Expansion:**
 
@@ -420,7 +419,22 @@ object properties (via `createFeature()`).
   
 - `Feature.enabled`
   
-  ?? pull from JavaDoc ... discuss dynamic enablement, AND verifying existance ?? REFERENCE OTHER PARTS-OF-DOC
+  Each feature has an `Feature.enabled` boolean property that determines
+  whether it is enabled or not.  This indicator is typically based on a
+  dynamic expression.
+
+  This allows packaged code to be dynamically enabled/disabled at
+  run-time, and is useful in a number of different situations.  For
+  example:
+
+  - some features may only be enabled for paid clients
+
+  - other features may only be used for diagnostic purposes, and are
+    disabled by default
+
+  If need be you can use the App object to determine if a feature is
+  present or not (see: [Checking Feature Dependencies (via
+  App)](#checking-feature-dependencies-via-app)).
 
   
 - `Feature.publicFace`
@@ -749,6 +763,26 @@ appDidStart({app, appState, dispatch}) {
 }
 ```
 
+
+<!-- *** SECTION ********************************************************************************  -->
+## Feature Enablement
+
+Each feature has an `Feature.enabled` boolean property that determines
+whether it is enabled or not.  This indicator is typically based on a
+dynamic expression.
+
+This allows packaged code to be dynamically enabled/disabled at
+run-time, and is useful in a number of different situations.  For
+example:
+
+- some features may only be enabled for paid clients
+
+- other features may only be used for diagnostic purposes, and are
+  disabled by default
+
+If need be you can use the App object to determine if a feature is
+present or not (see: [Checking Feature Dependencies (via
+App)](#checking-feature-dependencies-via-app)).
 
 
 <!-- *** SECTION ********************************************************************************  -->
