@@ -139,7 +139,7 @@ end" of your features!** _Go forth and compute!!_
 - [Cross Feature Communication](#cross-feature-communication)
   * [publicFace and the App Object](#publicface-and-the-app-object)
   * [Accessing the App Object](#accessing-the-app-object)
-    - [managedExpansion()](#managedexpansion)
+    - [Managed Code Expansion](#managed-code-expansion)
     - [App Access Summary](#app-access-summary)
 - [Single Source of Truth](#single-source-of-truth)
   * [Feature Name](#feature-name)
@@ -170,10 +170,7 @@ end" of your features!** _Go forth and compute!!_
 
 WORKING TOC: ********************************************************************************
 
-- ??$$$ Feature Enablement ... brief section that summarizes this item
-
-- ??$$$ facilitate single-source-of-truth within a feature's implementation
-
+- ??$$ Feature Enablement ... brief section that summarizes this item
 
 - ? extending via Aspects
   * ? use other published npm packages
@@ -290,7 +287,16 @@ feature-u was developed!
 
    **Solution:** Feature Enablement ??link/this-is-new
 
-1. ??$$$ in-line code expansion and dependency order issues ... managedExpansion()
+1. **Resource Resolution during Code Expansion:**
+
+   There are situations where resource access can be problematic. This
+   is typically a **timing issue**, _during in-line code expansion_,
+   where the resource is not fully defined YET.  This **ultimately is
+   due to order dependencies** across features.  
+
+   **_How can this problem be minimized?_**
+   
+   **Solution:** [Managed Code Expansion](#managed-code-expansion)
 
 1. **Framework Integration:**
 
@@ -773,7 +779,7 @@ exposed/used, and **b:** your features become truly plug-and-play.
 Let's see how Cross Communication is accomplished in feature-u:
   * [publicFace and the App Object](#publicface-and-the-app-object)
   * [Accessing the App Object](#accessing-the-app-object)
-    - [managedExpansion()](#managedexpansion)
+    - [Managed Code Expansion](#managed-code-expansion)
     - [App Access Summary](#app-access-summary)
 
 
@@ -905,11 +911,11 @@ The App object can be accessed in several different ways.
 
 3. There is a third technique to access the App object, that provides
    **early access** _during code expansion time_, that is provided
-   through the [managedExpansion()](#managedexpansion) function (_see
+   through [Managed Code Expansion](#managed-code-expansion) (_see
    next section_).
 
 
-### managedExpansion()
+### Managed Code Expansion
 
 In the previous discussion, we detailed two ways to access the App
 object, and referred to a third technique (_discussed here_).
