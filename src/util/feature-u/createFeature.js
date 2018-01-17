@@ -17,8 +17,11 @@ const noOp = () => null;
  * @param {string} name the feature name, used in
  * programmatically delineating various features (ex: 'views').
  *
- * @param {boolean} [enabled=true] an indicator as to
- * whether this feature is enabled (true) or not (false).
+ * @param {boolean} [enabled=true] an indicator as to whether this
+ * feature is enabled (true) or not (false).  When used, this
+ * indicator is typically based on a dynamic expression, allowing
+ * packaged code to be dynamically enabled/disabled at run-time
+ * _(please refer to: [Feature Enablement](#feature-enablement))_.
  *
  * @param {Any} [publicFace] an optional resource exposed in
  * app.{featureName}.{publicFace} (emitted from launchApp()),

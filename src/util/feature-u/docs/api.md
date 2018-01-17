@@ -8,7 +8,7 @@ Create a new Feature object, accumulating Aspect content to be consumedby launc
 | Param | Type | Default | Description |
 | --- | --- | --- | --- |
 | name | string |  | the feature name, used in programmatically delineating various features (ex: 'views'). |
-| [enabled] | boolean | <code>true</code> | an indicator as to whether this feature is enabled (true) or not (false). |
+| [enabled] | boolean | <code>true</code> | an indicator as to whether this feature is enabled (true) or not (false).  When used, this indicator is typically based on a dynamic expression, allowing packaged code to be dynamically enabled/disabled at run-time _(please refer to: [Feature Enablement](#feature-enablement))_. |
 | [publicFace] | Any |  | an optional resource exposed in app.{featureName}.{publicFace} (emitted from launchApp()), promoting cross-communication between features.  Please refer to the feature-u `publicFace` documentation for more detail. |
 | [appWillStart] | [`appWillStartCB`](#appWillStartCB) |  | an optional app life-cycle hook invoked one time, just before the app starts up.  This life-cycle hook can do any type of initialization, and/or optionally supplement the app's top-level content (using a non-null return).  Please refer to the feature-u `App Life Cycle Hooks` documentation for more detail. |
 | [appDidStart] | [`appDidStartCB`](#appDidStartCB) |  | an optional app life-cycle hook invoked one time, immediately after app has started.  Because the app is up-and-running at this time, you have access to the appState and the dispatch() function ... assuming you are using redux (when detected by feature-u's plugable aspects).  Please refer to the feature-u `App Life Cycle Hooks` documentation for more detail. |

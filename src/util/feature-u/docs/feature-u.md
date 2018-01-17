@@ -548,37 +548,26 @@ object properties (via `createFeature()`).
 
 - `Feature.name`
   
-  ?? pull from JavaDoc ... discuss uniqueness and useages for single-source of truth ?? REFERENCE OTHER PARTS-OF-DOC
+  ??$$ pull from JavaDoc ... discuss uniqueness and useages for single-source of truth ?? REFERENCE OTHER PARTS-OF-DOC
 
   
 - `Feature.enabled`
-  
-  Each feature has an `Feature.enabled` boolean property that determines
-  whether it is enabled or not.  This indicator is typically based on a
-  dynamic expression.
 
-  This allows packaged code to be dynamically enabled/disabled at
-  run-time, and is useful in a number of different situations.  For
-  example:
-
-  - some features may only be enabled for paid clients
-
-  - other features may only be used for diagnostic purposes, and are
-    disabled by default
-
-  If need be you can use the App object to determine if a feature is
-  present or not (see: [Checking Feature Dependencies (via
-  App)](#checking-feature-dependencies-via-app)).
+  Each feature has an `Feature.enabled` boolean property that
+  determines whether it is enabled or not.  This indicator is
+  typically based on a dynamic expression, allowing packaged code to
+  be dynamically enabled/disabled at run-time _(please refer to:
+  [Feature Enablement](#feature-enablement))_.
 
   
 - `Feature.publicFace`
   
-  ?? pull from JavaDoc ... ?? REFERENCE OTHER PARTS-OF-DOC
+  ??$$ pull from JavaDoc ... ?? REFERENCE OTHER PARTS-OF-DOC
 
   
 - `Feature.appWillStart`
   
-  ?? pull from JavaDoc ... ?? REFERENCE application life cycle
+  ??$$ pull from JavaDoc ... ?? REFERENCE application life cycle
 
   
 - `Feature.appDidStart`
