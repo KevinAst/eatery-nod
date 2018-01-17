@@ -34,12 +34,12 @@ const noOp = () => null;
  * `app.{featureName}.{publicFace}` _(please refer to: [publicFace and
  * the App Object](#publicface-and-the-app-object))_.
  *
- * @param {appWillStartCB} [appWillStart] an optional app life-cycle
- * hook invoked one time, just before the app starts up.  This
- * life-cycle hook can do any type of initialization, and/or
- * optionally supplement the app's top-level content (using a non-null
- * return).  Please refer to the feature-u `App Life Cycle Hooks`
- * documentation for more detail.
+ * @param {appWillStartCB} [appWillStart] an optional [Application
+ * Life Cycle Hook](#application-life-cycle-hooks) invoked one time,
+ * just before the app starts up.  This life-cycle hook can do any
+ * type of initialization, and/or optionally supplement the app's
+ * top-level content (using a non-null return) _(please refer to:
+ * [appWillStart](#appwillstart))_.
  *
  * @param {appDidStartCB} [appDidStart] an optional app life-cycle
  * hook invoked one time, immediately after app has started.  Because

@@ -576,8 +576,12 @@ object properties (via `createFeature()`).
   
 - `Feature.appWillStart`
   
-  ??$$ pull from JavaDoc ... ?? REFERENCE application life cycle
-
+  An optional [Application Life Cycle
+  Hook](#application-life-cycle-hooks) invoked one time, just before
+  the app starts up.  This life-cycle hook can do any type of
+  initialization, and/or optionally supplement the app's top-level
+  content (using a non-null return) _(please refer to:
+  [appWillStart](#appwillstart))_.
   
 - `Feature.appDidStart`
   
