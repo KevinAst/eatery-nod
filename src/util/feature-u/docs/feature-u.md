@@ -567,7 +567,11 @@ object properties (via `createFeature()`).
   
 - `Feature.publicFace`
   
-  ??$$ pull from JavaDoc ... ?? REFERENCE OTHER PARTS-OF-DOC
+  An optional resource object that is the feature's Public API,
+  promoting cross-communication between features.  This object is
+  exposed through the App object as: `app.{featureName}.{publicFace}`
+  _(please refer to: [publicFace and the App
+  Object](#publicface-and-the-app-object))_.
 
   
 - `Feature.appWillStart`

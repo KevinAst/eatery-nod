@@ -28,10 +28,11 @@ const noOp = () => null;
  * packaged code to be dynamically enabled/disabled at run-time
  * _(please refer to: [Feature Enablement](#feature-enablement))_.
  *
- * @param {Any} [publicFace] an optional resource exposed in
- * app.{featureName}.{publicFace} (emitted from launchApp()),
- * promoting cross-communication between features.  Please refer to
- * the feature-u `publicFace` documentation for more detail.
+ * @param {Any} [publicFace] an optional resource object that is the
+ * feature's Public API, promoting cross-communication between
+ * features.  This object is exposed through the App object as:
+ * `app.{featureName}.{publicFace}` _(please refer to: [publicFace and
+ * the App Object](#publicface-and-the-app-object))_.
  *
  * @param {appWillStartCB} [appWillStart] an optional app life-cycle
  * hook invoked one time, just before the app starts up.  This
