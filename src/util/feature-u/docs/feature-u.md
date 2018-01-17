@@ -233,7 +233,6 @@ src/
         ScreenA2.js
       index.js        ... promotes featureA object using createFeature()
       logic.js
-      publicFace.js
       reducer.js
       route.js
 
