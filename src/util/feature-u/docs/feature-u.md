@@ -254,7 +254,6 @@ Each feature promotes it's aspects through a Feature object (using
 **`src/feature/featureA/index.js`**
 ```js
 import {createFeature}  from 'feature-u';
-import publicFace       from './publicFace';
 import reducer          from './state';
 import logic            from './logic';
 import route            from './route';
