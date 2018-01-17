@@ -87,7 +87,7 @@ The benefits of using **feature-u** include:
 
 - **Feature Enablement** _enable/disable features through a run-time switch_
 
-- **App Life Cycle Hooks** _features can initialize themselves without
+- **Application Life Cycle Hooks** _features can initialize themselves without
   relying on an external process_
 
 - **Single Source of Truth** is facilitated in a number of ways
@@ -129,16 +129,16 @@ end" of your features!** _Go forth and compute!!_
   * [Real Example](#real-example)
 - [Why feature-u](#why-feature-u)
 - [A Closer Look](#a-closer-look)
-- [aspects](#aspects)
-- [Feature Object (relaying aspects)](#feature-object-relaying-aspects)
-  * [Built-In aspects](#built-in-aspects)
-  * [Extendable aspects](#extendable-aspects)
-- [App Object](#app-object)
-  * [Promoting Feature's Public API (via App)](#promoting-features-public-api-via-app)
-  * [Checking Feature Dependencies (via App)](#checking-feature-dependencies-via-app))
-- [Launching Your App](#launching-your-app)
-  * [React Registration](#react-registration)
-- [App Life Cycle Hooks](#app-life-cycle-hooks)
+  * [aspects](#aspects)
+  * [Feature Object (relaying aspects)](#feature-object-relaying-aspects)
+    - [Built-In aspects](#built-in-aspects)
+    - [Extendable aspects](#extendable-aspects)
+  * [Launching Your Application](#launching-your-application)
+    - [React Registration](#react-registration)
+  * [App Object](#app-object)
+    - [Promoting Feature's Public API (via App)](#promoting-features-public-api-via-app)
+    - [Checking Feature Dependencies (via App)](#checking-feature-dependencies-via-app))
+- [Application Life Cycle Hooks](#application-life-cycle-hooks)
   * [appWillStart](#appwillstart)
   * [appDidStart](#appdidstart)
 - [Feature Enablement](#feature-enablement)
@@ -409,7 +409,7 @@ feature-u was developed!
     - dispatch an action that kicks off some startup process
     - etc.
 
-   **Solution:** [App Life Cycle Hooks](#app-life-cycle-hooks)
+   **Solution:** [Application Life Cycle Hooks](#application-life-cycle-hooks)
 
 1. **Feature Enablement:**
 
@@ -440,7 +440,7 @@ feature-u was developed!
    How are the resources needed by these frameworks acumulated and
    configured across the many features of your app?
 
-   **Solution:** [Extendable aspects](#extendable-aspects) -and- [Launching Your App](#launching-your-app)
+   **Solution:** [Extendable aspects](#extendable-aspects) -and- [Launching Your Application](#launching-your-application)
 
 1. **UI Component Promotion:**
 
@@ -466,7 +466,7 @@ feature-u was developed!
    turns out, however, because of the structure promoted by feature-u,
    it actually is a very simple process.
 
-   **Solution:** [Launching Your App](#launching-your-app)
+   **Solution:** [Launching Your Application](#launching-your-application)
 
 
 
@@ -686,81 +686,8 @@ you a feel of what is possible_).
   details.
 
 
-
 <!-- *** SECTION ********************************************************************************  -->
-## App Object
-
-The App object is emitted from `launchApp()` function, and promotes
-information about the Features within the app:
-
-- both the [feature's public API](#promoting-features-public-api-via-app)
-- and [whether a feature exists or not](#checking-feature-dependencies-via-app)
-
-### Promoting Feature's Public API (via App)
-
-The App object promotes the feature's Public API (i.e. it's
-publicFace).
-
-The project's mainline function should export the app object (i.e. the
-return of `launchApp()`), so other modules can access it.  Please note
-that depending on the context, there are various techniques by which
-the App object can be accessed (see: [Accessing the App
-Object](#accessing-the-app-object)).
-
-The App object is structured as follows:
-
-```js
-App.{featureName}.{publicFace}
-```
-
-As an example, an application that has two features (featureA, and
-featureB) will look like this:
-
-```js
-app: {
-  featureA: {
-    action: {
-      open(),
-      close()
-    }
-  },
-  featureB: {
-  }
-}
-```
-
-You can see that featureA is promoting a couple of actions (open(),
-close()) in it's publicFace, while featureB has NO publicFace.
-
-
-### Checking Feature Dependencies (via App)
-
-The App object can be used to determine if a feature is present or
-not.  If a feature does not exist, or has been disabled, the
-corresponding `app.{featureName}` will NOT exist.
-
- - It could be that `featureA` will conditionally use `featureB` if it
-   is present.
-
-   ```js
-   if (app.featureB) {
-     ... do something featureB related
-   }
-   ```
-
- - It could be that `featureC` unconditionally requires that `featureD`
-   is present.  This can be checked in the `appWillStart()` life cycle
-   hook.
-
-   ```js
-   appWillStart({app, curRootAppElm}) {
-     assert(app.featureD, '***ERROR*** I NEED featureD');
-   }
-   ```
-
-
-<!-- *** SECTION ********************************************************************************  -->
-## Launching Your App
+## Launching Your Application
 
 By assimilating the set of features that comprise an application,
 interpreting each feature aspect, **feature-u** can actually
@@ -876,10 +803,80 @@ export default launchApp({
 ```
 
 
+<!-- *** SECTION ********************************************************************************  -->
+## App Object
+
+The App object is emitted from `launchApp()` function, and promotes
+information about the Features within the app:
+
+- both the [feature's public API](#promoting-features-public-api-via-app)
+- and [whether a feature exists or not](#checking-feature-dependencies-via-app)
+
+### Promoting Feature's Public API (via App)
+
+The App object promotes the feature's Public API (i.e. it's
+publicFace).
+
+The project's mainline function should export the app object (i.e. the
+return of `launchApp()`), so other modules can access it.  Please note
+that depending on the context, there are various techniques by which
+the App object can be accessed (see: [Accessing the App
+Object](#accessing-the-app-object)).
+
+The App object is structured as follows:
+
+```js
+App.{featureName}.{publicFace}
+```
+
+As an example, an application that has two features (featureA, and
+featureB) will look like this:
+
+```js
+app: {
+  featureA: {
+    action: {
+      open(),
+      close()
+    }
+  },
+  featureB: {
+  }
+}
+```
+
+You can see that featureA is promoting a couple of actions (open(),
+close()) in it's publicFace, while featureB has NO publicFace.
+
+
+### Checking Feature Dependencies (via App)
+
+The App object can be used to determine if a feature is present or
+not.  If a feature does not exist, or has been disabled, the
+corresponding `app.{featureName}` will NOT exist.
+
+ - It could be that `featureA` will conditionally use `featureB` if it
+   is present.
+
+   ```js
+   if (app.featureB) {
+     ... do something featureB related
+   }
+   ```
+
+ - It could be that `featureC` unconditionally requires that `featureD`
+   is present.  This can be checked in the `appWillStart()` life cycle
+   hook.
+
+   ```js
+   appWillStart({app, curRootAppElm}) {
+     assert(app.featureD, '***ERROR*** I NEED featureD');
+   }
+   ```
 
 
 <!-- *** SECTION ********************************************************************************  -->
-## App Life Cycle Hooks
+## Application Life Cycle Hooks
 
 Because feature-u is in control of launching the app, application life
 cycle hooks can be introduced, allowing features to perform
