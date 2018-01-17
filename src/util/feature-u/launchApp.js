@@ -243,8 +243,8 @@ export default function launchApp({aspects=[],
  * application element to the specific React framework used in the app.
  *
  * Because this registration is accomplished by app-specific code,
- * feature-u can operate in any number of the react flavors, such as:
- * React Web, React Native, Expo, etc.
+ * feature-u can operate in any of the React flavors, such as: React
+ * Web, React Native, Expo, etc. (see: **React Registration**).
  * 
  * **NOTE on rootAppElm:**
  * 

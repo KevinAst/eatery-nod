@@ -22,8 +22,8 @@ However, there are some issues yet to be resolved ...
   allowing them to collaborate with one another?
 
 - How can selected features introduce start-up initialization, without
-  relying on a global startup process (_even injecting utility service
-  in the root DOM_)?
+  relying on a global startup process (_even injecting utility at the
+  root DOM_)?
 
 - How do you promote feature-based UI components in an isolated and
   autonomous way?
@@ -37,7 +37,7 @@ However, there are some issues yet to be resolved ...
 - How do you pull it all together so that your individual features
   operate as one application?
 
-**_the Goal (what now?) ..._**
+**_what now? (the Goal) ..._**
 
 The **overriding goal** of **feature-u** is actually two fold:
 
@@ -107,6 +107,10 @@ The benefits of using **feature-u** include:
   configuring the frameworks in use, all driven by a simple set of
   features!_
 
+- **Operates in any React Flavor** _(React Web, React Native, Expo,
+  etc.)_
+
+
 <!-- ?? trash (I think):
 - **Manages Feature Aspects** _accumulation, setup, configure, etc._
 -->
@@ -133,6 +137,7 @@ end" of your features!** _Go forth and compute!!_
   * [Promoting Feature's Public API (via App)](#promoting-features-public-api-via-app)
   * [Checking Feature Dependencies (via App)](#checking-feature-dependencies-via-app))
 - [Launching Your App](#launching-your-app)
+  * [React Registration](#react-registration)
 - [App Life Cycle Hooks](#app-life-cycle-hooks)
   * [appWillStart](#appwillstart)
   * [appDidStart](#appdidstart)
@@ -185,45 +190,176 @@ WORKING TOC: *******************************************************************
 
 The basic usage pattern of feature-u is to:
 
- - Determine the external frameworks your app will be using.  This
-   defines your application run-time stack, and dictates the set of
-   feature-u Aspects that will be used.  Aspects are feature-u
-   extensions points, and extend the available properties found on the
-   Feature object.
+1. Determine the Aspects that you will be using, based on your
+   frameworks in use (i.e. your run-time stack).  This determines the
+   extended aspects accepted by the Feature object (for example:
+   `Feature.reducer` for [redux], and `Feature.logic` for [redux-logic]).
 
- - Organize your app into features.
+   Typically these Aspects are packaged seperatly in NPM, although you
+   can create your own Aspects (if needed).
 
-   * Each feature is found in it's own seperate directory.
+1. Organize your app into features.
+
+   * Each feature should be located in it's own directory.
 
    * How you break your app up into features will take some time and
      throught.  There are many ways to approach this from a design
      perspective.
 
-   * Each feature catalogs and promotes the various aspects of
-     itself through a formal Feature object (using createFeature()).
+   * Each feature promotes it's aspects through a formal Feature
+     object (using `createFeature()`).
 
- - All Aspect and Feature objects are accumulated and supplied to the
-   launchApp() function that starts your app running.
+1. Your mainline starts the app by invoking `launchApp()`, passing all
+   Aspects and Features.  **Easy Peasy!!**
+
 
 ### Directory Structure
 
-Here is a typical directory structure of an app that uses feature-u:
+Here is a sample directory structure of an app that uses **feature-u**:
 
-??$$ SAMPLE DIR
+```
+src/
+  app.js              ... launches app using launchApp()
 
-Each feature is located in it's own directory, and promotes it's
-characteristics through a Feature object (using createFeature()).
+  feature/
+    index.js          ... accumulate/promote all app features
+
+    featureA/         ... an app feature
+      actions.js
+      appDidStart.js
+      appWillStart.js
+      comp/
+        ScreenA1.js
+        ScreenA2.js
+      index.js        ... promotes featureA object using createFeature()
+      logic.js
+      publicFace.js
+      reducer.js
+      route.js
+
+    featureB/         ... another app feature
+      ...
+
+  util/               ... common utilities used across all features
+    ...
+```
+
+Each feature is located in it's own directory, containing it's aspects
+(actions, reducers, components, routes, logic, etc.).
 
 ### Feature Object
 
-??$$ show createFeature()
+Each feature promotes it's aspects through a Feature object (using
+`createFeature()`).
 
-You can see that featureA defines ?? bla bla bla ?? we will fill in
-more detail later, but for now, just notice that ?? bla bla bla
+**`src/feature/featureA/index.js`**
+```js
+import {createFeature}  from 'feature-u';
+import publicFace       from './publicFace';
+import reducer          from './state';
+import logic            from './logic';
+import route            from './route';
+import appWillStart     from './appWillStart';
+import appDidStart      from './appDidStart';
+
+export default createFeature({
+  name:     'featureA',
+  enabled:  true,
+
+  publicFace: {
+    api: {
+      open:  () => ... implementation omitted,
+      close: () => ... implementation omitted,
+    },
+  },
+
+  reducer,
+  logic,
+  route,
+
+  appWillStart,
+  appDidStart,
+});
+```
+
+We will fill in more detail a bit later, but for now notice that
+featureA defines reducers, logic modules, routes, and does some type
+of initialization (appWillStart/appDidStart).  It also promotes a
+publicFace (open/close) to other features.
+
 
 ### launchApp()
 
-??$$ bla bla bla
+The **application mainline**, merely collects all aspects and
+features, and starts the app by invoking `launchApp()`:
+
+**`src/app.js`**
+```js
+import React             from 'react';
+import ReactDOM          from 'react-dom';
+import {routeAspect}     from './util/feature-u/aspect/feature-u-state-router';
+import {reducerAspect}   from './util/feature-u/aspect/feature-u-redux';
+import {logicAspect}     from './util/feature-u/aspect/feature-u-redux-logic';
+import {launchApp}       from './util/feature-u';
+import SplashScreen      from './util/comp/SplashScreen';
+import features          from './feature'; // the set of features that comprise this application
+
+
+// define our set of "plugable" feature-u Aspects, conforming to our app's run-time stack
+const aspects = [
+  routeAspect,   // StateRouter ... order: early, because <StateRouter> DOM injection does NOT support children
+  reducerAspect, // redux       ... order: later, because <Provider> DOM injection should cover all prior injections
+  logicAspect,   // redux-logic ... order: N/A,   because NO DOM injection
+];
+
+
+// configure our Aspects (as needed)
+// ... StateRouter fallback screen (when no routes are in effect)
+routeAspect.fallbackElm = <SplashScreen msg="I'm trying to think but it hurts!"/>;
+
+
+// launch our app, exposing the feature-u App object (facilitating cross-feature communication)!
+export default launchApp({
+  aspects,
+  features,
+  registerRootAppElm(rootAppElm) {
+    ReactDOM.render(rootAppElm,
+                    getElementById('myAppRoot'));
+  }
+});
+```
+
+**NOTE:** The returned App object accumulates the publicFace of all
+features (in named feature nodes), and is exported in order to support
+cross-communication between features (_please refer to_ [Accessing the
+App Object](#accessing-the-app-object)):
+
+```js
+app: {
+  featureA: {
+    api: {
+      open(),
+      close(),
+    },
+  },
+  featureB: {
+    ...
+  },
+}
+```
+
+**Also NOTE:** In the example above you can see that `launchApp()`
+uses a `registerRootAppElm()` callback hook to register the supplied
+`rootAppElm` to the specific React framework in use.  Because this
+registration is accomplished by app-specific code, **feature-u** can
+operate in any of the React flavors, such as: React Web, React Native,
+Expo, etc. (_please refer to:_ [React
+Registration](#react-registration)).
+
+
+Hopefully this gives you the basic idea of how **feature-u** operates.
+The following sections develop a more thorough understanding! _Go
+forth and compute!!_
 
 
 ### Real Example
@@ -652,7 +788,7 @@ executable code!!
 **`src/app.js`**
 ```js
 import React             from 'react';
-import Expo              from 'expo';
+import ReactDOM          from 'react-dom';
 import {routeAspect}     from './util/feature-u/aspect/feature-u-state-router';
 import {reducerAspect}   from './util/feature-u/aspect/feature-u-redux';
 import {logicAspect}     from './util/feature-u/aspect/feature-u-redux-logic';
@@ -679,13 +815,68 @@ export default launchApp({
   aspects,
   features,
   registerRootAppElm(rootAppElm) {
+    ReactDOM.render(rootAppElm,
+                    getElementById('myAppRoot'));
+  }
+});
+```
+
+The returned App object accumulates the publicFace of all features (in
+named feature nodes), and is exported in order to support
+cross-communication between features (_please refer to_ [Accessing the
+App Object](#accessing-the-app-object)):
+
+
+### React Registration
+
+In the example above you can see that `launchApp()` uses a
+`registerRootAppElm()` callback hook to register the supplied
+`rootAppElm` to the specific React framework in use.  Because this
+registration is accomplished by app-specific code, **feature-u** can
+operate in any of the React flavors, such as: React Web, React Native,
+Expo, etc.
+
+**React Web**
+```js
+import ReactDOM from 'react-dom';
+...
+export default launchApp({
+  aspects,
+  features,
+  registerRootAppElm(rootAppElm) {
+    ReactDOM.render(rootAppElm,
+                    getElementById('myAppRoot'));
+  }
+});
+```
+
+**React Native**
+```js
+import {AppRegistry} from 'react-native';
+...
+export default launchApp({
+  aspects,
+  features,
+  registerRootAppElm(rootAppElm) {
+    AppRegistry.registerComponent('myAppKey',
+                                  ()=>rootAppElm); // convert rootAppElm to a React Component
+  }
+});
+```
+
+**Expo**
+```js
+import Expo from 'expo';
+...
+export default launchApp({
+  aspects,
+  features,
+  registerRootAppElm(rootAppElm) {
     Expo.registerRootComponent(()=>rootAppElm); // convert rootAppElm to a React Component
   }
 });
 ```
 
-Please note that the returned App object should be exported, exposing
-it to other modules within your application.
 
 
 
