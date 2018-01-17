@@ -547,17 +547,22 @@ Like all aspects, Built-In aspect content is relayed through Feature
 object properties (via `createFeature()`).
 
 - `Feature.name`
-  
-  ??$$ pull from JavaDoc ... discuss uniqueness and useages for single-source of truth ?? REFERENCE OTHER PARTS-OF-DOC
 
-  
+  A string property which represents the identity of the feature.
+  Feature names are used to index the [App Object](#app-object) by
+  feature _(in support of [Cross Feature
+  Communication](#cross-feature-communication))_, and are therefore
+  guaranteed to be unique.  Application code can also use [Feature
+  Name](#feature-name) in various [Single Source of
+  Truth](#single-source-of-truth) operations.
+
+
 - `Feature.enabled`
 
-  Each feature has an `Feature.enabled` boolean property that
-  determines whether it is enabled or not.  This indicator is
-  typically based on a dynamic expression, allowing packaged code to
-  be dynamically enabled/disabled at run-time _(please refer to:
-  [Feature Enablement](#feature-enablement))_.
+  A boolean property that determines whether it is enabled or not.
+  This indicator is typically based on a dynamic expression, allowing
+  packaged code to be dynamically enabled/disabled at run-time
+  _(please refer to: [Feature Enablement](#feature-enablement))_.
 
   
 - `Feature.publicFace`
@@ -942,7 +947,7 @@ appDidStart({app, appState, dispatch}) {
 <!-- *** SECTION ********************************************************************************  -->
 ## Feature Enablement
 
-Each feature has an `Feature.enabled` boolean property that determines
+Each feature has a `Feature.enabled` boolean property that determines
 whether it is enabled or not.  This indicator is typically based on a
 dynamic expression.
 

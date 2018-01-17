@@ -14,9 +14,14 @@ const noOp = () => null;
  *
  * **Please Note** `createFeature()` accepts named parameters.
  *
- * @param {string} name the feature name, used in
- * programmatically delineating various features (ex: 'views').
- *
+ * @param {string} name the identity of the feature.  Feature names
+ * are used to index the [App Object](#app-object) by feature _(in
+ * support of [Cross Feature
+ * Communication](#cross-feature-communication))_, and are therefore
+ * guaranteed to be unique.  Application code can also use [Feature
+ * Name](#feature-name) in various [Single Source of
+ * Truth](#single-source-of-truth) operations.
+ * 
  * @param {boolean} [enabled=true] an indicator as to whether this
  * feature is enabled (true) or not (false).  When used, this
  * indicator is typically based on a dynamic expression, allowing
