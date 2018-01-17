@@ -585,7 +585,13 @@ object properties (via `createFeature()`).
   
 - `Feature.appDidStart`
   
-  ?? pull from JavaDoc ... ?? REFERENCE application life cycle
+  An optional [Application Life Cycle
+  Hook](#application-life-cycle-hooks) invoked one time, immediately
+  after the app has started.  Because the app is up-and-running at
+  this time, you have access to the appState and the dispatch()
+  function ... assuming you are using redux (when detected by
+  feature-u's plugable aspects) _(please refer to:
+  [appDidStart](#appdidstart))_.
 
 
 ### Extendable aspects

@@ -41,13 +41,13 @@ const noOp = () => null;
  * top-level content (using a non-null return) _(please refer to:
  * [appWillStart](#appwillstart))_.
  *
- * @param {appDidStartCB} [appDidStart] an optional app life-cycle
- * hook invoked one time, immediately after app has started.  Because
- * the app is up-and-running at this time, you have access to the
- * appState and the dispatch() function ... assuming you are using
- * redux (when detected by feature-u's plugable aspects).  Please
- * refer to the feature-u `App Life Cycle Hooks` documentation for
- * more detail.
+ * @param {appDidStartCB} [appDidStart] an optional [Application Life
+ * Cycle Hook](#application-life-cycle-hooks) invoked one time,
+ * immediately after the app has started.  Because the app is
+ * up-and-running at this time, you have access to the appState and
+ * the dispatch() function ... assuming you are using redux (when
+ * detected by feature-u's plugable aspects) _(please refer to:
+ * [appDidStart](#appdidstart))_.
  * 
  * @param {Aspect} [pluggableAspects] additional aspects, as defined
  * by the feature-u's pluggable Aspect extension.
