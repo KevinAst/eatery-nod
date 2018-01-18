@@ -52,7 +52,7 @@ Launch an app by assembling the supplied features, driving theconfiguration of 
 <a name="createAspect"></a>
 
 ## createAspect(name, [validateConfiguration], [expandFeatureContent], validateFeatureContent, assembleFeatureContent, [assembleAspectResources], [injectRootAppElm], [additionalMethods]) ⇒ [`Aspect`](#Aspect)
-Create an Aspect object, used to extend feature-u.**Note on App Promotion**: You will notice that the App object isconsistently supplied thoughout the various Aspect methods.  TheApp object is used in promoting cross-communiction betweenfeatures.  While it is most likely an anti-pattern to interaget theApp object directly in the Aspect, it is needed as to "passthrough" to downwstream processes (i.e. as an opaque object).**This is the reason the App object is supplied**.  As examples ofthis: - The "logic" aspect will dependancy inject (DI) the App object   into the redux-logic process. - The "route" aspect communcates the app in it's API (i.e. passes   it through). - etc.**Please Note**: `createAspect()` accepts named parameters.
+Create an Aspect object, used to extend feature-u.The Aspect object promotes a series of life-cycle methods that**feature-u** invokes in a controlled way.  This life-cycle iscontrolled by `launchApp()` _... it is supplied the Aspects, and itinvokes their methods._The essential characteristics of the Aspect life-cycle is to:- accumulate aspect content across all features- perform the desired setup and configuration- expose the framework in some way _(by injecting a component in the  root DOM, or some "aspect cross-communication mechanism")_Typically the Aspect object will need to retain state between theselife-cycle methods in order to do it's job.Some Aspects may rely on an "aspect cross-communication mechanism" toaccomplish it's work.  This is merely a proprietary Aspect method whichis documented and consumed by another Aspect.  Please refer to[Aspect.additionalMethods()](#aspectadditionalmethods).**Please Note**: `createAspect()` accepts named parameters.  Theorder in which these items are presented represents the same orderthey are executed.
 
 
 | Param | Type | Description |
@@ -125,9 +125,9 @@ The content (or payload) of an Aspect, specified within a Feature.An Aspect ac
 <a name="validateConfigurationMeth"></a>
 
 ## validateConfigurationMeth ⇒ string
-A validation hook allowing this aspect to verify it's own requiredconfiguration (if any).  Some aspects may require certain settingsin self for them to operate.NOTE: To better understand the context in which any returned      validation messages are used, feature-u will prefix them      with: 'launchApp() parameter violation: '
+A validation hook allowing this aspect to verify it's own requiredconfiguration (if any).  Some aspects may require certain settingsin self for them to operate.
 
-**Returns**: string - an error message when self is in an invalid state(falsy when valid).  
+**Returns**: string - an error message when self is in an invalid state(falsy when valid).  Because this validation occurs under thecontrol of `launchApp()`, any message is prefixed with:`'launchApp() parameter violation: '`.  
 <a name="expandFeatureContentMeth"></a>
 
 ## expandFeatureContentMeth ⇒ string
@@ -143,14 +143,14 @@ Expand self's AspectContent in the supplied feature, replacing thatcontent (wit
 <a name="validateFeatureContentMeth"></a>
 
 ## validateFeatureContentMeth ⇒ string
-A validation hook allowing this aspect to verify it's content onthe supplied feature.NOTE: To better understand the context in which any returned      validation messages are used, feature-u will prefix them      with: 'createFeature() parameter violation: '
+A validation hook allowing this aspect to verify it's content onthe supplied feature.
 
 
 | Param | Type | Description |
 | --- | --- | --- |
 | feature | Feature | the feature to validate, which is known to contain this aspect. |
 
-**Returns**: string - an error message when the supplied featurecontains invalid content for this aspect (falsy when valid).  
+**Returns**: string - an error message string when the supplied featurecontains invalid content for this aspect (falsy when valid).Because this validation conceptually occurs under the control of`createFeature()`, any message is prefixed with: `'createFeature()parameter violation: '`.  
 <a name="assembleFeatureContentMeth"></a>
 
 ## assembleFeatureContentMeth : function
