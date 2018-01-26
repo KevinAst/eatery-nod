@@ -57,12 +57,14 @@ The **overriding goal** of **feature-u** is actually two fold:
 
 **_the Process ..._**
 
-The basic process of feature-u is for each feature to promote a
-`Feature` object that relays the various aspects within that feature.
-In turn, these Feature objects are supplied to `launchApp()`, which
-configures and starts your application, returning the [App
-Object](#app-object) (_which promotes the public API of each
-feature_).
+The basic process of feature-u is that each feature promotes a
+`Feature` object that contains various aspects of that feature
+... _things like: the feature's name, it's Public API, whether it is
+enabled, initialization constructs, and resources used in configuring
+it's slice of the frameworks in use._ In turn, these Feature objects
+are supplied to `launchApp()`, which configures and starts your
+application, returning the [App Object](#app-object) (_which promotes
+the public API of each feature_).
 
 <ul>
 
@@ -413,7 +415,7 @@ feature-u was developed!
 
    You may have the need for selected features to be dynamically
    enabled or disabled.  As an example, certain features may only be
-   enabled for paid clients, or other features may only be used for
+   enabled with a license upgrade, or other features may only be used for
    diagnostic purposes.
 
    **Solution:** [Feature Enablement](#feature-enablement)
@@ -446,7 +448,7 @@ feature-u was developed!
    them in the overall app's GUI.  How is this acomplished in an
    autonomous way?
 
-   **Solution:** Feature Based Route Management (via the pluggable feature-u-state-router routeAspect) ??link-to-external-package
+   **Solution:** Feature Based Route Management (via the pluggable **feature-u-state-router** `routeAspect`)
 
 1. **Single Source of Truth:**
 
@@ -460,7 +462,7 @@ feature-u was developed!
    After breaking your application into pieces (i.e. features), how do
    you pull it all together, and actually start your app running?
 
-   From an initial glance, this may seem like a daunting task.  As it
+   At first glance, this may seem like a daunting task.  As it
    turns out, however, because of the structure promoted by feature-u,
    it actually is a very simple process.
 
@@ -889,7 +891,7 @@ cycle hooks can be introduced, allowing features to perform
 app-specific initialization, and even inject components into the
 root of the app.
 
-Two hooks are provided through the following feature properties:
+Two hooks are provided through the following Feature properties:
 
 1. [**appWillStart**](#appwillstart) - invoked one time at app startup time
 2. [**appDidStart**](#appdidstart)   - invoked one time immediatly after app has started
@@ -967,7 +969,7 @@ This allows packaged code to be dynamically enabled/disabled at
 run-time, and is useful in a number of different situations.  For
 example:
 
-- some features may only be enabled for paid clients
+- some features may require a license upgrade
 
 - other features may only be used for diagnostic purposes, and are
   disabled by default

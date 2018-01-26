@@ -7,7 +7,7 @@ import SideBar,
 /**
  * Inject our Drawer/SideBar component at the root of our app, using
  * API: `injectRootAppElmForStateRouter()` required when using the
- * `routAspect`.
+ * `routeAspect`.
  */
 export default function injectRootAppElmForStateRouter(app, curRootAppElm) {
   return (
