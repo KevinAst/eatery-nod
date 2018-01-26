@@ -1,4 +1,4 @@
-# feature-u-state-router API
+feature-router API
 <a name="featureRoute"></a>
 
 ## featureRoute(content, [priority]) ⇒ [`routeCB`](#routeCB)
@@ -19,7 +19,7 @@ The routeAspect is a **feature-u** plugin that facilitates StateRouterintegrati
 <a name="PRIORITY"></a>
 
 ## PRIORITY : Object
-Route priority defined constants.  This is strictly a convenience,as any integer can be used.Priorities are integer values that are used to minimize a routesregistration order.  Higher priority routes are given precedence(i.e. executed before lower priority routes).  Routes with the samepriority are executed in their registration order.  While apriority can be any integer number, for your convenience, a smallnumber of PRIORITY constants are provided:```jsimport {PRIORITY} from 'feature-u-state-router';// usage:PRIORITY.HIGH     // ... 100PRIORITY.STANDARD // ...  50 ... the default (when NOT specified)PRIORITY.LOW      // ...  10```While priorities can be used to minimize (or even eliminate) theregistration order, typically an application does in fact rely onregistration order and can operate using a small number ofpriorities.  Priorities are particularly useful within feature-u,where a given feature is provided one registration slot, butrequires it's route logic to execute in different priorities.  Inthat case, the feature can promote multiple routes (an array) eachwith their own priority.
+Route priority defined constants.  This is strictly a convenience,as any integer can be used.Priorities are integer values that are used to minimize a routesregistration order.  Higher priority routes are given precedence(i.e. executed before lower priority routes).  Routes with the samepriority are executed in their registration order.  While apriority can be any integer number, for your convenience, a smallnumber of PRIORITY constants are provided:```jsimport {PRIORITY} from 'feature-router';// usage:PRIORITY.HIGH     // ... 100PRIORITY.STANDARD // ...  50 ... the default (when NOT specified)PRIORITY.LOW      // ...  10```While priorities can be used to minimize (or even eliminate) theregistration order, typically an application does in fact rely onregistration order and can operate using a small number ofpriorities.  Priorities are particularly useful within feature-u,where a given feature is provided one registration slot, butrequires it's route logic to execute in different priorities.  Inthat case, the feature can promote multiple routes (an array) eachwith their own priority.
 
 <a name="routeCB"></a>
 

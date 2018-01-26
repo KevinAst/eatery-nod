@@ -1,4 +1,4 @@
-# feature-u-redux-logic API
+feature-redux-logic API
 <a name="logicAspect"></a>
 
 ## logicAspect : Aspect

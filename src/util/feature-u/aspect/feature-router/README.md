@@ -1,6 +1,6 @@
-# feature-u-state-router *(StateRouter integration in feature-u)*
+# feature-router *(StateRouter integration in feature-u)*
 
-**feature-u-state-router** promotes the `route` Aspect (a **feature-u**
+**feature-router** promotes the `route` Aspect (a **feature-u**
 plugin) that facilitates **StateRouter** integration to your
 features _(also referred to as: **Feature Routes**)_.
 
@@ -11,7 +11,7 @@ which determine the active screen based on an analysis of the the
 overall appState.  This is particulary useful in feature-based
 routing, because each feature can promote their own UI components in
 an encapsulated and autonomous way!  Because of this,
-**feature-u-state-router** is a preferred routing solution for
+**feature-router** is a preferred routing solution for
 **feature-u**.
 
 **SideBar:**
@@ -24,7 +24,7 @@ operates under an open plugin architecture where Aspects integrate
 feature-u to other framework/utilities that match your specific
 run-time stack.
 
-**feature-u-state-router** is your **feature-u** integration point to
+**feature-router** is your **feature-u** integration point to
 **StateRouter** _(or **Feature Routes**)_!
 
 </ul>
@@ -56,7 +56,7 @@ run-time stack.
 ## Install
 
 ```shell
-npm install --save feature-u-state-router
+npm install --save feature-router
 ```
 
 **Please Note**: The following **peerDependencies** are in effect:
@@ -67,13 +67,13 @@ npm install --save feature-u-state-router
 
 ## Usage
 
-1. Register the **feature-u-state-router** `routeAspect` through
+1. Register the **feature-router** `routeAspect` through
    **feature-u**'s `launchApp()` (_see: **NOTE 1** below_).
 
    **myAppMain.js**
    ```js
    import {launchApp}    from 'feature-u';
-   import {routeAspect}  from 'feature-u-state-router'; // *** NOTE 1 ***
+   import {routeAspect}  from 'feature-router'; // *** NOTE 1 ***
    import SplashScreen   from './wherever/SplashScreen';
    import features       from './feature';
 
@@ -108,7 +108,7 @@ npm install --save feature-u-state-router
    import React            from 'react';
    import {createFeature}  from 'feature-u';
    import {featureRoute, 
-           PRIORITY}       from 'feature-u-state-router';
+           PRIORITY}       from 'feature-router';
    import * as selector    from './state';
    import SplashScreen     from '~/util/comp/SplashScreen';
    
@@ -134,7 +134,7 @@ The `route` content can either be a single `featureRoute()` or an
 array with varying priorities.
 
 Hopefully this gives you the basic idea of how
-**feature-u-state-router** operates.  The following sections develop a
+**feature-router** operates.  The following sections develop a
 more thorough understanding of StateRouter concepts.  _Go forth and
 compute!_
 
@@ -222,7 +222,7 @@ priorities:
 import React               from 'react';
 import {createFeature}     from 'feature-u';
 import {featureRoute,
-        PRIORITY}          from 'feature-u-state-router';
+        PRIORITY}          from 'feature-router';
 import * as sel            from './state';
 import featureName         from './featureName';
 import EateriesListScreen  from './comp/EateriesListScreen';
@@ -322,7 +322,7 @@ Before you can use `routeAspect` you must first configure the
 are in effect.  Simply set it as follows:
 
 ```js
-import {routeAspect} from 'feature-u-state-router';
+import {routeAspect} from 'feature-router';
 import SplashScreen  from './wherever/SplashScreen';
 ...
 routeAspect.fallbackElm = <SplashScreen msg="I'm trying to think but it hurts!"/>;
@@ -330,7 +330,7 @@ routeAspect.fallbackElm = <SplashScreen msg="I'm trying to think but it hurts!"/
 ```
 
 This configuration is **required**, because it would be problematic
-for **feature-u-state-router** to devise a default _(it doesn't know
+for **feature-router** to devise a default _(it doesn't know
 your app layout, or for that matter if you are a web or react-native
 application)_.
 
@@ -346,7 +346,7 @@ introduced in support of ReactNative animation._ Simply set it as
 follows:
 
 ```js
-import {routeAspect}     from 'feature-u-state-router';
+import {routeAspect}     from 'feature-router';
 import {LayoutAnimation} from 'react-native';
 ...
 routeAspect.componentWillUpdateHook = () => LayoutAnimation.configureNext(LayoutAnimation.Presets.spring);
@@ -355,21 +355,21 @@ routeAspect.componentWillUpdateHook = () => LayoutAnimation.configureNext(Layout
 
 ## Interface Points
 
-**feature-u-state-router** accumulates all the routes from the various
+**feature-router** accumulates all the routes from the various
 features of your app, and registers them to **StateRouter**.  The
 **Aspect Interface** to this process (_i.e. the inputs and outputs_)
 are documented here.
 
 ### Input
 
-- The input to **feature-u-state-router** are routing callback hooks.
+- The input to **feature-router** are routing callback hooks.
   This is specified by each of your features (_that maintain UI
   components_) through the `Feature.route` property, referencing
   functions defined by the `featureRoute()` utility.
 
 ### Exposure
 
-- **feature-u-state-router** promotes your app's active screen by
+- **feature-router** promotes your app's active screen by
   injecting the `StateRouter` component at the at the root of your
   application DOM.  This allows your `route` hooks to specify the
   active screen, based on your application state.

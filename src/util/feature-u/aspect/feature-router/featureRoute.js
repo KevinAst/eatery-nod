@@ -16,7 +16,7 @@ import isFunction     from 'lodash.isfunction';
  * number of PRIORITY constants are provided:
  *
  * ```js
- * import {PRIORITY} from 'feature-u-state-router';
+ * import {PRIORITY} from 'feature-router';
  * 
  * // usage:
  * PRIORITY.HIGH     // ... 100

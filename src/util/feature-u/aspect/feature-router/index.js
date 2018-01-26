@@ -3,14 +3,14 @@ import featureRoute,
        {PRIORITY}        from './featureRoute';
 
 //*** 
-//*** Promote all feature-u-redux utilities through this centralized module.
+//*** Promote all feature-router utilities through this centralized module.
 //*** 
 
 // NOTE: This non-default export supports ES6 imports.
 //       Example:
-//         import { routeAspect }    from 'feature-u-redux';
+//         import { routeAspect }    from 'feature-router';
 //       -or-
-//         import * as FeatureURedux from 'feature-u-redux';
+//         import * as FeatureURedux from 'feature-router';
 export {
   routeAspect,
   featureRoute,
@@ -19,9 +19,9 @@ export {
 
 // NOTE: This default export supports CommonJS modules (otherwise Babel does NOT promote them).
 //       Example:
-//         const { routeAspect } = require('feature-u-redux');
+//         const { routeAspect } = require('feature-router');
 //       -or-
-//         const FeatureURedux = require('feature-u-redux');
+//         const FeatureURedux = require('feature-router');
 export default {
   routeAspect,
   featureRoute,

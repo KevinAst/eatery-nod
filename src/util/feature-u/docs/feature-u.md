@@ -295,9 +295,9 @@ features, and starts the app by invoking `launchApp()`:
 ```js
 import React             from 'react';
 import ReactDOM          from 'react-dom';
-import {routeAspect}     from './util/feature-u/aspect/feature-u-state-router';
-import {reducerAspect}   from './util/feature-u/aspect/feature-u-redux';
-import {logicAspect}     from './util/feature-u/aspect/feature-u-redux-logic';
+import {routeAspect}     from './util/feature-u/aspect/feature-router';
+import {reducerAspect}   from './util/feature-u/aspect/feature-redux';
+import {logicAspect}     from './util/feature-u/aspect/feature-redux-logic';
 import {launchApp}       from './util/feature-u';
 import SplashScreen      from './util/comp/SplashScreen';
 import features          from './feature'; // the set of features that comprise this application
@@ -448,7 +448,7 @@ feature-u was developed!
    them in the overall app's GUI.  How is this acomplished in an
    autonomous way?
 
-   **Solution:** Feature Based Route Management (via the pluggable **feature-u-state-router** `routeAspect`)
+   **Solution:** Feature Based Route Management (via the pluggable **feature-router** `routeAspect`)
 
 1. **Single Source of Truth:**
 
@@ -624,9 +624,9 @@ conjunction with the initial development of **feature-u** (_just to give
 you a feel of what is possible_).
 
 
-- `Feature.reducer` via: **feature-u-redux**
+- `Feature.reducer` via: **feature-redux**
   
-  **feature-u-redux** is the **feature-u** integration point to
+  **feature-redux** is the **feature-u** integration point to
   [redux]!
 
   It configures [redux] through the `reducerAspect` (_to be
@@ -644,17 +644,17 @@ you a feel of what is possible_).
   multiple feature-based reducers in constructing the overall
   top-level application state tree.
 
-  Because **feature-u-redux** manages redux, it also provides an
+  Because **feature-redux** manages redux, it also provides an
   integration hook to other Aspects that need to inject redux
   middleware.
 
-  Please refer to the **feature-u-redux** documentation for complete
+  Please refer to the **feature-redux** documentation for complete
   details.
   
   
-- `Feature.logic` via: **feature-u-redux-logic**
+- `Feature.logic` via: **feature-redux-logic**
 
-  **feature-u-redux-logic** is the **feature-u** integration point to
+  **feature-redux-logic** is the **feature-u** integration point to
   [redux-logic]!
 
   It configures [redux-logic] through the `logicAspect` (_to be
@@ -667,13 +667,13 @@ you a feel of what is possible_).
   React-Redux
   application](https://medium.com/@jeffbski/where-do-i-put-my-business-logic-in-a-react-redux-application-9253ef91ce1).
 
-  Please refer to the **feature-u-redux-logic** documentation for complete
+  Please refer to the **feature-redux-logic** documentation for complete
   details.
 
  
-- `Feature.route` via: **feature-u-state-router**
+- `Feature.route` via: **feature-router**
 
-  **feature-u-state-router** is the **feature-u** integration point to
+  **feature-router** is the **feature-u** integration point to
   **Feature Routes**!
 
   It configures **Feature Router** through the `routeAspect` (_to be
@@ -687,10 +687,10 @@ you a feel of what is possible_).
   active screen based on an analysis of the the overall appState.
   This is particulary useful in feature-based routing, because each
   feature can promote their own UI components in an encapsulated and
-  autonomous way!  Because of this, **feature-u-state-router** is a
+  autonomous way!  Because of this, **feature-router** is a
   preferred routing solution for **feature-u**.
 
-  Please refer to the **feature-u-state-router** documentation for complete
+  Please refer to the **feature-router** documentation for complete
   details.
 
 
@@ -722,9 +722,9 @@ executable code!!
 ```js
 import React             from 'react';
 import ReactDOM          from 'react-dom';
-import {routeAspect}     from './util/feature-u/aspect/feature-u-state-router';
-import {reducerAspect}   from './util/feature-u/aspect/feature-u-redux';
-import {logicAspect}     from './util/feature-u/aspect/feature-u-redux-logic';
+import {routeAspect}     from './util/feature-u/aspect/feature-router';
+import {reducerAspect}   from './util/feature-u/aspect/feature-redux';
+import {logicAspect}     from './util/feature-u/aspect/feature-redux-logic';
 import {launchApp}       from './util/feature-u';
 import SplashScreen      from './util/comp/SplashScreen';
 import features          from './feature'; // the set of features that comprise this application
@@ -1119,12 +1119,12 @@ The App object can be accessed in several different ways.
      appDidStart({app, appState, dispatch}): void                        
      ```
    
-   * route hooks (PKG: `feature-u-state-router`):
+   * route hooks (PKG: `feature-router`):
      ```js
      routeCB({app, appState}): rendered-component (null for none)
      ```
    
-   * logic hooks (PKG: `feature-u-redux-logic`):
+   * logic hooks (PKG: `feature-redux-logic`):
      ```js
      createLogic({
        ...
@@ -1154,7 +1154,7 @@ may not be fully defined)_, and **b:** _order dependencies (across
 features)_.
 
 To illustrate this, the following logic module (PKG:
-`feature-u-redux-logic`) is monitoring an action defined by an
+`feature-redux-logic`) is monitoring an action defined by an
 external feature (see `*1*`).  Because this `app` reference is made
 during code expansion time, the import will not work, because the
 `app` object has not yet been fully defined.  This is a timing issue.
@@ -1329,10 +1329,10 @@ frameworks, matching your specific run-time stack.  **This is good,**
 _because not everyone uses the same frameworks_!
 
  - You want state management using [redux]?  There is an Aspect for
-   that: [feature-u-redux].
+   that: [feature-redux].
 
  - You want to maintain your logic using [redux-logic]?  There is an
-   Aspect for that: [feature-u-redux-logic].
+   Aspect for that: [feature-redux-logic].
 
  - You want your features to autonomously promote their screens
    within the application?  There is an Aspect for that: [Feature
@@ -1530,7 +1530,7 @@ mechanism.  It allows a given aspect to gather resources from other
 aspects, through a documented API for a given Aspect (ex:
 Aspect.getXyz()).
 
-As an example of this, consider **feature-u-redux**.  Because it
+As an example of this, consider **feature-redux**.  Because it
 manages [redux], it must promote a technique by which other Aspects
 can register their redux middleware.  This is accomplished through the
 proprietary method: `Aspect.getReduxMiddleware(): middleware`.
@@ -1569,7 +1569,7 @@ supporting two different requirements:
   used by another Aspect, facilitated through the
   `Aspect.assembleAspectResources(app, aspects)` hook.
 
-  As an example of this, consider **feature-u-redux**.  Because it
+  As an example of this, consider **feature-redux**.  Because it
   manages [redux], it must promote a technique by which other Aspects
   can register their redux middleware.  This is accomplished through the
   proprietary method: `Aspect.getReduxMiddleware(): middleware`.

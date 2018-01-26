@@ -1,9 +1,9 @@
 import React             from 'react';
 import Expo              from 'expo';
 import {LayoutAnimation} from 'react-native';
-import {routeAspect}     from './util/feature-u/aspect/feature-u-state-router';
-import {reducerAspect}   from './util/feature-u/aspect/feature-u-redux';
-import {logicAspect}     from './util/feature-u/aspect/feature-u-redux-logic';
+import {routeAspect}     from './util/feature-u/aspect/feature-router';
+import {reducerAspect}   from './util/feature-u/aspect/feature-redux';
+import {logicAspect}     from './util/feature-u/aspect/feature-redux-logic';
 import {launchApp}       from './util/feature-u';
 import SplashScreen      from './util/comp/SplashScreen';
 import features          from './feature'; // the set of features that comprise this application

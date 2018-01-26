@@ -159,7 +159,7 @@ function injectRootAppElm(app, activeFeatures, curRootAppElm) {
   // insure we don't clober any supplied content
   // ... by design, <StateRouter> doesn't support children
   if (curRootAppElm) {
-    throw new Error('*** ERROR*** Please register routeAspect (from feature-u-state-router) before other Aspects ' +
+    throw new Error('*** ERROR*** Please register routeAspect (from feature-router) before other Aspects ' +
                     'that inject content in the root app elm ... <StateRouter> does NOT support children.');
   }
 

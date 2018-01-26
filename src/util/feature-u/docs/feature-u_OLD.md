@@ -871,12 +871,12 @@ The App object can be accessed in several different ways.
      appDidStart({app, appState, dispatch}): void                        
      ```
    
-   * route hooks (PKG: `feature-u-state-router`):
+   * route hooks (PKG: `feature-router`):
      ```js
      routeCB(app, appState): rendered-component (null for none)
      ```
    
-   * logic hooks (PKG: `feature-u-redux-logic`):
+   * logic hooks (PKG: `feature-redux-logic`):
      ```js
      createLogic({
        ...
@@ -906,7 +906,7 @@ may not be fully defined)_, and **b:** _order dependencies (across
 features)_.
 
 To illustrate this, the following logic module (PKG:
-`feature-u-redux-logic`) is monitoring an action defined by an
+`feature-redux-logic`) is monitoring an action defined by an
 external feature (see `*1*`).  Because this `app` reference is made
 during code expansion time, the import will not work, because the
 `app` object has not yet been fully defined.  This is a timing issue.

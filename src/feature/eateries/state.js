@@ -1,6 +1,6 @@
 import {combineReducers}     from 'redux';
 import {reducerHash}         from 'astx-redux-util';
-import {slicedReducer}       from '../../util/feature-u/aspect/feature-u-redux';
+import {slicedReducer}       from '../../util/feature-u/aspect/feature-redux';
 import {managedExpansion}    from '../../util/feature-u';
 import {createSelector}      from 'reselect';
 import featureName           from './featureName';

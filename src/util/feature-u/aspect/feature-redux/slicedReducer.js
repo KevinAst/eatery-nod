@@ -7,7 +7,7 @@ import isFunction     from 'lodash.isfunction';
  * @description
  *
  * Embellish the supplied reducer with a slice property - a
- * specification (interpreted by **feature-u-redux**) as to the
+ * specification (interpreted by **feature-redux**) as to the
  * location of the reducer within the top-level appState tree.
  *
  * **Please refer to the User Docs** for a complete description with

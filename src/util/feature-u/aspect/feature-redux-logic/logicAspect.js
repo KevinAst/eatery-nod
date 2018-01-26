@@ -84,7 +84,7 @@ function assembleFeatureContent(app, activeFeatures) {
 /**
  * Expose our redux middleware that activates redux-logic.  
  *
- * This method is consumed by the feature-u-redux Aspect using an
+ * This method is consumed by the feature-redux Aspect using an
  * "aspect cross-communication".
  *
  * @private

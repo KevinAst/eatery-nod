@@ -2,7 +2,7 @@ import React                from 'react';
 import {isDeviceReady,
         getDeviceStatusMsg} from './state';
 import {featureRoute, 
-        PRIORITY}           from '../../util/feature-u/aspect/feature-u-state-router';
+        PRIORITY}           from '../../util/feature-u/aspect/feature-router';
 import SplashScreen         from '../../util/comp/SplashScreen';
 
 

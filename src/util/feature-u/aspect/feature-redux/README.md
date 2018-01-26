@@ -1,6 +1,6 @@
-# feature-u-redux *(redux integration in feature-u)*
+# feature-redux *(redux integration in feature-u)*
 
-**feature-u-redux** promotes the `reducerAspect` (a **feature-u**
+**feature-redux** promotes the `reducerAspect` (a **feature-u**
 plugin) that facilitates [redux] integration in your features.
 
 **SideBar:**
@@ -13,7 +13,7 @@ operates under an open plugin architecture where Aspects integrate
 feature-u to other framework/utilities that match your specific
 run-time stack.
 
-**feature-u-redux** is your **feature-u** integration point to [redux]!
+**feature-redux** is your **feature-u** integration point to [redux]!
 
 </ul>
 
@@ -21,7 +21,7 @@ run-time stack.
 
 <ul>
 
-**feature-u-redux** configures [redux] through the `reducerAspect`
+**feature-redux** configures [redux] through the `reducerAspect`
 (_to be supplied to_ `launchApp()`), which extends the Feature object,
 adding support for the `Feature.reducer` property, referencing
 feature-based reducers.
@@ -35,7 +35,7 @@ The `Feature.reducer` content must be embellished by
 multiple feature-based reducers in constructing the overall top-level
 application state tree.
 
-Because **feature-u-redux** manages redux, it also provides an
+Because **feature-redux** manages redux, it also provides an
 integration point to other Aspects that need to inject redux
 middleware.
 
@@ -65,7 +65,7 @@ Additional information can be found in the following sections.
 ## Install
 
 ```shell
-npm install --save feature-u-redux
+npm install --save feature-redux
 ```
 
 **Please Note**: the following **peerDependencies** are in effect:
@@ -75,13 +75,13 @@ npm install --save feature-u-redux
 
 ## Usage
 
-1. Register the **feature-u-redux** `reducerAspect` through
+1. Register the **feature-redux** `reducerAspect` through
    **feature-u**'s `launchApp()` (_see: **NOTE** below_):
 
    **myAppMain.js**
    ```js
    import {launchApp}      from 'feature-u';
-   import {reducerAspect}  from 'feature-u-redux'; // *** NOTE ***
+   import {reducerAspect}  from 'feature-redux'; // *** NOTE ***
    import features         from './feature';
 
    export default launchApp({
@@ -112,7 +112,7 @@ npm install --save feature-u-redux
    **myXyzFeature.js**
    ```js
    import {createFeature}  from 'feature-u';
-   import {slicedReducer}  from 'feature-u-redux';
+   import {slicedReducer}  from 'feature-redux';
    import myXyzFeatureReducer from './state';
    
    export default createFeature({
@@ -123,7 +123,7 @@ npm install --save feature-u-redux
    ```
 
 In the nutshell, that's most everything you need to know to use
-**feature-u-redux**!  _Go forth and compute!_
+**feature-redux**!  _Go forth and compute!_
 
 
 ## A Closer Look
@@ -131,15 +131,15 @@ In the nutshell, that's most everything you need to know to use
 In working with the [redux] framework, you deal with [actions],
 [reducers], and [selectors].
 
-**feature-u-redux** is only concerned with the characteristics of
+**feature-redux** is only concerned with the characteristics of
 redux that are required to configure it (_a generalized principle of
-all **feature-u** Aspects_).  As a result, **feature-u-redux** is only
+all **feature-u** Aspects_).  As a result, **feature-redux** is only
 interested in your reducers, because that is what it needs to
 configure redux.  All other redux items are considered internal
 details of your feature code.
 
 It is important to note that even though your using
-**feature-u-redux**, your interface to redux does not change in any
+**feature-redux**, your interface to redux does not change in any
 way.  In other words, your code continues to operate with redux as it
 always has.
 
@@ -241,7 +241,7 @@ maintaining it's own feature-based state (typically a sub-tree of
 several items).
 
 While these reducers are opaque assets that maintain state as an
-internal detail of the feature, **feature-u-redux** is interested in
+internal detail of the feature, **feature-redux** is interested in
 them to the extent that it must combine all feature states into one
 overall appState, and in turn register them to redux.
 
@@ -256,10 +256,10 @@ returns the reducerFn* (please refer to
 
 #### Sliced Reducers
 
-Because **feature-u-redux** must combine the reducers from all
+Because **feature-redux** must combine the reducers from all
 features into one overall appState, it requires that each reducer be
 embellished through the `slicedReducer()` function.  This merely
-injects a slice property (interpreted by **feature-u-redux**) on the
+injects a slice property (interpreted by **feature-redux**) on the
 reducer function, specifying the location of the reducer within the
 top-level appState tree.
 
@@ -316,7 +316,7 @@ outside the feature boundary*.
 
 Another benefit of `slicedReducer()` is that not only does it
 embellish the reducer with a `slice` property (interpreted by
-**feature-u-redux**), it also injects a selector that returns the
+**feature-redux**), it also injects a selector that returns the
 slicedState root, given the appState:
 
 ```js
@@ -343,7 +343,7 @@ export const isDeviceReady = (appState) => getFeatureState(appState).status === 
 
 ## Interface Points
 
-The primary accomplishment of **feature-u-redux** is the creation
+The primary accomplishment of **feature-redux** is the creation
 (_and configuration_) of the [**redux app
 store**](https://redux.js.org/docs/api/Store.html).  The **Aspect
 Interface** to this process (_i.e. the inputs and outputs_) are
@@ -353,7 +353,7 @@ documented here.
 
 1. **Primary Input**:
 
-   The primary input to **feature-u-redux** is the set of [reducers]
+   The primary input to **feature-redux** is the set of [reducers]
    that make up the overall app reducer.  This is specified by each of
    your features (_that maintain state_) through the `Feature.reducer`
    property, containing a [`slicedReducer`](api.md#slicedReducer) that
@@ -361,10 +361,10 @@ documented here.
 
 2. **Middleware Integration**:
 
-   Because **feature-u-redux** manages [redux], other Aspects can
-   promote their [redux middleware] through **feature-u-redux**'s
+   Because **feature-redux** manages [redux], other Aspects can
+   promote their [redux middleware] through **feature-redux**'s
    `Aspect.getReduxMiddleware()` API (an "aspect cross-communication
-   mechanism").  As an example, the **feature-u-redux-logic** Aspect
+   mechanism").  As an example, the **feature-redux-logic** Aspect
    integrates **redux-logic**.
 
 
@@ -372,7 +372,7 @@ documented here.
 
 1. **Primary Output**:
 
-   The primary way in which **feature-u-redux** exposes [redux] to your
+   The primary way in which **feature-redux** exposes [redux] to your
    app is by injecting the standard redux
    [`Provider`](https://github.com/reactjs/react-redux/blob/master/docs/api.md#provider-store)
    component at the root of your application DOM.  This enables app
@@ -383,14 +383,14 @@ documented here.
 
 2. **Middleware Features**:
 
-   Because **feature-u-redux** allows other aspects to inject their
+   Because **feature-redux** allows other aspects to inject their
    [redux middleware], whatever that middleware exposes is made
-   available.  As an example, the **feature-u-redux-logic** Aspect
+   available.  As an example, the **feature-redux-logic** Aspect
    injects **redux-logic**.
    
 3. **Other**:
 
-   For good measure, **feature-u-redux** promotes the [redux store]
+   For good measure, **feature-redux** promotes the [redux store]
    through the `Aspect.getReduxStore()` method (once again, an "aspect
    cross-communication mechanism").  While this may be considered
    somewhat unconventional, it is available should an external process

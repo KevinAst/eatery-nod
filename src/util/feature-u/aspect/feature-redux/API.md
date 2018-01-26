@@ -1,4 +1,4 @@
-# feature-u-redux API
+feature-redux API
 <a name="expandFeatureContent"></a>
 
 ## expandFeatureContent(app, feature) ⇒ string
@@ -14,7 +14,7 @@ Expand the reducer content in the supplied feature -AND- transferthe slice prop
 <a name="slicedReducer"></a>
 
 ## slicedReducer(slice, reducer) ⇒ reducerFn
-Embellish the supplied reducer with a slice property - aspecification (interpreted by **feature-u-redux**) as to thelocation of the reducer within the top-level appState tree.**Please refer to the User Docs** for a complete description withexamples.**SideBar**: For reducer aspects, `slicedReducer()` should always             wrap the the outer function passed to             `createFeature()`, even when `managedExpansion()` is             used.  This gives your app code access to the             embellished `getSlicedState()` selector, even prior to             expansion occurring (_used as a single-source-of-truth             in your selector definitions_).
+Embellish the supplied reducer with a slice property - aspecification (interpreted by **feature-redux**) as to thelocation of the reducer within the top-level appState tree.**Please refer to the User Docs** for a complete description withexamples.**SideBar**: For reducer aspects, `slicedReducer()` should always             wrap the the outer function passed to             `createFeature()`, even when `managedExpansion()` is             used.  This gives your app code access to the             embellished `getSlicedState()` selector, even prior to             expansion occurring (_used as a single-source-of-truth             in your selector definitions_).
 
 
 | Param | Type | Description |

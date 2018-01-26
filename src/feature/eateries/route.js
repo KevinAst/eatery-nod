@@ -1,7 +1,7 @@
 import React               from 'react';
 import * as sel            from './state';
 import {featureRoute, 
-        PRIORITY}          from '../../util/feature-u/aspect/feature-u-state-router';
+        PRIORITY}          from '../../util/feature-u/aspect/feature-router';
 import featureName         from './featureName';
 import EateriesListScreen  from './comp/EateriesListScreen';
 import EateryDetailScreen  from './comp/EateryDetailScreen';

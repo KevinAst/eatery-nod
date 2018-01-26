@@ -28,7 +28,7 @@ import isFunction     from 'lodash.isfunction';
  * API: managedExpansionCB(app): AspectContent
  * ```
  *
- * Example (feature-u-redux `reducerAspect`):
+ * Example (feature-redux `reducerAspect`):
  * ```js
  *   export default slicedReducer('foo', managedExpansion( (app) => combineReducers({...reducer-code-requiring-app...} ) ));
  * ```
@@ -37,7 +37,7 @@ import isFunction     from 'lodash.isfunction';
  *          the the outer function passed to createFunction(), even
  *          when managedExpansion() is used.
  *
- * Example (feature-u-redux-logic `logicAspect`):
+ * Example (feature-redux-logic `logicAspect`):
  * ```js
  *   export const startAppAuthProcess = managedExpansion( (app) => createLogic({
  *     ...logic-code-requiring-app...

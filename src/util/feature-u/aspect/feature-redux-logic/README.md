@@ -1,6 +1,6 @@
-# feature-u-redux-logic *(redux integration in feature-u)*
+# feature-redux-logic *(redux integration in feature-u)*
 
-**feature-u-redux-logic** promotes the `logic` Aspect (a **feature-u**
+**feature-redux-logic** promotes the `logic` Aspect (a **feature-u**
 plugin) that facilitates [redux-logic] integration to your features.
 
 **SideBar:**
@@ -13,7 +13,7 @@ operates under an open plugin architecture where Aspects integrate
 feature-u to other framework/utilities that match your specific
 run-time stack.
 
-**feature-u-redux-logic** is your **feature-u** integration point to
+**feature-redux-logic** is your **feature-u** integration point to
 [redux-logic]!
 
 </ul>
@@ -23,7 +23,7 @@ run-time stack.
 
 <ul>
 
-**feature-u-redux-logic** configures [redux-logic] through the
+**feature-redux-logic** configures [redux-logic] through the
 `logicAspect` (_to be supplied to_ `launchApp()`), which extends the
 Feature object, adding support for the `Feature.logic` property,
 referencing feature-based logic modules.
@@ -51,7 +51,7 @@ Additional information can be found in the following sections.
 ## Install
 
 ```shell
-npm install --save feature-u-redux-logic
+npm install --save feature-redux-logic
 ```
 
 **Please Note**: The following **peerDependencies** are in effect:
@@ -60,7 +60,7 @@ npm install --save feature-u-redux-logic
 
 ## Usage
 
-1. Register the **feature-u-redux-logic** `logicAspect` through
+1. Register the **feature-redux-logic** `logicAspect` through
    **feature-u**'s `launchApp()` (_see: **NOTE 1** below_).
 
    **Please Note**: [redux] must also be present in your run-time
@@ -70,8 +70,8 @@ npm install --save feature-u-redux-logic
    **myAppMain.js**
    ```js
    import {launchApp}      from 'feature-u';
-   import {reducerAspect}  from 'feature-u-redux';       // *** NOTE 2 ***
-   import {logicAspect}    from 'feature-u-redux-logic'; // *** NOTE 1 ***
+   import {reducerAspect}  from 'feature-redux';       // *** NOTE 2 ***
+   import {logicAspect}    from 'feature-redux-logic'; // *** NOTE 1 ***
    import features         from './feature';
 
    export default launchApp({
@@ -110,7 +110,7 @@ npm install --save feature-u-redux-logic
    ```
 
 In the nutshell, that's most everything you need to know to use
-**feature-u-redux-logic**!  _Go forth and compute!_
+**feature-redux-logic**!  _Go forth and compute!_
 
 
 ## A Closer Look
@@ -127,7 +127,7 @@ returns the set of logic modules* (please refer to **feature-u**'s
 
 
 It is important to note that even though your using
-**feature-u-redux-logic**, your interface to [redux-logic] does not change in any
+**feature-redux-logic**, your interface to [redux-logic] does not change in any
 way.  In other words, your code continues to operate with [redux-logic] as it
 always has.
 
@@ -174,7 +174,7 @@ My business logic is now:
 
 ## Interface Points
 
-**feature-u-redux-logic** accumulates all the logic modules from the
+**feature-redux-logic** accumulates all the logic modules from the
 various features of your app, and registers them to [redux-logic].  This
 is accomplished by creating the redux-logic middleware component which
 is in turn registered to [redux].  The **Aspect Interface** to this
@@ -183,7 +183,7 @@ process (_i.e. the inputs and outputs_) are documented here.
 
 ### Input
 
-- The input to **feature-u-redux-logic** are [redux-logic] modules.
+- The input to **feature-redux-logic** are [redux-logic] modules.
   This is specified by each of your features (_that maintain logic_)
   through the `Feature.logic` property, containing a logic modules
   array.
@@ -191,11 +191,11 @@ process (_i.e. the inputs and outputs_) are documented here.
 
 ### Exposure
 
-- The output from **feature-u-redux-logic** is the [redux middleware]
+- The output from **feature-redux-logic** is the [redux middleware]
   component, exposed through the `Aspect.getReduxMiddleware()` API
   (an "aspect cross-communication mechanism").  This middleware
   component must be consumed by yet another aspect (_such as
-  **feature-u-redux**_) that in turn manages [redux].
+  **feature-redux**_) that in turn manages [redux].
 
 ## API
 
