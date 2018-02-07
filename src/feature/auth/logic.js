@@ -1,6 +1,6 @@
 import {createLogic}      from 'redux-logic';
 import firebase           from 'firebase';
-import {managedExpansion} from '../../util/feature-u';
+import {managedExpansion} from 'feature-u';
 import featureName        from './featureName';
 import actions            from './actions';
 import * as sel           from './state';

@@ -1,7 +1,7 @@
 import React               from 'react';
 import * as sel            from './state';
 import {featureRoute, 
-        PRIORITY}          from '../../util/feature-u/aspect/feature-router';
+        PRIORITY}          from 'feature-router';
 import featureName         from './featureName';
 import SignInVerifyScreen  from './comp/SignInVerifyScreen';
 import SignInScreen        from './comp/SignInScreen';

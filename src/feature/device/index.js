@@ -1,4 +1,4 @@
-import {createFeature}  from '../../util/feature-u';
+import {createFeature}  from 'feature-u';
 import name             from './featureName';
 import publicFace       from './publicFace';
 import reducer          from './state';

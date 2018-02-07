@@ -1,5 +1,5 @@
 import {reducerHash}      from 'astx-redux-util';
-import {slicedReducer}    from '../../util/feature-u/aspect/feature-redux';
+import {slicedReducer}    from 'feature-redux';
 import featureName        from './featureName';
 import actions            from './actions';
 

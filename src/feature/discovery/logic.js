@@ -3,7 +3,7 @@ import discoveryFilterFormMeta from './discoveryFilterFormMeta';
 import actions                 from './actions';
 import featureName             from './featureName';
 import * as sel                from './state';
-import {managedExpansion}      from '../../util/feature-u';0
+import {managedExpansion}      from 'feature-u';
 
 /**
  * Initially retrieve discovery eateries, on 'discovery' view change.

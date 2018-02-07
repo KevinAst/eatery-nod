@@ -1,6 +1,6 @@
 import {combineReducers}  from 'redux';
 import {reducerHash}      from 'astx-redux-util';
-import {slicedReducer}    from '../../util/feature-u/aspect/feature-redux';
+import {slicedReducer}    from 'feature-redux';
 import actions            from './actions';
 import isString           from 'lodash.isstring';
 

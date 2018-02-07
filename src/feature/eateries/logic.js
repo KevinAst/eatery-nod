@@ -5,7 +5,7 @@ import eateryFilterFormMeta from './eateryFilterFormMeta';
 import featureName          from './featureName';
 import * as sel             from './state';
 import actions              from './actions';
-import {managedExpansion}   from '../../util/feature-u';
+import {managedExpansion}   from 'feature-u';
 
 /**
  * Monitor our persistent data changes associated to a given pool.
