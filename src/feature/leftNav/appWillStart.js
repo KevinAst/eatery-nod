@@ -5,11 +5,9 @@ import SideBar,
        closeSideBar}    from './comp/SideBar';
 
 /**
- * Inject our Drawer/SideBar component at the root of our app, using
- * API: `injectRootAppElmForStateRouter()` required when using the
- * `routeAspect`.
+ * Inject our Drawer/SideBar component at the root of our app
  */
-export default function injectRootAppElmForStateRouter(app, curRootAppElm) {
+export default function appWillStart({app, curRootAppElm}) {
   return (
     <Drawer ref={ ref => registerDrawer(ref) }
             content={<SideBar/>}

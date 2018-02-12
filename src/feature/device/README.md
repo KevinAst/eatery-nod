@@ -10,7 +10,7 @@ It accomplishes the following:
    **(appWillStart)**
 
  - inject our notify utility in the root DOM
-   **(injectRootAppElmForStateRouter)**
+   **(appWillStart)**
 
  - loads device resources (fonts, geo location), triggered by
    bootstrap action **(logic, action, reducer)**

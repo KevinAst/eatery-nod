@@ -6,7 +6,6 @@ import logic            from './logic';
 import route            from './route';
 import appWillStart     from './appWillStart';
 import appDidStart      from './appDidStart';
-import injectRootAppElmForStateRouter from './injectRootAppElmForStateRouter';
 
 
 /**
@@ -20,7 +19,7 @@ import injectRootAppElmForStateRouter from './injectRootAppElmForStateRouter';
  *    **(appWillStart)**
  * 
  *  - inject our notify utility in the root DOM
- *    **(injectRootAppElmForStateRouter)**
+ *    **(appWillStart)**
  * 
  *  - loads device resources (fonts, geo location), triggered by
  *    bootstrap action **(logic, action, reducer)**
@@ -61,6 +60,4 @@ export default createFeature({
 
   appWillStart,
   appDidStart,
-
-  injectRootAppElmForStateRouter,
 });

@@ -11,9 +11,9 @@ import features          from './feature'; // the set of features that comprise 
 
 // define our set of "plugable" feature-u Aspects, conforming to our app's run-time stack
 const aspects = [
-  routeAspect,   // StateRouter ... order: early, because <StateRouter> DOM injection does NOT support children
-  reducerAspect, // redux       ... order: later, because <Provider> DOM injection should cover all prior injections
-  logicAspect,   // redux-logic ... order: N/A,   because NO DOM injection
+  reducerAspect, // redux          ... extending: Feature.reducer
+  logicAspect,   // redux-logic    ... extending: Feature.logic
+  routeAspect,   // Feature Routes ... extending: Feature.route
 ];
 
 
