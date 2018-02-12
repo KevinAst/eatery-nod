@@ -15,9 +15,6 @@ eateries
   .dbPool
                                                       
     .changed(eateries) .............................................................................  - retain appState.eateries.dbPool (from action.eateries)
-                                           postProcessDbPool:
-                                           =================
-                                             DISPATCH .applyFilter()
  
     .add(eateryId) .................................................................................  - NO NEED TO DO ANYTHING, due to Firebase real-time notifications
                                            addToPoolPrep:                                               ... we attempted to retain appState.eateries.dbPool[eateryId] with temporary entry
@@ -55,32 +52,23 @@ eateries
                                              - issue firebase set(null)
  
  
-  .applyFilter([filter]) ...........................................................................  - retain appState.eateries.listView.entries (from action.entries)
-                                           applyFilter:                                               - retain appState.eateries.listView.filter  (from action.filter)
-                                           ===========
-                                             transform()
-                                             ---------
-                                               - supplementing optional action.filter                
-                                               - apply filter/sort
-                                               - supplement action.entries
- 
+  .filterForm
     > iForm logic (auto-generated)         > iForm logic (auto-generated)                             > iForm logic (auto-generated)
     .open([domain] [,formMsg])                    
     .fieldChanged(fieldName, value)               
     .fieldTouched(fieldName)                      
-    .process(values, domain) .......................................................................              
+    .process(values, domain) .......................................................................  - retain appState.eateries.listView.filter  (from action.domain)
                                            processFilter:
                                            =============
-                                             DISPATCH .applyFilter(action.domain ... i.e. filter)
                                              DISPATCH view.change('eatery')
-                                             DISPATCH eatery.applyFilter.close()
+                                             DISPATCH eatery.filterForm.close()
       .reject(msgs)
     .close()
  
  
-  .viewDetail(eateryId) ............................................................................  - retain appState.eateries.detailView (from action.eateryId)
+  .viewDetail(eateryId) ............................................................................  - retain appState.eateries.selectedEateryId (from action.eateryId)
 
-    .close() .......................................................................................  - retain appState.eateries.detailView = null
+    .close() .......................................................................................  - retain appState.eateries.selectedEateryId = null
  
  
   .spin ............................................................................................  - retain appState.eateries.spin (from action.spinMsg)

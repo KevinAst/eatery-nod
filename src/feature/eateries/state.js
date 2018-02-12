@@ -1,7 +1,8 @@
 import {combineReducers}     from 'redux';
 import {reducerHash}         from 'astx-redux-util';
-import {shapedReducer,
-        managedExpansion}    from '../../util/feature-u';
+import {managedExpansion}    from 'feature-u';
+import {slicedReducer}       from 'feature-redux';
+import {createSelector}      from 'reselect';
 import featureName           from './featureName';
 import eateryFilterFormMeta  from './eateryFilterFormMeta';
 import actions               from './actions';
@@ -13,7 +14,7 @@ import actions               from './actions';
 // NOTE: managedExpansion() is used NOT for app injection,
 //       but RATHER to delay expansion (avoiding circular dependancies
 //       in selector access from eateryFilterFormMeta.js)
-const reducer = shapedReducer(`view.${featureName}`, managedExpansion( () => combineReducers({
+const reducer = slicedReducer(`view.${featureName}`, managedExpansion( () => combineReducers({
 
   // raw eatery entries synced from firebase realtime DB
   dbPool: reducerHash({
@@ -27,21 +28,16 @@ const reducer = shapedReducer(`view.${featureName}`, managedExpansion( () => com
 
     // filter used in visualizing listView
     filter: reducerHash({
-      [actions.applyFilter]: (state, action) => action.filter,
+      [actions.filterForm.process]: (state, action) => action.domain,
     }, { // initialState
       distance: null,    // distance in miles (default: null - for any distance)
       sortOrder: 'name', // sortOrder: 'name'/'distance'
     }),
 
-    // filtered entries displayed in visual listView
-    entries: reducerHash({
-      [actions.applyFilter]: (state, action) => action.entries,
-    }, null), // initialState
-
   }),
 
-  // detailView: eateryId ... id of eatery to "display details for" (null for none)
-  detailView: reducerHash({
+  // selectedEateryId: eateryId ... id of selected eatery to "display details for" (null for none)
+  selectedEateryId: reducerHash({
     [actions.viewDetail]:       (state, action) => action.eateryId,
     [actions.viewDetail.close]: (state, action) => null,
   }, null), // initialState
@@ -61,8 +57,8 @@ export default reducer;
 // *** Various Selectors
 // ***
 
-                                   /** Our feature state root (via shapedReducer as a single-source-of-truth) */
-const getFeatureState            = (appState) => reducer.getShapedState(appState);
+                                   /** Our feature state root (via slicedReducer as a single-source-of-truth) */
+const getFeatureState            = (appState) => reducer.getSlicedState(appState);
 const gfs = getFeatureState;       // ... concise alias (used internally)
 
 export const getDbPool           = (appState) => gfs(appState).dbPool;
@@ -72,10 +68,33 @@ export const getFormFilter       = (appState) => gfs(appState).listView.filterFo
 
 export const getListViewFilter   = (appState) => gfs(appState).listView.filter;
 
-export const getListViewEntries  = (appState) => gfs(appState).listView.entries;
+export const getFilteredEateries  = createSelector(
+  getDbPool,
+  getListViewFilter,
+  (dbPool, filter) => {
+
+    if (!dbPool) {
+      return null; // NO dbPool yet ... waiting for pool entries
+    }
+
+    // apply filter to dbPool
+    // filteredEateries: Eatery[]
+    const entries = Object.values(dbPool)
+                          .filter(entry => { // filter entries
+                            // apply distance (when supplied in filter)
+                            return filter.distance ? entry.distance <= filter.distance : true;
+                          })
+                          .sort((e1, e2) => ( // sort entries ... order by:
+                            filter.sortOrder==='distance' ? e1.distance-e2.distance : 0 || // distance (when requested)
+                            e1.name.localeCompare(e2.name) // name - either secondary (within distance), or primary (when no distance)
+                          ));
+
+    return entries;
+  }
+);
 
 export const getSelectedEatery   = (appState) => {
-  const  selectedEateryId = gfs(appState).detailView;
+  const  selectedEateryId = gfs(appState).selectedEateryId;
   return selectedEateryId ? gfs(appState).dbPool[selectedEateryId] : null;
 };
 

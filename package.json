@@ -28,21 +28,22 @@
     "preset": "jest-expo"
   },
   "dependencies": {
-    "@expo/vector-icons": "^5.2.0",
+    "@expo/vector-icons": "^6.2.1",
     "action-u": "^0.2.0",
     "astx-redux-util": "^1.0.0",
-    "expo": "^21.0.0",
+    "expo": "^24.0.0",
     "firebase": "^4.3.1",
     "geodist": "^0.2.1",
     "lodash.isequal": "^4.5.0",
     "lodash.isfunction": "^3.0.8",
     "lodash.isstring": "^4.0.1",
-    "native-base": "^2.3.1",
-    "react": "16.0.0-alpha.12",
-    "react-native": "https://github.com/expo/react-native/archive/sdk-21.0.2.tar.gz",
+    "native-base": "^2.3.5",
+    "react": "16.0.0",
+    "react-native": "https://github.com/expo/react-native/archive/sdk-24.0.0.tar.gz",
     "react-redux": "^5.0.6",
     "redux": "^3.7.2",
     "redux-logic": "^0.12.3",
+    "reselect": "^3.0.1",
     "yup": "^0.22.0"
   },
   "devDependencies": {
@@ -54,6 +55,7 @@
     "eslint-plugin-flowtype": "^2.35.1",
     "eslint-plugin-import": "^2.7.0",
     "eslint-plugin-react": "^7.3.0",
-    "jest-expo": "^21.0.0"
+    "jest-expo": "^24.0.0",
+    "prettier": "^1.9.2"
   }
 }

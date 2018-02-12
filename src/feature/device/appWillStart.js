@@ -1,16 +1,16 @@
-import React            from 'react';
-import platformSetup    from './init/platformSetup';
-import Notify           from '../../util/notify'; 
+import React          from 'react';
+import platformSetup  from './init/platformSetup';
+import Notify         from '../../util/notify';
 
 /**
  * An app-level life-cycle hook, initializing our feature by:
  *  - performing platform-specific setup (iOS/Android)
- *  - and initialize the notify utility, by injecting it in our App root
+ *  - inject our notify utility in the root DOM
  */
-export default function appWillStart(app, children) {
+export default function appWillStart({app, curRootAppElm}) {
   // platform-specific setup (iOS/Android)
   platformSetup();
 
   // initialize notify utility, by injecting it in our App root
-  return [React.Children.toArray(children), <Notify key="Notify"/>];
+  return [React.Children.toArray(curRootAppElm), <Notify key="Notify"/>];
 }

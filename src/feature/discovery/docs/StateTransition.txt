@@ -12,7 +12,7 @@ Actions (see: actions.js)                        Logic (see: logic.js)          
 ==============================================   ===================================================  ===============================
 discovery
 
- .filter
+ .filterForm
     > iForm logic (auto-generated)               > iForm logic (auto-generated)                       > iForm logic (auto-generated)
     .open([domain] [,formMsg])                   
     .fieldChanged(fieldName, value)
@@ -22,7 +22,7 @@ discovery
                                                  =============
                                                    DISPATCH discovery.retrieve(action.domain ... i.e. filter)
                                                    DISPATCH view.change('discovery')
-                                                   DISPATCH discovery.filter.close()
+                                                   DISPATCH discovery.filterForm.close()
       .reject(msgs)
     .close()
 
@@ -35,6 +35,7 @@ discovery
                                                       fail: DISPATCH .fail(err)
 
    .complete(eateriesResp [with pagetoken/entries]) ................................................  - retain appState.discovery.eateries (from action.eateriesResp)
+                                                                                                      - retain appState.discovery.filter   (from action.filter)
                                                                                                       - retain nextPageToken
                                                                                                       - set appState.discovery.inProgress = null
 

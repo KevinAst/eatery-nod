@@ -1,4 +1,4 @@
-import {createFeature}  from '../../util/feature-u';
+import {createFeature}  from 'feature-u';
 import name             from './featureName';
 import logic            from './logic';
 

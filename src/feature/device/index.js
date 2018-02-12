@@ -1,4 +1,4 @@
-import {createFeature}  from '../../util/feature-u';
+import {createFeature}  from 'feature-u';
 import name             from './featureName';
 import publicFace       from './publicFace';
 import reducer          from './state';
@@ -7,6 +7,7 @@ import route            from './route';
 import appWillStart     from './appWillStart';
 import appDidStart      from './appDidStart';
 
+
 /**
  * The **'device'** feature initializes the device for use by the app.
  * It accomplishes the following:
@@ -14,7 +15,10 @@ import appDidStart      from './appDidStart';
  *  - kicks off the entire app, by dispatching a device bootstrap action
  *    **(appDidStart)**
  * 
- *  - performs device-specific initialization: platform-setup, notify
+ *  - performs device-specific initialization: platform-setup
+ *    **(appWillStart)**
+ * 
+ *  - inject our notify utility in the root DOM
  *    **(appWillStart)**
  * 
  *  - loads device resources (fonts, geo location), triggered by

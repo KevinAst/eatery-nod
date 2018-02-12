@@ -5,15 +5,14 @@ import SideBar,
        closeSideBar}    from './comp/SideBar';
 
 /**
- * An app-level life-cycle hook that:
- *  - injects our Drawer/SideBar at the top of our app.
+ * Inject our Drawer/SideBar component at the root of our app
  */
-export default function appWillStart(app, children) {
+export default function appWillStart({app, curRootAppElm}) {
   return (
     <Drawer ref={ ref => registerDrawer(ref) }
             content={<SideBar/>}
             onClose={closeSideBar}>
-      {children}
+      {curRootAppElm}
     </Drawer>
   );
 }

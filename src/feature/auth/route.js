@@ -1,6 +1,7 @@
 import React               from 'react';
 import * as sel            from './state';
-import {createRoute}       from '../../util/feature-u';
+import {featureRoute, 
+        PRIORITY}          from 'feature-router';
 import featureName         from './featureName';
 import SignInVerifyScreen  from './comp/SignInVerifyScreen';
 import SignInScreen        from './comp/SignInScreen';
@@ -10,9 +11,11 @@ import SplashScreen        from '../../util/comp/SplashScreen';
 // *** The routes for this feature.
 // ***
 
-export default createRoute({
+export default featureRoute({
 
-  priorityContent(app, appState) {
+  priority: PRIORITY.HIGH,
+
+  content({app, appState}) {
 
     // when user is FULLY signedIn/verified
     // ... allow down-stream features to route further (i.e. app-specific screens)

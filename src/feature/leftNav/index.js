@@ -1,6 +1,7 @@
-import {createFeature}  from '../../util/feature-u';
+import {createFeature}  from 'feature-u';
 import publicFace       from './publicFace';
 import appWillStart     from './appWillStart';
+
 
 /**
  * The **'leftNav'** feature promotes the app-specific Drawer/SideBar

@@ -1,4 +1,4 @@
-import {createFeature}  from '../../util/feature-u';
+import {createFeature}  from 'feature-u';
 import name             from './featureName';
 import actions          from './actions'; // TODO: QUERKYNESS of IFormMeta (aggravated by feature-u) ... actions MUST be expanded BEFORE IFormMeta instance (signInFormMeta)
 import publicFace       from './publicFace';

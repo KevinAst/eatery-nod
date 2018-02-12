@@ -1,81 +1,0 @@
-# feature-u API
-<a name="createFeature"></a>
-
-## createFeature(name, [enabled], [publicFace], [reducer], [logic], [route], [appWillStart], [appDidStart]) ⇒ Feature
-Create a new Feature object, that accumulates various FeatureAspects to be consumed by feature-u runApp().Example:```js  import {createFeature} from 'feature-u';  import reducer         from './state';  export default createFeature({    name:       'views',    enabled:    true,    reducer:    shapedReducer('views.currentView', reducer),    ?? expand this a bit  };```**Please Note** `createFeature()` accepts named parameters.
-
-
-| Param | Type | Default | Description |
-| --- | --- | --- | --- |
-| name | string |  | the feature name, used in programmatically delineating various features (ex: 'views'). |
-| [enabled] | boolean | <code>true</code> | an indicator as to whether this feature is enabled (true) or not (false). |
-| [publicFace] | Any \| [`contextCB`](#contextCB) |  | an optional resource exposed in app.{featureName}.{publicFace} (emitted from runApp()), promoting cross-communication between features.  Please refer to the feature-u `publicFace` documentation for more detail. Because some publicFace may require feature-based context information, this parameter may also be a contextCB - a function that returns the publicFace (see managedExpansion()). |
-| [reducer] | reducerFn \| [`contextCB`](#contextCB) |  | an optional reducer that maintains redux state (if any) for this feature. The reducers from all features are combined into one overall app state, through a required shape specification, embellished on the reducer through the shapedReducer() function.  Please refer to the feature-u `Reducers` documentation for more detail. Because some reducers may require feature-based context information, this parameter may also be a contextCB - a function that returns the reducerFn (see managedExpansion()). |
-| [logic] | Array.&lt;Logic&gt; \| [`contextCB`](#contextCB) |  | an optional set of business logic modules (if any) to be registered to redux-logic in support of this feature. Please refer to the feature-u `Logic` documentation for more detail. Because some logic modules may require feature-based context information, this parameter may also be a contextCB - a function that returns the Logic[] (see managedExpansion()). |
-| [route] | Route |  | the optional route callback (see createRoute()) that promotes feature-based top-level screen components based on appState.  Please refer to the feature-u `routes` documentation for more detail. |
-| [appWillStart] | function |  | an optional app life-cycle hook invoked one-time at app startup time.  `API: appWillStart(app, children): optional-top-level-content` This life-cycle hook can do any type of initialization, and/or optionally supplement the app's top-level content (using a non-null return).  Please refer to the feature-u `App Life Cycle Hooks` documentation for more detail. |
-| [appDidStart] | function |  | an optional app life-cycle hook invoked one-time immediately after app has started.  `API: appDidStart({app, appState, dispatch}): void` Because the app is up-and-running at this time, you have access to the appState and the dispatch function.  Please refer to the feature-u `App Life Cycle Hooks` documentation for more detail. |
-
-**Returns**: Feature - a new Feature object (to be consumed by feature-u runApp()).  
-<a name="shapedReducer"></a>
-
-## shapedReducer(shape, reducer) ⇒ reducerFn
-Embellish the supplied reducer with a shape property - aspecification (interpreted by feature-u) as to the location of thereducer within the top-level appState tree.Please refer to the Reducers documentation for more information andexamples.SideBar: For reducer aspects, shapedReducer() should always wrap         the the outer function passed to createFunction(), even         when managedExpansion() is used.
-
-
-| Param | Type | Description |
-| --- | --- | --- |
-| shape | string | the location of the managed state within the overall top-level appState tree.  This can be a federated namespace (delimited by dots).  Example: `'views.currentView'` |
-| reducer | reducerFn | a redux reducer function to be embellished with the shape specification. |
-
-**Returns**: reducerFn - the supplied reducer, embellished with both theshape and a standard selector:```jsreducer.shape: shapereducer.getShapedState(appState): shapedState```  
-<a name="managedExpansion"></a>
-
-## managedExpansion(contextCB) ⇒ [`contextCB`](#contextCB)
-Mark the supplied contextCB as a "managed expansion callback",distinguishing it from other functions (such as reducer functions).Managed Expansion Callbacks (i.e. contextCB) are merely functionsthat when invoked, return a FeatureAspect (ex: reducer, logicmodule, etc.).  In feature-u, you may communicate yourFeatureAspects directly, or through a contextCB.  The latter 1:supports cross-feature communication (through app objectinjection), and 2: minimizes circular dependency issues (of ES6modules).  Please see the full User Guide for more details on thistopic.The contextCB function should conform to the following signature:```jscontextCB(app): FeatureAspect```Example (reducer):```js  export default shapedReducer('foo', managedExpansion( (app) => combineReducers({...reducer-code-using-app...} ) ));```SideBar: For reducer aspects, shapedReducer() should always wrap         the the outer function passed to createFunction(), even         when managedExpansion() is used.Example (logic):```js  export const startAppAuthProcess = managedExpansion( (app) => createLogic({    ...logic-code-using-app...  }));```Please refer to the feature-u `managedExpansion()` documentation for more detail.
-
-
-| Param | Type | Description |
-| --- | --- | --- |
-| contextCB | [`contextCB`](#contextCB) | the callback function that when invoked (by feature-u) expands/returns the desired FeatureAspect. |
-
-**Returns**: [`contextCB`](#contextCB) - the supplied contextCB, marked as a "managedexpansion callback".  
-<a name="createRoute"></a>
-
-## createRoute() ⇒ Route
-Create a new Route object, that provides a generalized run-timeAPI to abstractly expose component rendering, based on appState.The Route object contains one or two function callbacks (routeCB), withthe following signature:```js  routeCB(app, appState): rendered-component (null for none)```The routeCB reasons about the supplied appState, and either returns arendered component, or null to allow downstream routes the sameopportunity.  Basically the first non-null return wins.One or two routeCBs can be registered, one with priority and onewithout.  The priority routeCBs are given precedence across allregistered routes before the non-priority routeCBs are invoked, andare useful in some cases to minimize the feature registrationorder.
-
-
-| Param | Type | Description |
-| --- | --- | --- |
-| [namedArgs.content] | routeCB | the non-priority route routeCB (if any) ... see: desc above. |
-| [namedArgs.priorityContent] | routeCB | the priority route routeCB (if any) ... see: desc above. |
-
-**Returns**: Route - a new Route object (to be consumed by feature-u'sRouter via runApp()).  
-<a name="runApp"></a>
-
-## runApp(features) ⇒ App
-Launch an app by assembling/configuring the supplied app features.The runApp() function manages the configuration of all featureaspects including: actions, logic, reducers, routing, etc.  Inaddition it drives various app life-cycle methods (on the Featureobject), allowing selected features to inject initializationconstructs, etc.The runApp() function maintains an App object, which facilitatescross-communication between features.  The App object is promotedthrough redux-logic inject, and is also returned from this runApp()invocation (which can be exported to facilitate othercommunication).Example:```js  import {runApp} from 'feature-u';  import features from '../features';  export default runApp(features);```
-
-
-| Param | Type | Description |
-| --- | --- | --- |
-| features | Array.&lt;Feature&gt; | the features that comprise this application. |
-
-**Returns**: App - an app object which used in featurecross-communication (as follows):```js {   ?? document }```  
-<a name="FeatureAspect"></a>
-
-## FeatureAspect : \*
-In feature-u, "aspects" (FeatureAspect) is a general term used to refer to thevarious ingredients that, when combined, constitute your app. A FeatureAspect can refere to actions, reducers, components,routes, logic, etc.
-
-<a name="contextCB"></a>
-
-## contextCB ⇒ [`FeatureAspect`](#FeatureAspect)
-A "managed expansion callback" (defined by managedExpansion) thatwhen invoked (by feature-u) expands and returns the desiredFeatureAspect.
-
-
-| Param | Type | Description |
-| --- | --- | --- |
-| app | App | The feature-u app object, promoting the publicFace of each feature. |
-
-**Returns**: [`FeatureAspect`](#FeatureAspect) - The desired FeatureAspect (ex: reducer,logic module, etc.).  

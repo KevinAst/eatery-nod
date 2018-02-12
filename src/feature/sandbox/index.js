@@ -1,4 +1,4 @@
-import {createFeature}  from '../../util/feature-u';
+import {createFeature}  from 'feature-u';
 import publicFace       from './publicFace';
 
 /**
@@ -12,7 +12,7 @@ import publicFace       from './publicFace';
  */
 export default createFeature({
   name:    'sandbox',
-  enabled: false,
+  enabled: true,
 
   publicFace,
 });

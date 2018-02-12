@@ -3,7 +3,7 @@ import discoveryFilterFormMeta from './discoveryFilterFormMeta';
 import actions                 from './actions';
 import featureName             from './featureName';
 import * as sel                from './state';
-import {managedExpansion}      from '../../util/feature-u';0
+import {managedExpansion}      from 'feature-u';
 
 /**
  * Initially retrieve discovery eateries, on 'discovery' view change.
@@ -39,7 +39,7 @@ export const initialRetrieve = managedExpansion( (app) => createLogic({
 export const defaultFilter = createLogic({
 
   name: `${featureName}.defaultFilter`,
-  type: String(actions.filter.open),
+  type: String(actions.filterForm.open),
 
   transform({getState, action, app}, next) {
     if (!action.domain) {
@@ -58,7 +58,7 @@ export const defaultFilter = createLogic({
 export const processFilter = createLogic({
 
   name: `${featureName}.processFilter`,
-  type: String(actions.filter.process),
+  type: String(actions.filterForm.process),
   
   process({getState, action, app}, dispatch, done) {
     // retrieve using new filter from form
@@ -72,7 +72,7 @@ export const processFilter = createLogic({
     dispatch( app.currentView.actions.changeView(featureName) );
 
     // close our form filter
-    dispatch( actions.filter.close() );
+    dispatch( actions.filterForm.close() );
 
     done();
   },

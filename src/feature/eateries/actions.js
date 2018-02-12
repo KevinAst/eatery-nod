@@ -52,19 +52,7 @@ export default generateActions.root({
 
     // inject the standard iForm auto-generated form actions
     // ... open(), fieldChanged(), fieldTouched(), process(), process.reject(), close()
-    applyFilter: eateryFilterFormMeta.registrar.formActionGenesis({
-
-      // along with additional app-specific actions:
-
-                   // actions.applyFilter([filter]): Action
-                   // > apply listView filter (either supplied or from state)
-                   //   NOTE: logic supplements action with .entries[] and .filter (as needed)
-                   actionMeta: {
-                     traits: ['filter'],
-                     ratify: (filter=null) => [filter]
-                   },
-    }),
-
+    filterForm: eateryFilterFormMeta.registrar.formActionGenesis(),
 
     viewDetail: { // actions.viewDetail(eateryId): Action
                   // > view eatery details (from supplied eateryId)
