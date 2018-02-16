@@ -1,13 +1,14 @@
 import {combineReducers}  from 'redux';
 import {reducerHash}      from 'astx-redux-util';
 import {slicedReducer}    from 'feature-redux';
+import featureName        from './featureName';
 import actions            from './actions';
 import isString           from 'lodash.isstring';
 
 // ***
 // *** Our feature reducer, managing state for our device.
 // ***
-const reducer = slicedReducer('device', combineReducers({
+const reducer = slicedReducer(featureName, combineReducers({
 
   status: reducerHash({ // string: 'Waiting for bla bla bla' -or- 'READY'
     [actions.statusUpdate]: (state, action) => action.statusMsg,
