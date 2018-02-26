@@ -12,7 +12,7 @@ import publicFace       from './publicFace';
  */
 export default createFeature({
   name:    'sandbox',
-  enabled: true,
+  enabled: false,
 
   publicFace,
 });
