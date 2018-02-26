@@ -23,6 +23,8 @@ routeAspect.fallbackElm = <SplashScreen msg="I'm trying to think but it hurts!"/
 // ... StateRouter animation hook
 routeAspect.componentWillUpdateHook = () => LayoutAnimation.configureNext(LayoutAnimation.Presets.spring);
 
+// diagnostic: activate feature-u logging
+// launchApp.diag.logf.enable();
 
 // launch our app, exposing the feature-u App object (facilitating cross-feature communication)!
 export default launchApp({
