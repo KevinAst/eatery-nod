@@ -25,6 +25,7 @@ routeAspect.componentWillUpdateHook = () => LayoutAnimation.configureNext(Layout
 
 // diagnostic: activate feature-u logging
 // launchApp.diag.logf.enable();
+// launchApp.diag.logf.elm2html = (elm) => elm; // show react elms as object blobs
 
 // launch our app, exposing the feature-u App object (facilitating cross-feature communication)!
 export default launchApp({
