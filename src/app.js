@@ -7,7 +7,7 @@ import {logicAspect}     from 'feature-redux-logic';
 import {routeAspect}     from 'feature-router';
 import SplashScreen      from './util/comp/SplashScreen';
 import features          from './feature'; // the set of features that comprise this application
-
+import logActions        from './feature/logActions'; // enable/disable eatery-nod's action logger
 
 // define our set of "plugable" feature-u Aspects, conforming to our app's run-time stack
 const aspects = [
@@ -16,16 +16,16 @@ const aspects = [
   routeAspect,   // Feature Routes ... extending: Feature.route
 ];
 
-
-// configure our Aspects (as needed)
+// configure Aspects (as needed)
 // ... StateRouter fallback screen (when no routes are in effect)
 routeAspect.fallbackElm = <SplashScreen msg="I'm trying to think but it hurts!"/>;
 // ... StateRouter animation hook
 routeAspect.componentWillUpdateHook = () => LayoutAnimation.configureNext(LayoutAnimation.Presets.spring);
 
-// diagnostic: activate feature-u logging
-// launchApp.diag.logf.enable();
+// configure logging
+launchApp.diag.logf.enable(); // feature-u/plugin diagnostic logging
 // launchApp.diag.logf.elm2html = (elm) => elm; // show react elms as object blobs
+logActions.enabled = false;   // eatery-nod's action logger
 
 // launch our app, exposing the feature-u App object (facilitating cross-feature communication)!
 export default launchApp({
