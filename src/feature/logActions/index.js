@@ -7,6 +7,6 @@ import logic            from './logic';
  */
 export default createFeature({
   name,
-  enabled: true,
+  enabled: false,
   logic,
 });
