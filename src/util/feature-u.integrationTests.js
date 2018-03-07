@@ -11,7 +11,7 @@ import {createLogicMiddleware} from 'redux-logic';
 import {featureRoute, 
         PRIORITY}        from 'feature-router';
 import SplashScreen      from './comp/SplashScreen';
-import {diag}            from './diagnosticUtil';
+import {diag$}           from './diagnosticUtil';
 
 // ***
 // *** feature-u Ingegration Tests ---------------------------------------------
@@ -23,11 +23,11 @@ export default function feature_u_integrationTests() {
 
   // --- feature-redux -----------------------------------------------------------
 
-  diag.skip('feature-redux plugin: test PUBLIC allowNoReducers$', () => {
+  diag$.skip('feature-redux plugin: test PUBLIC allowNoReducers$', () => {
     test_allowNoReducers$();
   });
 
-  diag.skip('feature-redux plugin: test HIDDEN createReduxStore$', () => {
+  diag$.skip('feature-redux plugin: test HIDDEN createReduxStore$', () => {
     // override reducerAspect's creation of redux store (showing default implementation -WITH- our log)
     reducerAspect.config.createReduxStore$ = function (appReducer, middlewareArr) {
       console.log('OVERRIDING createReduxStore$ ... LOOK FOR THIS LOG');
@@ -40,11 +40,11 @@ export default function feature_u_integrationTests() {
 
   // --- feature-redux-logic -----------------------------------------------------
 
-  diag.skip('feature-redux-logic plugin: test PUBLIC allowNoLogic$', () => {
+  diag$.skip('feature-redux-logic plugin: test PUBLIC allowNoLogic$', () => {
     test_allowNoLogic$();
   });
   
-  diag.skip('feature-redux-logic plugin: test HIDDEN createLogicMiddleware$', () => {
+  diag$.skip('feature-redux-logic plugin: test HIDDEN createLogicMiddleware$', () => {
     // override logicAspect's creation of redux-logic middleware (showing default implementation)
     logicAspect.config.createLogicMiddleware$ = function(app, appLogic) {
       console.log('OVERRIDING createLogicMiddleware$ ... LOOK FOR THIS LOG');
@@ -63,13 +63,13 @@ export default function feature_u_integrationTests() {
   // NOTE: PUBLIC routeAspect.config.componentWillUpdateHook$: void ... invoked during react componentWillUpdate() life-cycle (OPTIONAL)
   //       is tested by eatery-nod directly
 
-  diag.skip('feature-router plugin: test PUBLIC allowNoRoutes$', () => {
+  diag$.skip('feature-router plugin: test PUBLIC allowNoRoutes$', () => {
     test_allowNoRoutes$();
   });
 
   // --- rename Aspect.name ----------------------------------------------------------
 
-  diag.skip('TEST ability to rename Aspect.name (on various plugin projects)', () => {
+  diag$.skip('TEST ability to rename Aspect.name (on various plugin projects)', () => {
     test_renameAspectName();
   });
 
@@ -82,7 +82,7 @@ export default function feature_u_integrationTests() {
 
 function test_allowNoReducers$() {
 
-  diag('test_allowNoReducers$() test PUBLIC allowNoReducers$ ... disable feature-u logging, so as to see forced logs', () => {
+  diag$('test_allowNoReducers$() test PUBLIC allowNoReducers$ ... disable feature-u logging, so as to see forced logs', () => {
     launchApp.diag.logf.disable();
   });
 
@@ -95,13 +95,13 @@ function test_allowNoReducers$() {
 
   // NOTE: run following sub-tests mutually exclusive
 
-  diag.skip('test_allowNoReducers$() 1st: insure allowNoReducers$ is NOT referenced when our features HAVE reducers ... should run normally', () => {
+  diag$.skip('test_allowNoReducers$() 1st: insure allowNoReducers$ is NOT referenced when our features HAVE reducers ... should run normally', () => {
     reducerAspect.config.allowNoReducers$ = (s) => "MY REDUCER";
   });
   // expecting app to run normally!
 
 
-  diag.skip('test_allowNoReducers$() 2nd: test DEFAULT EXCEPTION ... when our features HAVE NO reducers ... expecting: thrown exception', () => {
+  diag$.skip('test_allowNoReducers$() 2nd: test DEFAULT EXCEPTION ... when our features HAVE NO reducers ... expecting: thrown exception', () => {
     removeAllReducers();
   });
   // expecting Exception:
@@ -110,7 +110,7 @@ function test_allowNoReducers$() {
   //               (please refer to the feature-redux docs to see how to override this behavior).
 
 
-  diag.skip('test_allowNoReducers$() 3rd: test allowNoReducers$ = true ... when our features HAVE NO reducers ... expecting: forced log', () => {
+  diag$.skip('test_allowNoReducers$() 3rd: test allowNoReducers$ = true ... when our features HAVE NO reducers ... expecting: forced log', () => {
     removeAllReducers();
     reducerAspect.config.allowNoReducers$ = true;
   });
@@ -121,7 +121,7 @@ function test_allowNoReducers$() {
   //                              directed a continuation WITH the identity reducer.
 
 
-  diag.skip('test_allowNoReducers$() 4th: test allowNoReducers$ = reducerFn ... when our features HAVE NO reducers ... expecting: forced log', () => {
+  diag$.skip('test_allowNoReducers$() 4th: test allowNoReducers$ = reducerFn ... when our features HAVE NO reducers ... expecting: forced log', () => {
     removeAllReducers();
     reducerAspect.config.allowNoReducers$ = (s) => 'MY REDUCER';
   });
@@ -140,7 +140,7 @@ function test_allowNoReducers$() {
 
 function test_allowNoLogic$() {
 
-  diag('test_allowNoLogic$() test PUBLIC allowNoLogic$ ... disable feature-u logging, so as to see forced logs', () => {
+  diag$('test_allowNoLogic$() test PUBLIC allowNoLogic$ ... disable feature-u logging, so as to see forced logs', () => {
     launchApp.diag.logf.disable();
   });
 
@@ -153,13 +153,13 @@ function test_allowNoLogic$() {
 
   // NOTE: run following sub-tests mutually exclusive
 
-  diag.skip('test_allowNoLogic$() 1st: insure allowNoLogic$ is NOT referenced when our features HAVE logic ... should run normally', () => {
+  diag$.skip('test_allowNoLogic$() 1st: insure allowNoLogic$ is NOT referenced when our features HAVE logic ... should run normally', () => {
     logicAspect.config.allowNoLogic$ = ['simulatedLogicNotSoWell'];
   });
   // expecting app to run normally!
 
 
-  diag.skip('test_allowNoLogic$() 2nd: test DEFAULT EXCEPTION ... when our features HAVE NO logic ... expecting: thrown exception', () => {
+  diag$.skip('test_allowNoLogic$() 2nd: test DEFAULT EXCEPTION ... when our features HAVE NO logic ... expecting: thrown exception', () => {
     removeAllLogic();
   });
   // expecting Exception:
@@ -167,7 +167,7 @@ function test_allowNoLogic$() {
   //               ... did you forget to register Feature.logic aspects in your features?
   //               (please refer to the feature-redux-logic docs to see how to override this behavior).
 
-  diag.skip('test_allowNoLogic$() 3rd: test allowNoLogic$ = true ... when our features HAVE NO logic ... expecting: forced log', () => {
+  diag$.skip('test_allowNoLogic$() 3rd: test allowNoLogic$ = true ... when our features HAVE NO logic ... expecting: forced log', () => {
     removeAllLogic();
     logicAspect.config.allowNoLogic$ = true;
   });
@@ -177,7 +177,7 @@ function test_allowNoLogic$() {
   //                              but client override (logicAspect.config.allowNoLogic$=truthy;)
   //                              directed a continuation WITHOUT redux-logic.
 
-  diag.skip('test_allowNoLogic$() 4th: test allowNoLogic$ = [myLogic] ... when our features HAVE NO logic ... expecting: forced log', () => {
+  diag$.skip('test_allowNoLogic$() 4th: test allowNoLogic$ = [myLogic] ... when our features HAVE NO logic ... expecting: forced log', () => {
     removeAllLogic();
     logicAspect.config.allowNoLogic$ = ['simulatedLogicNotSoWell'];
   });
@@ -196,7 +196,7 @@ function test_allowNoLogic$() {
 
 function test_allowNoRoutes$() {
 
-  diag('test_allowNoRoutes$() test PUBLIC allowNoRoutes$ ... disable feature-u logging, so as to see forced logs', () => {
+  diag$('test_allowNoRoutes$() test PUBLIC allowNoRoutes$ ... disable feature-u logging, so as to see forced logs', () => {
     launchApp.diag.logf.disable();
   });
 
@@ -217,12 +217,12 @@ function test_allowNoRoutes$() {
 
   // NOTE: run following sub-tests mutually exclusive
 
-  diag.skip('test_allowNoRoutes$() 1st: insure allowNoRoutes$ is NOT referenced when our features HAVE routes ... should run normally', () => {
+  diag$.skip('test_allowNoRoutes$() 1st: insure allowNoRoutes$ is NOT referenced when our features HAVE routes ... should run normally', () => {
     routeAspect.config.allowNoRoutes$ = [fallbackRoute];
   });
   // expecting app to run normally!
 
-  diag.skip('test_allowNoRoutes$() 2nd: test DEFAULT EXCEPTION ... when our features HAVE NO routes ... expecting: thrown exception', () => {
+  diag$.skip('test_allowNoRoutes$() 2nd: test DEFAULT EXCEPTION ... when our features HAVE NO routes ... expecting: thrown exception', () => {
     removeAllRoutes();
   });
   // expecting Exception:
@@ -230,7 +230,7 @@ function test_allowNoRoutes$() {
   //               ... did you forget to register Feature.route aspects in your features?
   //               (please refer to the feature-router docs to see how to override this behavior).
 
-  diag.skip('test_allowNoRoutes$() 3rd: test allowNoRoutes$ = true ... when our features HAVE NO routes ... expecting: forced log', () => {
+  diag$.skip('test_allowNoRoutes$() 3rd: test allowNoRoutes$ = true ... when our features HAVE NO routes ... expecting: forced log', () => {
     removeAllRoutes();
     routeAspect.config.allowNoRoutes$ = true;
   });
@@ -240,7 +240,7 @@ function test_allowNoRoutes$() {
   //                              but client override (routeAspect.config.allowNoRoutes$=truthy;)
   //                              directed a continuation WITHOUT feature-router.
 
-  diag.skip('test_allowNoRoutes$() 4th: test allowNoRoutes$ = [routes] ... when our features HAVE NO routes ... expecting: forced log', () => {
+  diag$.skip('test_allowNoRoutes$() 4th: test allowNoRoutes$ = [routes] ... when our features HAVE NO routes ... expecting: forced log', () => {
     removeAllRoutes();
     routeAspect.config.allowNoRoutes$ = [fallbackRoute];
   });
@@ -259,13 +259,13 @@ function test_allowNoRoutes$() {
 
 function test_renameAspectName() {
 
-  diag('test_renameAspectName() TEST ability to rename Aspect.name ... enable feature-u logging, so as to see the fun', () => {
+  diag$('test_renameAspectName() TEST ability to rename Aspect.name ... enable feature-u logging, so as to see the fun', () => {
     launchApp.diag.logf.enable();
   });
 
   // NOTE: you may run following sub-tests together if you like
 
-  diag('test_renameAspectName() RENAME Aspect.name:reducer TO: Aspect.name:reducerX', () => {
+  diag$('test_renameAspectName() RENAME Aspect.name:reducer TO: Aspect.name:reducerX', () => {
 
     // rename Aspect.name:reducer
     reducerAspect.name = 'reducerX';         
@@ -285,7 +285,7 @@ function test_renameAspectName() {
     //     :reducerX  ... 22
   });
 
-  diag('test_renameAspectName() RENAME Aspect.name:logic TO: Aspect.name:logicX', () => {
+  diag$('test_renameAspectName() RENAME Aspect.name:logic TO: Aspect.name:logicX', () => {
 
     // rename Aspect.name:logic
     logicAspect.name = 'logicX';         
@@ -305,7 +305,7 @@ function test_renameAspectName() {
     //     :logicX  ... 15
   });
 
-  diag('test_renameAspectName() RENAME Aspect.name:route TO: Aspect.name:routeX', () => {
+  diag$('test_renameAspectName() RENAME Aspect.name:route TO: Aspect.name:routeX', () => {
 
     // rename Aspect.name:route
     routeAspect.name = 'routeX';         
