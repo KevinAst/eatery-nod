@@ -8,12 +8,6 @@ import {routeAspect}     from 'feature-router';
 import SplashScreen      from './util/comp/SplashScreen';
 import features          from './feature'; // the set of features that comprise this application
 
-// following imports are for diagnostic purposes only (i.e. NON Production)
-import {diag}      from './util/diagnosticUtil';
-import logActions  from './feature/logActions'; // enable eatery-nod "logActions" feature
-import sandbox     from './feature/sandbox';    // enable eatery-nod "sandbox" feature (in left-nav)
-import feature_u_integrationTests  from './util/feature-u.integrationTests';
-
 configureDiagnostics();
 
 // launch our app, exposing the feature-u App object (facilitating cross-feature communication)!
@@ -48,32 +42,41 @@ function appAspects() {
 }
 
 
+//******************************************************************************
+//*** NON Production Diagnostic Code follows ***********************************
+//******************************************************************************
+
+import {diag$}     from './util/diagnosticUtil';
+import logActions  from './feature/logActions'; // enable eatery-nod "logActions" feature
+import sandbox     from './feature/sandbox';    // enable eatery-nod "sandbox" feature (in left-nav)
+import feature_u_integrationTests  from './util/feature-u.integrationTests';
+
 // configure our diagnostics (if any)
 function configureDiagnostics() {
 
   // --- eatery-nod logging/sandbox ... ------------------------------------------
-  diag.skip('enable eatery-nod "logActions" feature', () => {
+  diag$.skip('enable eatery-nod "logActions" feature', () => {
     logActions.enabled = true;
   });
-  diag.skip('enable eatery-nod "sandbox" feature (in left-nav)', () => {
+  diag$.skip('enable eatery-nod "sandbox" feature (in left-nav)', () => {
     sandbox.enabled = true;
   });
 
   // --- feature-u logging related ... -------------------------------------------
-  diag.skip('enable feature-u logging', () => {
+  diag$.skip('enable feature-u logging', () => {
     launchApp.diag.logf.enable();
   });
-  diag.skip('show feature-u react elms as object blobs', () => {
+  diag$.skip('show feature-u react elms as object blobs', () => {
     launchApp.diag.logf.elm2html = (elm) => elm;
   });
-  diag.skip('show feature-u react elms as html markup', () => {
+  diag$.skip('show feature-u react elms as html markup', () => {
     // NOTE: requires ... import ReactDOMServer from 'react-dom/server';
     //       UNTESTED: react-native / expo has issues resolving this in node
     launchApp.diag.logf.elm2html = (elm) => ReactDOMServer.renderToStaticMarkup(elm);
   });
 
   // --- feature-u integration tests ... -----------------------------------------
-  diag.skip('perform feature-u integration tests', () => {
+  diag$.skip('perform feature-u integration tests', () => {
     feature_u_integrationTests();
   });
 }

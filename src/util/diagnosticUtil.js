@@ -30,10 +30,10 @@ export function skip$(desc, doThis) {
 //*** various aliases
 //***
 
-// ... diag/diag.skip ... nice in that the semantics are better for LOG only
-export const diag = do$;
-diag.skip = skip$;
+// ... diag$ / diag$.skip ... nice in that the semantics are better for LOG only
+export const diag$ = do$;
+diag$.skip = skip$;
 
-// ... YES$/NO$ ... hmmm
+// ... YES$ / NO$ ... hmmm
 export const YES$ = do$;
 export const NO$  = skip$;
