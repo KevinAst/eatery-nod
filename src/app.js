@@ -1,3 +1,4 @@
+import 'babel-polyfill'; // required for feature-u es2015+ constructs
 import React             from 'react';
 import Expo              from 'expo';
 import {LayoutAnimation} from 'react-native';
