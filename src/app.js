@@ -16,9 +16,7 @@ export default launchApp({
   aspects: appAspects(),
   features,
   registerRootAppElm(rootAppElm) {
-    console.log(`??? eatery-nod: invoking Expo.registerRootComponent() ... rootAppElm: `, rootAppElm);
     Expo.registerRootComponent(()=>rootAppElm); // convert rootAppElm to a React Component
-    console.log(`??? eatery-nod: AFTER Expo.registerRootComponent()`);
   }
 });
 
@@ -66,7 +64,7 @@ function configureDiagnostics() {
   });
 
   // --- feature-u logging related ... -------------------------------------------
-  diag$('enable feature-u logging', () => { // ?? .skip
+  diag$.skip('enable feature-u logging', () => {
     launchApp.diag.logf.enable();
   });
   diag$.skip('show feature-u react elms as object blobs', () => {
