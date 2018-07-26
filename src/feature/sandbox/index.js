@@ -12,7 +12,6 @@ import fassets          from './fassets';
  */
 export default createFeature({
   name:    'sandbox',
-  enabled: false,
-
+  enabled: true,
   fassets,
 });

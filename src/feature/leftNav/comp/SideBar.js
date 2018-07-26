@@ -1,5 +1,6 @@
-import React        from 'react';
-import connectRedux from '../../../util/connectRedux';
+import React           from 'react';
+import {connect}       from 'react-redux';
+import {withFassets }  from 'feature-u';
 import {Body,
         Button,
         Container,
@@ -18,7 +19,7 @@ import commonStyles from '../../commonStyles';
 /**
  * SideBar: our leftNav component, exposed through the Drawer.
  */
-function SideBar({deviceReady, changeView, handleFilterEatery, handleFilterDiscovery, handleSignOut}) {
+function SideBar({deviceReady, changeView, handleFilterEatery, handleFilterDiscovery, handleSignOut, leftNavItems}) {
 
   // when device is NOT ready, render a placebo
   // ... ex: system fonts must be loaded
@@ -28,44 +29,6 @@ function SideBar({deviceReady, changeView, handleFilterEatery, handleFilterDisco
         Device NOT ready (i.e. waiting for fonts to load)
       </Text>
     );
-  }
-
-  // define our production menu items
-  let menuItems = [
-
-    <ListItem key="eateriesMenu" icon onPress={()=>changeView('eateries')}>
-      <Left>
-        <Icon name="bonfire" style={{color: 'red'}}/>
-      </Left>
-      <Body>
-        <Text style={{color: 'red'}}>Pool</Text>
-      </Body>
-      <Right>
-        <Button transparent onPress={handleFilterEatery}>
-          <Icon active name="options"/>
-        </Button>
-      </Right>
-    </ListItem>,
-
-    <ListItem key="discoveryMenu" icon onPress={()=>changeView('discovery')}>
-      <Left>
-        <Icon name="cloud" style={{color: 'green'}}/>
-      </Left>
-      <Body>
-        <Text style={{color: 'green'}}>Discovery</Text>
-      </Body>
-      <Right>
-        <Button transparent onPress={handleFilterDiscovery}>
-          <Icon active name="options"/>
-        </Button>
-      </Right>
-    </ListItem>
-
-  ];
-
-  // optionally inject any sandbox menu items (when the feature is enabled)
-  if (fassets.sandbox && fassets.sandbox.leftNavListItems) {
-    menuItems = [...menuItems, fassets.sandbox.leftNavListItems];
   }
 
   // render our menu
@@ -83,7 +46,45 @@ function SideBar({deviceReady, changeView, handleFilterEatery, handleFilterDisco
       </Header>
       <Content>
         <List>
-          {menuItems}
+
+          {/* production items */}
+          <ListItem key="eateriesMenu" icon onPress={()=>changeView('eateries')}>
+            <Left>
+              <Icon name="bonfire" style={{color: 'red'}}/>
+            </Left>
+            <Body>
+              <Text style={{color: 'red'}}>Pool</Text>
+            </Body>
+            <Right>
+              <Button transparent onPress={handleFilterEatery}>
+                <Icon active name="options"/>
+              </Button>
+            </Right>
+          </ListItem>
+
+          <ListItem key="discoveryMenu" icon onPress={()=>changeView('discovery')}>
+            <Left>
+              <Icon name="cloud" style={{color: 'green'}}/>
+            </Left>
+            <Body>
+              <Text style={{color: 'green'}}>Discovery</Text>
+            </Body>
+            <Right>
+              <Button transparent onPress={handleFilterDiscovery}>
+                <Icon active name="options"/>
+              </Button>
+            </Right>
+          </ListItem>
+
+          {/* diagnostic items */}
+          {/* JSX requires keys for array 
+              - if NOT: Warning: Each child in an array or iterator should have a unique "key" prop.
+              - I think in this case the array index will suffice, only because the fassets collection will not change
+                ... assuming you don't inject the fassets key with some conditional logic
+                ... otherwise, it's up to the app to supply an appropriate key
+            */}
+          {leftNavItems.map( (LeftNavItem, indx) => <LeftNavItem key={indx}/> )}
+          
         </List>
       </Content>
     </Container>
@@ -104,30 +105,49 @@ export function closeSideBar() {
 }
 
 
-export default connectRedux(SideBar, {
-  mapStateToProps(appState) {
-    return {
-      deviceReady: fassets.device.sel.isDeviceReady(appState),
-    };
-  },
-  mapDispatchToProps(dispatch) {
-    return {
-      changeView(viewName) {
-        dispatch( fassets.currentView.actions.changeView(viewName) );
-        closeSideBar();
-      },
-      handleFilterEatery() {
-        dispatch( fassets.eateries.actions.openFilterDialog() );
-        closeSideBar();
-      },
-      handleFilterDiscovery() {
-        dispatch( fassets.discovery.actions.openFilterDialog() );
-        closeSideBar();
-      },
-      handleSignOut() {
-        dispatch( fassets.auth.actions.signOut() );
-        closeSideBar();
-      },
-    };
-  },
-});
+// ***
+// *** inject various state items into our component
+// ***   NOTE: we use the native redux connect() to chain multiple HoC
+// ***
+
+function mapStateToProps(appState) {
+  return {
+    deviceReady: fassets.device.sel.isDeviceReady(appState),
+  };
+}
+
+function mapDispatchToProps(dispatch) {
+  return {
+    changeView(viewName) {
+      dispatch( fassets.currentView.actions.changeView(viewName) );
+      closeSideBar();
+    },
+    handleFilterEatery() {
+      dispatch( fassets.eateries.actions.openFilterDialog() );
+      closeSideBar();
+    },
+    handleFilterDiscovery() {
+      dispatch( fassets.discovery.actions.openFilterDialog() );
+      closeSideBar();
+    },
+    handleSignOut() {
+      dispatch( fassets.auth.actions.signOut() );
+      closeSideBar();
+    },
+  };
+}
+
+const reduxConnectedSideBar = connect(mapStateToProps, mapDispatchToProps)(SideBar);
+
+
+// ***
+// *** inject various fassets (feature assets) into our component
+// ***
+
+const withFassetsSideBar = withFassets({
+  mapFassetsToProps: {
+    leftNavItems:  'leftNavItem.*', // this is the manifestation of our use contract ... i.e. we use these items
+  }
+})(reduxConnectedSideBar);
+
+export default withFassetsSideBar;
