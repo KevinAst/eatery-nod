@@ -4,7 +4,7 @@ The **'auth'** feature promotes complete user authentication.
 It accomplishes the following:
 
  - starts authorization process by monitoring device ready action
-   (`app.device.actions.ready`) **(logic)**
+   (`fassets.device.actions.ready`) **(logic)**
 
    - interacts with authentication services **(logic, reducer)**
 
@@ -23,7 +23,7 @@ It accomplishes the following:
 
  - emits key action that triggers downstream app process **(logic)**:
    ```
-   app.auth.actions.userProfileChanged(userProfile({name,pool}))
+   fassets.auth.actions.userProfileChanged(userProfile({name,pool}))
    ```
 
 
