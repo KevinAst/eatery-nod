@@ -1,12 +1,13 @@
 import {openSideBar,
         closeSideBar}  from './comp/SideBar';
+import featureName     from './featureName';
 
 /**
  * The Public Face promoted by this feature.
  */
 export default {
   define: {
-    'leftNav.open':  openSideBar,  // open():  void ... open  the SideBar
-    'leftNav.close': closeSideBar, // close(): void ... close the SideBar
+    [`${featureName}.open`]:  openSideBar,  // open():  void ... open  the SideBar
+    [`${featureName}.close`]: closeSideBar, // close(): void ... close the SideBar
   }
 };

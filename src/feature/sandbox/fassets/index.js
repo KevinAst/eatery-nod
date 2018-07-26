@@ -5,6 +5,7 @@ import leftNavListItems from './leftNavListItems';
  */
 export default {
   define: {
+    // ?? we currently have NO featureName ... this needs retrofitting anyway
     'sandbox.leftNavListItems':  leftNavListItems,
   }
 };

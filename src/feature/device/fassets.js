@@ -3,18 +3,19 @@ import {areFontsLoaded,
         isDeviceReady,
         getDeviceLoc}    from './state';
 import actions           from './actions';
+import featureName       from './featureName';
 
 /**
  * The Public Face promoted by this feature.
  */
 export default {
   define: {
-    'device.api': api,
+    [`${featureName}.api`]: api,
 
-    'device.sel.areFontsLoaded': areFontsLoaded,
-    'device.sel.isDeviceReady':  isDeviceReady,
-    'device.sel.getDeviceLoc':   getDeviceLoc,
+    [`${featureName}.sel.areFontsLoaded`]: areFontsLoaded,
+    [`${featureName}.sel.isDeviceReady`]:  isDeviceReady,
+    [`${featureName}.sel.getDeviceLoc`]:   getDeviceLoc,
 
-    'device.actions.ready': actions.ready,
+    [`${featureName}.actions.ready`]: actions.ready,
   }
 };

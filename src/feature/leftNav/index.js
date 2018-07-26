@@ -1,4 +1,5 @@
 import {createFeature}  from 'feature-u';
+import name             from './featureName';
 import fassets          from './fassets';
 import appWillStart     from './appWillStart';
 
@@ -17,7 +18,7 @@ import appWillStart     from './appWillStart';
  * You can see a Screen Flow diagram at: `docs/ScreenFlow.png`.
  */
 export default createFeature({
-  name: 'leftNav',
+  name,
 
   fassets,
 
