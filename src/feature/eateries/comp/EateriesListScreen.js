@@ -19,7 +19,7 @@ import SplashScreen  from '../../../util/comp/SplashScreen';
 import commonStyles  from '../../commonStyles';
 import actions       from '../actions';
 import * as sel      from '../state';
-import app           from '../../../app';
+import fassets       from '../../../app';
 
 /**
  * EateriesListScreen displaying a set of eateries (possibly filtered).
@@ -70,7 +70,7 @@ function EateriesListScreen({filteredEateries, filter, showDetail, handleSpin}) 
     <Container style={commonStyles.container}>
       <Header>
         <Left>
-          <Button transparent onPress={app.leftNav.open}>
+          <Button transparent onPress={fassets.leftNav.open}>
             <Icon name="menu"/>
           </Button>
         </Left>

@@ -1,6 +1,6 @@
 import {createFeature}  from 'feature-u';
 import name             from './featureName';
-import publicFace       from './publicFace';
+import fassets          from './fassets';
 import reducer          from './state';
 
 /**
@@ -9,8 +9,8 @@ import reducer          from './state';
  * This is a **very simple process**.  It merely provides a
  * cross-communication mechanism to:
  * 
- *  1. set the currentView ... `app.currentView.actions.changeView(viewName)`
- *  2. get the currentView ... `app.currentView.sel.getView(appState)`
+ *  1. set the currentView ... `fassets.currentView.actions.changeView(viewName)`
+ *  2. get the currentView ... `fassets.currentView.sel.getView(appState)`
  * 
  * It is up to the various view-specific features to set/interpret.  A
  * **best practice** would be to maintain the currentView value
@@ -25,7 +25,7 @@ import reducer          from './state';
 export default createFeature({
   name,
 
-  publicFace,
+  fassets,
 
   reducer,
 });

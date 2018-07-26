@@ -10,7 +10,7 @@ import actions            from './actions';
 // *** Our feature reducer, managing state for our authoration process.
 // ***
 
-// NOTE: managedExpansion() is used NOT for app injection,
+// NOTE: managedExpansion() is used NOT for fassets injection,
 //       but RATHER to delay expansion (avoiding circular dependancies
 //       in selector access from signInFormMeta.js)
 const reducer = slicedReducer(featureName, managedExpansion( () => combineReducers({

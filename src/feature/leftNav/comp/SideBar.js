@@ -12,7 +12,7 @@ import {Body,
         Right,
         Text,
         Title}      from 'native-base';
-import app          from '../../../app';
+import fassets      from '../../../app';
 import commonStyles from '../../commonStyles';
 
 /**
@@ -64,8 +64,8 @@ function SideBar({deviceReady, changeView, handleFilterEatery, handleFilterDisco
   ];
 
   // optionally inject any sandbox menu items (when the feature is enabled)
-  if (app.sandbox && app.sandbox.leftNavListItems) {
-    menuItems = [...menuItems, app.sandbox.leftNavListItems];
+  if (fassets.sandbox && fassets.sandbox.leftNavListItems) {
+    menuItems = [...menuItems, fassets.sandbox.leftNavListItems];
   }
 
   // render our menu
@@ -107,25 +107,25 @@ export function closeSideBar() {
 export default connectRedux(SideBar, {
   mapStateToProps(appState) {
     return {
-      deviceReady: app.device.sel.isDeviceReady(appState),
+      deviceReady: fassets.device.sel.isDeviceReady(appState),
     };
   },
   mapDispatchToProps(dispatch) {
     return {
       changeView(viewName) {
-        dispatch( app.currentView.actions.changeView(viewName) );
+        dispatch( fassets.currentView.actions.changeView(viewName) );
         closeSideBar();
       },
       handleFilterEatery() {
-        dispatch( app.eateries.actions.openFilterDialog() );
+        dispatch( fassets.eateries.actions.openFilterDialog() );
         closeSideBar();
       },
       handleFilterDiscovery() {
-        dispatch( app.discovery.actions.openFilterDialog() );
+        dispatch( fassets.discovery.actions.openFilterDialog() );
         closeSideBar();
       },
       handleSignOut() {
-        dispatch( app.auth.actions.signOut() );
+        dispatch( fassets.auth.actions.signOut() );
         closeSideBar();
       },
     };

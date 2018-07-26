@@ -12,7 +12,7 @@ import {Body,
         Text,
         Title}      from 'native-base';
 import PropTypes    from 'prop-types';
-import app          from '../../app';
+import fassets      from '../../app';
 import commonStyles from '../../feature/commonStyles';
 
 
@@ -60,7 +60,7 @@ export default connectRedux(SplashScreen, {
   mapStateToProps(appState) {
     return {
       // hmmm ... inappropriate coupling: common component <SplashScreen> using app-specific info
-      fontsLoaded: app.device.sel.areFontsLoaded(appState),
+      fontsLoaded: fassets.device.sel.areFontsLoaded(appState),
     };
   },
 });

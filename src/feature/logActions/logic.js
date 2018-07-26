@@ -33,7 +33,7 @@ export const actionLogger = createLogic({
     next(action);
   },
 
-  process({getState, action, app}, dispatch, done) {
+  process({getState, action, fassets}, dispatch, done) {
     const curState = getState();
     if (curState === lastState) {
       console.log('Current State: UNCHANGED');

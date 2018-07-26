@@ -6,7 +6,7 @@ import {Body,
         ListItem,
         Right,
         Text}      from 'native-base';
-import app         from '../../../app';
+import fassets     from '../../../app';
 import {notify,
         toast,
         alert,
@@ -181,7 +181,7 @@ export default [
 
 
 function closeSideBar() {
-  app.leftNav.close();
+  fassets.leftNav.close();
 }
 
 // ***

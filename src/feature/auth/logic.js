@@ -15,10 +15,10 @@ import {alert, toast}     from '../../util/notify';
  *       except our downstream processes are dependent on device.loc, so we wait and
  *       trigger the process here.
  */
-export const startAuthorization = managedExpansion( (app) => createLogic({
+export const startAuthorization = managedExpansion( (fassets) => createLogic({
 
   name: `${featureName}.startAuthorization`,
-  type: String(app.device.actions.ready),
+  type: String(fassets.device.actions.ready),
   
   process({getState, action}, dispatch, done) {
     dispatch( actions.bootstrap() );
@@ -35,8 +35,8 @@ export const checkDeviceCredentials = createLogic({
   name: `${featureName}.checkDeviceCredentials`,
   type: String(actions.bootstrap),
 
-  process({getState, action, app}, dispatch, done) {
-    app.device.api.fetchCredentials()
+  process({getState, action, fassets}, dispatch, done) {
+    fassets.device.api.fetchCredentials()
        .then( (encodedCredentials) => {
          if (encodedCredentials) {
            dispatch( actions.bootstrap.haveDeviceCredentials(encodedCredentials) );
@@ -63,8 +63,8 @@ export const autoSignIn = createLogic({
   name: `${featureName}.autoSignIn`,
   type: String(actions.bootstrap.haveDeviceCredentials),
   
-  process({getState, action, app}, dispatch, done) {
-    const {email, pass} = app.device.api.decodeCredentials(action.encodedCredentials);
+  process({getState, action, fassets}, dispatch, done) {
+    const {email, pass} = fassets.device.api.decodeCredentials(action.encodedCredentials);
     dispatch( actions.signIn(email, pass) );
     done();
   },
@@ -116,11 +116,11 @@ export const signIn = createLogic({
   type: String(actions.signIn),
   warnTimeout: 0, // long-running logic ... UNFORTUNATELY firebase is sometimes EXCRUCIATINGLY SLOW!
 
-  process({getState, action, app}, dispatch, done) {
+  process({getState, action, fassets}, dispatch, done) {
     firebase.auth().signInWithEmailAndPassword(action.email, action.pass)
             .then( user => {
               // console.log(`xx logic ${featureName}.signIn: signInWithEmailAndPassword() WORKED, user: `, user);
-              app.device.api.storeCredentials(action.email, action.pass)
+              fassets.device.api.storeCredentials(action.email, action.pass)
                  .catch( (err) => {
                    // hmmmm ... nested errors in a promise are caught in the outer catch (need to better understand this)
                  });
@@ -281,7 +281,7 @@ export const signOut = createLogic({
   name: `${featureName}.signOut`,
   type: String(actions.signOut),
 
-  process({getState, action, app}, dispatch, done) {
+  process({getState, action, fassets}, dispatch, done) {
     firebase.auth().signOut()
             .catch( (err) => {
               // simply report unexpected error to user
@@ -295,7 +295,7 @@ export const signOut = createLogic({
                 ]
               });
             });
-    app.device.api.removeCredentials()
+    fassets.device.api.removeCredentials()
        .catch( (err) => {
          // simply report unexpected error to user
          toast.error({  // ... will auto close -OR- when "details" is clicked
@@ -317,9 +317,9 @@ export const signOut = createLogic({
 
 // promote all logic modules for this feature
 // ... NOTE: individual logic modules are unit tested using the named exports.
-export default managedExpansion( (app) => [
+export default managedExpansion( (fassets) => [
 
-  startAuthorization(app),
+  startAuthorization(fassets),
 
   checkDeviceCredentials,
   autoSignIn,

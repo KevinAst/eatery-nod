@@ -1,7 +1,7 @@
 import {createFeature}  from 'feature-u';
 import name             from './featureName';
 import actions          from './actions'; // TODO: QUERKYNESS of IFormMeta (aggravated by feature-u) ... actions MUST be expanded BEFORE IFormMeta instance (eateryFilterFormMeta)
-import publicFace       from './publicFace';
+import fassets          from './fassets';
 import reducer          from './state';
 import logic            from './logic';
 import route            from './route';
@@ -26,7 +26,7 @@ import appDidStart      from './appDidStart';
 export default createFeature({
   name,
 
-  publicFace,
+  fassets,
 
   reducer,
   logic,

@@ -1,7 +1,7 @@
 import {createFeature}  from 'feature-u';
 import name             from './featureName';
 import actions          from './actions'; // TODO: QUERKYNESS of IFormMeta (aggravated by feature-u) ... actions MUST be expanded BEFORE IFormMeta instance (signInFormMeta)
-import publicFace       from './publicFace';
+import fassets          from './fassets';
 import reducer          from './state';
 import logic            from './logic';
 import route            from './route';
@@ -11,7 +11,7 @@ import route            from './route';
  * It accomplishes the following:
  * 
  *  - starts authorization process by monitoring device ready action
- *    (`app.device.actions.ready`) **(logic)**
+ *    (`fassets.device.actions.ready`) **(logic)**
  * 
  *    - interacts with authentication services **(logic, reducer)**
  * 
@@ -30,7 +30,7 @@ import route            from './route';
  * 
  *  - emits key action that triggers downstream app process **(logic)**:
  *    ```
- *    app.auth.actions.userProfileChanged(userProfile({name,pool}))
+ *    fassets.auth.actions.userProfileChanged(userProfile({name,pool}))
  *    ```
  *
  * **State Transition**
@@ -46,7 +46,7 @@ import route            from './route';
 export default createFeature({
   name,
 
-  publicFace,
+  fassets,
 
   reducer,
   logic,

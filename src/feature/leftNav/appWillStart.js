@@ -7,7 +7,7 @@ import SideBar,
 /**
  * Inject our Drawer/SideBar component at the root of our app
  */
-export default function appWillStart({app, curRootAppElm}) {
+export default function appWillStart({fassets, curRootAppElm}) {
   return (
     <Drawer ref={ ref => registerDrawer(ref) }
             content={<SideBar/>}
