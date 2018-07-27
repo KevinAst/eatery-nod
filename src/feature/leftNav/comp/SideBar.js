@@ -1,5 +1,5 @@
 import React           from 'react';
-import {connect}       from 'react-redux';
+import connectRedux    from '../../../util/connectRedux';
 import {withFassets }  from 'feature-u';
 import {Body,
         Button,
@@ -7,9 +7,7 @@ import {Body,
         Content,
         Icon,
         Header,
-        Left,
         List,
-        ListItem,
         Right,
         Text,
         Title}      from 'native-base';
@@ -19,7 +17,7 @@ import commonStyles from '../../commonStyles';
 /**
  * SideBar: our leftNav component, exposed through the Drawer.
  */
-function SideBar({deviceReady, changeView, handleFilterEatery, handleFilterDiscovery, handleSignOut, leftNavItems}) {
+function SideBar({deviceReady, handleSignOut, leftNavItems}) {
 
   // when device is NOT ready, render a placebo
   // ... ex: system fonts must be loaded
@@ -46,50 +44,18 @@ function SideBar({deviceReady, changeView, handleFilterEatery, handleFilterDisco
       </Header>
       <Content>
         <List>
-
-          {/* production items */}
-          <ListItem key="eateriesMenu" icon onPress={()=>changeView('eateries')}>
-            <Left>
-              <Icon name="bonfire" style={{color: 'red'}}/>
-            </Left>
-            <Body>
-              <Text style={{color: 'red'}}>Pool</Text>
-            </Body>
-            <Right>
-              <Button transparent onPress={handleFilterEatery}>
-                <Icon active name="options"/>
-              </Button>
-            </Right>
-          </ListItem>
-
-          <ListItem key="discoveryMenu" icon onPress={()=>changeView('discovery')}>
-            <Left>
-              <Icon name="cloud" style={{color: 'green'}}/>
-            </Left>
-            <Body>
-              <Text style={{color: 'green'}}>Discovery</Text>
-            </Body>
-            <Right>
-              <Button transparent onPress={handleFilterDiscovery}>
-                <Icon active name="options"/>
-              </Button>
-            </Right>
-          </ListItem>
-
-          {/* diagnostic items */}
-          {/* JSX requires keys for array 
-              - if NOT: Warning: Each child in an array or iterator should have a unique "key" prop.
-              - I think in this case the array index will suffice, only because the fassets collection will not change
-                ... assuming you don't inject the fassets key with some conditional logic
-                ... otherwise, it's up to the app to supply an appropriate key
-            */}
+          {/* pull in leftNav menu items from accross all features */}
           {leftNavItems.map( (LeftNavItem, indx) => <LeftNavItem key={indx}/> )}
-          
         </List>
       </Content>
     </Container>
   );
 }
+
+
+// ***
+// *** various SideBar utility functions
+// ***
 
 let _drawer = null;
 export function registerDrawer(drawer) {
@@ -107,47 +73,33 @@ export function closeSideBar() {
 
 // ***
 // *** inject various state items into our component
-// ***   NOTE: we use the native redux connect() to chain multiple HoC
 // ***
 
-function mapStateToProps(appState) {
-  return {
-    deviceReady: fassets.device.sel.isDeviceReady(appState),
-  };
-}
-
-function mapDispatchToProps(dispatch) {
-  return {
-    changeView(viewName) {
-      dispatch( fassets.currentView.actions.changeView(viewName) );
-      closeSideBar();
-    },
-    handleFilterEatery() {
-      dispatch( fassets.eateries.actions.openFilterDialog() );
-      closeSideBar();
-    },
-    handleFilterDiscovery() {
-      dispatch( fassets.discovery.actions.openFilterDialog() );
-      closeSideBar();
-    },
-    handleSignOut() {
-      dispatch( fassets.auth.actions.signOut() );
-      closeSideBar();
-    },
-  };
-}
-
-const reduxConnectedSideBar = connect(mapStateToProps, mapDispatchToProps)(SideBar);
+const SideBarWithState = connectRedux(SideBar, {
+  mapStateToProps(appState) {
+    return {
+      deviceReady: fassets.device.sel.isDeviceReady(appState),
+    };
+  },
+  mapDispatchToProps(dispatch) {
+    return {
+      handleSignOut() {
+        dispatch( fassets.auth.actions.signOut() );
+        closeSideBar();
+      },
+    };
+  },
+});
 
 
 // ***
 // *** inject various fassets (feature assets) into our component
 // ***
 
-const withFassetsSideBar = withFassets({
+const SideBarWithFassets = withFassets({
   mapFassetsToProps: {
     leftNavItems:  'leftNavItem.*', // this is the manifestation of our use contract ... i.e. we use these items
   }
-})(reduxConnectedSideBar);
+})(SideBarWithState);
 
-export default withFassetsSideBar;
+export default SideBarWithFassets;
