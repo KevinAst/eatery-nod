@@ -12,6 +12,6 @@ export default {
     [`${featureName}.close`]: closeSideBar, // close(): void ... close the SideBar
   },
   use: [
-    ['leftNavItem.*', {required: false, type: fassetValidations.comp}], // expecting: <ListItem/>
+    ['leftNavItem.*', {required: true, type: fassetValidations.comp}], // expecting: <ListItem/>
   ],
 };
