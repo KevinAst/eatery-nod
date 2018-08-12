@@ -2,7 +2,7 @@ import {connect} from 'react-redux';
 import verify    from './verify';
 
 /**
- * 
+ * ?? REPLACED BY: withState()
  * Connect the supplied react component to the redux store, returning
  * a higher-order react component.
  * 
