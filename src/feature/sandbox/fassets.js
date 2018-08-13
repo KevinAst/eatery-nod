@@ -24,13 +24,13 @@ export default {
     // *** Sandbox items to see what happens to logs in published apps
     // ***
 
-    'leftNavItem.publishedLogTestXheader': () => (
+    'leftNavItem.publishedLogTest_header': () => (
       <ListItem itemDivider>
         <Text>Published Logs Test</Text>
       </ListItem>
     ),
 
-    'leftNavItem.publishedLogTestXlog': () => (
+    'leftNavItem.publishedLogTest_log': () => (
       <ListItem icon onPress={()=>console.log('Here is a console.log() probe.')}>
         <Left>
           <Icon name="alert" style={{color: 'black'}}/>
@@ -42,7 +42,7 @@ export default {
       </ListItem>
     ),
     
-    'leftNavItem.publishedLogTestXwarn': () => (
+    'leftNavItem.publishedLogTest_warn': () => (
       <ListItem icon onPress={()=>console.warn('Here is a console.warn() probe.')}>
         <Left>
           <Icon name="alert" style={{color: 'orange'}}/>
@@ -54,7 +54,7 @@ export default {
       </ListItem>
     ),
     
-    'leftNavItem.publishedLogTestXerror': () => (
+    'leftNavItem.publishedLogTest_error': () => (
       <ListItem icon onPress={()=>console.error('Here is a console.error() probe.')}>
         <Left>
           <Icon name="alert" style={{color: 'red'}}/>
@@ -77,7 +77,7 @@ export default {
       </ListItem>
     ),
     
-    'leftNavItem.notifyXMsg': () => (
+    'leftNavItem.notify_Msg': () => (
       <ListItem icon onPress={()=>Msg(false)}>
         <Left>
           <Icon name="alert" style={{color: 'purple'}}/>
@@ -93,7 +93,7 @@ export default {
       </ListItem>
     ),
     
-    'leftNavItem.notifyXMsgXwXDur': () => (
+    'leftNavItem.notify_Msg_w_Dur': () => (
       <ListItem icon onPress={()=>Msg_w_Dur(false)}>
         <Left>
           <Icon name="alert" style={{color: 'purple'}}/>
@@ -109,7 +109,7 @@ export default {
       </ListItem>
     ),
     
-    'leftNavItem.notifyXMsgXwXAct': () => (
+    'leftNavItem.notify_Msg_w_Act': () => (
       <ListItem icon onPress={()=>Msg_w_Act(false)}>
         <Left>
           <Icon name="alert" style={{color: 'purple'}}/>
@@ -125,7 +125,7 @@ export default {
       </ListItem>
     ),
     
-    'leftNavItem.notifyXMsgXwXActXDur': () => (
+    'leftNavItem.notify_Msg_w_Act_Dur': () => (
       <ListItem icon onPress={()=>Msg_w_Act_Dur(false)}>
         <Left>
           <Icon name="alert" style={{color: 'purple'}}/>
@@ -147,7 +147,7 @@ export default {
       </ListItem>
     ),
     
-    'leftNavItem.wrapperXtoast': () => (
+    'leftNavItem.wrapper_toast': () => (
       <ListItem icon onPress={()=> {closeSideBar(); toast({ msg:'Here is a toast to you!' })}}>
         <Left>
           <Icon name="alert" style={{color: 'purple'}}/>
@@ -158,7 +158,7 @@ export default {
       </ListItem>
     ),
     
-    'leftNavItem.wrapperXtoastXwarn': () => (
+    'leftNavItem.wrapper_toast_warn': () => (
       <ListItem icon onPress={()=> {
           closeSideBar();
           toast.warn({
@@ -177,7 +177,7 @@ export default {
       </ListItem>
     ),
     
-    'leftNavItem.wrapperXtoastXerror': () => (
+    'leftNavItem.wrapper_toast_error': () => (
       <ListItem icon onPress={()=> {closeSideBar(); alert.error({ msg: 'This is an alert error.\nYou must explicitly acknowledge it by clicking OK.' })}}>
         <Left>
           <Icon name="alert" style={{color: 'purple'}}/>
@@ -188,7 +188,7 @@ export default {
       </ListItem>
     ),
     
-    'leftNavItem.wrapperXconfirmXwarn': () => (
+    'leftNavItem.wrapper_confirm_warn': () => (
       <ListItem icon onPress={()=> {
           closeSideBar();
           confirm.warn({ 
