@@ -1,11 +1,11 @@
-import {createLogic}      from 'redux-logic';
-import firebase           from 'firebase';
-import {managedExpansion} from 'feature-u';
-import featureName        from './featureName';
-import actions            from './actions';
-import * as sel           from './state';
-import signInFormMeta     from './signInFormMeta';
-import {alert, toast}     from '../../util/notify';
+import {createLogic}        from 'redux-logic';
+import firebase             from 'firebase';
+import {expandWithFassets}  from 'feature-u';
+import featureName          from './featureName';
+import actions              from './actions';
+import * as sel             from './state';
+import signInFormMeta       from './signInFormMeta';
+import {alert, toast}       from '../../util/notify';
 
 
 /**
@@ -15,7 +15,7 @@ import {alert, toast}     from '../../util/notify';
  *       except our downstream processes are dependent on device.loc, so we wait and
  *       trigger the process here.
  */
-export const startAuthorization = managedExpansion( (fassets) => createLogic({
+export const startAuthorization = expandWithFassets( (fassets) => createLogic({
 
   name: `${featureName}.startAuthorization`,
   type: String(fassets.device.actions.ready),
@@ -317,7 +317,7 @@ export const signOut = createLogic({
 
 // promote all logic modules for this feature
 // ... NOTE: individual logic modules are unit tested using the named exports.
-export default managedExpansion( (fassets) => [
+export default expandWithFassets( (fassets) => [
 
   startAuthorization(fassets),
 

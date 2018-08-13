@@ -3,12 +3,12 @@ import discoveryFilterFormMeta from './discoveryFilterFormMeta';
 import actions                 from './actions';
 import featureName             from './featureName';
 import * as sel                from './state';
-import {managedExpansion}      from 'feature-u';
+import {expandWithFassets}     from 'feature-u';
 
 /**
  * Initially retrieve discovery eateries, on 'discovery' view change.
  */
-export const initialRetrieve = managedExpansion( (fassets) => createLogic({
+export const initialRetrieve = expandWithFassets( (fassets) => createLogic({
 
   name: `${featureName}.initialRetrieve`,
   type: String(fassets.currentView.actions.changeView),
@@ -136,7 +136,7 @@ export const nextPage = createLogic({
 
 // promote all logic (accumulated in index.js)
 // ... named exports (above) are used by unit tests :-)
-export default managedExpansion( (fassets) => [
+export default expandWithFassets( (fassets) => [
   ...discoveryFilterFormMeta.registrar.formLogic(), // discoveryFilter iForm logic modules
   defaultFilter,
   initialRetrieve(fassets),

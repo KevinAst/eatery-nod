@@ -5,7 +5,7 @@ import eateryFilterFormMeta from './eateryFilterFormMeta';
 import featureName          from './featureName';
 import * as sel             from './state';
 import actions              from './actions';
-import {managedExpansion}   from 'feature-u';
+import {expandWithFassets}  from 'feature-u';
 
 /**
  * Monitor our persistent data changes associated to a given pool.
@@ -17,7 +17,7 @@ let curDbPoolMonitor = { // existing "pool" monitor (if any)
   wrapUp: () => 'no-op', // type: function(): void ... wrap-up monitor (both firebase -and- logic)
 };
 
-export const monitorDbPool = managedExpansion( (fassets) => createLogic({
+export const monitorDbPool = expandWithFassets( (fassets) => createLogic({
 
   name:        `${featureName}.monitorDbPool`,
   type:        String(fassets.auth.actions.userProfileChanged), // NOTE: action contains: action.userProfile.pool
@@ -240,7 +240,7 @@ export const removeFromPool = createLogic({
 
 // promote all logic (accumulated in index.js)
 // ... named exports (above) are used by unit tests :-)
-export default managedExpansion( (fassets) => [
+export default expandWithFassets( (fassets) => [
   monitorDbPool(fassets),
   ...eateryFilterFormMeta.registrar.formLogic(), // inject the standard eatery filter form-based logic modules
   defaultFilter,

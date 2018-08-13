@@ -1,6 +1,6 @@
 import {combineReducers}     from 'redux';
 import {reducerHash}         from 'astx-redux-util';
-import {managedExpansion}    from 'feature-u';
+import {expandWithFassets}   from 'feature-u';
 import {slicedReducer}       from 'feature-redux';
 import {createSelector}      from 'reselect';
 import featureName           from './featureName';
@@ -11,10 +11,10 @@ import actions               from './actions';
 // *** Our feature reducer, managing state for our eateries process.
 // ***
 
-// NOTE: managedExpansion() is used NOT for app injection,
+// NOTE: expandWithFassets() is used NOT for app injection,
 //       but RATHER to delay expansion (avoiding circular dependancies
 //       in selector access from eateryFilterFormMeta.js)
-const reducer = slicedReducer(`view.${featureName}`, managedExpansion( () => combineReducers({
+const reducer = slicedReducer(`view.${featureName}`, expandWithFassets( () => combineReducers({
 
   // raw eatery entries synced from firebase realtime DB
   dbPool: reducerHash({
