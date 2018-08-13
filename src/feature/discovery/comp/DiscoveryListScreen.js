@@ -1,5 +1,6 @@
-import React        from 'react';
-import withState    from '../../../util/withState';
+import React         from 'react';
+import {withFassets} from 'feature-u';
+import withState     from '../../../util/withState';
 import {Body,
         Button,
         Container,
@@ -17,12 +18,11 @@ import {Body,
 import commonStyles  from '../../commonStyles';
 import actions       from '../actions';
 import * as sel      from '../state';
-import fassets       from '../../../app';
 
 /**
  * DiscoveryListScreen displaying our discovered eateries.
  */
-function DiscoveryListScreen({inProgress, eateries, nextPageToken, eateryPool, toggleEateryPool, handleNextPage, handleFilterDiscovery}) {
+function DiscoveryListScreen({fassets, inProgress, eateries, nextPageToken, eateryPool, toggleEateryPool, handleNextPage, handleFilterDiscovery}) {
 
   // ***
   // *** define page content
@@ -157,9 +157,9 @@ function DiscoveryListScreen({inProgress, eateries, nextPageToken, eateryPool, t
   );
 }
 
-export default DiscoveryListScreenWithState = withState({
+const DiscoveryListScreenWithState = withState({
   component: DiscoveryListScreen,
-  mapStateToProps(appState) {
+  mapStateToProps(appState, {fassets}) { // ... fassets available in ownProps (via withFassets() below)
     return {
       inProgress:    sel.getInProgress(appState),
       eateries:      sel.getEateries(appState),
@@ -167,7 +167,7 @@ export default DiscoveryListScreenWithState = withState({
       eateryPool:    fassets.eateries.sel.getDbPool(appState),
     };
   },
-  mapDispatchToProps(dispatch) {
+  mapDispatchToProps(dispatch, {fassets}) { // ... fassets available in ownProps (via withFassets() below)
     return {
       toggleEateryPool(eatery, eateryPool) {
         if (eateryPool[eatery.id]) { // in pool
@@ -187,4 +187,12 @@ export default DiscoveryListScreenWithState = withState({
       },
     };
   },
+});
+
+
+export default DiscoveryListScreenWithFassets = withFassets({
+  component: DiscoveryListScreenWithState,
+  mapFassetsToProps: {
+    fassets: '.', // ... introduce fassets into props via the '.' keyword
+  }
 });

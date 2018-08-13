@@ -11,7 +11,6 @@ import {Body,
         Right,
         Text,
         Title}      from 'native-base';
-import fassets      from '../../../app';
 import commonStyles from '../../commonStyles';
 
 /**
@@ -77,12 +76,12 @@ export function closeSideBar() {
 
 const SideBarWithState = withState({
   component: SideBar,
-  mapStateToProps(appState) {
+  mapStateToProps(appState, {fassets}) { // ... fassets available in ownProps (via withFassets() below)
     return {
       deviceReady: fassets.device.sel.isDeviceReady(appState),
     };
   },
-  mapDispatchToProps(dispatch) {
+  mapDispatchToProps(dispatch, {fassets}) { // ... fassets available in ownProps (via withFassets() below)
     return {
       handleSignOut() {
         dispatch( fassets.auth.actions.signOut() );
@@ -101,5 +100,6 @@ export default SideBarWithFassets = withFassets({
   component: SideBarWithState,
   mapFassetsToProps: {
     leftNavItems:  'leftNavItem.*', // this is the manifestation of our use contract ... i.e. we use these items
+    fassets:       '.',             // introduce fassets into props via the '.' keyword
   }
 });

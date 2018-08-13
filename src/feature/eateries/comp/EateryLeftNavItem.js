@@ -1,15 +1,15 @@
-import React        from 'react';
-import withState    from '../../../util/withState';
-import featureName  from '../featureName';
-import actions      from '../actions';
+import React         from 'react';
+import {withFassets} from 'feature-u';
+import withState     from '../../../util/withState';
+import featureName   from '../featureName';
+import actions       from '../actions';
 import {Body,
         Button,
         Icon,
         Left,
         ListItem,
         Right,
-        Text}       from 'native-base';
-import fassets      from '../../../app';
+        Text}        from 'native-base';
 
 /**
  * EateryLeftNavItem: our Eatery entry into the leftNav.
@@ -34,9 +34,9 @@ function EateryLeftNavItem({changeView, handleFilter}) {
   );
 }
 
-export default EateryLeftNavItemWithState = withState({
+const EateryLeftNavItemWithState = withState({
   component: EateryLeftNavItem,
-  mapDispatchToProps(dispatch) {
+  mapDispatchToProps(dispatch, {fassets}) {// ... fassets available in ownProps (via withFassets() below)
     return {
       changeView() {
         dispatch( fassets.currentView.actions.changeView(featureName) );
@@ -49,3 +49,11 @@ export default EateryLeftNavItemWithState = withState({
     };
   },
 });
+
+export default EateryLeftNavItemWithFassets = withFassets({
+  component: EateryLeftNavItemWithState,
+  mapFassetsToProps: {
+    fassets: '.', // ... introduce fassets into props via the '.' keyword
+  }
+});
+

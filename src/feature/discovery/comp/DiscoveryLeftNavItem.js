@@ -1,4 +1,5 @@
 import React           from 'react';
+import {withFassets}   from 'feature-u';
 import withState       from '../../../util/withState';
 import featureName     from '../featureName';
 import actions         from '../actions';
@@ -9,7 +10,6 @@ import {Body,
         ListItem,
         Right,
         Text}       from 'native-base';
-import fassets      from '../../../app';
 
 /**
  * DiscoveryLeftNavItem: our Discovery entry into the leftNav.
@@ -34,9 +34,9 @@ function DiscoveryLeftNavItem({changeView, handleFilter}) {
   );
 }
 
-export default DiscoveryLeftNavItemWithState = withState({
+const DiscoveryLeftNavItemWithState = withState({
   component: DiscoveryLeftNavItem,
-  mapDispatchToProps(dispatch) {
+  mapDispatchToProps(dispatch, {fassets}) { // ... fassets available in ownProps (via withFassets() below)
     return {
       changeView() {
         dispatch( fassets.currentView.actions.changeView(featureName) );
@@ -48,4 +48,11 @@ export default DiscoveryLeftNavItemWithState = withState({
       },
     };
   },
+});
+
+export default DiscoveryLeftNavItemWithFassets = withFassets({
+  component: DiscoveryLeftNavItemWithState,
+  mapFassetsToProps: {
+    fassets: '.', // ... introduce fassets into props via the '.' keyword
+  }
 });

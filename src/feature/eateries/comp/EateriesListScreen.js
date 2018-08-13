@@ -1,4 +1,5 @@
 import React         from 'react';
+import {withFassets} from 'feature-u';
 import withState     from '../../../util/withState';
 import {TouchableWithoutFeedback} from 'react-native';
 import {Body,
@@ -19,12 +20,11 @@ import SplashScreen  from '../../../util/comp/SplashScreen';
 import commonStyles  from '../../commonStyles';
 import actions       from '../actions';
 import * as sel      from '../state';
-import fassets       from '../../../app';
 
 /**
  * EateriesListScreen displaying a set of eateries (possibly filtered).
  */
-function EateriesListScreen({filteredEateries, filter, showDetail, handleSpin}) {
+function EateriesListScreen({fassets, filteredEateries, filter, showDetail, handleSpin}) {
 
   if (!filteredEateries) {
     return <SplashScreen msg="... waiting for pool entries"/>;
@@ -99,7 +99,7 @@ function EateriesListScreen({filteredEateries, filter, showDetail, handleSpin}) 
   );
 }
 
-export default EateriesListScreenWithState = withState({
+const EateriesListScreenWithState = withState({
   component: EateriesListScreen,
   mapStateToProps(appState) {
     return {
@@ -118,4 +118,11 @@ export default EateriesListScreenWithState = withState({
       },
     };
   },
+});
+
+export default EateriesListScreenWithFassets = withFassets({
+  component: EateriesListScreenWithState,
+  mapFassetsToProps: {
+    fassets: '.', // ... introduce fassets into props via the '.' keyword
+  }
 });
