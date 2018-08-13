@@ -1,11 +1,9 @@
 import {connect} from 'react-redux';
 import verify    from './verify';
 
-// ?? test this (I think it is complete)
-
 /**
  * Promotes a "wrapped" Component (an HoC - Higher-order Component)
- * that injects redux state props into a `CompToWrap`, as specified by
+ * that injects redux state props into a `component`, as specified by
  * the various named parameters.
  * 
  * This is a simple wrapper around redux connect(), promoting the
@@ -21,28 +19,28 @@ import verify    from './verify';
  *    - parameter order is up to the client
  *
  * 3. Provides a "convenient" way to directly emit the
- *    HoC, by directly passing the `CompToWrap`.
+ *    HoC, by directly passing the `component`.
  *
- *    When the `CompToWrap` is **not supplied**, it
+ *    When the `component` is **not supplied**, it
  *    operates in the original way - returning the
  *    HoF _(allowing for "functional composition")_.
  *
  * Central to this process, a Higher-order Function (HoF) is created
  * that encapsulates this "mapping knowledge".  Ultimately, this
- * HoF must be invoked (passing the `CompToWrap`), which exposes the HoC
+ * HoF must be invoked (passing the `component`), which exposes the HoC
  * (the "wrapped" Component).
  * 
  * ```js
- * + withStateHoF(CompToWrap): HoC
+ * + withStateHoF(component): HoC
  * ```
  * 
  * There are two ways to use `withState()`:
  * 
- * 1. By directly passing the `CompToWrap` parameter, the HoC will be
+ * 1. By directly passing the `component` parameter, the HoC will be
  *    returned _(internally invoking the HoF)_.  This is the most
  *    common use case.
  * 
- * 2. By omitting the `CompToWrap` parameter, the HoF will be
+ * 2. By omitting the `component` parameter, the HoF will be
  *    returned.  This is useful to facilitate "functional composition"
  *    _(in functional programming)_.  In this case it is the client's
  *    responsibility to invoke the HoF _(either directly or
@@ -54,18 +52,18 @@ import verify    from './verify';
  * @param {object|function} [mapDispatchToProps] same as redux connect() docs.
  * @param {function}        [mergeProps]         same as redux connect() docs.
  * @param {object}          [options]            same as redux connect() docs.
- * @param {ReactComp}       [CompToWrap]         optionally, the React Component
+ * @param {ReactComp}       [component]         optionally, the React Component
  *                                               to be wrapped _(see discussion above)_.
  *    
  * @returns {HoC|HoF} either the HoC (the "wrapped" Component) when
- * `CompToWrap` is supplied, otherwise the HoF _(see discussion
+ * `component` is supplied, otherwise the HoF _(see discussion
  * above)_.
  *
  * **Examples**:
  * ```js
  *   // auto wrap a MainPage Component ...
  *   export default withState({
- *     CompToWrap: MainPage, // NOTE: auto wrap MainPage
+ *     component: MainPage, // NOTE: auto wrap MainPage
  *     mapStateToProps(appState) {
  *       return {
  *         deviceStatus: appState.device.status,
@@ -100,18 +98,17 @@ export default function withState({mapStateToProps,
                                    mapDispatchToProps,
                                    mergeProps,
                                    options,
-                                   CompToWrap,
+                                   component,
                                    ...unknownArgs}={}) {
   // validate params
   const check = verify.prefix('withState() parameter violation: ');
-  check(CompToWrap, 'CompToWrap is required');
 
   // ... all map params are optional
   // ... options param is optional
-  // ... CompToWrap
-  if (CompToWrap) {
-    check(typeof CompToWrap == 'function',
-          'CompToWrap, when supplied, must be a React Component - to be wrapped');
+  // ... component
+  if (component) {
+    check(typeof component == 'function',
+          'component, when supplied, must be a React Component - to be wrapped');
   }
   // ... unrecognized named parameter
   const unknownArgKeys = Object.keys(unknownArgs);
@@ -126,6 +123,6 @@ export default function withState({mapStateToProps,
   const withStateHoF = connect(mapStateToProps, mapDispatchToProps, mergeProps, options);
 
   // either return the HoC "wrapped" Component or HoF
-  // ... depending on whether the CompToWrap parameter is supplied
-  return CompToWrap ? withStateHoF(CompToWrap) : withStateHoF;
+  // ... depending on whether the component parameter is supplied
+  return component ? withStateHoF(component) : withStateHoF;
 }

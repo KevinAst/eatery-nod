@@ -1,6 +1,6 @@
 import Expo         from 'expo';
 import React        from 'react';
-import connectRedux from '../connectRedux';
+import withState    from '../withState';
 import {Image}      from 'react-native';
 import {Body,
         Container,
@@ -56,11 +56,11 @@ SplashScreen.defaultProps = {
 };
 
 
-export default connectRedux(SplashScreen, {
+export default SplashScreenWithState = withState({
   mapStateToProps(appState) {
     return {
       // hmmm ... inappropriate coupling: common component <SplashScreen> using app-specific info
       fontsLoaded: fassets.device.sel.areFontsLoaded(appState),
     };
   },
-});
+})(SplashScreen); // NOTE: test withState() BOTH WAYS

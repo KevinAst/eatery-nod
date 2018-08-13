@@ -1,5 +1,5 @@
 import React           from 'react';
-import connectRedux    from '../../../util/connectRedux';
+import withState       from '../../../util/withState';
 import {withFassets }  from 'feature-u';
 import {Body,
         Button,
@@ -75,7 +75,8 @@ export function closeSideBar() {
 // *** inject various state items into our component
 // ***
 
-const SideBarWithState = connectRedux(SideBar, {
+const SideBarWithState = withState({
+  component: SideBar,
   mapStateToProps(appState) {
     return {
       deviceReady: fassets.device.sel.isDeviceReady(appState),

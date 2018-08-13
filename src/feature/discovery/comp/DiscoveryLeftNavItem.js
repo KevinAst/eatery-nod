@@ -1,5 +1,5 @@
 import React           from 'react';
-import connectRedux    from '../../../util/connectRedux';
+import withState       from '../../../util/withState';
 import featureName     from '../featureName';
 import actions         from '../actions';
 import {Body,
@@ -34,7 +34,8 @@ function DiscoveryLeftNavItem({changeView, handleFilter}) {
   );
 }
 
-export default connectRedux(DiscoveryLeftNavItem, {
+export default DiscoveryLeftNavItemWithState = withState({
+  component: DiscoveryLeftNavItem,
   mapDispatchToProps(dispatch) {
     return {
       changeView() {

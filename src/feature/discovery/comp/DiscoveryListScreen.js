@@ -1,5 +1,5 @@
 import React        from 'react';
-import connectRedux from '../../../util/connectRedux';
+import withState    from '../../../util/withState';
 import {Body,
         Button,
         Container,
@@ -157,7 +157,8 @@ function DiscoveryListScreen({inProgress, eateries, nextPageToken, eateryPool, t
   );
 }
 
-export default connectRedux(DiscoveryListScreen, {
+export default DiscoveryListScreenWithState = withState({
+  component: DiscoveryListScreen,
   mapStateToProps(appState) {
     return {
       inProgress:    sel.getInProgress(appState),

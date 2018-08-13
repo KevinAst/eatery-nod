@@ -1,7 +1,7 @@
-import React           from 'react';
-import connectRedux    from '../../../util/connectRedux';
-import featureName     from '../featureName';
-import actions         from '../actions';
+import React        from 'react';
+import withState    from '../../../util/withState';
+import featureName  from '../featureName';
+import actions      from '../actions';
 import {Body,
         Button,
         Icon,
@@ -34,7 +34,8 @@ function EateryLeftNavItem({changeView, handleFilter}) {
   );
 }
 
-export default connectRedux(EateryLeftNavItem, {
+export default EateryLeftNavItemWithState = withState({
+  component: EateryLeftNavItem,
   mapDispatchToProps(dispatch) {
     return {
       changeView() {

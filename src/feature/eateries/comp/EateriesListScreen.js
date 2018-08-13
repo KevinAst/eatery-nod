@@ -1,5 +1,5 @@
 import React         from 'react';
-import connectRedux  from '../../../util/connectRedux';
+import withState     from '../../../util/withState';
 import {TouchableWithoutFeedback} from 'react-native';
 import {Body,
         Button,
@@ -99,7 +99,8 @@ function EateriesListScreen({filteredEateries, filter, showDetail, handleSpin}) 
   );
 }
 
-export default connectRedux(EateriesListScreen, {
+export default EateriesListScreenWithState = withState({
+  component: EateriesListScreen,
   mapStateToProps(appState) {
     return {
       filteredEateries: sel.getFilteredEateries(appState),

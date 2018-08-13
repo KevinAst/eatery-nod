@@ -1,5 +1,5 @@
 import React        from 'react';
-import connectRedux from '../../../util/connectRedux';
+import withState    from '../../../util/withState';
 import PropTypes    from 'prop-types';
 import {Body,
         Button,
@@ -105,7 +105,8 @@ EateryFilterScreen.propTypes = {
   iForm: PropTypes.object.isRequired,
 };
 
-export default connectRedux(EateryFilterScreen, {
+export default EateryFilterScreenWithState = withState({
+  component: EateryFilterScreen,
   mapStateToProps(appState) {
     return {
       formState: eateryFilterFormMeta.formStateSelector(appState),
