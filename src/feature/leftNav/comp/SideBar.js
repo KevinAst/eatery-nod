@@ -96,10 +96,9 @@ const SideBarWithState = connectRedux(SideBar, {
 // *** inject various fassets (feature assets) into our component
 // ***
 
-const SideBarWithFassets = withFassets({
+export default SideBarWithFassets = withFassets({
+  component: SideBarWithState,
   mapFassetsToProps: {
     leftNavItems:  'leftNavItem.*', // this is the manifestation of our use contract ... i.e. we use these items
   }
-})(SideBarWithState);
-
-export default SideBarWithFassets;
+});
