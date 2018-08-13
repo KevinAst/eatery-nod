@@ -1,13 +1,17 @@
 import 'babel-polyfill'; // required for feature-u es2015+ constructs
-import React             from 'react';
-import Expo              from 'expo';
-import {LayoutAnimation} from 'react-native';
-import {launchApp}       from 'feature-u';
-import {reducerAspect}   from 'feature-redux';
-import {logicAspect}     from 'feature-redux-logic';
-import {routeAspect}     from 'feature-router';
-import SplashScreen      from './util/comp/SplashScreen';
-import features          from './feature'; // the set of features that comprise this application
+import React                 from 'react';
+import Expo                  from 'expo';
+import {LayoutAnimation}     from 'react-native';
+import {launchApp}           from 'feature-u';
+import {createReducerAspect} from 'feature-redux';
+import {createLogicAspect}   from 'feature-redux-logic';
+import {createRouteAspect}   from 'feature-router';
+import SplashScreen          from './util/comp/SplashScreen';
+import features              from './feature'; // the set of features that comprise this application
+
+const reducerAspect = createReducerAspect();
+const logicAspect   = createLogicAspect();
+const routeAspect   = createRouteAspect();
 
 configureDiagnostics();
 
