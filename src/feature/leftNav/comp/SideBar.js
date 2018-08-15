@@ -1,24 +1,22 @@
-import React        from 'react';
-import connectRedux from '../../../util/connectRedux';
+import React           from 'react';
+import withState       from '../../../util/withState';
+import {withFassets }  from 'feature-u';
 import {Body,
         Button,
         Container,
         Content,
         Icon,
         Header,
-        Left,
         List,
-        ListItem,
         Right,
         Text,
         Title}      from 'native-base';
-import app          from '../../../app';
 import commonStyles from '../../commonStyles';
 
 /**
  * SideBar: our leftNav component, exposed through the Drawer.
  */
-function SideBar({deviceReady, changeView, handleFilterEatery, handleFilterDiscovery, handleSignOut}) {
+function SideBar({deviceReady, handleSignOut, leftNavItems}) {
 
   // when device is NOT ready, render a placebo
   // ... ex: system fonts must be loaded
@@ -28,44 +26,6 @@ function SideBar({deviceReady, changeView, handleFilterEatery, handleFilterDisco
         Device NOT ready (i.e. waiting for fonts to load)
       </Text>
     );
-  }
-
-  // define our production menu items
-  let menuItems = [
-
-    <ListItem key="eateriesMenu" icon onPress={()=>changeView('eateries')}>
-      <Left>
-        <Icon name="bonfire" style={{color: 'red'}}/>
-      </Left>
-      <Body>
-        <Text style={{color: 'red'}}>Pool</Text>
-      </Body>
-      <Right>
-        <Button transparent onPress={handleFilterEatery}>
-          <Icon active name="options"/>
-        </Button>
-      </Right>
-    </ListItem>,
-
-    <ListItem key="discoveryMenu" icon onPress={()=>changeView('discovery')}>
-      <Left>
-        <Icon name="cloud" style={{color: 'green'}}/>
-      </Left>
-      <Body>
-        <Text style={{color: 'green'}}>Discovery</Text>
-      </Body>
-      <Right>
-        <Button transparent onPress={handleFilterDiscovery}>
-          <Icon active name="options"/>
-        </Button>
-      </Right>
-    </ListItem>
-
-  ];
-
-  // optionally inject any sandbox menu items (when the feature is enabled)
-  if (app.sandbox && app.sandbox.leftNavListItems) {
-    menuItems = [...menuItems, app.sandbox.leftNavListItems];
   }
 
   // render our menu
@@ -83,12 +43,18 @@ function SideBar({deviceReady, changeView, handleFilterEatery, handleFilterDisco
       </Header>
       <Content>
         <List>
-          {menuItems}
+          {/* pull in leftNav menu items from accross all features */}
+          {leftNavItems.map( (LeftNavItem, indx) => <LeftNavItem key={indx}/> )}
         </List>
       </Content>
     </Container>
   );
 }
+
+
+// ***
+// *** various SideBar utility functions
+// ***
 
 let _drawer = null;
 export function registerDrawer(drawer) {
@@ -104,30 +70,36 @@ export function closeSideBar() {
 }
 
 
-export default connectRedux(SideBar, {
-  mapStateToProps(appState) {
+// ***
+// *** inject various state items into our component
+// ***
+
+const SideBarWithState = withState({
+  component: SideBar,
+  mapStateToProps(appState, {fassets}) { // ... fassets available in ownProps (via withFassets() below)
     return {
-      deviceReady: app.device.sel.isDeviceReady(appState),
+      deviceReady: fassets.device.sel.isDeviceReady(appState),
     };
   },
-  mapDispatchToProps(dispatch) {
+  mapDispatchToProps(dispatch, {fassets}) { // ... fassets available in ownProps (via withFassets() below)
     return {
-      changeView(viewName) {
-        dispatch( app.currentView.actions.changeView(viewName) );
-        closeSideBar();
-      },
-      handleFilterEatery() {
-        dispatch( app.eateries.actions.openFilterDialog() );
-        closeSideBar();
-      },
-      handleFilterDiscovery() {
-        dispatch( app.discovery.actions.openFilterDialog() );
-        closeSideBar();
-      },
       handleSignOut() {
-        dispatch( app.auth.actions.signOut() );
+        dispatch( fassets.auth.actions.signOut() );
         closeSideBar();
       },
     };
   },
+});
+
+
+// ***
+// *** inject various fassets (feature assets) into our component
+// ***
+
+export default SideBarWithFassets = withFassets({
+  component: SideBarWithState,
+  mapFassetsToProps: {
+    leftNavItems:  'leftNavItem.*', // this is the manifestation of our use contract ... i.e. we use these items
+    fassets:       '.',             // introduce fassets into props via the '.' keyword
+  }
 });

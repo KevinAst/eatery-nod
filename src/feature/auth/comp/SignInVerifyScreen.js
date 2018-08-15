@@ -1,5 +1,5 @@
 import React        from 'react';
-import connectRedux from '../../../util/connectRedux';
+import withState    from '../../../util/withState';
 import {Body,
         Button,
         Container,
@@ -88,7 +88,8 @@ SignInVerifyScreen.propTypes = {
   signOut:                 PropTypes.func.isRequired,
 };
 
-export default connectRedux(SignInVerifyScreen, {
+export default SignInVerifyScreenWithState = withState({
+  component: SignInVerifyScreen,
   mapStateToProps(appState) {
     return {
       email: sel.getUserEmail(appState),

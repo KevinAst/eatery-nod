@@ -7,7 +7,7 @@ import Notify         from '../../util/notify';
  *  - performing platform-specific setup (iOS/Android)
  *  - inject our notify utility in the root DOM
  */
-export default function appWillStart({app, curRootAppElm}) {
+export default function appWillStart({fassets, curRootAppElm}) {
   // platform-specific setup (iOS/Android)
   platformSetup();
 

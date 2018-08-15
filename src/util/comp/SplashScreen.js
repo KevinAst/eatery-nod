@@ -1,7 +1,8 @@
-import Expo         from 'expo';
-import React        from 'react';
-import connectRedux from '../connectRedux';
-import {Image}      from 'react-native';
+import Expo          from 'expo';
+import React         from 'react';
+import {withFassets} from 'feature-u';
+import withState     from '../withState';
+import {Image}       from 'react-native';
 import {Body,
         Container,
         Content,
@@ -10,10 +11,9 @@ import {Body,
         Right,
         Spinner,
         Text,
-        Title}      from 'native-base';
-import PropTypes    from 'prop-types';
-import app          from '../../app';
-import commonStyles from '../../feature/commonStyles';
+        Title}       from 'native-base';
+import PropTypes     from 'prop-types';
+import commonStyles  from '../../feature/commonStyles';
 
 
 /**
@@ -56,11 +56,18 @@ SplashScreen.defaultProps = {
 };
 
 
-export default connectRedux(SplashScreen, {
-  mapStateToProps(appState) {
+const SplashScreenWithState = withState({
+  mapStateToProps(appState, {fassets}) { // ... fassets available in ownProps (via withFassets() below)
     return {
       // hmmm ... inappropriate coupling: common component <SplashScreen> using app-specific info
-      fontsLoaded: app.device.sel.areFontsLoaded(appState),
+      fontsLoaded: fassets.device.sel.areFontsLoaded(appState),
     };
   },
+})(SplashScreen); // NOTE: test withState() BOTH WAYS
+
+export default SplashScreenWithFassets = withFassets({
+  component: SplashScreenWithState,
+  mapFassetsToProps: {
+    fassets: '.', // ... introduce fassets into props via the '.' keyword
+  }
 });

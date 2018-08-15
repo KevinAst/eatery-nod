@@ -1,17 +1,25 @@
-import React             from 'react';
-import {launchApp}       from 'feature-u';
-import {reducerAspect}   from 'feature-redux';
-import {logicAspect}     from 'feature-redux-logic';
-import {routeAspect}     from 'feature-router';
-import features          from '../feature';
+import React                   from 'react';
+import {launchApp}             from 'feature-u';
+import {createReducerAspect}   from 'feature-redux';
+import {createLogicAspect}     from 'feature-redux-logic';
+import {createRouteAspect}     from 'feature-router';
+import features                from '../feature';
 import {applyMiddleware,
         compose,
-        createStore}     from 'redux';
+        createStore}           from 'redux';
 import {createLogicMiddleware} from 'redux-logic';
 import {featureRoute, 
-        PRIORITY}        from 'feature-router';
-import SplashScreen      from './comp/SplashScreen';
-import {diag$}           from './diagnosticUtil';
+        PRIORITY}              from 'feature-router';
+import SplashScreen            from './comp/SplashScreen';
+import {diag$}                 from './diagnosticUtil';
+
+// AI: have NOT tested this singleton removal
+//     ... we may need to pass these as parameters (from app.js)
+//     ... which means all the way down various functions too!
+const reducerAspect = createReducerAspect();
+const logicAspect   = createLogicAspect();
+const routeAspect   = createRouteAspect();
+
 
 // ***
 // *** feature-u Ingegration Tests ---------------------------------------------

@@ -1,7 +1,7 @@
 import React        from 'react';
 import PropTypes    from 'prop-types';
 import {Linking}    from 'react-native';
-import connectRedux from '../../../util/connectRedux';
+import withState    from '../../../util/withState';
 import {Body,
         Button,
         Container,
@@ -95,7 +95,8 @@ EateryDetailScreen.propTypes = {
   eatery: PropTypes.object.isRequired,
 };
 
-export default connectRedux(EateryDetailScreen, {
+export default EateryDetailScreenWithState = withState({
+  component: EateryDetailScreen,
   mapDispatchToProps(dispatch) {
     return {
       handleClose() {

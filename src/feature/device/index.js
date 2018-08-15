@@ -1,6 +1,6 @@
 import {createFeature}  from 'feature-u';
 import name             from './featureName';
-import publicFace       from './publicFace';
+import fassets          from './fassets';
 import reducer          from './state';
 import logic            from './logic';
 import route            from './route';
@@ -33,9 +33,9 @@ import appDidStart      from './appDidStart';
  *  - emits **ready** action (when appropriate by monitoring device
  *    status), triggering downstream app process **(logic)**:
  *    ```
- *    app.device.ready()
+ *    fassets.device.ready()
  *    ```
- *  - promotes a **device api** abstraction: `app.device.api...` * 
+ *  - promotes a **device api** abstraction: `fassets.device.api...` * 
  *
  *
  * **State Transition**
@@ -52,7 +52,7 @@ import appDidStart      from './appDidStart';
 export default createFeature({
   name,
 
-  publicFace,
+  fassets,
 
   reducer,
   logic,

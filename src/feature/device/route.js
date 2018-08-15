@@ -14,7 +14,7 @@ export default featureRoute({
 
   priority: PRIORITY.HIGH,
 
-  content({app, appState}) {
+  content({fassets, appState}) {
 
     // promote a simple SplashScreen (with status) until our system is ready
     // NOTE: Errors related to system resources are promoted through independent user notifications

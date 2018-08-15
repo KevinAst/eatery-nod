@@ -3,17 +3,17 @@ import discoveryFilterFormMeta from './discoveryFilterFormMeta';
 import actions                 from './actions';
 import featureName             from './featureName';
 import * as sel                from './state';
-import {managedExpansion}      from 'feature-u';
+import {expandWithFassets}     from 'feature-u';
 
 /**
  * Initially retrieve discovery eateries, on 'discovery' view change.
  */
-export const initialRetrieve = managedExpansion( (app) => createLogic({
+export const initialRetrieve = expandWithFassets( (fassets) => createLogic({
 
   name: `${featureName}.initialRetrieve`,
-  type: String(app.currentView.actions.changeView),
+  type: String(fassets.currentView.actions.changeView),
 
-  process({getState, action, app}, dispatch, done) {
+  process({getState, action, fassets}, dispatch, done) {
 
     const appState = getState();
 
@@ -21,7 +21,7 @@ export const initialRetrieve = managedExpansion( (app) => createLogic({
         sel.getEateries(appState) === null        && // ... discovery eateries in initial state
         !sel.getInProgress(appState)) {              // ... no discovery retrieval is in-progress
       // initial retrieval using default filter (located in our app state)
-      const deviceLoc = app.device.sel.getDeviceLoc(appState);
+      const deviceLoc = fassets.device.sel.getDeviceLoc(appState);
       dispatch( actions.retrieve({...sel.getFilter(appState),
                                   loc: [deviceLoc.lat, deviceLoc.lng]}) );
     }
@@ -41,7 +41,7 @@ export const defaultFilter = createLogic({
   name: `${featureName}.defaultFilter`,
   type: String(actions.filterForm.open),
 
-  transform({getState, action, app}, next) {
+  transform({getState, action, fassets}, next) {
     if (!action.domain) {
       action.domain = sel.getFilter(getState());
     }
@@ -60,16 +60,16 @@ export const processFilter = createLogic({
   name: `${featureName}.processFilter`,
   type: String(actions.filterForm.process),
   
-  process({getState, action, app}, dispatch, done) {
+  process({getState, action, fassets}, dispatch, done) {
     // retrieve using new filter from form
     const appState  = getState();
     const filter    = action.domain;
-    const deviceLoc = app.device.sel.getDeviceLoc(appState);
+    const deviceLoc = fassets.device.sel.getDeviceLoc(appState);
     dispatch( actions.retrieve({...filter, 
                                 loc: [deviceLoc.lat, deviceLoc.lng]}) );
     
     // show our view view
-    dispatch( app.currentView.actions.changeView(featureName) );
+    dispatch( fassets.currentView.actions.changeView(featureName) );
 
     // close our form filter
     dispatch( actions.filterForm.close() );
@@ -89,9 +89,9 @@ export const retrieve = createLogic({
   type: String(actions.retrieve),
   warnTimeout: 0, // long-running logic ... UNFORTUNATELY GooglePlaces is sometimes EXCRUCIATINGLY SLOW!
 
-  process({getState, action, app}, dispatch, done) {
+  process({getState, action, fassets}, dispatch, done) {
 
-    app.discovery.api.searchEateries(action.filter)
+    fassets.discovery.api.searchEateries(action.filter)
        .then(resp => {
          // console.log(`xx here is our response: `, resp);
          dispatch( actions.retrieve.complete(action.filter, resp) );
@@ -116,9 +116,9 @@ export const nextPage = createLogic({
   name: `${featureName}.nextPage`,
   type: String(actions.nextPage),
 
-  process({getState, action, app}, dispatch, done) {
+  process({getState, action, fassets}, dispatch, done) {
 
-    app.discovery.api.searchEateriesNextPage(action.pagetoken)
+    fassets.discovery.api.searchEateriesNextPage(action.pagetoken)
        .then(resp => {
          // console.log(`xx here is our response: `, resp);
          dispatch( actions.nextPage.complete(resp) );
@@ -136,10 +136,10 @@ export const nextPage = createLogic({
 
 // promote all logic (accumulated in index.js)
 // ... named exports (above) are used by unit tests :-)
-export default managedExpansion( (app) => [
+export default expandWithFassets( (fassets) => [
   ...discoveryFilterFormMeta.registrar.formLogic(), // discoveryFilter iForm logic modules
   defaultFilter,
-  initialRetrieve(app),
+  initialRetrieve(fassets),
   processFilter,
   retrieve,
   nextPage,

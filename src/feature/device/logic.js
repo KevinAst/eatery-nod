@@ -34,9 +34,9 @@ export const loadFonts = createLogic({
   name: `${featureName}.loadFonts`,
   type: String(actions.loadFonts),
   
-  process({getState, action, app}, dispatch, done) {
+  process({getState, action, fassets}, dispatch, done) {
     // asynchronously load our system resources
-    app.device.api.loadFonts()
+    fassets.device.api.loadFonts()
        .then( () => {
          dispatch( actions.loadFonts.complete() );
          done();
@@ -177,7 +177,7 @@ export const monitorDeviceReadiness = createLogic({
   name: `${featureName}.monitorDeviceReadiness`,
   type: String(actions.statusUpdate),
   
-  process({getState, action, app}, dispatch, done) {
+  process({getState, action, fassets}, dispatch, done) {
 
     // when our device is ready, kick off our authorization process
     if ( isDeviceReady(getState()) ) {

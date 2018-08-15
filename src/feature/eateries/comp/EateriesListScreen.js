@@ -1,5 +1,6 @@
 import React         from 'react';
-import connectRedux  from '../../../util/connectRedux';
+import {withFassets} from 'feature-u';
+import withState     from '../../../util/withState';
 import {TouchableWithoutFeedback} from 'react-native';
 import {Body,
         Button,
@@ -19,12 +20,11 @@ import SplashScreen  from '../../../util/comp/SplashScreen';
 import commonStyles  from '../../commonStyles';
 import actions       from '../actions';
 import * as sel      from '../state';
-import app           from '../../../app';
 
 /**
  * EateriesListScreen displaying a set of eateries (possibly filtered).
  */
-function EateriesListScreen({filteredEateries, filter, showDetail, handleSpin}) {
+function EateriesListScreen({fassets, filteredEateries, filter, showDetail, handleSpin}) {
 
   if (!filteredEateries) {
     return <SplashScreen msg="... waiting for pool entries"/>;
@@ -70,7 +70,7 @@ function EateriesListScreen({filteredEateries, filter, showDetail, handleSpin}) 
     <Container style={commonStyles.container}>
       <Header>
         <Left>
-          <Button transparent onPress={app.leftNav.open}>
+          <Button transparent onPress={fassets.leftNav.open}>
             <Icon name="menu"/>
           </Button>
         </Left>
@@ -99,7 +99,8 @@ function EateriesListScreen({filteredEateries, filter, showDetail, handleSpin}) 
   );
 }
 
-export default connectRedux(EateriesListScreen, {
+const EateriesListScreenWithState = withState({
+  component: EateriesListScreen,
   mapStateToProps(appState) {
     return {
       filteredEateries: sel.getFilteredEateries(appState),
@@ -117,4 +118,11 @@ export default connectRedux(EateriesListScreen, {
       },
     };
   },
+});
+
+export default EateriesListScreenWithFassets = withFassets({
+  component: EateriesListScreenWithState,
+  mapFassetsToProps: {
+    fassets: '.', // ... introduce fassets into props via the '.' keyword
+  }
 });

@@ -1,5 +1,5 @@
 import React        from 'react';
-import connectRedux from '../../../util/connectRedux';
+import withState    from '../../../util/withState';
 import PropTypes    from 'prop-types';
 import {Body,
         Button,
@@ -117,7 +117,8 @@ DiscoveryFilterScreen.propTypes = {
   iForm: PropTypes.object.isRequired,
 };
 
-export default connectRedux(DiscoveryFilterScreen, {
+export default DiscoveryFilterScreenWithState = withState({
+  component: DiscoveryFilterScreen,
   mapStateToProps(appState) {
     return {
       formState: discoveryFilterFormMeta.formStateSelector(appState),

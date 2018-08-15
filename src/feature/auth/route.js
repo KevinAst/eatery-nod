@@ -15,7 +15,7 @@ export default featureRoute({
 
   priority: PRIORITY.HIGH,
 
-  content({app, appState}) {
+  content({fassets, appState}) {
 
     // when user is FULLY signedIn/verified
     // ... allow down-stream features to route further (i.e. app-specific screens)

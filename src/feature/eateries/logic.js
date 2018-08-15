@@ -5,7 +5,7 @@ import eateryFilterFormMeta from './eateryFilterFormMeta';
 import featureName          from './featureName';
 import * as sel             from './state';
 import actions              from './actions';
-import {managedExpansion}   from 'feature-u';
+import {expandWithFassets}  from 'feature-u';
 
 /**
  * Monitor our persistent data changes associated to a given pool.
@@ -17,13 +17,13 @@ let curDbPoolMonitor = { // existing "pool" monitor (if any)
   wrapUp: () => 'no-op', // type: function(): void ... wrap-up monitor (both firebase -and- logic)
 };
 
-export const monitorDbPool = managedExpansion( (app) => createLogic({
+export const monitorDbPool = expandWithFassets( (fassets) => createLogic({
 
   name:        `${featureName}.monitorDbPool`,
-  type:        String(app.auth.actions.userProfileChanged), // NOTE: action contains: action.userProfile.pool
+  type:        String(fassets.auth.actions.userProfileChanged), // NOTE: action contains: action.userProfile.pool
   warnTimeout: 0, // long-running logic
 
-  validate({getState, action, app}, allow, reject) {
+  validate({getState, action, fassets}, allow, reject) {
 
     // no-op if we are alreay monitoring this same pool
     if (action.userProfile.pool === curDbPoolMonitor.pool) {
@@ -35,7 +35,7 @@ export const monitorDbPool = managedExpansion( (app) => createLogic({
     allow(action);
   },
 
-  process({getState, action, app}, dispatch, done) {
+  process({getState, action, fassets}, dispatch, done) {
 
     // close prior monitor, if any (both firebase -and- logic)
     curDbPoolMonitor.wrapUp();
@@ -56,7 +56,7 @@ export const monitorDbPool = managedExpansion( (app) => createLogic({
       const eateries = snapshot.val();
 
       // supplement eateries with distance from device (as the crow flies)
-      const deviceLoc = app.device.sel.getDeviceLoc(getState());
+      const deviceLoc = fassets.device.sel.getDeviceLoc(getState());
       for (const eateryId in eateries) {
         const eatery = eateries[eateryId];
         eatery.distance = geodist([eatery.loc.lat, eatery.loc.lng], [deviceLoc.lat, deviceLoc.lng]);
@@ -80,7 +80,7 @@ export const defaultFilter = createLogic({
   name: `${featureName}.defaultFilter`,
   type: String(actions.filterForm.open),
 
-  transform({getState, action, app}, next) {
+  transform({getState, action, fassets}, next) {
     if (!action.domain) {
       action.domain = sel.getListViewFilter(getState());
     }
@@ -98,7 +98,7 @@ export const processFilter = createLogic({
   name: `${featureName}.processFilter`,
   type: String(actions.filterForm.process),
   
-  process({getState, action, app}, dispatch, done) {
+  process({getState, action, fassets}, dispatch, done) {
 
     // console.log(`xx logic: eatery.processFilter, action is: `, action);
     //   action: {
@@ -114,7 +114,7 @@ export const processFilter = createLogic({
     //   }
     
     // show our view
-    dispatch( app.currentView.actions.changeView(featureName) );
+    dispatch( fassets.currentView.actions.changeView(featureName) );
 
     // close eatery form filter
     dispatch( actions.filterForm.close() );
@@ -130,7 +130,7 @@ export const spin = createLogic({
   name: `${featureName}.spin`,
   type: String(actions.spin),
 
-  transform({getState, action, app}, next, reject) {
+  transform({getState, action, fassets}, next, reject) {
 
     const appState         = getState();
     const filteredEateries = sel.getFilteredEateries(appState);
@@ -140,7 +140,7 @@ export const spin = createLogic({
     next(action);
   },
 
-  process({getState, action, app}, dispatch, done) {
+  process({getState, action, fassets}, dispatch, done) {
 
     setTimeout( () => {
 
@@ -168,7 +168,7 @@ export const spinComplete = createLogic({
   name: `${featureName}.spinComplete`,
   type: String(actions.spin.complete),
 
-  process({getState, action, app}, dispatch, done) {
+  process({getState, action, fassets}, dispatch, done) {
     dispatch( actions.viewDetail(action.eateryId) );
     done();
   },
@@ -181,9 +181,9 @@ export const addToPoolPrep = createLogic({
   name: `${featureName}.addToPoolPrep`,
   type: String(actions.dbPool.add),
 
-  process({getState, action, app}, dispatch, done) {
+  process({getState, action, fassets}, dispatch, done) {
 
-    app.discovery.api.getEateryDetail(action.eateryId)
+    fassets.discovery.api.getEateryDetail(action.eateryId)
       .then(eatery => {
         dispatch( actions.dbPool.add.eateryDetail(eatery) );
         done();
@@ -203,10 +203,10 @@ export const addToPool = createLogic({
   name: `${featureName}.addToPool`,
   type: String(actions.dbPool.add.eateryDetail),
 
-  transform({getState, action, app}, next, reject) {
+  transform({getState, action, fassets}, next, reject) {
 
     const appState = getState();
-    const pool     = app.auth.sel.getUserPool(appState);
+    const pool     = fassets.auth.sel.getUserPool(appState);
 
     // console.log(`xx adding eatery: /pools/${pool}/${action.eatery.id}`);
     const dbRef = firebase.database().ref(`/pools/${pool}/${action.eatery.id}`);
@@ -223,10 +223,10 @@ export const removeFromPool = createLogic({
   name: `${featureName}.removeFromPool`,
   type: String(actions.dbPool.remove),
 
-  transform({getState, action, app}, next, reject) {
+  transform({getState, action, fassets}, next, reject) {
 
     const appState = getState();
-    const pool     = app.auth.sel.getUserPool(appState);
+    const pool     = fassets.auth.sel.getUserPool(appState);
 
     // console.log(`xx removing eatery: /pools/${pool}/${action.eateryId}`);
     const dbRef = firebase.database().ref(`/pools/${pool}/${action.eateryId}`);
@@ -240,8 +240,8 @@ export const removeFromPool = createLogic({
 
 // promote all logic (accumulated in index.js)
 // ... named exports (above) are used by unit tests :-)
-export default managedExpansion( (app) => [
-  monitorDbPool(app),
+export default expandWithFassets( (fassets) => [
+  monitorDbPool(fassets),
   ...eateryFilterFormMeta.registrar.formLogic(), // inject the standard eatery filter form-based logic modules
   defaultFilter,
   processFilter,

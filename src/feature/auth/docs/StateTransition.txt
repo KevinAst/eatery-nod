@@ -9,7 +9,7 @@ accommodate the wide free-format content).
 
 Actions (see: actions.js)                        Logic (see: logic.js)                                          Reducer (see: state.js)
 ==============================================   ============================================================   ===============================
-app.device.actions.ready() ..................................................................................   - NONE
+fassets.device.actions.ready() ..............................................................................   - NONE
                                                  startAuthorization:
                                                  ==================
                                                    DISPATCH .bootstrap()           
@@ -18,7 +18,7 @@ auth
   .bootstrap() ...............................   ............................................................   - NONE
                                                  checkDeviceCredentials:
                                                  ======================
-                                                   async: app.device.api.fetchCredentials() via localStorage() 
+                                                   async: fassets.device.api.fetchCredentials() via localStorage() 
                                                           - YES: DISPATCH .haveDeviceCredentials(encodedCredentials)  
                                                           - NO:  DISPATCH .noDeviceCredentials()           
                                                           - ERR: DISPATCH .fail(err)                       
@@ -42,7 +42,7 @@ auth
                                                  ======
                                                    async: firebase.auth()
                                                           .signInWithEmailAndPassword(email, pass)         
-                                                          - SUCCESS: app.device.api.storeCredentials(action.email, action.pass)
+                                                          - SUCCESS: fassets.device.api.storeCredentials(action.email, action.pass)
                                                                      DISPATCH .complete(user)              
                                                           - FAIL:    toast.error(msg)
                                                                      DISPATCH signIn.open(action, msg)
@@ -98,7 +98,7 @@ auth
                                                  =======
                                                    async: firebase.auth().signOut()                                       
                                                           - ERR: toast.error(msg)
-                                                   async: app.device.api.removeCredentials()
+                                                   async: fassets.device.api.removeCredentials()
                                                           - ERR: toast.error(msg)
 
   .userProfileChanged(userProfile) .........................................................................   - set user.name FROM action payload

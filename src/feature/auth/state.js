@@ -1,19 +1,19 @@
-import {combineReducers}  from 'redux';
-import {reducerHash}      from 'astx-redux-util';
-import {managedExpansion} from 'feature-u';
-import {slicedReducer}    from 'feature-redux';
-import featureName        from './featureName';
-import signInFormMeta     from './signInFormMeta';
-import actions            from './actions';
+import {combineReducers}    from 'redux';
+import {reducerHash}        from 'astx-redux-util';
+import {expandWithFassets}  from 'feature-u';
+import {slicedReducer}      from 'feature-redux';
+import featureName          from './featureName';
+import signInFormMeta       from './signInFormMeta';
+import actions              from './actions';
 
 // ***
 // *** Our feature reducer, managing state for our authoration process.
 // ***
 
-// NOTE: managedExpansion() is used NOT for app injection,
+// NOTE: expandWithFassets() is used NOT for fassets injection,
 //       but RATHER to delay expansion (avoiding circular dependancies
 //       in selector access from signInFormMeta.js)
-const reducer = slicedReducer(featureName, managedExpansion( () => combineReducers({
+const reducer = slicedReducer(featureName, expandWithFassets( () => combineReducers({
 
   user: combineReducers({
 

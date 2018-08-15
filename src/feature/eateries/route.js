@@ -16,7 +16,7 @@ export default [
 
   featureRoute({
     priority: PRIORITY.HIGH,
-    content({app, appState}) {
+    content({fassets, appState}) {
       // display EateryFilterScreen, when form is active (accomplished by our logic)
       // ... this is done as a priority route, because this screen can be used to
       //     actually change the view - so we display it regarless of the state of the active view
@@ -27,10 +27,10 @@ export default [
   }),
 
   featureRoute({
-    content({app, appState}) {
+    content({fassets, appState}) {
 
       // allow other down-stream features to route, when the active view is NOT ours
-      if (app.currentView.sel.getView(appState) !== featureName) {
+      if (fassets.currentView.sel.getView(appState) !== featureName) {
         return null;
       }
       

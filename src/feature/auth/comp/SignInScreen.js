@@ -1,5 +1,5 @@
 import React        from 'react';
-import connectRedux from '../../../util/connectRedux';
+import withState    from '../../../util/withState';
 import PropTypes    from 'prop-types';
 import {Body,
         Button,
@@ -89,7 +89,8 @@ SignInScreen.propTypes = {
   iForm: PropTypes.object.isRequired,
 };
 
-export default connectRedux(SignInScreen, {
+export default SignInScreenWithState = withState({
+  component: SignInScreen,
   mapStateToProps(appState) {
     return {
       formState: signInFormMeta.formStateSelector(appState),

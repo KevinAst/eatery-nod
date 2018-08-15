@@ -1,5 +1,6 @@
-import React        from 'react';
-import connectRedux from '../../../util/connectRedux';
+import React         from 'react';
+import {withFassets} from 'feature-u';
+import withState     from '../../../util/withState';
 import {Body,
         Button,
         Container,
@@ -17,12 +18,11 @@ import {Body,
 import commonStyles  from '../../commonStyles';
 import actions       from '../actions';
 import * as sel      from '../state';
-import app           from '../../../app';
 
 /**
  * DiscoveryListScreen displaying our discovered eateries.
  */
-function DiscoveryListScreen({inProgress, eateries, nextPageToken, eateryPool, toggleEateryPool, handleNextPage, handleFilterDiscovery}) {
+function DiscoveryListScreen({fassets, inProgress, eateries, nextPageToken, eateryPool, toggleEateryPool, handleNextPage, handleFilterDiscovery}) {
 
   // ***
   // *** define page content
@@ -131,7 +131,7 @@ function DiscoveryListScreen({inProgress, eateries, nextPageToken, eateryPool, t
     <Container style={commonStyles.container}>
       <Header>
         <Left>
-          <Button transparent onPress={app.leftNav.open}>
+          <Button transparent onPress={fassets.leftNav.open}>
             <Icon name="menu"/>
           </Button>
         </Left>
@@ -157,25 +157,26 @@ function DiscoveryListScreen({inProgress, eateries, nextPageToken, eateryPool, t
   );
 }
 
-export default connectRedux(DiscoveryListScreen, {
-  mapStateToProps(appState) {
+const DiscoveryListScreenWithState = withState({
+  component: DiscoveryListScreen,
+  mapStateToProps(appState, {fassets}) { // ... fassets available in ownProps (via withFassets() below)
     return {
       inProgress:    sel.getInProgress(appState),
       eateries:      sel.getEateries(appState),
       nextPageToken: sel.getNextPageToken(appState),
-      eateryPool:    app.eateries.sel.getDbPool(appState),
+      eateryPool:    fassets.eateries.sel.getDbPool(appState),
     };
   },
-  mapDispatchToProps(dispatch) {
+  mapDispatchToProps(dispatch, {fassets}) { // ... fassets available in ownProps (via withFassets() below)
     return {
       toggleEateryPool(eatery, eateryPool) {
         if (eateryPool[eatery.id]) { // in pool
           // console.log(`xx delete ${eatery.name} from pool`);
-          dispatch( app.eateries.actions.remove(eatery.id) );
+          dispatch( fassets.eateries.actions.remove(eatery.id) );
         }
         else { // NOT in pool
           // console.log(`xx add ${eatery.name} to pool`);
-          dispatch( app.eateries.actions.add(eatery.id) );
+          dispatch( fassets.eateries.actions.add(eatery.id) );
         }
       },
       handleNextPage(nextPageToken) {
@@ -186,4 +187,12 @@ export default connectRedux(DiscoveryListScreen, {
       },
     };
   },
+});
+
+
+export default DiscoveryListScreenWithFassets = withFassets({
+  component: DiscoveryListScreenWithState,
+  mapFassetsToProps: {
+    fassets: '.', // ... introduce fassets into props via the '.' keyword
+  }
 });

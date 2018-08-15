@@ -49,7 +49,7 @@ export function searchEateries({loc,
   // *** validate parameters
   // ***
 
-  const check = verify.prefix('app.discovery.api.searchEateries() parameter violation: ');
+  const check = verify.prefix('discovery.api.searchEateries() parameter violation: ');
 
   if (!pagetoken) {
     check(loc,                            'loc is required ... [lat,lng]'); // really need to check array of two numbers
@@ -170,7 +170,7 @@ export function searchEateries({loc,
  */
 export function searchEateriesNextPage(pagetoken) {
 
-  const check = verify.prefix('app.discovery.api.searchEateriesNextPage() parameter violation: ');
+  const check = verify.prefix('discovery.api.searchEateriesNextPage() parameter violation: ');
   check(pagetoken, 'pagetoken is required');
   check(isString(pagetoken), `supplied pagetoken (${pagetoken}) must be a string`);
   

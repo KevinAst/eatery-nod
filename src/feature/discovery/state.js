@@ -1,6 +1,6 @@
 import {combineReducers}        from 'redux';
 import {reducerHash}            from 'astx-redux-util';
-import {managedExpansion}       from 'feature-u';
+import {expandWithFassets}      from 'feature-u';
 import {slicedReducer}          from 'feature-redux';
 import featureName              from './featureName';
 import discoveryFilterFormMeta  from './discoveryFilterFormMeta';
@@ -10,10 +10,10 @@ import actions                  from './actions';
 // *** Our feature reducer, managing state for our discovery process.
 // ***
 
-// NOTE: managedExpansion() is used NOT for app injection,
+// NOTE: expandWithFassets() is used NOT for app injection,
 //       but RATHER to delay expansion (avoiding circular dependancies
 //       in selector access from discoveryFilterFormMeta.js)
-const reducer = slicedReducer(`view.${featureName}`, managedExpansion( () => combineReducers({
+const reducer = slicedReducer(`view.${featureName}`, expandWithFassets( () => combineReducers({
 
   // retrieval in-progress (used by BOTH filtered retrieval, and next page)
   // ... null/'retrieve'/'next'

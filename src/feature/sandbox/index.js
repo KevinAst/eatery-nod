@@ -1,5 +1,5 @@
 import {createFeature}  from 'feature-u';
-import publicFace       from './publicFace';
+import fassets          from './fassets';
 
 /**
  * The **'sandbox'** feature promotes a variety of interactive tests,
@@ -12,7 +12,6 @@ import publicFace       from './publicFace';
  */
 export default createFeature({
   name:    'sandbox',
-  enabled: false,
-
-  publicFace,
+  enabled: true,
+  fassets,
 });

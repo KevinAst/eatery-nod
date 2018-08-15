@@ -24,9 +24,9 @@ It accomplishes the following:
  - emits **ready** action (when appropriate by monitoring device
    status), triggering downstream app process **(logic)**:
    ```
-   app.device.ready()
+   fassets.device.ready()
 
- - promotes a **device api** abstraction: `app.device.api...`
+ - promotes a **device api** abstraction: `fassets.device.api...`
 
 
 ## State Transition
