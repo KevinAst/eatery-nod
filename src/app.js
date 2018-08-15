@@ -9,12 +9,6 @@ import {createRouteAspect}   from 'feature-router';
 import SplashScreen          from './util/comp/SplashScreen';
 import features              from './feature'; // the set of features that comprise this application
 
-const reducerAspect = createReducerAspect();
-const logicAspect   = createLogicAspect();
-const routeAspect   = createRouteAspect();
-
-configureDiagnostics();
-
 // launch our application, exposing the feature-u Fassets object (facilitating cross-feature-communication)!
 export default launchApp({
   aspects: appAspects(),
@@ -29,7 +23,10 @@ export default launchApp({
 // ... matching our app's run-time stack
 function appAspects() {
 
-  // here is our run-time stack
+  // construct our framework run-time stack
+  const reducerAspect = createReducerAspect();
+  const logicAspect   = createLogicAspect();
+  const routeAspect   = createRouteAspect();
   const aspects = [
     reducerAspect, // redux          ... extending: Feature.reducer
     logicAspect,   // redux-logic    ... extending: Feature.logic
@@ -41,6 +38,9 @@ function appAspects() {
   routeAspect.config.fallbackElm$ = <SplashScreen msg="I'm trying to think but it hurts!"/>;
   // ... StateRouter animation hook
   routeAspect.config.componentWillUpdateHook$ = () => LayoutAnimation.configureNext(LayoutAnimation.Presets.spring);
+
+  // configure our app's overall diagnostics
+  configureDiagnostics();
 
   // beam me up Scotty :-)
   return aspects;
@@ -63,7 +63,7 @@ function configureDiagnostics() {
   diag$.skip('enable eatery-nod "logActions" feature', () => {
     logActions.enabled = true;
   });
-  diag$.skip('enable eatery-nod "sandbox" feature (in left-nav)', () => {
+  diag$('enable eatery-nod "sandbox" feature (in left-nav)', () => {
     sandbox.enabled = true;
   });
 
