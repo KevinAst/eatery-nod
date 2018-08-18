@@ -82,6 +82,15 @@ export const locateDevice = createLogic({
       done();
     }
 
+    // ?? temporary hack for Genymotion Emulator (hard-code location)
+    // ?? WOW: seems like I'm missing a done in production code below
+    // communicate device location
+    dispatch( actions.locateDevice.complete({lat: 38.7657446,
+                                             lng: -89.9923039}) );
+    done();
+    return;
+    
+
     // obtain permission: device geo location
     // ... will auto-succeed if access has previously been granted/failed (when "don't ask again" checked)
     Permissions.askAsync(Permissions.LOCATION)
