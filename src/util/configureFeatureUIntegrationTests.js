@@ -74,7 +74,7 @@ export default function configureFeatureUIntegrationTests(reducerAspect, logicAs
     test_renameAspectName();
   });
 
-  // ?? move into configureFeatureUIntegrationTests
+
 
   // ***
   // *** test_allowNoReducers$() -------------------------------------------------
