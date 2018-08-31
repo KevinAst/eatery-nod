@@ -1,3 +1,2 @@
-// parent dir import defaults to our feature reference
-import feature from './feature';
-export default feature;
+// redirect parent dir import to our feature reference
+export {default} from './feature';
