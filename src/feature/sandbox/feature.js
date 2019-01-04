@@ -1,5 +1,6 @@
 import {createFeature}  from 'feature-u';
 import fassets          from './fassets';
+import featureFlags     from '../../util/featureFlags'
 
 /**
  * The **'sandbox'** feature promotes a variety of interactive tests,
@@ -12,6 +13,6 @@ import fassets          from './fassets';
  */
 export default createFeature({
   name:    'sandbox',
-  enabled: false,
+  enabled: featureFlags.sandbox,
   fassets,
 });

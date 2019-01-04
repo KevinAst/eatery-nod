@@ -1,6 +1,4 @@
 import {createLogic}      from 'redux-logic';
-import {Location,
-        Permissions}      from 'expo';
 import featureName        from './featureName';
 import actions            from './actions';
 import {isDeviceReady,
@@ -59,76 +57,28 @@ export const locateDevice = createLogic({
   type: String(actions.locateDevice),
   warnTimeout: 0, // long-running logic (due to user interaction)
   
-  process({getState, action}, dispatch, done) {
+  process({getState, action, fassets}, dispatch, done) {
 
-    // issue handler
-    function handleIssue(msg, err=null) {
+    // obtain our device location via our locationService
+    fassets.locationService.getCurrentPositionAsync()
 
-      // notify user of situation
-      const myToast = err ? toast.error : toast.info;
-      myToast({
-        msg: `${msg}\nReverting to last know location.`,
-      });
+           .then( (location) => {
+             dispatch( actions.locateDevice.complete(location) );
+             done();
+           })
 
-      // fallback to last known location (for now just hard-code to Glen Carbon)
-      dispatch( actions.locateDevice.complete({lat: 38.752209, lng: -89.986610}) );
+           .catch( err => {
 
-      // log any error
-      if (err) {
-        console.error(msg, err);
-      }
+             // fallback to last known location (for now just hard-code to Glen Carbon)
+             dispatch( actions.locateDevice.complete({lat: 38.752209, lng: -89.986610}) );
 
-      // complete this logic service
-      done();
-    }
+             // notify user and console log
+             const msg = err.formatClientMsg() + ' ... falling back to last known location';
+             toast.warn({msg});
+             console.info(msg, err); // console.error is TOO intrusive in Expo env
 
-    // ?? temporary hack for Genymotion Emulator (hard-code location)
-    // ?? WOW: seems like I'm missing a done in production code below
-    // communicate device location
-    dispatch( actions.locateDevice.complete({lat: 38.7657446,
-                                             lng: -89.9923039}) );
-    done();
-    return;
-    
-
-    // obtain permission: device geo location
-    // ... will auto-succeed if access has previously been granted/failed (when "don't ask again" checked)
-    Permissions.askAsync(Permissions.LOCATION)
-               .then( ({status}) => {
-                 if (status === 'granted') {
-                   // obtain device geo location
-                   Location.getCurrentPositionAsync({})
-                           .then( (location) => {
-                             // console.log(`xx Obtained Device Location: `, location);
-                             // Obtained Device Location: {
-                             //   "coords": {
-                             //     "accuracy":   50,
-                             //     "altitude":   0,
-                             //     "heading":    0,
-                             //     "latitude":   38.7657446, // of interest
-                             //     "longitude": -89.9923039, // of interest
-                             //     "speed":      0,
-                             //   },
-                             //   "mocked":    false,
-                             //   "timestamp": 1507050033634,
-                             // }
-
-                             // communicate device location
-                             dispatch( actions.locateDevice.complete({lat: location.coords.latitude, 
-                                                                      lng: location.coords.longitude}) );
-                           })
-                           .catch( err => {
-                             handleIssue('Could not obtain device location.', err);
-                           });
-                 }
-                 else {
-                   // permission denied
-                   handleIssue('No access to device location.');
-                 }
-               })
-               .catch( err => {
-                 handleIssue('An issue was encountered in obtaining device location permission.', err);
-               });
+             done();
+           });
 
   },
 

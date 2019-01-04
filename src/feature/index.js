@@ -4,7 +4,8 @@ import leftNav     from './leftNav';
 import currentView from './currentView';
 import eateries    from './eateries';
 import discovery   from './discovery';
-import firebase    from './firebase';
+import services    from './services'; // ?? new
+import firebase    from './firebase'; // ?? to be replaced (by services)
 import logActions  from './logActions';
 import sandbox     from './sandbox';
 
@@ -27,6 +28,7 @@ export default [
   currentView,
   eateries,
   discovery,
+  ...services,
   firebase,
   logActions,
   sandbox,
