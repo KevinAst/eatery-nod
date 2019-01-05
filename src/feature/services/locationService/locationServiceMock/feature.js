@@ -11,7 +11,7 @@ import LocationServiceMock from './LocationServiceMock';
 export default createFeature({
   name:    'locationServiceMock',
 
-  enabled: !featureFlags.wifiAvailable,
+  enabled: featureFlags.mockGPS,
 
   fassets: {
     defineUse: {
