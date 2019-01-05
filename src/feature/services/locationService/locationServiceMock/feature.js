@@ -1,14 +1,21 @@
-import {createFeature}  from 'feature-u';
-import fassets          from './fassets';
-import featureFlags     from '../../../../util/featureFlags';
+import {createFeature}     from 'feature-u';
+import featureFlags        from '../../../../util/featureFlags';
+import LocationServiceMock from './LocationServiceMock';
 
 /**
- * The **'locationServiceMock'** feature is a minimilistic feature
- * that **defines** the "locationService" ... the **mock** service
- * implementation that is promoted when we are mocking.
+ * The **'locationServiceMock'** feature **defines** the **mock**
+ * 'locationService' implementation.
+ * 
+ * This service is conditionally promoted when we **are** mocking.
  */
 export default createFeature({
   name:    'locationServiceMock',
+
   enabled: !featureFlags.wifiAvailable,
-  fassets,
+
+  fassets: {
+    defineUse: {
+      'locationService': new LocationServiceMock(),
+    },
+  }
 });

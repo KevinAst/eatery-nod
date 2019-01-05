@@ -1,15 +1,21 @@
-import {createFeature}  from 'feature-u';
-import fassets          from './fassets';
-import featureFlags     from '../../../../util/featureFlags';
+import {createFeature}     from 'feature-u';
+import featureFlags        from '../../../../util/featureFlags';
+import LocationServiceExpo from './LocationServiceExpo';
 
 /**
- * The **'locationServiceExpo'** feature is a minimilistic feature
- * that **defines** the "locationService" ... the **real** service
- * implementation (from the Expo API) that is promoted when we are not
- * mocking.
+ * The **'locationServiceExpo'** feature **defines** the **real**
+ * 'locationService' implementation (which uses the Expo API).
+ * 
+ * This service is conditionally promoted when we are **not** mocking.
  */
 export default createFeature({
   name:    'locationServiceExpo',
+
   enabled: featureFlags.wifiAvailable,
-  fassets,
+
+  fassets: {
+    defineUse: {
+      'locationService': new LocationServiceExpo(),
+    },
+  }
 });

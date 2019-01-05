@@ -1,6 +1,6 @@
 /**
  * LocationServiceAPI is a "pseudo" interface specifying the LocationService API
- * which all implementations (i.e. derivations) should conform.
+ * which all implementations (i.e. derivations) must conform.
  */
 export default class LocationServiceAPI {
 
