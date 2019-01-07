@@ -4,8 +4,7 @@ import leftNav     from './leftNav';
 import currentView from './currentView';
 import eateries    from './eateries';
 import discovery   from './discovery';
-import services    from './services'; // ?? new
-import firebase    from './firebase'; // ?? to be replaced (by services)
+import services    from './services';
 import logActions  from './logActions';
 import sandbox     from './sandbox';
 
@@ -17,7 +16,6 @@ import sandbox     from './sandbox';
  *  - **'currentView'**: maintains the currentView with get/set cross-feature communication bindings
  *  - **'eateries'**:    manages and promotes the eateries view
  *  - **'discovery'**:   manages and promotes the discovery view
- *  - **'firebase'**:    initializes the google firebase service
  *  - **'logActions'**:  logs all dispatched actions and resulting state
  *  - **'sandbox'**:     promotes a variety of interactive tests, used in development, that can easily be disabled
  */
@@ -29,7 +27,6 @@ export default [
   eateries,
   discovery,
   ...services,
-  firebase,
   logActions,
   sandbox,
 ];

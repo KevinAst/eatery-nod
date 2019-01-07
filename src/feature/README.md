@@ -7,6 +7,5 @@ The **'eatery-nod'** application is composed from following **features**:
  - [**'currentView'**](currentView/README.md): maintains the currentView with get/set cross-feature communication bindings
  - [**'eateries'**](eateries/README.md):       manages and promotes the eateries view
  - [**'discovery'**](discovery/README.md):     manages and promotes the discovery view
- - [**'firebase'**](firebase/README.md):       initializes the google firebase service
  - [**'logActions'**](logActions/README.md):   logs all dispatched actions and resulting state
  - [**'sandbox'**](sandbox/README.md):         promotes a variety of interactive tests, used in development, that can easily be disabled
