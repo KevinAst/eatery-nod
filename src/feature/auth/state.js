@@ -39,7 +39,9 @@ const reducer = slicedReducer(featureName, expandWithFassets( () => combineReduc
       [actions.signOut]:         (state, action) => null,
     }, null), // initialState
 
-    // user.pool: string (eatery pool identifier - from firebase DB userProfile ... null profile read)
+    // ?? it would be nice to retain the uid (even though it may not be used externally)
+
+    // user.pool: string (eatery pool identifier ??OLD (now part of authService): - from firebase DB userProfile ... null profile read)
     pool: reducerHash({
       [actions.userProfileChanged]: (state, action) => action.userProfile.pool,
       [actions.signOut]:            (state, action) => null,

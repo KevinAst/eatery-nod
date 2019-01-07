@@ -117,6 +117,7 @@ export const signIn = createLogic({
   warnTimeout: 0, // long-running logic ... UNFORTUNATELY firebase is sometimes EXCRUCIATINGLY SLOW!
 
   process({getState, action, fassets}, dispatch, done) {
+    // ?? replace with fassets.authService.signIn(email, pass)
     firebase.auth().signInWithEmailAndPassword(action.email, action.pass)
             .then( user => {
               // console.log(`xx logic ${featureName}.signIn: signInWithEmailAndPassword() WORKED, user: `, user);
@@ -163,6 +164,12 @@ export const signIn = createLogic({
 /**
  * Supplement signIn complete action with userProfile, triggering profile.changed action
  */
+// ?????????????????????????????????????????????? cur point
+// ?? this entire thing IS REPLACED (GREATLY SIMPLIFIED)
+//    - SHOULD GO into AuthServiceAPI.signIn(...) ... combining pool as part of user
+//    - don't confuse user.pool (a string pool identifier) with view.eateries.dbPool (the db entries)
+// ?? also it would be nice to retain the uid (even though it may not be used externally)
+//    - this thing takes REAL user.uid (from action which is never saved) and retrieves our data (i.e. pool)
 export const supplementSignInComplete = createLogic({
 
   name: `${featureName}.supplementSignInComplete`,
@@ -183,6 +190,7 @@ export const supplementSignInComplete = createLogic({
     }
 
     // fetch our userProfile
+    // ?? now internal to AuthServiceAPI.signIn(...)
     const dbRef = firebase.database().ref(`/userProfiles/${action.user.uid}`);
     dbRef.once('value')
          .then( snapshot => {
@@ -240,9 +248,10 @@ export const checkEmailVerified = createLogic({
   transform({getState, action}, next, reject) {
 
     // fetch the most up-to-date user
+    // ?? replace with fassets.authService.refreshUser() ... and service retains currentUser
     firebase.auth().currentUser.reload()
             .then(()=> {
-              // supplement action with most up-to-date user
+              // supplement action with most up-to-date user (?? to insure the status is up-to-date)
               action.user = firebase.auth().currentUser;
               next(action);
             })
@@ -266,6 +275,7 @@ export const resendEmailVerification = createLogic({
   type: String(actions.signIn.resendEmailVerification),
 
   transform({getState, action}, next) {
+    // ?? replace with fassets.authService.resendEmailVerification()
     firebase.auth().currentUser.sendEmailVerification();
     next(action);
   },
@@ -282,6 +292,7 @@ export const signOut = createLogic({
   type: String(actions.signOut),
 
   process({getState, action, fassets}, dispatch, done) {
+    // ?? replace with fassets.authService.signOut()
     firebase.auth().signOut()
             .catch( (err) => {
               // simply report unexpected error to user

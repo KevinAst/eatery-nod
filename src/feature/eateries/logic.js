@@ -11,10 +11,12 @@ import {expandWithFassets}  from 'feature-u';
  * Monitor our persistent data changes associated to a given pool.
  */
 
+// ?? think moves into our persistent service: services/eateryService/eateryServiceFirebase
+//    ... ?? we may have a slightly different rendition of this (for logic purposes) STRIPPED of any firebase remnants
 let curDbPoolMonitor = { // existing "pool" monitor (if any)
   pool:   null,          // type: string
-  dbRef:  null,          // type: firebase.database.Reference
-  wrapUp: () => 'no-op', // type: function(): void ... wrap-up monitor (both firebase -and- logic)
+  dbRef:  null,          // type: firebase.database.Reference // ?? now in service
+  wrapUp: () => 'no-op', // type: function(): void ... wrap-up monitor (both firebase -and- logic??how-now?)
 };
 
 export const monitorDbPool = expandWithFassets( (fassets) => createLogic({
@@ -37,25 +39,29 @@ export const monitorDbPool = expandWithFassets( (fassets) => createLogic({
 
   process({getState, action, fassets}, dispatch, done) {
 
-    // close prior monitor, if any (both firebase -and- logic)
+    // close prior monitor, if any (both firebase -and- logic) // ?? one HERE (logic) and service(firebase)
     curDbPoolMonitor.wrapUp();
 
     // create new monitor (retaining needed info for subsequent visibility)
     curDbPoolMonitor = {
       pool:   action.userProfile.pool,
-      dbRef:  firebase.database().ref(`/pools/${action.userProfile.pool}`),
+      dbRef:  firebase.database().ref(`/pools/${action.userProfile.pool}`), // ?? now in service (HOWEVER passed pool)
       wrapUp() { // ... hook to wrap-up monitor (both firebase -and- logic)
-        curDbPoolMonitor.dbRef.off('value');
-        done();
+        curDbPoolMonitor.dbRef.off('value'); // ?? now in service
+        done();                              // ?? retained here
       }
     };
 
     // register our firebase listener
+    // ?? now: fassets.eateryService.monitorDbEateries( pool, changeCb(eateries) ): void
     curDbPoolMonitor.dbRef.on('value', (snapshot) => {
+
+      // ?? this callback is NOW a CB parameter of our monitorDbEateries() ... (eateries) =>
 
       const eateries = snapshot.val();
 
       // supplement eateries with distance from device (as the crow flies)
+      // ?? this is retained in our logic (because it is supplementing info from our device)
       const deviceLoc = fassets.device.sel.getDeviceLoc(getState());
       for (const eateryId in eateries) {
         const eatery = eateries[eateryId];
@@ -209,6 +215,7 @@ export const addToPool = createLogic({
     const pool     = fassets.auth.sel.getUserPool(appState);
 
     // console.log(`xx adding eatery: /pools/${pool}/${action.eatery.id}`);
+    // ?? now fassets.eateryService.addEatery(eatery): void
     const dbRef = firebase.database().ref(`/pools/${pool}/${action.eatery.id}`);
     dbRef.set(action.eatery);
 
@@ -229,6 +236,7 @@ export const removeFromPool = createLogic({
     const pool     = fassets.auth.sel.getUserPool(appState);
 
     // console.log(`xx removing eatery: /pools/${pool}/${action.eateryId}`);
+    // ?? now fassets.eateryService.removeEatery(eateryId): void
     const dbRef = firebase.database().ref(`/pools/${pool}/${action.eateryId}`);
     dbRef.set(null);
 
