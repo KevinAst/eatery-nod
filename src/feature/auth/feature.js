@@ -28,9 +28,9 @@ import route            from './route';
  *    by promoting various authentication screens until authentication
  *    is complete **(route)**
  * 
- *  - emits key action that triggers downstream app process **(logic)**:
+ *  - emits key action that triggers downstream eateries to bootstrap **(logic)**:
  *    ```
- *    fassets.auth.actions.userProfileChanged(userProfile({name,pool}))
+ *    fassets.auth.actions.userProfileChanged(user)
  *    ```
  *
  * **State Transition**

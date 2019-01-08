@@ -19,16 +19,18 @@ let curDbPoolMonitor = { // existing "pool" monitor (if any)
   wrapUp: () => 'no-op', // type: function(): void ... wrap-up monitor (both firebase -and- logic??how-now?)
 };
 
+// ?? previously this may have been invoked on initial startup to get the ball rolling ... that may still be the case
+// ?? hmmm ... initially didn't think was being invoked, we need the ability to change the pool
 export const monitorDbPool = expandWithFassets( (fassets) => createLogic({
 
   name:        `${featureName}.monitorDbPool`,
-  type:        String(fassets.auth.actions.userProfileChanged), // NOTE: action contains: action.userProfile.pool
+  type:        String(fassets.auth.actions.userProfileChanged), // NOTE: action contains: User object (where we can obtain the pool)
   warnTimeout: 0, // long-running logic
 
   validate({getState, action, fassets}, allow, reject) {
 
     // no-op if we are alreay monitoring this same pool
-    if (action.userProfile.pool === curDbPoolMonitor.pool) {
+    if (action.user.pool === curDbPoolMonitor.pool) {
       reject(action); // other-logic/middleware/reducers: YES, self's process(): NO
       return;
     }
@@ -44,8 +46,8 @@ export const monitorDbPool = expandWithFassets( (fassets) => createLogic({
 
     // create new monitor (retaining needed info for subsequent visibility)
     curDbPoolMonitor = {
-      pool:   action.userProfile.pool,
-      dbRef:  firebase.database().ref(`/pools/${action.userProfile.pool}`), // ?? now in service (HOWEVER passed pool)
+      pool:   action.user.pool,
+      dbRef:  firebase.database().ref(`/pools/${action.user.pool}`), // ?? this is retained in our service (we have pool via action.user.pool)
       wrapUp() { // ... hook to wrap-up monitor (both firebase -and- logic)
         curDbPoolMonitor.dbRef.off('value'); // ?? now in service
         done();                              // ?? retained here

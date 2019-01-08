@@ -90,7 +90,7 @@ eateries
 
 ** cross-feature-communication: **
 app.auth.actions
-  .userProfileChanged(userProfile({name,pool})) ....................................................  - NONE
+  .userProfileChanged(user) ........................................................................  - NONE
                                            monitorDbPool:
                                            =============
                                              monitor firebase DB pool changes (via firebase .database().ref(...pool).on

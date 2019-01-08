@@ -1,5 +1,5 @@
 import {createLogic}        from 'redux-logic';
-import firebase             from 'firebase';
+// import firebase             from 'firebase'; // ?? REMOVE THIS ... should be NO firebase here now
 import {expandWithFassets}  from 'feature-u';
 import featureName          from './featureName';
 import actions              from './actions';
@@ -7,6 +7,7 @@ import * as sel             from './state';
 import signInFormMeta       from './signInFormMeta';
 import {alert, toast}       from '../../util/notify';
 
+// ?? test each fassets.authService() execution path
 
 /**
  * Start our authorization process, once the device is ready.
@@ -114,47 +115,61 @@ export const signIn = createLogic({
 
   name: `${featureName}.signIn`,
   type: String(actions.signIn),
-  warnTimeout: 0, // long-running logic ... UNFORTUNATELY firebase is sometimes EXCRUCIATINGLY SLOW!
+  warnTimeout: 0, // long-running logic ... UNFORTUNATELY signin using firebase is sometimes EXCRUCIATINGLY SLOW!
 
   process({getState, action, fassets}, dispatch, done) {
-    // ?? replace with fassets.authService.signIn(email, pass)
-    firebase.auth().signInWithEmailAndPassword(action.email, action.pass)
-            .then( user => {
-              // console.log(`xx logic ${featureName}.signIn: signInWithEmailAndPassword() WORKED, user: `, user);
-              fassets.device.api.storeCredentials(action.email, action.pass)
-                 .catch( (err) => {
-                   // hmmmm ... nested errors in a promise are caught in the outer catch (need to better understand this)
-                 });
-              dispatch( actions.signIn.complete(user) );
-              done();
-            })
-            .catch( (err) => {
+    
+    fassets.authService.signIn(action.email, action.pass)
 
-              const unexpectedMsg = 'An unexpected condition occurred, please try again later.';
+           .then( user => { // user has successfully signed in
 
-              // firebase provides a .code, enumerating credentials problem
-              // ... we do NOT interpret this, rather treat it generically (so as to NOT give hacker insight)
-              const invalidCredentials = err.code ? true : false;
+             console.log(`?? logic ${featureName}.signIn: authService.signIn() WORKED, user: `, user);
 
-              // for unexpected errors, display msg to user
-              if (!invalidCredentials) {
-                toast.error({  // ... will auto close -OR- when "details" is clicked
-                  msg:     unexpectedMsg,
-                  actions: [
-                    { txt:    'detail',
-                      action: () => {
-                        alert.error({ msg: ''+err });
-                      }},
-                  ]
-                });
-              }
+             // retain these credentials on our device (to streamline subsequent app launch)
+             fassets.device.api.storeCredentials(action.email, action.pass)
+                    .catch( (err) => { // unexpected error in a react-native API
+                      // hmmmm ... nested errors in a promise are caught in the outer catch (need to better understand this)
+                    });
 
-              // re-display SignIn form
-              const msg = invalidCredentials ? 'Invalid SignIn credentials.' : unexpectedMsg;
-              dispatch( actions.signIn.open(action, msg) ); // NOTE: action is a cheap shortcut to domain (contains email/pass)
+             // communicate a new user is in town
+             dispatch( actions.signIn.complete(user) );
+             done();
+           })
 
-              done();
-            });
+           .catch( (err) => {
+
+             console.log(`?? logic ${featureName}.signIn: authService.signIn() ERROR: `, err);
+
+             // Errors from authService conditionally provides an err.code
+             //  - when .code is supplied, it enumerates a user specific credentials problem (like "invalid password")
+             //    ... we do NOT expose this to the user (so as to NOT give hacker insight)
+             //        rather we generalize it to the user ('Invalid SignIn credentials.')
+             //  - when .code is NOT supplied, it represents an unexpected condition
+             // ?? TODO: document (this firebase heuristic) Error in our service API
+             //    - ? in real implementation, merly use as is (firebase does it)
+             //    - ? in mock implementation, need to tweek this for testing
+             const invalidCredentials = err.code ? true : false; // true: user problem, false: unexpected error
+
+             // for unexpected errors, display msg to user
+             // ?? TEST THIS OUT
+             if (!invalidCredentials) {
+               toast.error({  // ... will auto close -OR- when "details" is clicked
+                 msg:     err.formatClientMsg(),
+                 actions: [
+                   { txt:    'detail',
+                     action: () => {
+                       alert.error({ msg: ''+err });
+                     }},
+                 ]
+               });
+             };
+
+             // re-display SignIn form, prepopulated with appropriat msg
+             const msg = err.formatClientMsg();
+             dispatch( actions.signIn.open(action, msg) ); // NOTE: action is a cheap shortcut to domain (contains email/pass) ... pre-populating sign-in form with last user input
+
+             done();
+           });
   },
 
 });
@@ -162,61 +177,61 @@ export const signIn = createLogic({
 
 
 /**
- * Supplement signIn complete action with userProfile, triggering profile.changed action
+ * Supplement signIn complete action by triggering profile.changed action,
+ * causing eateries view to bootstrap.
  */
-// ?????????????????????????????????????????????? cur point
-// ?? this entire thing IS REPLACED (GREATLY SIMPLIFIED)
-//    - SHOULD GO into AuthServiceAPI.signIn(...) ... combining pool as part of user
-//    - don't confuse user.pool (a string pool identifier) with view.eateries.dbPool (the db entries)
-// ?? also it would be nice to retain the uid (even though it may not be used externally)
-//    - this thing takes REAL user.uid (from action which is never saved) and retrieves our data (i.e. pool)
 export const supplementSignInComplete = createLogic({
 
   name: `${featureName}.supplementSignInComplete`,
   type: String(actions.signIn.complete),
 
-  // NOTE: action.user is available, we supplement action.userProfile
-  // NOTE: We accomplish this in logic transform, to simulate an Atomic operation (as from the server).
-  transform({getState, action}, next, reject) {
-
-    const handleFetchProfileProblem = (err=null) => {
-      // revert action to one that will re-display signIn with error message
-      console.log(`***ERROR*** logic ${featureName}.supplementSignInComplete: encountered err (null indicates profile NOT found): `, err);
-      const msg = err 
-                ? 'A problem was encountered fetching your user profile.'
-                : 'Your user profile does NOT exist.';
-      const actionRedirect = actions.signIn.open({email: action.user.email}, msg);
-      next(actionRedirect);
-    }
-
-    // fetch our userProfile
-    // ?? now internal to AuthServiceAPI.signIn(...)
-    const dbRef = firebase.database().ref(`/userProfiles/${action.user.uid}`);
-    dbRef.once('value')
-         .then( snapshot => {
-           const userProfile = snapshot.val();
-           // console.log(`xx logic supplementSignInComplete: have userProfile: `, userProfile)
-           if (!userProfile) {
-             handleFetchProfileProblem();
-           }
-           else {
-             // supplement action with userProfile
-             action.userProfile = userProfile
-             next(action);
-           }
-         })
-         .catch( err => {
-           handleFetchProfileProblem(err);
-         });
-  },
+  // ?? TEST: no longer a need to supplement action, it has the complete user in it
+  // ? // NOTE: action.user is available, we supplement action.userProfile
+  // ? // NOTE: We accomplish this in logic transform, to simulate an Atomic operation (as from the server).
+  // ? transform({getState, action}, next, reject) {
+  // ? 
+  // ?   const handleFetchProfileProblem = (err=null) => {
+  // ?     // revert action to one that will re-display signIn with error message
+  // ?     console.log(`***ERROR*** logic ${featureName}.supplementSignInComplete: encountered err (null indicates profile NOT found): `, err);
+  // ?     const msg = err 
+  // ?               ? 'A problem was encountered fetching your user profile.'
+  // ?               : 'Your user profile does NOT exist.';
+  // ?     const actionRedirect = actions.signIn.open({email: action.user.email}, msg);
+  // ?     next(actionRedirect);
+  // ?   }
+  // ? 
+  // ?   // fetch our userProfile
+  // ?   // ?? now internal to AuthServiceAPI.signIn(...)
+  // ?   const dbRef = firebase.database().ref(`/userProfiles/${action.user.uid}`);
+  // ?   dbRef.once('value')
+  // ?        .then( snapshot => {
+  // ?          const userProfile = snapshot.val();
+  // ?          // console.log(`xx logic supplementSignInComplete: have userProfile: `, userProfile)
+  // ?          if (!userProfile) {
+  // ?            handleFetchProfileProblem();
+  // ?          }
+  // ?          else {
+  // ?            // supplement action with userProfile
+  // ?            action.userProfile = userProfile
+  // ?            next(action);
+  // ?          }
+  // ?        })
+  // ?        .catch( err => {
+  // ?          handleFetchProfileProblem(err);
+  // ?        });
+  // ? },
 
   process({getState, action}, dispatch, done) {
-    dispatch( actions.userProfileChanged(action.userProfile) );
+    // NOTE: Currently, this is the only place where userProfileChanged is dispatched.
+    //       It stimulates the eateries view to get the ball rolling (displaying the correct pool)
+    //       In the future, userProfileChanged is dispatched dynamically, when the user has the ability to change their pool.
+    // ?? this appears to be working
+    // console.log(`?? logic ${featureName}.supplementSignInComplete ... monitoring Action: ${actions.signIn.complete} ... ISSUING action: '${String(actions.userProfileChanged)}'`);
+    dispatch( actions.userProfileChanged(action.user) ); // utilize the same user from our our monitored sction!! ?? was using action.userProfile (from transform)
     done();
   },
 
 });
-
 
 
 /**
@@ -228,7 +243,7 @@ export const signInCleanup = createLogic({
   type: String(actions.signIn.complete),
 
   process({getState, action}, dispatch, done) {
-    // console.log(`xx logic ${featureName}.signInCleanup: user.status: '${sel.getUserStatus(getState())}'`);
+    // console.log(`xx logic ${featureName}.signInCleanup: user.status: '${sel.getUser(getState()).getAuthStatus()}'`);
     dispatch( actions.signIn.close() ); // we are done with our signIn form
     done();
   },
@@ -245,20 +260,19 @@ export const checkEmailVerified = createLogic({
   name: `${featureName}.checkEmailVerified`,
   type: String(actions.signIn.checkEmailVerified),
 
-  transform({getState, action}, next, reject) {
+  transform({getState, action, fassets}, next, reject) {
 
     // fetch the most up-to-date user
-    // ?? replace with fassets.authService.refreshUser() ... and service retains currentUser
-    firebase.auth().currentUser.reload()
-            .then(()=> {
-              // supplement action with most up-to-date user (?? to insure the status is up-to-date)
-              action.user = firebase.auth().currentUser;
-              next(action);
-            })
-            .catch( err => {
-              console.error('logic: ${featureName}.checkEmailVerified: some problem with firebase.auth().currentUser.reload()', err);
-              reject(); // nix the entire action
-            });
+    fassets.authService.refreshUser()
+           .then( user => {
+             // suplement action with the most up-to-date user
+             action.user = user;
+             next(action);
+           })
+           .catch( err => {
+             console.error('logic: ${featureName}.checkEmailVerified: some problem with authService.refreshUser()', err);
+             reject(); // nix the entire action
+           });
   },
 
 });
@@ -274,9 +288,8 @@ export const resendEmailVerification = createLogic({
   name: `${featureName}.resendEmailVerification`,
   type: String(actions.signIn.resendEmailVerification),
 
-  transform({getState, action}, next) {
-    // ?? replace with fassets.authService.resendEmailVerification()
-    firebase.auth().currentUser.sendEmailVerification();
+  transform({getState, action, fassets}, next) {
+    fassets.authService.resendEmailVerification()
     next(action);
   },
 
@@ -292,20 +305,20 @@ export const signOut = createLogic({
   type: String(actions.signOut),
 
   process({getState, action, fassets}, dispatch, done) {
-    // ?? replace with fassets.authService.signOut()
-    firebase.auth().signOut()
-            .catch( (err) => {
-              // simply report unexpected error to user
-              toast.error({  // ... will auto close -OR- when "details" is clicked
-                msg:     'A problem was encountered trying to signOut of firebase.',
-                actions: [
-                  { txt:    'detail',
-                    action: () => {
-                      alert.error({ msg: ''+err });
-                    }},
-                ]
-              });
-            });
+    fassets.authService.signOut()
+           .catch( (err) => {
+             // simply report unexpected error to user
+             toast.error({  // ... will auto close -OR- when "details" is clicked
+               msg:     err.formatClientMsg(),
+               actions: [
+                 { txt:    'detail',
+                   action: () => {
+                     alert.error({ msg: ''+err });
+                   }},
+               ]
+             });
+           });
+
     fassets.device.api.removeCredentials()
        .catch( (err) => {
          // simply report unexpected error to user
@@ -319,6 +332,7 @@ export const signOut = createLogic({
            ]
          });
        });
+
     done();
   },
 

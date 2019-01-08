@@ -17,15 +17,17 @@ export default featureRoute({
 
   content({fassets, appState}) {
 
+    const user = sel.getUser(appState);
+
     // when user is FULLY signedIn/verified
     // ... allow down-stream features to route further (i.e. app-specific screens)
-    if (sel.isUserSignedIn(appState)) {
+    if (user.isUserSignedIn()) {
       return null;
     }
 
     // when user is signed in BUT unverified
     // ... display email verification screen
-    if (sel.isUserUnverifiedSignedIn(appState)) {
+    if (user.isUserSignedInUnverified()) {
       return <SignInVerifyScreen/>;
     }
 
@@ -53,7 +55,7 @@ export default featureRoute({
     //     c) an error condition (say some change that impacts our route logic)
     //        ... this is an unexpected condition
     //        ... SO, we expose the user-status context in the message (for diagnostics)
-    const msg = `authorization in progress (${sel.getUserStatus(appState)})`;
+    const msg = `authorization in progress (${sel.getUser(appState).getAuthStatus()})`;
     return <SplashScreen msg={msg}/>;
   },
 

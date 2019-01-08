@@ -92,7 +92,7 @@ export default SignInVerifyScreenWithState = withState({
   component: SignInVerifyScreen,
   mapStateToProps(appState) {
     return {
-      email: sel.getUserEmail(appState),
+      email: sel.getUser(appState).email,
     };
   },
   mapDispatchToProps(dispatch) {

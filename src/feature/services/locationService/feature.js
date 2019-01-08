@@ -3,10 +3,9 @@ import LocationServiceAPI from './LocationServiceAPI';
 
 /**
  * The **'locationService'** feature simply promotes the
- * 'locationService' use contract.
- *
- * This allows feature-u to validate it's existence, because it is
- * supplied by other features (either real or mocked).
+ * 'locationService' use contract, allowing feature-u to validate it's
+ * existence (as it is supplied by other features - either real or
+ * mocked).
  */
 export default createFeature({
   name:    'locationService',

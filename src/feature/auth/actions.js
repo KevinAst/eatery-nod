@@ -43,7 +43,6 @@ export default generateActions.root({
     
       complete: { // actions.signIn.complete(user): Action
                   // > signIn completed successfully
-                  //   NOTE: logic supplements action with userProfile
                   actionMeta: {
                     traits: ['user'],
                   },
@@ -51,7 +50,7 @@ export default generateActions.root({
     
       checkEmailVerified: { // actions.signIn.checkEmailVerified(): Action
                             // > check to see if account email has been verified
-                            actionMeta: {},
+                            actionMeta: {}, // NOTE: logic suplements the action with the current user
       },
     
       resendEmailVerification: { // actions.signIn.resendEmailVerification(): Action
@@ -67,10 +66,10 @@ export default generateActions.root({
                actionMeta: {},
     },
 
-    userProfileChanged: { // actions.userProfileChanged(userProfile): Action
-                          // > user profile changed: userProfile: {name, pool}
+    userProfileChanged: { // actions.userProfileChanged(user): Action
+                          // > user profile changed
                           actionMeta: {
-                            traits: ['userProfile'],
+                            traits: ['user'],
                           },
     },
 

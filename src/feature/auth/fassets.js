@@ -7,9 +7,9 @@ import featureName  from './featureName';
  */
 export default {
   define: {
-    [`${featureName}.actions.userProfileChanged`]: actions.userProfileChanged, // userProfileChanged(userProfile) ... userProfile: {name, pool}
+    [`${featureName}.actions.userProfileChanged`]: actions.userProfileChanged, // userProfileChanged(user) NOTE: PUBLIC for eateries to monitor, and for future use (when user can change their pool)
     [`${featureName}.actions.signOut`]:            actions.signOut,            // signOut()
 
-    [`${featureName}.sel.getUserPool`]:            sel.getUserPool,
+    [`${featureName}.sel.getUserPool`]:            (appState) => sel.getUser(appState).pool,
   },
 };

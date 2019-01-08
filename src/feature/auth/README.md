@@ -6,7 +6,7 @@ It accomplishes the following:
  - starts authorization process by monitoring device ready action
    (`fassets.device.actions.ready`) **(logic)**
 
-   - interacts with authentication services **(logic, reducer)**
+   - interacts with authentication services **(logic, reducer)** ?? what reducer does this?
 
    - gathers user credentials from various authentication screens
      **(route, logic)**
@@ -21,11 +21,10 @@ It accomplishes the following:
    by promoting various authentication screens until authentication
    is complete **(route)**
 
- - emits key action that triggers downstream app process **(logic)**:
+ - emits key action that triggers downstream eateries to bootstrap **(logic)**:
    ```
-   fassets.auth.actions.userProfileChanged(userProfile({name,pool}))
+   fassets.auth.actions.userProfileChanged(user)
    ```
-
 
 ## State Transition
 

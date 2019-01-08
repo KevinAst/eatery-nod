@@ -5,49 +5,24 @@ import {slicedReducer}      from 'feature-redux';
 import featureName          from './featureName';
 import signInFormMeta       from './signInFormMeta';
 import actions              from './actions';
+import User                 from './../services/authService/User'; // ?? subsequent useage has no access to fassets ... can I import it from app?
 
 // ***
-// *** Our feature reducer, managing state for our authoration process.
+// *** Our feature reducer, managing state for our authorization process.
 // ***
 
-// NOTE: expandWithFassets() is used NOT for fassets injection,
-//       but RATHER to delay expansion (avoiding circular dependancies
+// NOTE: expandWithFassets() is NOT only used for fassets injection,
+//       but ALSO to delay expansion (avoiding circular dependencies
 //       in selector access from signInFormMeta.js)
-const reducer = slicedReducer(featureName, expandWithFassets( () => combineReducers({
+const reducer = slicedReducer(featureName, expandWithFassets( (fassets) => combineReducers({
 
-  user: combineReducers({
-
-    // user.status: string
-    //   'signedOut':          unauthorized
-    //   'signedInUnverified': signed in BUT email verification in-progress
-    //   'signedIn':           fully signed in (authorized/verified/profiled)
-    status: reducerHash({
-      [actions.signIn.complete]:           (state, action) => action.user.emailVerified ? 'signedIn' : 'signedInUnverified',
-      [actions.signIn.checkEmailVerified]: (state, action) => action.user.emailVerified ? 'signedIn' : 'signedInUnverified',
-      [actions.signOut]:                   (state, action) => 'signedOut',
-    }, 'signedOut'), // initialState
-
-    // user.name: string (what UI calls this user you - from firebase DB userProfile ... null profile read)
-    name: reducerHash({
-      [actions.userProfileChanged]:  (state, action) => action.userProfile.name,
-      [actions.signOut]:             (state, action) => null,
-    }, null), // initialState
-
-    // user.email: string (user's email sign-in credentials - from firebase user)
-    email: reducerHash({
-      [actions.signIn.complete]: (state, action) => action.user.email,
-      [actions.signOut]:         (state, action) => null,
-    }, null), // initialState
-
-    // ?? it would be nice to retain the uid (even though it may not be used externally)
-
-    // user.pool: string (eatery pool identifier ??OLD (now part of authService): - from firebase DB userProfile ... null profile read)
-    pool: reducerHash({
-      [actions.userProfileChanged]: (state, action) => action.userProfile.pool,
-      [actions.signOut]:            (state, action) => null,
-    }, null), // initialState
-
-  }),
+  // the current User object (serialized to state only) ... can represent empty User - NOT signed in
+  user: reducerHash({
+    [actions.signIn.complete]:           (state, action) => action.user.toStruct(),
+    [actions.signIn.checkEmailVerified]: (state, action) => action.user.toStruct(),        // containing updated User.emailVerified ?? think this has NO payload
+    [actions.userProfileChanged]:        (state, action) => action.user.toStruct(),        // pulling in new profile info
+    [actions.signOut]:                   (state, action) => new fassets.User().toStruct(), // an empty User - NOT signed in
+  }, new fassets.User().toStruct()), // initialState (an empty User - NOT signed in)
 
   // SignIn iForm's reducer ... null indicates form is inactive
   signInForm: signInFormMeta.registrar.formReducer(),
@@ -61,19 +36,22 @@ export default reducer;
 // *** Various Selectors
 // ***
 
-                                         /** Our feature state root (via slicedReducer as a single-source-of-truth) */
-const getFeatureState                  = (appState) => reducer.getSlicedState(appState);
-const gfs = getFeatureState;             // ... concise alias (used internally)
+      // Our feature state root (via slicedReducer as a single-source-of-truth)
+const getFeatureState  = (appState) => reducer.getSlicedState(appState);
+const gfs              = getFeatureState;             // ... concise alias (used internally)
 
-export const getUserStatus             = (appState) => gfs(appState).user.status;
-export const isUserUnverifiedSignedIn  = (appState) => getUserStatus(appState) === 'signedInUnverified';
-export const isUserSignedIn            = (appState) => getUserStatus(appState) === 'signedIn';
-export const isUserSignedOut           = (appState) => getUserStatus(appState) === 'signedOut';
 
-export const isSignInFormActive        = (appState) => gfs(appState).signInForm ? true : false;
+             // the current User object (with all it's value-added methods)
+             //   LIKE: user.getAuthStatus()
+             //         user.isUserSignedOut()
+             //         user.isUserSignedIn()
+             //         user.isUserSignedInUnverified()
+             //         user.name
+             //         user.email
+             //         user.pool
+             //   NOTE: will always return a User object (may represent a no-user object that: isSignedOut())
+export const getUser = (appState) => new User(gfs(appState).user);
 
-export const getUserName               = (appState) => gfs(appState).user.name;
-export const getUserEmail              = (appState) => gfs(appState).user.email;
-export const getUserPool               = (appState) => gfs(appState).user.pool;
-
-export const getUserSignInForm         = (appState) => gfs(appState).signInForm;
+             // SignIn form  related
+export const isSignInFormActive = (appState) => gfs(appState).signInForm ? true : false;
+export const getUserSignInForm  = (appState) => gfs(appState).signInForm;
