@@ -19,8 +19,17 @@ let curDbPoolMonitor = { // existing "pool" monitor (if any)
   wrapUp: () => 'no-op', // type: function(): void ... wrap-up monitor (both firebase -and- logic??how-now?)
 };
 
-// ?? previously this may have been invoked on initial startup to get the ball rolling ... that may still be the case
-// ?? hmmm ... initially didn't think was being invoked, we need the ability to change the pool
+/**
+ * This is the primary logic module, which initially loads (and
+ * monitors changes) in the real-time DB for the pool eateries of our
+ * active user.
+ *
+ * The key that drives this is the active User.pool identifier.
+ * Therefore, we trigger the process off of the 'userProfileChanged'
+ * action (where the User.pool is obtained).  This action is emitted:
+ *  - on initial startup of our app
+ *  - and when the User profile changes (TODO: a future enhancement of the app)
+ */
 export const monitorDbPool = expandWithFassets( (fassets) => createLogic({
 
   name:        `${featureName}.monitorDbPool`,

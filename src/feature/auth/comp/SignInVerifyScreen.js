@@ -45,7 +45,7 @@ function SignInVerifyScreen({email, checkEmailVerified, resendEmailVerification,
             Please follow the instructions from the email sent to: {email}
           </Text>
 
-          {verticalSpacing}
+          {verticalSpacing()}
 
           <View style={{flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'center'}}>
             <Text>Once completed ... </Text>

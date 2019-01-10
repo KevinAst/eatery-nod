@@ -4,7 +4,7 @@ import AuthServiceFirebase from './AuthServiceFirebase';
 
 /**
  * The **'authServiceFirebase'** feature **defines** the **real**
- * 'authService' implementation (which uses the Firebase API).
+ * 'authService' implementation (using the Firebase API).
  * 
  * This service is conditionally promoted when WIFI is available
  * (i.e. **not** mocking).
@@ -18,5 +18,10 @@ export default createFeature({
     defineUse: {
       'authService': new AuthServiceFirebase(),
     },
-  }
+  },
+
+  appWillStart({fassets, curRootAppElm}) { // initialize FireBase (required by this service)
+    fassets.initFireBase();
+  },
+
 });

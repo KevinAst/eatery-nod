@@ -20,7 +20,4 @@ export default createFeature({
     },
   },
 
-  appWillStart({fassets, curRootAppElm}) { // ?? very temporary till services utilize
-    fassets.initFireBase(); // initialize FireBase
-  },
 });

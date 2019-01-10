@@ -6,23 +6,21 @@ import User           from '../User';
  * AuthServiceFirebase is the **real** AuthServiceAPI derivation
  * using the Firebase service APIs.
  * 
- * This represents a persistent service, where the active user is
- * retained between service invocations.
+ * NOTE: This represents a persistent service, where the active user
+ *       is retained between service invocations.
  */
 export default class AuthServiceFirebase extends AuthServiceAPI {
 
-  // ***
-  // *** NOTE: The persistance of this services is implicitly provided by firebase!
-  // ***       ... via firebase.auth().currentUser 
-  // ***           - null:                               (initial state or signed-out)
-  // ***           - currentely signed-in firebase.user: (after successful sign-in)
-  // ***
-
-  // *** HOWEVER: We retain our last known User (currentAppUser) 
-  // ***          in order to retain additional information accumulated
-  // ***          from the app's DB userProfile.
-
-  currentAppUser = null;
+  /**
+   * Our "current" active user, retained between service invocations,
+   * null for none (i.e. signed-out).
+   * 
+   * NOTE: Firebase also maintains it's rendition of current user,
+   *       available via `firebase.auth().currentUser`.  However, this
+   *       service supplements the user with additional information
+   *       from the app's DB userProfile.
+   */
+  currentAppUser = null; // type: User (our application User object)
 
   /**
    * Sign in to our authorization provider (asynchronously).
@@ -30,8 +28,8 @@ export default class AuthServiceFirebase extends AuthServiceAPI {
    * @param {String} email the identifying user email
    * @param {String} pass the user password
    *
-   * @returns {Promise} the signed-in eatery-nod User object.  
-   * NOTE: The returned user may still be in an unverified state.
+   * @returns {User via promise} the signed-in eatery-nod User object.
+   * NOTE: This returned user may still be in an unverified state.
    */
   signIn(email, pass) {
 
@@ -39,10 +37,8 @@ export default class AuthServiceFirebase extends AuthServiceAPI {
 
       // signin through firebase authentication
       firebase.auth().signInWithEmailAndPassword(email, pass)
-              .then( fbUser => { // fbUser: firebase.User (https://firebase.google.com/docs/reference/js/firebase.User)
-
-                // ?? TEST: if true, use param AND document it as such
-                console.log(`??? AuthServiceFirebase.signIn() parm fbUser is same as firebase.auth().currentUser: ${fbUser === firebase.auth().currentUser}`);
+              .then( fbUser => { // fbUser:  <firebase.User>: https://firebase.google.com/docs/reference/js/firebase.User
+                                 // same as: firebase.auth().currentUser
 
                 // supplement the signed-in fbUser with our app's DB userProfile
                 const dbRef = firebase.database().ref(`/userProfiles/${fbUser.uid}`);
@@ -52,7 +48,7 @@ export default class AuthServiceFirebase extends AuthServiceAPI {
                        const userProfile = snapshot.val();
                        // console.log(`xx AuthServiceFirebase.signIn() userProfile: `, userProfile)
 
-                       // communicate issue: missing userProfile
+                       // communicate issue: missing userProfile in our DB
                        if (!userProfile) {
                          return reject(
                            new Error(`***ERROR*** No userProfile exists for user: ${fbUser.email}`)
@@ -86,7 +82,6 @@ export default class AuthServiceFirebase extends AuthServiceAPI {
                 //       - when .code is NOT supplied, it represents an unexpected condition
                 // KEY:  This err.code is an internal detail, interpret here, 
                 //       and manifest through the err.clientMsg
-
                 const userMsg = err.code ? 'Invalid SignIn credentials.' : 'A problem was encountered while signing in';
 
                 return reject(err.defineClientMsg(userMsg));
@@ -98,14 +93,15 @@ export default class AuthServiceFirebase extends AuthServiceAPI {
   /**
    * Refresh the current signed-in user.
    *
-   * This method is typically used to unsure the authorization status
+   * This method is typically used to insure the authorization status
    * is up-to-date.
    * 
    * This method can only be called, once a successful signIn() has
    * completed, because of the persistent nature of this service.
    * 
-   * @returns {Promise} the refreshed signed-in eatery-nod User object.
-   * NOTE: The returned user may still be in an unverified state.
+   * @returns {User via promise} the refreshed signed-in eatery-nod
+   * User object.  NOTE: The returned user may still be in an
+   * unverified state.
    */
   refreshUser() {
     return new Promise( (resolve, reject) => {
@@ -113,7 +109,7 @@ export default class AuthServiceFirebase extends AuthServiceAPI {
       // verify we have a current user to refresh
       if (this.currentAppUser === null) {
         return reject(
-          new Error('***ERROR*** AuthServiceFirebase.refreshUser(): may only be called once a successful signIn() has completed.')
+          new Error('***ERROR*** (within app logic) AuthServiceFirebase.refreshUser(): may only be called once a successful signIn() has completed.')
             .defineAttemptingToMsg('refresh a non-existent user (not yet signed in)')
         );
       }
@@ -121,17 +117,22 @@ export default class AuthServiceFirebase extends AuthServiceAPI {
       // refresh our current signed-in user
       firebase.auth().currentUser.reload()
 
-              .then( fbUser => { // fbUser: firebase.User (https://firebase.google.com/docs/reference/js/firebase.User)
+              .then( () => { // NOTE: this service returns void ... however, the firebase.auth().currentUser has been updated!
 
-                // ?? TEST: if true, use param AND document it as such (?? NOT fbUserX)
-                console.log(`??? AuthServiceFirebase.refreshUser() parm fbUser is same as firebase.auth().currentUser: ${fbUser === firebase.auth().currentUser}`);
+                const fbUser = firebase.auth().currentUser;
 
                 // refresh our signed-in user
-                const fbUserX = firebase.auth().currentUser;
-                this.currentAppUser.email         = fbUserX.email;
-                this.currentAppUser.emailVerified = fbUserX.emailVerified;
+                // ... just for good measure, we create a new instance of this.currentAppUser, rather than mutating the existing one
+                //     - just in case it is held directly in redux
+                //     - even though client SHOULD use user.toStruct()
+                this.currentAppUser = new User({
+                  name:          this.currentAppUser.name, // keep same (from our db profile)
+                  email:         fbUser.email,             // refresh   (from current firebase auth)
+                  emailVerified: fbUser.emailVerified,     // refresh   (from current firebase auth)
+                  pool:          this.currentAppUser.pool, // keep same (from our db profile)
+                });
 
-                // communicate refreshed signed-in user
+                // communicate our refreshed signed-in user
                 return resolve(this.currentAppUser);
               })
 
@@ -148,23 +149,20 @@ export default class AuthServiceFirebase extends AuthServiceAPI {
    * Resend an email notification to the current signed-in user.
    *
    * This method is used, upon user request, to resend the email
-   * contining instructions on how to verify their identity.
+   * containing instructions on how to verify their identity.
    * 
    * This method can only be called, once a successful signIn() has
    * completed, because of the persistent nature of this service.
    */
   resendEmailVerification() {
-
     // verify we have a current user to resend to
     if (this.currentAppUser === null) {
-      throw new Error('***ERROR*** AuthServiceFirebase.resendEmailVerification(): may only be called once a successful signIn() has completed.')
+      throw new Error('***ERROR*** (within app logic) AuthServiceFirebase.resendEmailVerification(): may only be called once a successful signIn() has completed.')
         .defineAttemptingToMsg('resend an email verification to a non-existent user (not yet signed in)');
     }
 
     // issue the email request
     firebase.auth().currentUser.sendEmailVerification();
-    // console.log(`??? AuthServiceFirebase.resendEmailVerification() just sent email verification to firebase`);
-
   }
 
 
@@ -174,7 +172,8 @@ export default class AuthServiceFirebase extends AuthServiceAPI {
    * This method can only be called, once a successful signIn() has
    * completed, because of the persistent nature of this service.
    * 
-   * @returns {Promise} a void promise, used to capture async errors.
+   * @returns {void via promise} a void promise is needed to capture
+   * async errors.
    */
   signOut() {
     return new Promise( (resolve, reject) => {
@@ -182,7 +181,7 @@ export default class AuthServiceFirebase extends AuthServiceAPI {
       // verify we have a current user to refresh
       if (this.currentAppUser === null) {
         return reject(
-          new Error('***ERROR*** AuthServiceFirebase.signOut(): may only be called once a successful signIn() has completed.')
+          new Error('***ERROR*** (within app logic) AuthServiceFirebase.signOut(): may only be called once a successful signIn() has completed.')
             .defineAttemptingToMsg('sign-out a non-existent user (not yet signed in)')
         );
       }
@@ -190,7 +189,7 @@ export default class AuthServiceFirebase extends AuthServiceAPI {
       // issue the signout request
       firebase.auth().signOut()
               .then( () => {
-                this.currentAppUser = null; // reset, now that we are signed-out
+                this.currentAppUser = null; // reset our local User object, now that we are signed-out
               })
               .catch( err => { // unexpected error
                 return reject(err.defineAttemptingToMsg('sign-out the user'));

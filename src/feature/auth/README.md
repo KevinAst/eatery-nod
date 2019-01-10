@@ -6,20 +6,19 @@ It accomplishes the following:
  - starts authorization process by monitoring device ready action
    (`fassets.device.actions.ready`) **(logic)**
 
-   - interacts with authentication services **(logic, reducer)** ?? what reducer does this?
+   - interacts with authentication service **(logic)**
 
    - gathers user credentials from various authentication screens
-     **(route, logic)**
+     **(comp, route, logic)**
 
    - manages "Auto SignIn" through retained device credentials
      **(logic)**
 
-   - fetches user profile as part of the SignIn process **(logic,
-     reducer)**
+   - maintains state for this feature **(reducer)**
 
  - disables app-specific visuals until the user is fully authenticated,
    by promoting various authentication screens until authentication
-   is complete **(route)**
+   is complete **(route, comp)**
 
  - emits key action that triggers downstream eateries to bootstrap **(logic)**:
    ```

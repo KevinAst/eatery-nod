@@ -1,18 +1,22 @@
 import verify from '../../../util/verify';
 
 /**
- * The User object represents the active user within an application,
+ * The User object representing the active user within an application,
  * holding their identity, authorization status, and profile.
  *
- * A User object should always be made available, even when no user is
- * signed in.  In this case, the properties will be null, and more
- * importantly the getAuthStatus() and isXyx() methods will correctly
- * represent the 'signedOut' status.
+ * NOTE: Using the default constructor, a User object can always be
+ *       made available, even when no user is signed in.
+ *       In this case:
+ *       - all properties will be null (or false), and
+ *       - more importantly the getAuthStatus() and isXyz() methods will
+ *         correctly represent the 'signedOut' status.
  */
 export default class User {
 
   /**
    * Instantiate a User object with the supplied named parameters.
+   *
+   * See NOTE (above) in regard to the default constructor.
    *
    * @param {string} name the user's name (e.g. 'John Doe')
    *
@@ -20,7 +24,7 @@ export default class User {
    * authorization credentials).  A null value indicates NO user is
    * signed in.
    *
-   * @param {string} emailVerified indicatates whether the user's
+   * @param {boolean} emailVerified indicates whether the user's
    * email been verified (used in authorization credentials).
    *
    * @param {string} pool the user's eatery pool identifier
@@ -31,7 +35,7 @@ export default class User {
                                     // =================
   constructor({name=null,           // via app's DB userProfile.name
                email=null,          // via firebase.User.email
-               emailVerified=null,  // via firebase.User.emailVerified
+               emailVerified=false, // via firebase.User.emailVerified
                pool=null,           // via app's DB userProfile.pool
              //uid=null,            // via firebase.User.uid             user's unique id hash ... CURRENTLY NO NEED for this (internally available via firebase.auth().currentUser.uid)
                ...unknownArgs}={}) {
@@ -53,28 +57,32 @@ export default class User {
 
 
   /**
-   * Return an indicator as to whether the user is signed out (i.e. there is no user).
+   * Return an indicator as to whether the user is signed out
+   * (i.e. there is no user).
    */
   isUserSignedOut() {
     return this.email === null;
   }
 
   /**
-   * Return an indicator as to whether the user is signed in -AND- their email has been verified.
+   * Return an indicator as to whether the user is signed in -AND-
+   * their email has been verified.
    */
   isUserSignedIn() {
     return this.email !== null && this.emailVerified;
   }
 
   /**
-   * Return an indicator as to whether the user is signed in -HOWEVER- their email needs verification.
+   * Return an indicator as to whether the user is signed in -HOWEVER-
+   * their email needs verification.
    */
   isUserSignedInUnverified() {
     return this.email !== null && !this.emailVerified;
   }
 
   /**
-   * Return the user's authorization status string, representing all permutations of the isXyx() methods:
+   * Return self's authorization status string, representing all
+   * permutations of the isXyx() methods:
    * 
    * - 'signedOut':          the user is signed out (i.e. there is no user)
    * - 'signedIn':           the user is signed in -AND- their email has been verified.
@@ -99,7 +107,7 @@ export default class User {
    * The returned structure is suitable to be used to re-instantiate a
    * User object, gaining the benefit of it's value-added methods.
    * 
-   * @returns {Structure} a pure data structure of self, suitable to
+   * @returns {struct} a pure data structure of self, suitable to
    * re-instantiate a User object.
    */
   toStruct() {

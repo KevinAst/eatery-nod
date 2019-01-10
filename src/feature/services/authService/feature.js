@@ -1,6 +1,5 @@
 import {createFeature} from 'feature-u';
 import AuthServiceAPI  from './AuthServiceAPI';
-import User            from './User';
 
 /**
  * The **'authService'** feature simply promotes the 'authService' use
@@ -14,9 +13,6 @@ export default createFeature({
     use: [
       ['authService', {required: true, type: objectOfTypeAuthServiceAPI}],
     ],
-    define: {
-      'User': User, // the User class (supports client re-instantiation from a serialized source (as retained in redux)
-    },
   }
 });
 

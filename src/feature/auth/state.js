@@ -5,7 +5,7 @@ import {slicedReducer}      from 'feature-redux';
 import featureName          from './featureName';
 import signInFormMeta       from './signInFormMeta';
 import actions              from './actions';
-import User                 from './../services/authService/User'; // ?? subsequent useage has no access to fassets ... can I import it from app?
+import User                 from './../services/authService/User';
 
 // ***
 // *** Our feature reducer, managing state for our authorization process.
@@ -19,10 +19,10 @@ const reducer = slicedReducer(featureName, expandWithFassets( (fassets) => combi
   // the current User object (serialized to state only) ... can represent empty User - NOT signed in
   user: reducerHash({
     [actions.signIn.complete]:           (state, action) => action.user.toStruct(),
-    [actions.signIn.checkEmailVerified]: (state, action) => action.user.toStruct(),        // containing updated User.emailVerified ?? think this has NO payload
-    [actions.userProfileChanged]:        (state, action) => action.user.toStruct(),        // pulling in new profile info
-    [actions.signOut]:                   (state, action) => new fassets.User().toStruct(), // an empty User - NOT signed in
-  }, new fassets.User().toStruct()), // initialState (an empty User - NOT signed in)
+    [actions.signIn.checkEmailVerified]: (state, action) => action.user.toStruct(), // containing updated User.emailVerified
+    [actions.userProfileChanged]:        (state, action) => action.user.toStruct(), // pulling in new profile info
+    [actions.signOut]:                   (state, action) => new User().toStruct(),  // an empty User - NOT signed in
+  }, new User().toStruct()), // initialState (an empty User - NOT signed in)
 
   // SignIn iForm's reducer ... null indicates form is inactive
   signInForm: signInFormMeta.registrar.formReducer(),

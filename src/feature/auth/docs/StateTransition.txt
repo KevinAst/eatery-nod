@@ -6,8 +6,6 @@ This document highlights how actions, logic, and reducers interact
 together to maintain this feature's state (a text document is used to
 accommodate the wide free-format content).
 
-?? there should be NO firebase
-
 
 Actions (see: actions.js)                        Logic (see: logic.js)                                          Reducer (see: state.js)
 ==============================================   ============================================================   ===============================
@@ -42,62 +40,44 @@ auth
   .signIn(email, pass) ......................................................................................   - NONE
                                                  signIn:
                                                  ======
-                                                   ?? this is NOW fassets.authService.signin(action.email, action.pass)
-                                                   async: firebase.auth()
-                                                          .signInWithEmailAndPassword(email, pass)         
+                                                   async: fassets.authService.signIn(action.email, action.pass)
                                                           - SUCCESS: fassets.device.api.storeCredentials(action.email, action.pass)
                                                                      DISPATCH .complete(user)
                                                           - FAIL:    toast.error(msg) ... user communication
                                                                      DISPATCH signIn.open(action, msg) .. display signin sreen
                                                                                                            
-              ?? NOTE: user has changed from firebase to app domain                                               ?? THESE setters should be more atomic ... dealing with entire user
-    .complete(user) ........................................................................................    - set user.status DERIVED FROM action payload ?? see note (above)
-                                                                                                                - set user.email  FROM         action payload ?? see note (above)
+    .complete(user) ........................................................................................    - set user FROM action.user (using toStruct())
 
                                                  supplementSignInComplete:
                                                  ========================
-                                                   transform(): ?? OBSOLETE: don't think there is a need to supplement this action, as it should have everything it needs <<< I COMMENTED OUT - TEST IT
-                                                   -----------
-                                                     async: firebase.database().ref(...).once() // fetch userProfile
-                                                            - SUCCESS: supplement action.userProfile                 
-                                                            - FAIL:    REDIRECT ACTION TO signIn.open(msg)
-                                                   process(): ?? however we do need to stimulate a userProfileChanged to get the ball rolling
+                                                   process():
                                                    ---------
-                                                     DISPATCH userProfileChanged(action.user) ... eventually, additionally this action will be dispatched when the user has the ability to chane his pool
+                                                     DISPATCH userProfileChanged(action.user) ... in the future this action will also be dispatched when the user has the ability to change their pool
                                                                                                            
-                                                 ?? this should still be needed
                                                  signInCleanup:
                                                  =============
                                                    DISPATCH signIn.close()                                 
-    
-    ?? WHO issues this and why?
-       ?? when user has NOT YET been email verified, 
-          ? an auth screen will request them to do so (via email instructions) <<< feature/auth/comp/SignInVerifyScreen.js
-          ? and provides a control to CONTINUE <<< which issues this action
-       ?? this action merely refreshes the state where user.status could have changed
-          ? based on our router, 
-          ? the display will either 
-            - progress to the app screen
-            - or come back to the <SignInVerifyScreen/>
-            > DEPENDING ON sel.isUserUnverifiedSignedIn(appState) <<< which is status === 'signedInUnverified'
- 
-    .checkEmailVerified() ..................................................................................    - set user.status DERIVED FROM action payload
+
+
+    > USED in secondary signin screen to refresh user, 
+           in an effort to determine if they have verified their email 
+    .checkEmailVerified() ..................................................................................    - set user FROM action.user (using toStruct())
                                                  checkEmailVerified:
                                                  ==================
                                                    transform():
                                                    -----------
-                                                     ?? use new service API
-                                                     firebase.auth().currentUser.reload()      
-                                                       .then( supplement action with most current user: firebase.currentUser )  
+                                                     fassets.authService.refreshUser()
+                                                       .then( supplement action with most current user)
                                                                     
-    ?? Ditto above comment
-       ? but user may wish to resend the email
+    > USED in secondary signin screen to request service
+           to resend the verification email instructions
     .resendEmailVerification() .............................................................................    - NONE
                                                  resendEmailVerification:
                                                  =======================
                                                    transform():
                                                    -----------
-                                                     firebase.auth().currentUser.sendEmailVerification()  
+                                                     fassets.authService.resendEmailVerification()
+
                                                                                                                
     > iForm logic (auto-generated) ............. > iForm logic (auto-generated) ............................    > iForm logic (auto-generated)
     .open([domain] [,formMsg])                                                                                 
@@ -110,21 +90,21 @@ auth
     .close()                                                                                                   
 
 
-  .signOut() ...............................................................................................    - set user.status:'signedOut', name:null, email:null, pool:null
-                                                 signOut:                                                       - ?? what about eateries and discovery (may want to clear them when user signs back in)
+  .signOut() ...............................................................................................    - set user TO empty User (i.e. NOT signed in)
+                                                 signOut:                                                       - TODO: what about eateries and discovery (may want to clear them when user signs back in)
                                                  =======
-                                                   async: firebase.auth().signOut()                                       
+                                                   async: fassets.authService.signOut()
                                                           - ERR: toast.error(msg)
                                                    async: fassets.device.api.removeCredentials()
                                                           - ERR: toast.error(msg)
+
+
+  > ALSO: this action is monitored by 'other' features (ex: 'eateries')
+  .userProfileChanged(user) ................................................................................   - set user FROM action.user (using toStruct())
+
 
                                                                                                                
   > TODO
   .signUp() ................................................................................................    - TODO
                                                  TODO:
                                                  ====
-
-   ?? this is NO LONGER NEEDED (since user treated atomically)
-  .userProfileChanged(userProfile) .........................................................................   - set user.name FROM action payload
-                                                                                                               - set user.pool FROM action payload
-                                                                                                               - ALSO: monitored by 'other' features (ex: 'eateries')

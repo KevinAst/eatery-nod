@@ -10,7 +10,7 @@ export default class LocationServiceAPI {
    * @returns {Promise} the current location {lat, lng}
    */
   getCurrentPositionAsync() {
-    throw new Error(`***ERROR*** ${this.constructor.name}.getCurrentPositionAsync() has NOT been correctly implemented (missing method definition)`);
+    throw new Error(`***ERROR*** ${this.constructor.name}.getCurrentPositionAsync() is a required service method that has NOT been implemented`);
   }
 
 };
