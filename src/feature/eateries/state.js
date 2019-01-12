@@ -16,7 +16,7 @@ import actions               from './actions';
 //       in selector access from eateryFilterFormMeta.js)
 const reducer = slicedReducer(`view.${featureName}`, expandWithFassets( () => combineReducers({
 
-  // raw eatery entries synced from firebase realtime DB
+  // raw eatery entries synced from our realtime DB
   dbPool: reducerHash({
     [actions.dbPool.changed]: (state, action) => action.eateries,
   }, null), // initialState

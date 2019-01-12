@@ -1,22 +1,17 @@
 import {createLogic}        from 'redux-logic';
-import firebase             from 'firebase';
-import geodist              from 'geodist';
 import eateryFilterFormMeta from './eateryFilterFormMeta';
 import featureName          from './featureName';
 import * as sel             from './state';
 import actions              from './actions';
 import {expandWithFassets}  from 'feature-u';
+import discloseError        from '../../util/discloseError';
 
 /**
- * Monitor our persistent data changes associated to a given pool.
+ * Our persistent monitor that manages various aspects of a given pool.
  */
-
-// ?? think moves into our persistent service: services/eateryService/eateryServiceFirebase
-//    ... ?? we may have a slightly different rendition of this (for logic purposes) STRIPPED of any firebase remnants
-let curDbPoolMonitor = { // existing "pool" monitor (if any)
+let curPoolMonitor = {   // current "pool" monitor (initially a placebo)
   pool:   null,          // type: string
-  dbRef:  null,          // type: firebase.database.Reference // ?? now in service
-  wrapUp: () => 'no-op', // type: function(): void ... wrap-up monitor (both firebase -and- logic??how-now?)
+  wrapUp: () => 'no-op', // type: function(): void ... cleanup existing monitored resources
 };
 
 /**
@@ -33,13 +28,13 @@ let curDbPoolMonitor = { // existing "pool" monitor (if any)
 export const monitorDbPool = expandWithFassets( (fassets) => createLogic({
 
   name:        `${featureName}.monitorDbPool`,
-  type:        String(fassets.auth.actions.userProfileChanged), // NOTE: action contains: User object (where we can obtain the pool)
+  type:        String(fassets.auth.actions.userProfileChanged), // NOTE: action contains: User object (where we obtain the pool)
   warnTimeout: 0, // long-running logic
 
   validate({getState, action, fassets}, allow, reject) {
 
     // no-op if we are alreay monitoring this same pool
-    if (action.user.pool === curDbPoolMonitor.pool) {
+    if (action.user.pool === curPoolMonitor.pool) {
       reject(action); // other-logic/middleware/reducers: YES, self's process(): NO
       return;
     }
@@ -50,39 +45,27 @@ export const monitorDbPool = expandWithFassets( (fassets) => createLogic({
 
   process({getState, action, fassets}, dispatch, done) {
 
-    // close prior monitor, if any (both firebase -and- logic) // ?? one HERE (logic) and service(firebase)
-    curDbPoolMonitor.wrapUp();
+    // close prior monitor
+    curPoolMonitor.wrapUp();
 
     // create new monitor (retaining needed info for subsequent visibility)
-    curDbPoolMonitor = {
+    curPoolMonitor = {
       pool:   action.user.pool,
-      dbRef:  firebase.database().ref(`/pools/${action.user.pool}`), // ?? this is retained in our service (we have pool via action.user.pool)
-      wrapUp() { // ... hook to wrap-up monitor (both firebase -and- logic)
-        curDbPoolMonitor.dbRef.off('value'); // ?? now in service
-        done();                              // ?? retained here
+      wrapUp() {
+        done();
       }
     };
 
-    // register our firebase listener
-    // ?? now: fassets.eateryService.monitorDbEateries( pool, changeCb(eateries) ): void
-    curDbPoolMonitor.dbRef.on('value', (snapshot) => {
+    // register our real-time DB listener for the set of eateries in our pool
+    fassets.eateryService.monitorDbEateryPool(
+      action.user.pool,
+      fassets.device.sel.getDeviceLoc(getState()),
+      (eateries) => {
 
-      // ?? this callback is NOW a CB parameter of our monitorDbEateries() ... (eateries) =>
+        // broadcast a notification of a change in our eateries (or the initial population)
+        dispatch( actions.dbPool.changed(eateries) );
 
-      const eateries = snapshot.val();
-
-      // supplement eateries with distance from device (as the crow flies)
-      // ?? this is retained in our logic (because it is supplementing info from our device)
-      const deviceLoc = fassets.device.sel.getDeviceLoc(getState());
-      for (const eateryId in eateries) {
-        const eatery = eateries[eateryId];
-        eatery.distance = geodist([eatery.loc.lat, eatery.loc.lng], [deviceLoc.lat, deviceLoc.lng]);
-      }
-
-      // broadcast notification of new eateries
-      // console.log(`xx logic eateries.monitorDbPool: eateries changed for pool '${curDbPoolMonitor.pool}': `, eateries);
-      dispatch( actions.dbPool.changed(eateries) );
-    });
+      });
   },
 
 }) );
@@ -222,13 +205,12 @@ export const addToPool = createLogic({
 
   transform({getState, action, fassets}, next, reject) {
 
-    const appState = getState();
-    const pool     = fassets.auth.sel.getUserPool(appState);
-
-    // console.log(`xx adding eatery: /pools/${pool}/${action.eatery.id}`);
-    // ?? now fassets.eateryService.addEatery(eatery): void
-    const dbRef = firebase.database().ref(`/pools/${pool}/${action.eatery.id}`);
-    dbRef.set(action.eatery);
+    // add the new eatery
+    fassets.eateryService.addEatery(action.eatery)
+           .catch( (err) => {
+             // report unexpected error to user
+             discloseError({err});
+           });
 
     next(action);
   },
@@ -243,13 +225,12 @@ export const removeFromPool = createLogic({
 
   transform({getState, action, fassets}, next, reject) {
 
-    const appState = getState();
-    const pool     = fassets.auth.sel.getUserPool(appState);
-
-    // console.log(`xx removing eatery: /pools/${pool}/${action.eateryId}`);
-    // ?? now fassets.eateryService.removeEatery(eateryId): void
-    const dbRef = firebase.database().ref(`/pools/${pool}/${action.eateryId}`);
-    dbRef.set(null);
+    // remove the supplied eatery
+    fassets.eateryService.removeEatery(action.eateryId)
+           .catch( (err) => {
+             // report unexpected error to user
+             discloseError({err});
+           });
 
     next(action);
   },
