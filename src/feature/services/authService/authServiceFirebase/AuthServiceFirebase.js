@@ -52,8 +52,7 @@ export default class AuthServiceFirebase extends AuthServiceAPI {
                        if (!userProfile) {
                          return reject(
                            new Error(`***ERROR*** No userProfile exists for user: ${fbUser.email}`)
-                             .defineClientMsg('Your user profile does NOT exist.')
-                             .defineAttemptingToMsg('sign in to eatery-nod')
+                             .defineAttemptingToMsg('sign in to eatery-nod (your user profile does NOT exist)')
                          );
                        }
 
@@ -68,23 +67,24 @@ export default class AuthServiceFirebase extends AuthServiceAPI {
                      })
 
                      .catch( err => { // unexpected error
-                       return reject(err.defineClientMsg('A problem was encountered fetching your user profile')
-                                        .defineAttemptingToMsg('sign in to eatery-nod'));
+                       return reject(err.defineAttemptingToMsg('sign in to eatery-nod (a problem was encountered fetching your user profile)'));
                      });
 
               })
 
               .catch( (err) => {
-                // NOTE: In this context, firebase provides an err.code
-                //       - when .code is supplied, it enumerates a user specific credentials problem (like "invalid password")
+                // NOTE: When firebase:
+                //       - provides an err.code, this enumerates a user specific credentials problem (like "invalid password")
                 //         ... we do NOT expose this to the user (so as to NOT give hacker insight)
                 //             rather we generalize it to the user ('Invalid SignIn credentials.')
-                //       - when .code is NOT supplied, it represents an unexpected condition
-                // KEY:  This err.code is an internal detail, interpret here, 
-                //       and manifest through the err.clientMsg
-                const userMsg = err.code ? 'Invalid SignIn credentials.' : 'A problem was encountered while signing in';
-
-                return reject(err.defineClientMsg(userMsg));
+                //       - when NO err.code is supplied, it represents an unexpected condition
+                if (err.code) { // expected condition
+                  err.defineUserMsg('Invalid SignIn credentials.'); // make generic ... do NOT expose err.code to the user
+                }
+                else { // unexpected conition
+                  err.defineAttemptingToMsg('sign in to eatery-nod');
+                }
+                return reject(err);
               });
     });
   }
@@ -109,6 +109,7 @@ export default class AuthServiceFirebase extends AuthServiceAPI {
       // verify we have a current user to refresh
       if (this.currentAppUser === null) {
         return reject(
+          // unexpected condition
           new Error('***ERROR*** (within app logic) AuthServiceFirebase.refreshUser(): may only be called once a successful signIn() has completed.')
             .defineAttemptingToMsg('refresh a non-existent user (not yet signed in)')
         );
@@ -157,6 +158,7 @@ export default class AuthServiceFirebase extends AuthServiceAPI {
   resendEmailVerification() {
     // verify we have a current user to resend to
     if (this.currentAppUser === null) {
+      // unexpected condition
       throw new Error('***ERROR*** (within app logic) AuthServiceFirebase.resendEmailVerification(): may only be called once a successful signIn() has completed.')
         .defineAttemptingToMsg('resend an email verification to a non-existent user (not yet signed in)');
     }
@@ -181,6 +183,7 @@ export default class AuthServiceFirebase extends AuthServiceAPI {
       // verify we have a current user to refresh
       if (this.currentAppUser === null) {
         return reject(
+          // unexpected condition
           new Error('***ERROR*** (within app logic) AuthServiceFirebase.signOut(): may only be called once a successful signIn() has completed.')
             .defineAttemptingToMsg('sign-out a non-existent user (not yet signed in)')
         );

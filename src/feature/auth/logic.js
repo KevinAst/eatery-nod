@@ -4,7 +4,7 @@ import featureName          from './featureName';
 import actions              from './actions';
 import * as sel             from './state';
 import signInFormMeta       from './signInFormMeta';
-import {alert, toast}       from '../../util/notify';
+import discloseError        from '../../util/discloseError';
 
 /**
  * Start our authorization process, once the device is ready.
@@ -123,7 +123,7 @@ export const signIn = createLogic({
              // retain these credentials on our device (to streamline subsequent app launch)
              fassets.device.api.storeCredentials(action.email, action.pass)
                     .catch( (err) => { // unexpected error in a react-native API
-                      // hmmmm ... nested errors in a promise are caught in the outer catch (need to better understand this)
+                      // ... nested errors in a promise are caught in the outer catch (see catch - below)
                     });
 
              // communicate a new user is in town
@@ -132,37 +132,17 @@ export const signIn = createLogic({
            })
 
            .catch( (err) => {
+             discloseError({err,
+                            showUser: err.isUnexpected()}); // expected errors are shown to the user via the re-direction to the signIn screen (see next step)
 
-             // Errors from authService conditionally provides an err.code
-             //  - when .code is supplied, it enumerates a user specific credentials problem (like "invalid password")
-             //    ... we do NOT expose this to the user (so as to NOT give hacker insight)
-             //        rather we generalize it to the user ('Invalid SignIn credentials.')
-             //  - when .code is NOT supplied, it represents an unexpected condition
-             const invalidCredentials = err.code ? true : false; // true: user problem, false: unexpected error
-
-             // for unexpected errors, display msg to user
-             if (!invalidCredentials) {
-               toast.error({  // ... will auto close -OR- when "details" is clicked
-                 msg: err.formatClientMsg(),
-                 actions: [
-                   { txt:    'detail',
-                     action: () => {
-                       alert.error({ msg: ''+err });
-                     }},
-                 ]
-               });
-             };
-
-             // re-display SignIn form, prepopulated with appropriat msg
-             const msg = err.formatClientMsg();
-             dispatch( actions.signIn.open(action, msg) ); // NOTE: action is a cheap shortcut to domain (contains email/pass) ... pre-populating sign-in form with last user input
+             // re-direct to SignIn form, prepopulated with appropriate msg
+             dispatch( actions.signIn.open(action, err.formatUserMsg()) ); // NOTE: action is a cheap shortcut to domain (contains email/pass) ... pre-populating sign-in form with last user input
 
              done();
            });
   },
 
 });
-
 
 
 /**
@@ -202,7 +182,6 @@ export const signInCleanup = createLogic({
 });
 
 
-
 /**
  * Check to see if account email has been verified.
  */
@@ -216,21 +195,13 @@ export const checkEmailVerified = createLogic({
     // fetch the most up-to-date user
     fassets.authService.refreshUser()
            .then( user => {
-             // suplement action with the most up-to-date user
+             // supplement action with the most up-to-date user
              action.user = user;
              next(action);
            })
            .catch( err => {
              // report unexpected error to user
-             toast.error({  // ... will auto close -OR- when "details" is clicked
-               msg: err.formatClientMsg(),
-               actions: [
-                 { txt:    'detail',
-                   action: () => {
-                     alert.error({ msg: ''+err });
-                   }},
-               ]
-             });
+             discloseError({err});
 
              // nix the entire action
              reject();
@@ -238,8 +209,6 @@ export const checkEmailVerified = createLogic({
   },
 
 });
-
-
 
 
 /**
@@ -270,29 +239,14 @@ export const signOut = createLogic({
     fassets.authService.signOut()
            .catch( (err) => {
              // report unexpected error to user
-             toast.error({  // ... will auto close -OR- when "details" is clicked
-               msg:     err.formatClientMsg(),
-               actions: [
-                 { txt:    'detail',
-                   action: () => {
-                     alert.error({ msg: ''+err });
-                   }},
-               ]
-             });
+             discloseError({err});
            });
 
     fassets.device.api.removeCredentials()
        .catch( (err) => {
          // report unexpected error to user
-         toast.error({  // ... will auto close -OR- when "details" is clicked
-           msg:     'A problem was encountered trying to remove your credentials from the device.',
-           actions: [
-             { txt:    'detail',
-               action: () => {
-                 alert.error({ msg: ''+err });
-               }},
-           ]
-         });
+         // ... we add user context to this raw error
+         discloseError({err: err.defineAttemptingToMsg('remove your credentials from the device')});
        });
 
     done();
