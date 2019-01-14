@@ -1,6 +1,6 @@
 import React         from 'react';
 import {withFassets} from 'feature-u';
-import withState     from '../../../util/withState';
+import withState     from '../../../../util/withState';
 import {TouchableWithoutFeedback} from 'react-native';
 import {Body,
         Button,
@@ -16,7 +16,7 @@ import {Body,
         Right,
         Text,
         Title}       from 'native-base';
-import SplashScreen  from '../../../util/comp/SplashScreen';
+import SplashScreen  from '../../../../util/comp/SplashScreen';
 import commonStyles  from '../../commonStyles';
 import actions       from '../actions';
 import * as sel      from '../state';

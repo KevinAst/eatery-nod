@@ -6,7 +6,7 @@ import featureName         from './featureName';
 import EateriesListScreen  from './comp/EateriesListScreen';
 import EateryDetailScreen  from './comp/EateryDetailScreen';
 import EateryFilterScreen  from './comp/EateryFilterScreen';
-import SplashScreen        from '../../util/comp/SplashScreen';
+import SplashScreen        from '../../../util/comp/SplashScreen';
 
 // ***
 // *** The routes for this feature.

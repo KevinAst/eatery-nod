@@ -4,7 +4,7 @@ import featureName          from './featureName';
 import * as sel             from './state';
 import actions              from './actions';
 import {expandWithFassets}  from 'feature-u';
-import discloseError        from '../../util/discloseError';
+import discloseError        from '../../../util/discloseError';
 
 /**
  * Our persistent monitor that manages various aspects of a given pool.

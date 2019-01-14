@@ -1,7 +1,7 @@
 import React        from 'react';
 import PropTypes    from 'prop-types';
 import {Linking}    from 'react-native';
-import withState    from '../../../util/withState';
+import withState    from '../../../../util/withState';
 import {Body,
         Button,
         Container,

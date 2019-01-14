@@ -1,6 +1,6 @@
 import React         from 'react';
 import {withFassets} from 'feature-u';
-import withState     from '../../../util/withState';
+import withState     from '../../../../util/withState';
 import {Body,
         Button,
         Container,

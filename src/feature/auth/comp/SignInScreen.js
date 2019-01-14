@@ -12,7 +12,7 @@ import {Body,
         Text,
         Title,
         View}         from 'native-base';
-import commonStyles   from '../../commonStyles';
+import commonStyles   from '../../views/commonStyles';
 import signInFormMeta from '../signInFormMeta';
 import ITextField     from '../../../util/iForms/comp/ITextField';
 import {toast}        from '../../../util/notify';
