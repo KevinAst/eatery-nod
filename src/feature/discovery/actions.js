@@ -11,20 +11,20 @@ export default generateActions.root({
     filterForm: discoveryFilterFormMeta.registrar.formActionGenesis(),
 
     retrieve: { // actions.retrieve([filter]): Action
-                // > retrieval of discovery eateries using supplied filter
+                // > retrieval of discoveries using supplied filter
                 actionMeta: {
                   traits: ['filter']
                 },
 
-      complete: { // actions.retrieve.complete(filter, eateriesResp): Action
-                  // > discovery eateries retrieval complete, with supplied response
+      complete: { // actions.retrieve.complete(filter, discoveriesResp): Action
+                  // > discoveries retrieval complete, with supplied response
                   actionMeta: {
-                    traits: ['filter', 'eateriesResp'],
+                    traits: ['filter', 'discoveriesResp'],
                   },
       },
 
       fail: { // actions.retrieve.fail(err): Action
-              // > discovery eateries retrieval failed, with supplied err
+              // > discoveries retrieval failed, with supplied err
               actionMeta: {
                 traits: ['err'],
               },
@@ -38,15 +38,15 @@ export default generateActions.root({
                   traits: ['pagetoken'],
                 },
 
-      complete: { // actions.nextPage.complete(eateriesResp): Action
-                  // > discovery eateries nextPage retrieval complete, with supplied response
+      complete: { // actions.nextPage.complete(discoveriesResp): Action
+                  // > discoveries nextPage retrieval complete, with supplied response
                   actionMeta: {
-                    traits: ['eateriesResp'],
+                    traits: ['discoveriesResp'],
                   },
       },
 
       fail: { // actions.nextPage.fail(err): Action
-              // > discovery eateries nextPage retrieval failed, with supplied err
+              // > discoveries nextPage retrieval failed, with supplied err
               actionMeta: {
                 traits: ['err'],
               },

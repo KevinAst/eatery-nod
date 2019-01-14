@@ -20,9 +20,9 @@ import actions       from '../actions';
 import * as sel      from '../state';
 
 /**
- * DiscoveryListScreen displaying our discovered eateries.
+ * DiscoveryListScreen displaying our discoveries.
  */
-function DiscoveryListScreen({fassets, inProgress, eateries, nextPageToken, eateryPool, toggleEateryPool, handleNextPage, handleFilterDiscovery}) {
+function DiscoveryListScreen({fassets, inProgress, discoveries, nextPageToken, eateryPool, toggleEateryPool, handleNextPage, handleFilterDiscovery}) {
 
   // ***
   // *** define page content
@@ -30,8 +30,8 @@ function DiscoveryListScreen({fassets, inProgress, eateries, nextPageToken, eate
 
   let content = null;
 
-  // case for eateries retrieval in-progress
-  if (eateries===null || inProgress==='retrieve') { // just to be safe ... eateries===null
+  // case for discoveries retrieval in-progress
+  if (discoveries===null || inProgress==='retrieve') { // just to be safe ... discoveries===null
     content = [
       <ListItem key="inProgress">
         <Left/>
@@ -45,8 +45,8 @@ function DiscoveryListScreen({fassets, inProgress, eateries, nextPageToken, eate
     ];
   }
 
-  // case for NO eateries found (in retrieval)
-  else if (eateries.length === 0) {
+  // case for NO discoveries found (in retrieval)
+  else if (discoveries.length === 0) {
     content = [
       <ListItem key="noEntries">
         <Body>
@@ -60,20 +60,20 @@ function DiscoveryListScreen({fassets, inProgress, eateries, nextPageToken, eate
     ];
   }
 
-  // case for displaying retrieved eateries
+  // case for displaying retrieved discoveries
   else {
     
-    function renderPoolButton(eatery) {
-      if (eateryPool[eatery.id]) { // IN pool
+    function renderPoolButton(discovery) {
+      if (eateryPool[discovery.id]) { // IN pool
         return (
-          <Button transparent onPress={()=>toggleEateryPool(eatery, eateryPool)}>
+          <Button transparent onPress={()=>toggleEateryPool(discovery, eateryPool)}>
             <Icon name="checkmark" style={{color: 'red'}}/>
           </Button>
         );
       }
       else { // NOT in pool
         return (
-          <Button transparent onPress={()=>toggleEateryPool(eatery, eateryPool)}>
+          <Button transparent onPress={()=>toggleEateryPool(discovery, eateryPool)}>
             <Icon name="checkmark" style={{color: 'lightgrey'}}/>
           </Button>
         );
@@ -82,14 +82,14 @@ function DiscoveryListScreen({fassets, inProgress, eateries, nextPageToken, eate
     
     // generate list content
     content =
-      eateries.map( eatery => (
-        <ListItem avatar key={eatery.id}>
+      discoveries.map( discovery => (
+        <ListItem avatar key={discovery.id}>
           <Left>
-            {renderPoolButton(eatery)}
+            {renderPoolButton(discovery)}
           </Left>
           <Body>
-            <Text>{eatery.name}</Text>
-            <Text note>{eatery.addr}</Text>
+            <Text>{discovery.name}</Text>
+            <Text note>{discovery.addr}</Text>
           </Body>
         </ListItem>
       ));
@@ -162,21 +162,21 @@ const DiscoveryListScreenWithState = withState({
   mapStateToProps(appState, {fassets}) { // ... fassets available in ownProps (via withFassets() below)
     return {
       inProgress:    sel.getInProgress(appState),
-      eateries:      sel.getEateries(appState),
+      discoveries:   sel.getDiscoveries(appState),
       nextPageToken: sel.getNextPageToken(appState),
       eateryPool:    fassets.eateries.sel.getDbPool(appState),
     };
   },
   mapDispatchToProps(dispatch, {fassets}) { // ... fassets available in ownProps (via withFassets() below)
     return {
-      toggleEateryPool(eatery, eateryPool) {
-        if (eateryPool[eatery.id]) { // in pool
-          // console.log(`xx delete ${eatery.name} from pool`);
-          dispatch( fassets.eateries.actions.remove(eatery.id) );
+      toggleEateryPool(discovery, eateryPool) {
+        if (eateryPool[discovery.id]) { // in pool
+          // console.log(`xx delete ${discovery.name} from pool`);
+          dispatch( fassets.eateries.actions.remove(discovery.id) );
         }
         else { // NOT in pool
-          // console.log(`xx add ${eatery.name} to pool`);
-          dispatch( fassets.eateries.actions.add(eatery.id) );
+          // console.log(`xx add ${discovery.name} to pool`);
+          dispatch( fassets.eateries.actions.add(discovery.id) );
         }
       },
       handleNextPage(nextPageToken) {

@@ -43,14 +43,14 @@ const reducer = slicedReducer(`view.${featureName}`, expandWithFassets( () => co
 
   // next page token (for paging)
   nextPageToken: reducerHash({
-    [actions.retrieve.complete]: (state, action) => action.eateriesResp.pagetoken,
-    [actions.nextPage.complete]: (state, action) => action.eateriesResp.pagetoken,
+    [actions.retrieve.complete]: (state, action) => action.discoveriesResp.pagetoken,
+    [actions.nextPage.complete]: (state, action) => action.discoveriesResp.pagetoken,
   }, null), // initialState
 
-  // eateries (data records)
-  eateries: reducerHash({
-    [actions.retrieve.complete]: (state, action) => action.eateriesResp.eateries,
-    [actions.nextPage.complete]: (state, action) => [...state, ...action.eateriesResp.eateries], // append to state
+  // discoveries (data records)
+  discoveries: reducerHash({
+    [actions.retrieve.complete]: (state, action) => action.discoveriesResp.discoveries,
+    [actions.nextPage.complete]: (state, action) => [...state, ...action.discoveriesResp.discoveries], // append to state
   }, null), // initialState
 
 }) ) );
@@ -75,4 +75,4 @@ export const getFilter           = (appState) => gfs(appState).filter;
 
 export const getNextPageToken    = (appState) => gfs(appState).nextPageToken;
 
-export const getEateries         = (appState) => gfs(appState).eateries;
+export const getDiscoveries      = (appState) => gfs(appState).discoveries;

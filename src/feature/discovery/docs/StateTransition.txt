@@ -30,18 +30,18 @@ discovery
  .retrieve([filter]) ...............................................................................  - set appState.discovery.inProgress = 'retrieve'
                                                  retrieve:
                                                  ========
-                                                  - issue retrieval
-                                                      work: DISPATCH .complete(resp [with pagetoken/entries]
+                                                  - discoveryService.searchDiscoveries(action.filter)
+                                                      work: DISPATCH .complete(resp [with pagetoken/discoveries]
                                                       fail: DISPATCH .fail(err)
 
-   .complete(eateriesResp [with pagetoken/entries]) ................................................  - retain appState.discovery.eateries (from action.eateriesResp)
-                                                                                                      - retain appState.discovery.filter   (from action.filter)
+   .complete(discoveriesResp [with pagetoken/discoveries]) .........................................  - retain appState.discovery.discoveries (from action.discoveriesResp)
+                                                                                                      - retain appState.discovery.filter      (from action.filter)
                                                                                                       - retain nextPageToken
                                                                                                       - set appState.discovery.inProgress = null
 
    .fail(err) .....................................................................................   - set appState.discovery.inProgress = null
                                                  NOTE: auto reported to user via logic:
-                                                       diag.communicateUnexpectedErrors
+                                                       diag.communicateUnexpectedErrors << WHA: doesn't exist
                                                        MONITORING ALL .fail actions
 
 
@@ -49,15 +49,15 @@ discovery
  .nextPage(pagetoken) .............................................................................   - set appState.discovery.inProgress = 'next'
                                                  nextPage:
                                                  ========
-                                                   - issue nextPage retrieval
-                                                       work: DISPATCH .complete(resp [with pagetoken/entries]
+                                                  - discoveryService.searchDiscoveriesNextPage(action.filter)
+                                                      work: DISPATCH .complete(resp [with pagetoken/discoveries]
                                                        fail: DISPATCH .fail(err)
 
-   .complete(eateriesResp [with pagetoken/entries]) ...............................................   - append appState.discovery.eateries (from action.eateriesResp)
+   .complete(discoveriesResp [with pagetoken/discoveries]) ........................................   - append appState.discovery.discoveries (from action.discoveriesResp)
                                                                                                       - retain nextPageToken
                                                                                                       - set appState.discovery.inProgress = null
 
    .fail(err) .....................................................................................   - set appState.discovery.inProgress = null
                                                  NOTE: auto reported to user via logic:
-                                                       diag.communicateUnexpectedErrors
+                                                       diag.communicateUnexpectedErrors << WHA: doesn't exist
                                                        MONITORING ALL .fail actions

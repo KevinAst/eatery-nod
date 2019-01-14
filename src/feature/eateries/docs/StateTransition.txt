@@ -19,7 +19,7 @@ eateries
     .add(eateryId) .................................................................................  - NO NEED TO DO ANYTHING, due to our real-time notifications
                                            addToPoolPrep:                                               ... we attempted to retain appState.eateries.dbPool[eateryId] with temporary entry
                                            =============                                                    in an attempt to makt "discovery check box" faster (but IT DIDN'T HELP)
-                                             - issue discoveryAPI.getEateryDetail(eateryId)                 ... src/appState/dbPool.js
+                                             - discoveryService.fetchEateryDetail(eateryId)                 ... src/appState/dbPool.js
                                                  work: DISPATCH .eateryDetail(eatery)                           // temporal entry DONE STICTLY to show up faster in "discovery check box" 
                                                  fail: DISPATCH .eateryDetail.fail(eateryId, err)               // ... will be followed up by real entry (from our DB real-time notifications)
                                                                                                                 [actions.eateries.dbPool.add]: (state, action) => ( {...state, [action.eateryId]: tempEatery(action.eateryId)} ),

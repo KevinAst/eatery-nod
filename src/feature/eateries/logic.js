@@ -183,7 +183,7 @@ export const addToPoolPrep = createLogic({
 
   process({getState, action, fassets}, dispatch, done) {
 
-    fassets.discovery.api.getEateryDetail(action.eateryId)
+    fassets.discoveryService.fetchEateryDetail(action.eateryId)
       .then(eatery => {
         dispatch( actions.dbPool.add.eateryDetail(eatery) );
         done();

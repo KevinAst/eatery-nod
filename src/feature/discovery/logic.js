@@ -6,7 +6,7 @@ import * as sel                from './state';
 import {expandWithFassets}     from 'feature-u';
 
 /**
- * Initially retrieve discovery eateries, on 'discovery' view change.
+ * Initially retrieve discoveries, on 'discovery' view change.
  */
 export const initialRetrieve = expandWithFassets( (fassets) => createLogic({
 
@@ -17,9 +17,9 @@ export const initialRetrieve = expandWithFassets( (fassets) => createLogic({
 
     const appState = getState();
 
-    if (action.viewName           === featureName && // ... our view
-        sel.getEateries(appState) === null        && // ... discovery eateries in initial state
-        !sel.getInProgress(appState)) {              // ... no discovery retrieval is in-progress
+    if (action.viewName              === featureName && // ... our view
+        sel.getDiscoveries(appState) === null        && // ... discoveries in initial state
+        !sel.getInProgress(appState)) {                 // ... no discovery retrieval is in-progress
       // initial retrieval using default filter (located in our app state)
       const deviceLoc = fassets.device.sel.getDeviceLoc(appState);
       dispatch( actions.retrieve({...sel.getFilter(appState),
@@ -91,10 +91,10 @@ export const retrieve = createLogic({
 
   process({getState, action, fassets}, dispatch, done) {
 
-    fassets.discovery.api.searchEateries(action.filter)
-       .then(resp => {
-         // console.log(`xx here is our response: `, resp);
-         dispatch( actions.retrieve.complete(action.filter, resp) );
+    fassets.discoveryService.searchDiscoveries(action.filter)
+       .then(discoveriesResp => { 
+         // console.log(`xx here is our discoveriesResp: `, discoveriesResp);
+         dispatch( actions.retrieve.complete(action.filter, discoveriesResp) );
          done();
        })
        .catch(err => {
@@ -115,13 +115,14 @@ export const nextPage = createLogic({
 
   name: `${featureName}.nextPage`,
   type: String(actions.nextPage),
+  warnTimeout: 0, // long-running logic ... UNFORTUNATELY GooglePlaces is sometimes EXCRUCIATINGLY SLOW!
 
   process({getState, action, fassets}, dispatch, done) {
 
-    fassets.discovery.api.searchEateriesNextPage(action.pagetoken)
-       .then(resp => {
-         // console.log(`xx here is our response: `, resp);
-         dispatch( actions.nextPage.complete(resp) );
+    fassets.discoveryService.searchDiscoveriesNextPage(action.pagetoken)
+       .then(discoveriesResp => {
+         // console.log(`xx here is our discoveriesRes: `, discoveriesResp);
+         dispatch( actions.nextPage.complete(discoveriesResp) );
          done();
        })
        .catch(err => {

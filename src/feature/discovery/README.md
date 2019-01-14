@@ -1,9 +1,9 @@
 # discovery feature
 
 The **'discovery'** feature manages and promotes the discovery view
-... a list of eateries "discovered" from GooglePlaces.  Eateries
-can be added/removed from our pool by simply checking/unchecking
-the entries.
+... a list of "discoveries" from GooglePlaces.  Eateries
+can be added/removed within the pool by simply checking/unchecking
+the discoveries.
 
 ## State Transition
 
