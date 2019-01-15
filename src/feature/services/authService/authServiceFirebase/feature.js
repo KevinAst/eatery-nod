@@ -3,7 +3,7 @@ import featureFlags        from '../../../../util/featureFlags';
 import AuthServiceFirebase from './AuthServiceFirebase';
 
 /**
- * The **'authServiceFirebase'** feature **defines** the **real**
+ * The **authServiceFirebase** feature **defines** the **real**
  * 'authService' implementation (using the Firebase API).
  * 
  * This service is conditionally promoted when WIFI is available

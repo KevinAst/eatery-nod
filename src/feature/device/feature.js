@@ -9,7 +9,7 @@ import appDidStart      from './appDidStart';
 
 
 /**
- * The **'device'** feature initializes the device for use by the app.
+ * The **device** feature initializes the device for use by the app.
  * It accomplishes the following:
  * 
  *  - kicks off the entire app, by dispatching a device bootstrap action

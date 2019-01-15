@@ -1,6 +1,6 @@
 # locationService feature
 
-The **'locationService'** feature promotes a GPS location service
+The **locationService** feature promotes a GPS location service
 through the `locationService` fassets reference (**feature-u**'s Cross
 Feature Communication mechanism).
 

@@ -2,7 +2,7 @@ import {createFeature}  from 'feature-u';
 import initFireBase     from './initFireBase';
 
 /**
- * The **'firebaseInit'** feature provides an API by which "firebase
+ * The **firebaseInit** feature provides an API by which "firebase
  * dependent" services can initialize themselves:
  * `fassets.initFireBase()`.
 

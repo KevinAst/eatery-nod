@@ -1,6 +1,6 @@
 # authService feature
 
-The **'authService'** feature promotes a persistent authentication
+The **authService** feature promotes a persistent authentication
 service (retaining active user) through the `authService` fassets
 reference (**feature-u**'s Cross Feature Communication mechanism).
 

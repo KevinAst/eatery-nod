@@ -1,6 +1,6 @@
 # eateryService feature
 
-The **'eateryService'** feature promotes a persistent "Eateries" DB
+The **eateryService** feature promotes a persistent "Eateries" DB
 service (monitoring real-time Eatery DB activity) through the
 `eateryService` fassets reference (**feature-u**'s Cross Feature
 Communication mechanism).

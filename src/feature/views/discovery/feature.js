@@ -7,7 +7,7 @@ import logic            from './logic';
 import route            from './route';
 
 /**
- * The **'discovery'** feature manages and promotes the discovery view
+ * The **discovery** feature manages and promotes the discovery view
  * ... a list of "discoveries" from GooglePlaces.  Eateries
  * can be added/removed within the pool by simply checking/unchecking
  * the discoveries.

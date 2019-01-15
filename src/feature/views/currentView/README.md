@@ -1,6 +1,6 @@
 # currentView feature
 
-The **'currentView'** feature maintains the currentView (as a string).
+The **currentView** feature maintains the currentView (as a string).
 
 This is a **very simple process**.  It merely provides a
 cross-communication mechanism to:

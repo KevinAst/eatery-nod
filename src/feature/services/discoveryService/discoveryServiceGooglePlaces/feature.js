@@ -3,7 +3,7 @@ import featureFlags     from '../../../../util/featureFlags';
 import DiscoveryServiceGooglePlaces from './DiscoveryServiceGooglePlaces';
 
 /**
- * The **'discoveryServiceGooglePlaces'** feature **defines** the
+ * The **discoveryServiceGooglePlaces** feature **defines** the
  * **real** 'discoveryService' implementation (using the GooglePlaces
  * API).
  * 

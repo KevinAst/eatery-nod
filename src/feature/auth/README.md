@@ -1,6 +1,6 @@
 # auth feature
 
-The **'auth'** feature promotes complete user authentication.
+The **auth** feature promotes complete user authentication.
 It accomplishes the following:
 
  - starts authorization process by monitoring device ready action

@@ -3,7 +3,7 @@ import featureFlags        from '../../../../util/featureFlags';
 import LocationServiceExpo from './LocationServiceExpo';
 
 /**
- * The **'locationServiceExpo'** feature **defines** the **real**
+ * The **locationServiceExpo** feature **defines** the **real**
  * 'locationService' implementation (which uses the Expo API).
  * 
  * This service is conditionally promoted when we are **not** mocking.

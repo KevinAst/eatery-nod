@@ -3,7 +3,7 @@ import fassets          from './fassets';
 import featureFlags     from '../../util/featureFlags'
 
 /**
- * The **'sandbox'** feature promotes a variety of interactive tests,
+ * The **sandbox** feature promotes a variety of interactive tests,
  * used in development, that can easily be disabled.
  *
  *

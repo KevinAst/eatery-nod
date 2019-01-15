@@ -3,7 +3,7 @@ import featureFlags          from '../../../../util/featureFlags';
 import EateryServiceFirebase from './EateryServiceFirebase';
 
 /**
- * The **'eateryServiceFirebase'** feature **defines** the **real**
+ * The **eateryServiceFirebase** feature **defines** the **real**
  * 'eateryService' implementation (using the Firebase API).
  * 
  * This service is conditionally promoted when WIFI is available

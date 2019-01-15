@@ -2,7 +2,7 @@ import {createFeature}      from 'feature-u';
 import DiscoveryServiceAPI  from './DiscoveryServiceAPI';
 
 /**
- * The **'discoveryService'** feature promotes a service that retrieves
+ * The **discoveryService** feature promotes a service that retrieves
  * restaurant information from a geographical data source, through the
  * `discoveryService` fassets reference (**feature-u**'s Cross Feature
  * Communication mechanism).

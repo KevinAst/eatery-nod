@@ -4,7 +4,7 @@ import logic            from './logic';
 import featureFlags     from '../../util/featureFlags';
 
 /**
- * The **'logActions'** feature logs all dispatched actions and resulting state.
+ * The **logActions** feature logs all dispatched actions and resulting state.
  */
 export default createFeature({
   name,
