@@ -1,4 +1,3 @@
-import * as api          from './api';
 import {areFontsLoaded,
         isDeviceReady,
         getDeviceLoc}    from './state';
@@ -10,12 +9,10 @@ import featureName       from './featureName';
  */
 export default {
   define: {
-    [`${featureName}.api`]: api,
-
-    [`${featureName}.sel.areFontsLoaded`]: areFontsLoaded,
+    [`${featureName}.sel.areFontsLoaded`]: areFontsLoaded, // ?? may no longer be needed (with simplification) AT ALL or PUBLICLY
     [`${featureName}.sel.isDeviceReady`]:  isDeviceReady,
     [`${featureName}.sel.getDeviceLoc`]:   getDeviceLoc,
 
-    [`${featureName}.actions.ready`]: actions.ready,
+    [`${featureName}.actions.ready`]: actions.ready,  // ?? rename to deviceReady
   }
 };

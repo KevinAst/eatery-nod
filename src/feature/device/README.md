@@ -26,8 +26,6 @@ It accomplishes the following:
    ```
    fassets.device.ready()
 
- - promotes a **device api** abstraction: `fassets.device.api...`
-
 
 ## State Transition
 

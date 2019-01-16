@@ -34,7 +34,7 @@ export const loadFonts = createLogic({
   
   process({getState, action, fassets}, dispatch, done) {
     // asynchronously load our system resources
-    fassets.device.api.loadFonts()
+    fassets.deviceService.loadFonts()
        .then( () => {
          dispatch( actions.loadFonts.complete() );
          done();
@@ -59,9 +59,8 @@ export const locateDevice = createLogic({
   
   process({getState, action, fassets}, dispatch, done) {
 
-    // obtain our device location via our locationService
-    fassets.locationService.getCurrentPositionAsync()
-
+    // obtain our device location via our deviceService
+    fassets.deviceService.getCurPos()
            .then( (location) => {
              dispatch( actions.locateDevice.complete(location) );
              done();

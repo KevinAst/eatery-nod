@@ -49,28 +49,17 @@ device
                                                    // issue handler: notify user, dispatch fallback location, log optional err, done()
                                                    function handleIssue(msg, err=null) { ... } 
                                                    ... 
-                                                   Permissions.askAsync(Permissions.LOCATION)
-                                                     .then( ({status}) => {
-                                                       if (status === 'granted') {
-                                                         // obtain device geo location
-                                                         Location.getCurrentPositionAsync({})
-                                                           .then( (location) => {
-                                                             // communicate device location
-                                                             dispatch( actions.device.bootstrap.locateDevice.complete({lat: location.coords.latitude, 
-                                                                                                                       lng: location.coords.longitude}) );
-                                                           })
-                                                           .catch( err => {
-                                                             handleIssue('Could not obtain device location.', err);
-                                                           });
-                                                       }
-                                                       else {
-                                                         // permission denied
-                                                         handleIssue('No access to device location.');
-                                                       }
+                                                   fassets.deviceService.getCurPos()
+                                                     .then( (location) => {
+                                                       dispatch( actions.locateDevice.complete(location) );
+                                                       done();
                                                      })
-                                                     .catch( err => {
-                                                       handleIssue('An issue was encountered in obtaining device location permission.', err);
-                                                     });
+                                                   .catch( err => {
+                                                     // fallback to last known location (for now just hard-code to Glen Carbon)
+                                                     dispatch( actions.locateDevice.complete({lat: 38.752209, lng: -89.986610}) );
+
+                                                     toast err to user
+                                                   }
 
      .complete(loc) .........................................................................................   - set device.loc = action.loc
 

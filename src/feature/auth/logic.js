@@ -34,7 +34,7 @@ export const checkDeviceCredentials = createLogic({
   type: String(actions.bootstrap),
 
   process({getState, action, fassets}, dispatch, done) {
-    fassets.device.api.fetchCredentials()
+    fassets.deviceService.fetchCredentials()
        .then( (encodedCredentials) => {
          if (encodedCredentials) {
            dispatch( actions.bootstrap.haveDeviceCredentials(encodedCredentials) );
@@ -62,7 +62,7 @@ export const autoSignIn = createLogic({
   type: String(actions.bootstrap.haveDeviceCredentials),
   
   process({getState, action, fassets}, dispatch, done) {
-    const {email, pass} = fassets.device.api.decodeCredentials(action.encodedCredentials);
+    const {email, pass} = fassets.deviceService.decodeCredentials(action.encodedCredentials);
     dispatch( actions.signIn(email, pass) );
     done();
   },
@@ -121,7 +121,7 @@ export const signIn = createLogic({
            .then( user => { // user has successfully signed in
 
              // retain these credentials on our device (to streamline subsequent app launch)
-             fassets.device.api.storeCredentials(action.email, action.pass)
+             fassets.deviceService.storeCredentials(action.email, action.pass)
                     .catch( (err) => { // unexpected error in a react-native API
                       // ... nested errors in a promise are caught in the outer catch (see catch - below)
                     });
@@ -242,7 +242,7 @@ export const signOut = createLogic({
              discloseError({err});
            });
 
-    fassets.device.api.removeCredentials()
+    fassets.deviceService.removeCredentials()
        .catch( (err) => {
          // report unexpected error to user
          // ... we add user context to this raw error

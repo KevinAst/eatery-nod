@@ -1,0 +1,178 @@
+import {Font,
+        Location,
+        Permissions}   from 'expo';
+import {AsyncStorage}  from 'react-native';
+import featureFlags    from '../../../util/featureFlags';
+
+const credentialsKey       = 'eatery-nod:credentials';
+const credentialsSeparator = '/';
+
+/**
+ * DeviceService promotes a simplified abstraction of several device
+ * services (both Expo and react-native), providing a consistent "GO
+ * TO" for device related resources.
+ *
+ * Some services are "mockable", at an individual method level, as
+ * specified by our featureFlags.
+ */
+export default class DeviceService {
+
+  /**
+   * Instantiate the DeviceService service object.
+   */
+  constructor() {
+
+    // conditionally mock getCurPos(), as directed by featureFlags
+    if (featureFlags.mockGPS) {
+
+      const GlenCarbonIL = {lat: 38.752209, lng: -89.986610};
+      const defaultLoc   = GlenCarbonIL;
+      const mockLoc      = featureFlags.mockGPS.lat ? featureFlags.mockGPS : defaultLoc;
+
+      this.getCurPos = () => { // override method with our mock
+        // console.log(`xx DeviceService.getCurPos() request ... mocked to: `, mockLoc);
+        return new Promise( (resolve, reject) => {
+          setTimeout(() => { // just for fun, delay just a bit
+            // communicate device location
+            return resolve(mockLoc);
+          }, 3000);
+        });
+      };
+    }
+
+  }
+
+
+  /**
+   * Load device fonts needed to run our app (NativeBase UI requirement)
+   */
+  loadFonts() {
+
+    // L8TR: Font.loadAsync() Expo docs are lacking, may return a promise that will eventually error
+    //       ... https://docs.expo.io/versions/v17.0.0/sdk/font.html#exponentfontloadasync
+    // L8TR: May need to wrap in our own promise ESPECIALLY at a point when multiple resources are needed.
+
+    // NativeBase UI needs these custom fonts
+    return Font.loadAsync({
+      'Roboto':        require('native-base/Fonts/Roboto.ttf'),
+      'Roboto_medium': require('native-base/Fonts/Roboto_medium.ttf'),
+    });
+  }
+
+
+  /**
+   * Fetch credentials stored on local device (if any).
+   * 
+   * @return {promise} a promise resolving to encodedCredentials (use
+   * decodeCredentials() to decode), or null (when non-existent).
+   */
+  fetchCredentials() {
+    return AsyncStorage.getItem(credentialsKey);
+  }
+
+
+  /**
+   * Store credentials on local device.
+   * 
+   * @return {promise} a promise strictly for error handling.
+   */
+  storeCredentials(email, pass) {
+    return AsyncStorage.setItem(credentialsKey, this.encodeCredentials(email, pass));
+  }
+
+
+  /**
+   * Remove credentials on local device.
+   * 
+   * @return {promise} a promise strictly for error handling.
+   */
+  removeCredentials() {
+    return AsyncStorage.removeItem(credentialsKey);
+  }
+
+
+  /**
+   * Encode the supplied email/pass into a string.
+   */
+  encodeCredentials(email, pass) {
+    return email+credentialsSeparator+pass;
+  }
+
+
+  /**
+   * Decode the supplied encodedCredentials, resulting in:
+   *    {
+   *      email: string,
+   *      pass:  string
+   *    }
+   * -or-
+   *    null (if non-existent).
+   */
+  decodeCredentials(encodedCredentials) {
+    if (encodedCredentials) {
+      const parts = encodedCredentials.split(credentialsSeparator);
+      return {
+        email: parts[0],
+        pass:  parts[1],
+      };
+    }
+    else {
+      return null;
+    }
+  }
+
+
+  /**
+   * Return the current device location asynchronously (via a promise).
+   * 
+   * @returns {Promise} the current device location {lat, lng}
+   */
+  getCurPos() {
+
+    return new Promise( (resolve, reject) => {
+
+      Permissions.askAsync(Permissions.LOCATION)
+                 .then( ({status}) => {
+
+                   // Device LOCATION permission denied
+                   if (status !== 'granted') {
+                     return reject(
+                       new Error(`Device LOCATION permission denied, status: ${status}`)
+                         .defineClientMsg('No access to device location')
+                         .defineAttemptingToMsg('obtain current position')
+                     );
+                   }
+
+                   // obtain device geo location
+                   Location.getCurrentPositionAsync({})
+                           .then( (location) => {
+                             // console.log(`xx Obtained Device Location: `, location);
+                             // Obtained Device Location: {
+                             //   "coords": {
+                             //     "accuracy":   50,
+                             //     "altitude":   0,
+                             //     "heading":    0,
+                             //     "latitude":   38.7657446, // of interest
+                             //     "longitude": -89.9923039, // of interest
+                             //     "speed":      0,
+                             //   },
+                             //   "mocked":    false,
+                             //   "timestamp": 1507050033634,
+                             // }
+      
+                             // communicate device location
+                             return resolve({lat: location.coords.latitude, 
+                                             lng: location.coords.longitude});
+                           })
+                           .catch( err => {
+                             return reject(err.defineClientMsg('Could not obtain device location'));
+                           });
+                 })
+
+                 .catch( err => {
+                   return reject(err.defineAttemptingToMsg('obtain current position'));
+                 });
+    });
+  }
+
+};
