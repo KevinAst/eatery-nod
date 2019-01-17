@@ -1,6 +1,8 @@
 {
   "extends": ["expo", "plugin:react/recommended"],
   "rules": {
+    "babel/object-curly-spacing":    "off",  // relax spacing inside braces
+    "import/order":                  "off",  // relax import ordering
     "space-in-parens":               "off",  // allow any spacing within parens ... ex: .then( (encodedCredentials) => 'hmmm' )
     "space-infix-ops":               "off",  // allow any infix spacing ... ex: i+1
     "no-trailing-spaces":            "off",  // allow any spacing ... geeze
