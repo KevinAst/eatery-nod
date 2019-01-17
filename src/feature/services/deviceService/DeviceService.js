@@ -125,6 +125,8 @@ export default class DeviceService {
   /**
    * Return the current device location asynchronously (via a promise).
    * 
+   * NOTE: This service method can be mocked via: featureFlags.mockGPS
+   *
    * @returns {Promise} the current device location {lat, lng}
    */
   getCurPos() {
