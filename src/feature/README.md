@@ -2,8 +2,10 @@
 
 The **eatery-nod** application is composed of the following **features**:
 
- - [**device**](device/README.md):           initializes the device for use by the app, and promotes a **device api** abstraction
- - [**auth**](auth/README.md):               promotes complete user authentication
+ - [**device**](device/README.md):           initializes the device for use by the app, and promotes a **device api** abstraction ?? OBSOLETE
+ - [**auth**](auth/README.md):               promotes complete user authentication ?? move to init
+ - [**init**](init/README.md):               a categorized collection of **"Initialization Related"** features
+   - [**device**](init/device/README.md):    initializes the device for use by the app
  - [**views**](views/README.md):             a categorized collection of **"UI Related"** features
    - [**leftNav**](views/leftNav/README.md):         promotes the app-specific Drawer/SideBar on the app's left side
    - [**currentView**](views/currentView/README.md): maintains the currentView with get/set cross-feature communication bindings
