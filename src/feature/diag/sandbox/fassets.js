@@ -6,11 +6,11 @@ import {Body,
         ListItem,
         Right,
         Text}      from 'native-base';
-import fassets     from '../../app';
+import fassets     from '../../../app';
 import {notify,
         toast,
         alert,
-        confirm}   from '../../util/notify';
+        confirm}   from '../../../util/notify';
 
 /**
  * The Public Face promoted by this feature.

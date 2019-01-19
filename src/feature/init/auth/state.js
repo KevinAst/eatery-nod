@@ -5,7 +5,7 @@ import {slicedReducer}      from 'feature-redux';
 import featureName          from './featureName';
 import signInFormMeta       from './signInFormMeta';
 import actions              from './actions';
-import User                 from './../services/authService/User';
+import User                 from '../../services/authService/User';
 
 // ***
 // *** Our feature reducer, managing state for our authorization process.

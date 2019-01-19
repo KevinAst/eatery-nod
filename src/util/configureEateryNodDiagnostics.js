@@ -1,7 +1,7 @@
 import {launchApp} from 'feature-u';
 import {diag$}     from './diagnosticUtil';
-import logActions  from '../feature/logActions'; // enable eatery-nod "logActions" feature
-import sandbox     from '../feature/sandbox';    // enable eatery-nod "sandbox" feature (in left-nav)
+import logActions  from '../feature/diag/logActions'; // enable eatery-nod "logActions" feature
+import sandbox     from '../feature/diag/sandbox';    // enable eatery-nod "sandbox" feature (in left-nav)
 import configureFeatureUIntegrationTests  from './configureFeatureUIntegrationTests';
 
 

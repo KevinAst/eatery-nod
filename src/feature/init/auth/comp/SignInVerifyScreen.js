@@ -1,5 +1,5 @@
 import React        from 'react';
-import withState    from '../../../util/withState';
+import withState    from '../../../../util/withState';
 import {Body,
         Button,
         Container,
@@ -11,7 +11,7 @@ import {Body,
         Title,
         View}       from 'native-base';
 import PropTypes    from 'prop-types';
-import commonStyles from '../../views/commonStyles';
+import commonStyles from '../../../views/commonStyles';
 import actions      from '../actions';
 import * as sel     from '../state';
 

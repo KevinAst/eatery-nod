@@ -2,9 +2,9 @@
 
 The **eatery-nod** application is composed of the following **features**:
 
- - [**auth**](auth/README.md):               promotes complete user authentication ?? move to init
  - [**init**](init/README.md):               a categorized collection of **"Initialization Related"** features
    - [**device**](init/device/README.md):    initializes the device for use by the app
+   - [**auth**](init/auth/README.md):        promotes complete user authentication
  - [**views**](views/README.md):             a categorized collection of **"UI Related"** features
    - [**leftNav**](views/leftNav/README.md):         promotes the app-specific Drawer/SideBar on the app's left side
    - [**currentView**](views/currentView/README.md): maintains the currentView with get/set cross-feature communication bindings
@@ -16,5 +16,6 @@ The **eatery-nod** application is composed of the following **features**:
     - [**discoveryService**](services/discoveryService/README.md):  retrieves restaurant information from a geographical data source, emitting Discovery/Eatery objects
     - [**eateryService**](services/eateryService/README.md):        a persistent "Eateries" DB service, monitoring real-time Eatery DB activity
     - [**firebaseInit**](services/firebaseInit/README.md):          initialize the eatery-nod firebase DB
- - [**logActions**](logActions/README.md):   logs all dispatched actions and resulting state
- - [**sandbox**](sandbox/README.md):         promotes a variety of interactive tests, used in development, that can easily be disabled
+ - [**diag**](diag/README.md):                      a categorized collection of **"Diagnostic Related"** features
+   - [**logActions**](diag/logActions/README.md):   logs all dispatched actions and resulting state
+   - [**sandbox**](diag/sandbox/README.md):         promotes a variety of interactive tests, used in development, that can easily be disabled

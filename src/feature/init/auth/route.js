@@ -5,7 +5,7 @@ import {featureRoute,
 import featureName         from './featureName';
 import SignInVerifyScreen  from './comp/SignInVerifyScreen';
 import SignInScreen        from './comp/SignInScreen';
-import SplashScreen        from '../../util/comp/SplashScreen';
+import SplashScreen        from '../../../util/comp/SplashScreen';
 
 // ***
 // *** The routes for this feature.

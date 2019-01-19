@@ -1,6 +1,6 @@
 import {createLogic}      from 'redux-logic';
 import featureName        from './featureName';
-import featureFlags       from '../../util/featureFlags';
+import featureFlags       from '../../../util/featureFlags';
 
 let lastState = null;
 

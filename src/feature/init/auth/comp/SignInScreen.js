@@ -1,5 +1,5 @@
 import React        from 'react';
-import withState    from '../../../util/withState';
+import withState    from '../../../../util/withState';
 import PropTypes    from 'prop-types';
 import {Body,
         Button,
@@ -12,10 +12,10 @@ import {Body,
         Text,
         Title,
         View}         from 'native-base';
-import commonStyles   from '../../views/commonStyles';
+import commonStyles   from '../../../views/commonStyles';
 import signInFormMeta from '../signInFormMeta';
-import ITextField     from '../../../util/iForms/comp/ITextField';
-import {toast}        from '../../../util/notify';
+import ITextField     from '../../../../util/iForms/comp/ITextField';
+import {toast}        from '../../../../util/notify';
 
 /**
  * SignInScreen: gather user sign-in credentials.

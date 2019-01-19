@@ -4,7 +4,7 @@ import featureName          from './featureName';
 import actions              from './actions';
 import * as sel             from './state';
 import signInFormMeta       from './signInFormMeta';
-import discloseError        from '../../util/discloseError';
+import discloseError        from '../../../util/discloseError';
 
 /**
  * Start our authorization process, once the device is ready.
