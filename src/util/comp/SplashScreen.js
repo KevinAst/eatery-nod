@@ -13,7 +13,7 @@ import {Body,
         Text,
         Title}       from 'native-base';
 import PropTypes     from 'prop-types';
-import commonStyles  from '../../feature/views/commonStyles';
+import commonStyles  from '../../features/views/commonStyles';
 
 
 /**

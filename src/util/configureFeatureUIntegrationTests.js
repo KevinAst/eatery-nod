@@ -3,7 +3,7 @@ import {launchApp}             from 'feature-u';
 import {createReducerAspect}   from 'feature-redux';
 import {createLogicAspect}     from 'feature-redux-logic';
 import {createRouteAspect}     from 'feature-router';
-import features                from '../feature';
+import features                from '../features';
 import {applyMiddleware,
         compose,
         createStore}           from 'redux';
