@@ -1,4 +1,3 @@
-import device      from './device';
 import auth        from './auth';
 import init        from './init';
 import views       from './views';
@@ -9,7 +8,6 @@ import sandbox     from './sandbox';
 /**
  * The **eatery-nod** application is composed of the following **features**:
  *
- * - **device**:       initializes the device for use by the app, and promotes a **device api** abstraction ?? OBSOLETE
  * - **auth**:         promotes complete user authentication ?? move to init
  * - **init**:         a categorized collection of **"Initialization Related"** features
  * - **views**:        a categorized collection of **"UI Related"** features
@@ -18,7 +16,6 @@ import sandbox     from './sandbox';
  * - **sandbox**:      promotes a variety of interactive tests, used in development, that can easily be disabled
  */
 export default [
-  device,
   auth,
   ...init,
   ...views,

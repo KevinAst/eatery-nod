@@ -16,19 +16,21 @@ import commonStyles from '../../commonStyles';
 /**
  * SideBar: our leftNav component, exposed through the Drawer.
  */
-function SideBar({deviceReady, handleSignOut, leftNavItems}) {
+function SideBar({guiReady, handleSignOut, leftNavItems}) {
 
-  // when device is NOT ready, render a placebo
-  // ... ex: system fonts must be loaded
-  if (!deviceReady) {
+  // fallback to more primitive content when GUI is NOT yet initialized
+  // ... part of the device feature initialization process
+  if (!guiReady) {
+    // console.log('xx rendering <SideBar> GUI NOT READY: fallback to simple <Text> content');
     return (
       <Text style={commonStyles.container}>
-        Device NOT ready (i.e. waiting for fonts to load)
+        Device NOT ready (i.e. waiting for GUI library to initialize)
       </Text>
     );
   }
 
   // render our menu
+  // console.log('xx rendering <SideBar> GUI IS READY: using REAL Content');
   return (
     <Container style={{...commonStyles.container, backgroundColor:'white'}}>
       <Header>
@@ -78,7 +80,7 @@ const SideBarWithState = withState({
   component: SideBar,
   mapStateToProps(appState, {fassets}) { // ... fassets available in ownProps (via withFassets() below)
     return {
-      deviceReady: fassets.device.sel.isDeviceReady(appState),
+      guiReady: fassets.device.sel.isGuiReady(appState),
     };
   },
   mapDispatchToProps(dispatch, {fassets}) { // ... fassets available in ownProps (via withFassets() below)

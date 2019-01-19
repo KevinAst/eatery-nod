@@ -69,7 +69,7 @@ export default function discloseError({err,
   // show user when requested
   if (showUser) {
     // unexpeded errors display as error toasts with additional details link
-    if (err.isUnexpected) {
+    if (err.isUnexpected()) {
       toast.error({  // ... will auto close -OR- when "details" is clicked
         msg: err.formatUserMsg(),
         actions: [

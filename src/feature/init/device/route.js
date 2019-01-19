@@ -3,7 +3,7 @@ import {isDeviceReady,
         getDeviceStatusMsg} from './state';
 import {featureRoute, 
         PRIORITY}           from 'feature-router';
-import SplashScreen         from '../../util/comp/SplashScreen';
+import SplashScreen         from '../../../util/comp/SplashScreen';
 
 
 // ***
@@ -12,14 +12,14 @@ import SplashScreen         from '../../util/comp/SplashScreen';
 
 export default featureRoute({
 
-  priority: PRIORITY.HIGH,
+  priority: PRIORITY.HIGH+10,
 
   content({fassets, appState}) {
 
     // promote a simple SplashScreen (with status) until our system is ready
     // NOTE: Errors related to system resources are promoted through independent user notifications
     if (!isDeviceReady(appState)) {
-      // console.log(`xx DEVICE NOT READY: route -> SplashScreen with msg: ${getDeviceStatusMsg(appState)}`);
+      // console.log(`xx device feature router ... DEVICE NOT READY: route -> SplashScreen with msg: ${getDeviceStatusMsg(appState)}`);
       return <SplashScreen msg={getDeviceStatusMsg(appState)}/>;
     }
 

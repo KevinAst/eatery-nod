@@ -32,10 +32,15 @@ export default class DeviceService {
       this.getCurPos = () => { // override method with our mock
         // console.log(`xx DeviceService.getCurPos() request ... mocked to: `, mockLoc);
         return new Promise( (resolve, reject) => {
-          setTimeout(() => { // just for fun, delay just a bit
+        //setTimeout(() => { // TEMPORARY: for testing delay just a bit
+
+            // TEMPORARY: for testing, simulate error condition
+            //            ... NOTE: reject() passes error into .catch(), throw does NOT
+            // return reject(new Error('Simulated Error in Expo GPS Location acquisition') );
+
             // communicate device location
             return resolve(mockLoc);
-          }, 3000);
+        //}, 10000); // TEMPORARY: for testing delay just a bit
         });
       };
     }
@@ -50,13 +55,30 @@ export default class DeviceService {
 
     // L8TR: Font.loadAsync() Expo docs are lacking, may return a promise that will eventually error
     //       ... https://docs.expo.io/versions/v17.0.0/sdk/font.html#exponentfontloadasync
-    // L8TR: May need to wrap in our own promise ESPECIALLY at a point when multiple resources are needed.
 
-    // NativeBase UI needs these custom fonts
-    return Font.loadAsync({
-      'Roboto':        require('native-base/Fonts/Roboto.ttf'),
-      'Roboto_medium': require('native-base/Fonts/Roboto_medium.ttf'),
+    // wrap in our own promise to facilitate timing and error constraints in testing
+    return new Promise( (resolve, reject) => {
+    //setTimeout(() => { // TEMPORARY: for testing delay just a bit
+
+        // TEMPORARY: for testing, simulate error condition
+        //            ... NOTE: reject() passes error into .catch(), throw does NOT
+        // return reject( new Error('Simulated Error in Expo Font.loadAsync()') );
+
+        // load needed custome fonts for NativeBase UI
+        Font.loadAsync({'Roboto':        require('native-base/Fonts/Roboto.ttf'),
+                        'Roboto_medium': require('native-base/Fonts/Roboto_medium.ttf'),
+                      })
+            .then( (nothing) => {
+              return resolve(nothing);
+            })
+            .catch( err => {
+              return reject(err.defineClientMsg('Could not obtain device location'));
+            });
+
+    //}, 5000); // TEMPORARY: for testing delay just a bit
     });
+
+
   }
 
 
