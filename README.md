@@ -43,10 +43,10 @@ entry.  **Red** entries are in your pool, **Grey** entries are not.
 ![Screen Flow](src/feature/views/discovery/docs/ScreenFlow.png)
 
 
-### Autorization
+### Authorization
 
 Authorization is provided through the [auth
-feature](src/feature/auth), requiring a validated email/password
+feature](src/feature/init/auth), requiring a validated email/password
 before promoting any application screens.
 
-![Screen Flow](src/feature/auth/docs/ScreenFlow.png)
+![Screen Flow](src/feature/init/auth/docs/ScreenFlow.png)
