@@ -55,7 +55,9 @@ export default class EateryServiceFirebase extends EateryServiceAPI {
     // listen for eatery data changes in the specified pool
     this.curPoolMonitor.dbRef.on('value', (snapshot) => {
 
-      const eateries = snapshot.val();
+      // conditional logic accommodates an empty pool
+      // ... a firebase DB philosophy is that it will NOT store empty data (or collections)
+      const eateries = snapshot.val() !== null ? snapshot.val() : {};
 
       // supplement eateries with distance from the supplied baseLoc (as the crow flies)
       for (const eateryId in eateries) {
