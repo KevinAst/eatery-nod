@@ -66,7 +66,7 @@ export default class EateryServiceFirebase extends EateryServiceAPI {
       }
 
       // notify our supplied monitorCB
-      // console.log(`xx EateryServiceFirebase.monitorDbEateryPool() eateries changed for pool '${this.curPoolMonitor.pool}': `, eateries);
+      // console.log(`xx EateryServiceFirebase.monitorDbEateryPool() -and- MOCK RECORDING ... eateries changed for pool '${this.curPoolMonitor.pool}': ${JSON.stringify(eateries)}`);
       monitorCB(eateries);
 
     });

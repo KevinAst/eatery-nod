@@ -1,9 +1,9 @@
 import discoveryService             from './feature';
 import discoveryServiceGooglePlaces from './discoveryServiceGooglePlaces/feature';
-// import discoveryServiceMock      from './discoveryServiceMock/feature'; ?? L8TR
+import discoveryServiceMock         from './discoveryServiceMock/feature';
 
 export default [
   discoveryService,
   discoveryServiceGooglePlaces,
-//discoveryServiceMock,
+  discoveryServiceMock,
 ];

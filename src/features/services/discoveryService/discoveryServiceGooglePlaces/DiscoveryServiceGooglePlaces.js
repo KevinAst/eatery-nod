@@ -186,11 +186,11 @@ export default class DiscoveryServiceGooglePlaces extends DiscoveryServiceAPI {
         }
 
         // convert to discoveries
-        const eateryResultsJson = gp2discoveries(payloadJson);
+        const discoveriesJson = gp2discoveries(payloadJson);
         // DETAIL_SAMPLE: sandbox/GooglePlaces/discovery/sample.searchEateries.output.eateryResultsJson.js
-        // console.log(`xx sample.searchEateries.output.eateryResultsJson: `, JSON.stringify(eateryResultsJson));
+        // console.log(`xx DiscoveryServiceGooglePlaces.searchDiscoveries() -and- MOCK RECORDING (N/A) ... returning discoveries: ${JSON.stringify(discoveriesJson)}`);
 
-        return eateryResultsJson;
+        return discoveriesJson;
       });
 
   }

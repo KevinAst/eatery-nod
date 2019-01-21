@@ -63,6 +63,7 @@ export default class AuthServiceFirebase extends AuthServiceAPI {
                          emailVerified: fbUser.emailVerified,
                          pool:          userProfile.pool,
                        });
+                       // console.log(`xx MOCK RECORDING from AuthServiceFirebase.signIn(...): returning User: ${JSON.stringify(this.currentAppUser.toStruct())}`);
                        return resolve(this.currentAppUser);
                      })
 

@@ -12,6 +12,7 @@ export default {
                   // {lat, lng}: specify mocked location, example:
                   //             {lat: 40.48643,  lng: -86.1336}   ... Kokomo IN
                   //             {lat: 42.60559,  lng: -83.14993}  ... Troy MI
+                  //             {lat: 30.010479, lng: -90.119414} ... New Orleans, LA
                   //             {lat: 38.752209, lng: -89.986610} ... Glen Carbon IL
 
   log:     false, // should app emit diagnostic logs?
