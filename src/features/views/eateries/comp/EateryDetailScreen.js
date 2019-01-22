@@ -1,7 +1,8 @@
-import React        from 'react';
-import PropTypes    from 'prop-types';
-import {Linking}    from 'react-native';
-import withState    from '../../../../util/withState';
+import React         from 'react';
+import PropTypes     from 'prop-types';
+import {Linking}     from 'react-native';
+import {withFassets} from 'feature-u';
+import withState     from '../../../../util/withState';
 import {Body,
         Button,
         Container,
@@ -15,15 +16,15 @@ import {Body,
         Right,
         Text,
         Title,
-        View}       from 'native-base';
-import commonStyles from '../../commonStyles';
-import actions      from '../actions';
+        View}        from 'native-base';
+import commonStyles  from '../../commonStyles';
+import actions       from '../actions';
 
 
 /**
  * EateryDetailScreen displaying the details of a given eatery.
  */
-function EateryDetailScreen({eatery, handleClose, handleSpin}) {
+function EateryDetailScreen({curUser, eatery, handleClose, handleSpin}) {
 
   const verticalSpacing = (spacing=10) => <View style={{paddingVertical: spacing}}/>;
 
@@ -36,7 +37,7 @@ function EateryDetailScreen({eatery, handleClose, handleSpin}) {
           </Button>
         </Left>
         <Body>
-          <Title>Eatery</Title>
+          <Title>Eatery <Text note>({curUser.pool})</Text></Title>
         </Body>
         <Right/>
       </Header>
@@ -95,8 +96,13 @@ EateryDetailScreen.propTypes = {
   eatery: PropTypes.object.isRequired,
 };
 
-export default EateryDetailScreenWithState = withState({
+const EateryDetailScreenWithState = withState({
   component: EateryDetailScreen,
+  mapStateToProps(appState, {fassets}) { // ... fassets available in ownProps (via withFassets() below)
+    return {
+      curUser: fassets.curUser(appState),
+    };
+  },
   mapDispatchToProps(dispatch) {
     return {
       handleClose() {
@@ -107,4 +113,11 @@ export default EateryDetailScreenWithState = withState({
       },
     };
   },
+});
+
+export default EateryDetailScreenWithFassets = withFassets({
+  component: EateryDetailScreenWithState,
+  mapFassetsToProps: {
+    fassets: '.', // introduce fassets into props via the '.' keyword
+  }
 });

@@ -22,7 +22,7 @@ import * as sel      from '../state';
 /**
  * DiscoveryListScreen displaying our discoveries.
  */
-function DiscoveryListScreen({fassets, inProgress, discoveries, nextPageToken, eateryPool, toggleEateryPool, handleNextPage, handleFilterDiscovery}) {
+function DiscoveryListScreen({curUser, openLeftNav, inProgress, discoveries, nextPageToken, eateryPool, toggleEateryPool, handleNextPage, handleFilterDiscovery}) {
 
   // ***
   // *** define page content
@@ -131,12 +131,12 @@ function DiscoveryListScreen({fassets, inProgress, discoveries, nextPageToken, e
     <Container style={commonStyles.container}>
       <Header>
         <Left>
-          <Button transparent onPress={fassets.leftNav.open}>
+          <Button transparent onPress={openLeftNav}>
             <Icon name="menu"/>
           </Button>
         </Left>
         <Body>
-          <Title>Discovery</Title>
+          <Title>Discovery <Text note>({curUser.pool})</Text></Title>
         </Body>
         <Right/>
       </Header>
@@ -165,6 +165,7 @@ const DiscoveryListScreenWithState = withState({
       discoveries:   sel.getDiscoveries(appState),
       nextPageToken: sel.getNextPageToken(appState),
       eateryPool:    fassets.eateries.sel.getDbPool(appState),
+      curUser:       fassets.curUser(appState),
     };
   },
   mapDispatchToProps(dispatch, {fassets}) { // ... fassets available in ownProps (via withFassets() below)
@@ -193,6 +194,7 @@ const DiscoveryListScreenWithState = withState({
 export default DiscoveryListScreenWithFassets = withFassets({
   component: DiscoveryListScreenWithState,
   mapFassetsToProps: {
-    fassets: '.', // ... introduce fassets into props via the '.' keyword
+    fassets:     '.',            // introduce fassets into props via the '.' keyword
+    openLeftNav: 'leftNav.open', // openLeftNav()
   }
 });

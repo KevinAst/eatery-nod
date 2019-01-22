@@ -24,7 +24,7 @@ import * as sel      from '../state';
 /**
  * EateriesListScreen displaying a set of eateries (possibly filtered).
  */
-function EateriesListScreen({fassets, filteredEateries, filter, showDetail, handleSpin}) {
+function EateriesListScreen({curUser, openLeftNav, filteredEateries, filter, showDetail, handleSpin}) {
 
   if (!filteredEateries) {
     return <SplashScreen msg="... waiting for pool entries"/>;
@@ -70,12 +70,12 @@ function EateriesListScreen({fassets, filteredEateries, filter, showDetail, hand
     <Container style={commonStyles.container}>
       <Header>
         <Left>
-          <Button transparent onPress={fassets.leftNav.open}>
+          <Button transparent onPress={openLeftNav}>
             <Icon name="menu"/>
           </Button>
         </Left>
         <Body>
-          <Title>Pool</Title>
+          <Title>Pool <Text note>({curUser.pool})</Text></Title>
           {filter.distance && <Text note>(within {filter.distance} mile{filter.distance===1?'':'s'})</Text>}
         </Body>
         <Right/>
@@ -101,10 +101,11 @@ function EateriesListScreen({fassets, filteredEateries, filter, showDetail, hand
 
 const EateriesListScreenWithState = withState({
   component: EateriesListScreen,
-  mapStateToProps(appState) {
+  mapStateToProps(appState, {fassets}) { // ... fassets available in ownProps (via withFassets() below)
     return {
       filteredEateries: sel.getFilteredEateries(appState),
       filter:           sel.getListViewFilter(appState),
+      curUser:          fassets.curUser(appState),
     };
   },
   mapDispatchToProps(dispatch) {
@@ -123,6 +124,7 @@ const EateriesListScreenWithState = withState({
 export default EateriesListScreenWithFassets = withFassets({
   component: EateriesListScreenWithState,
   mapFassetsToProps: {
-    fassets: '.', // ... introduce fassets into props via the '.' keyword
+    fassets:     '.',            // introduce fassets into props via the '.' keyword
+    openLeftNav: 'leftNav.open', // openLeftNav()
   }
 });
