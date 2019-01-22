@@ -2,6 +2,7 @@ import {combineReducers}    from 'redux';
 import {reducerHash}        from 'astx-redux-util';
 import {expandWithFassets}  from 'feature-u';
 import {slicedReducer}      from 'feature-redux';
+import {createSelector}     from 'reselect';
 import featureName          from './featureName';
 import signInFormMeta       from './signInFormMeta';
 import actions              from './actions';
@@ -50,7 +51,9 @@ const gfs              = getFeatureState;             // ... concise alias (used
              //         user.email
              //         user.pool
              //   NOTE: will always return a User object (may represent a no-user object that: isSignedOut())
-export const getUser = (appState) => new User(gfs(appState).user);
+       const curUserStruct = (appState) => gfs(appState).user;
+export const curUser       = createSelector(curUserStruct,
+                                            (curUserStruct) => new User(curUserStruct));
 
              // SignIn form  related
 export const isSignInFormActive = (appState) => gfs(appState).signInForm ? true : false;

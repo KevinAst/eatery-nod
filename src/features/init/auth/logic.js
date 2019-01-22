@@ -174,7 +174,7 @@ export const signInCleanup = createLogic({
   type: String(actions.signIn.complete),
 
   process({getState, action}, dispatch, done) {
-    // console.log(`xx logic ${featureName}.signInCleanup: user.status: '${sel.getUser(getState()).getAuthStatus()}'`);
+    // console.log(`xx logic ${featureName}.signInCleanup: user.status: '${sel.curUser(getState()).getAuthStatus()}'`);
     dispatch( actions.signIn.close() ); // we are done with our signIn form
     done();
   },

@@ -1,8 +1,8 @@
 import {createFeature}  from 'feature-u';
 import featureName      from './featureName';
 import actions          from './actions'; // TODO: QUERKYNESS of IFormMeta (aggravated by feature-u) ... actions MUST be expanded BEFORE IFormMeta instance (signInFormMeta)
-import reducer          from './state';
-import * as sel         from './state';
+import reducer,
+       {curUser}        from './state';
 import logic            from './logic';
 import route            from './route';
 
@@ -19,7 +19,7 @@ export default createFeature({
       [`${featureName}.actions.signOut`]:            actions.signOut,            // signOut()
 
       // selectors:
-      [`${featureName}.sel.getUserPool`]:            (appState) => sel.getUser(appState).pool,
+      curUser, // full blown User object
     },
   },
 

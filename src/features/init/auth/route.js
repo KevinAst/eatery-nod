@@ -17,7 +17,7 @@ export default featureRoute({
 
   content({fassets, appState}) {
 
-    const user = sel.getUser(appState);
+    const user = sel.curUser(appState);
 
     // when user is FULLY signedIn/verified
     // ... allow down-stream features to route further (i.e. app-specific screens)
@@ -55,7 +55,7 @@ export default featureRoute({
     //     c) an error condition (say some change that impacts our route logic)
     //        ... this is an unexpected condition
     //        ... SO, we expose the user-status context in the message (for diagnostics)
-    const msg = `authorization in progress (${sel.getUser(appState).getAuthStatus()})`;
+    const msg = `authorization in progress (${user.getAuthStatus()})`;
     return <SplashScreen msg={msg}/>;
   },
 
