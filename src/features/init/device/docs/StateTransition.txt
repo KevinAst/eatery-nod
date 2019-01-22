@@ -15,7 +15,6 @@ device
                                                  kickStart
                                                  =========
                                                    Administer the "kickStart" initialization process.
-                                                   dispatch device.bootstrap.locateDevice()
                                                    SEE: logic.js for COMPLETE description
 
                                                    - dispatch setStatus(statusMsg)

@@ -20,7 +20,7 @@ It accomplishes the following:
    by promoting various authentication screens until authentication
    is complete **(route, comp)**
 
- - emits key action that triggers downstream eateries to bootstrap **(logic)**:
+ - emits key action that triggers downstream eateries to populate **(logic)**:
    ```
    fassets.auth.actions.userProfileChanged(user)
    ```

@@ -12,16 +12,17 @@ Actions (see: actions.js)                        Logic (see: logic.js)          
 fassets.device.actions.ready() ..............................................................................   - NONE
                                                  startAuthorization:
                                                  ==================
-                                                   DISPATCH .bootstrap()           
+                                                   DISPATCH .autoSignIn()           
 
 auth                                             
-  .bootstrap() ...............................   ............................................................   - NONE
+  .autoSignIn() .............................   ............................................................   - NONE
                                                  checkDeviceCredentials:
                                                  ======================
                                                    async: fassets.deviceService.fetchCredentials() via localStorage() 
                                                           - YES: DISPATCH .haveDeviceCredentials(encodedCredentials)  
-                                                          - NO:  DISPATCH .noDeviceCredentials()           
-                                                          - ERR: DISPATCH .fail(err)                       
+                                                          - NO:  DISPATCH .noDeviceCredentials()
+                                                          - ERR: discloseError(err) -and- manually signin
+                                                                 DISPATCH .noDeviceCredentials()
 
     .haveDeviceCredentials(encodedCredentials)   ............................................................   - NONE
                                                  autoSignIn:                                               
@@ -32,10 +33,6 @@ auth
      -and- signOut() below                       manualSignIn:                                             
                                                  ============
                                                    DISPATCH signIn.open()
-
-    .fail(err) ..............................................................................................   - NOTHING (currently) system display fail screen
-                                                                                                                  TODO: failure in accessing device credentials is NOT catastrophic
-                                                                                                                        ... should we just manually signIn?
                                                               
   .signIn(email, pass) ......................................................................................   - NONE
                                                  signIn:
@@ -43,7 +40,7 @@ auth
                                                    async: fassets.authService.signIn(action.email, action.pass)
                                                           - SUCCESS: fassets.deviceService.storeCredentials(action.email, action.pass)
                                                                      DISPATCH .complete(user)
-                                                          - FAIL:    toast.error(msg) ... user communication
+                                                          - FAIL:    discloseError(err)
                                                                      DISPATCH signIn.open(action, msg) .. display signin sreen
                                                                                                            
     .complete(user) ........................................................................................    - set user FROM action.user (using toStruct())
@@ -94,9 +91,9 @@ auth
                                                  signOut:                                                       - TODO: what about eateries and discovery (may want to clear them when user signs back in)
                                                  =======
                                                    async: fassets.authService.signOut()
-                                                          - ERR: toast.error(msg)
+                                                          - ERR: discloseError(err)
                                                    async: fassets.deviceService.removeCredentials()
-                                                          - ERR: toast.error(msg)
+                                                          - ERR: discloseError(err)
 
 
   > ALSO: this action is monitored by 'other' features (ex: 'eateries')

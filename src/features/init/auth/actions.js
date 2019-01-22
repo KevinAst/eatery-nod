@@ -5,27 +5,20 @@ import signInFormMeta    from './signInFormMeta';
 export default generateActions.root({
   [featureName]: { // prefix all actions with our feature name, guaranteeing they unique app-wide!
 
-    bootstrap: {   // actions.bootstrap(): Action
-                   // > bootstrap our authorization process
+    autoSignIn: {  // actions.autoSignIn(): Action
+                   // > autoSignIn our authorization process
                    actionMeta: {},
 
-      haveDeviceCredentials: {  // actions.bootstrap.haveDeviceCredentials(encodedCredentials): Action
+      haveDeviceCredentials: {  // actions.autoSignIn.haveDeviceCredentials(encodedCredentials): Action
                                 // > credentials were stored on our device
                                 actionMeta: {
                                   traits: ['encodedCredentials'],
                                 },
       },
 
-      noDeviceCredentials: {  // actions.bootstrap.noDeviceCredentials(): Action
+      noDeviceCredentials: {  // actions.autoSignIn.noDeviceCredentials(): Action
                               // > NO credentials were stored on our device
                               actionMeta: {},
-      },
-
-      fail: { // actions.bootstrap.fail(err): Action
-              // > local device storage access failed (fetching credentials) ... ?? not exactly catastrophic: should we just manually signIn?
-              actionMeta: {
-                traits: ['err'],
-              },
       },
     },
 

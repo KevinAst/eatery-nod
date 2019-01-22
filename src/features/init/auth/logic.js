@@ -19,7 +19,7 @@ export const startAuthorization = expandWithFassets( (fassets) => createLogic({
   type: String(fassets.device.actions.ready),
   
   process({getState, action}, dispatch, done) {
-    dispatch( actions.bootstrap() );
+    dispatch( actions.autoSignIn() );
     done();
   },
 }));
@@ -31,21 +31,27 @@ export const startAuthorization = expandWithFassets( (fassets) => createLogic({
 export const checkDeviceCredentials = createLogic({
 
   name: `${featureName}.checkDeviceCredentials`,
-  type: String(actions.bootstrap),
+  type: String(actions.autoSignIn),
 
   process({getState, action, fassets}, dispatch, done) {
     fassets.deviceService.fetchCredentials()
        .then( (encodedCredentials) => {
          if (encodedCredentials) {
-           dispatch( actions.bootstrap.haveDeviceCredentials(encodedCredentials) );
+           dispatch( actions.autoSignIn.haveDeviceCredentials(encodedCredentials) );
          }
          else {
-           dispatch( actions.bootstrap.noDeviceCredentials() );
+           dispatch( actions.autoSignIn.noDeviceCredentials() );
          }
          done();
        })
        .catch( err => {
-         dispatch( actions.bootstrap.fail(err) );
+         // report unexpected error to user
+         // ... we add user context to this raw error
+         discloseError({err: err.defineAttemptingToMsg('fetch credentials stored on the device')});
+
+         // just manually signIn
+         dispatch( actions.autoSignIn.noDeviceCredentials() );
+
          done();
        });
   },
@@ -59,7 +65,7 @@ export const checkDeviceCredentials = createLogic({
 export const autoSignIn = createLogic({
 
   name: `${featureName}.autoSignIn`,
-  type: String(actions.bootstrap.haveDeviceCredentials),
+  type: String(actions.autoSignIn.haveDeviceCredentials),
   
   process({getState, action, fassets}, dispatch, done) {
     const {email, pass} = fassets.deviceService.decodeCredentials(action.encodedCredentials);
@@ -77,7 +83,7 @@ export const manualSignIn = createLogic({
 
   name: `${featureName}.manualSignIn'`,
   type: [
-    String(actions.bootstrap.noDeviceCredentials),
+    String(actions.autoSignIn.noDeviceCredentials),
     String(actions.signOut),
   ],
 
@@ -147,7 +153,7 @@ export const signIn = createLogic({
 
 /**
  * Supplement signIn complete action by triggering profile.changed action,
- * causing eateries view to bootstrap.
+ * causing eateries view to populate.
  */
 export const supplementSignInComplete = createLogic({
 
