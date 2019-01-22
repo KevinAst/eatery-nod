@@ -1,51 +1,27 @@
 import {createFeature}  from 'feature-u';
-import name             from './featureName';
+import featureName      from './featureName';
 import actions          from './actions'; // TODO: QUERKYNESS of IFormMeta (aggravated by feature-u) ... actions MUST be expanded BEFORE IFormMeta instance (signInFormMeta)
-import fassets          from './fassets';
 import reducer          from './state';
+import * as sel         from './state';
 import logic            from './logic';
 import route            from './route';
 
-/**
- * The **auth** feature promotes complete user authentication.  
- * It accomplishes the following:
- * 
- *  - starts authorization process by monitoring device ready action
- *    (`fassets.device.actions.ready`) **(logic)**
- * 
- *    - interacts with authentication service **(logic)**
- * 
- *    - gathers user credentials from various authentication screens
- *      **(comp, route, logic)**
- * 
- *    - manages "Auto SignIn" through retained device credentials
- *      **(logic)**
- * 
- *    - maintains state for this feature **(reducer)**
- * 
- *  - disables app-specific visuals until the user is fully authenticated,
- *    by promoting various authentication screens until authentication
- *    is complete **(route, comp)**
- * 
- *  - emits key action that triggers downstream eateries to bootstrap **(logic)**:
- *    ```
- *    fassets.auth.actions.userProfileChanged(user)
- *    ```
- *
- * **State Transition**
- *
- * For a high-level overview of how actions, logic, and reducers
- * interact together to maintain this feature's state, please refer to
- * `docs/StateTransition.txt`.
- *
- * **Screen Flow**
- *
- * You can see a Screen Flow diagram at: `docs/ScreenFlow.png`.
- */
+// feature: auth
+//          promote complete user authentication service (full details in README)
 export default createFeature({
-  name,
+  name: featureName,
 
-  fassets,
+  // our public face ...
+  fassets: {
+    define: {
+      // actions:
+      [`${featureName}.actions.userProfileChanged`]: actions.userProfileChanged, // userProfileChanged(user) NOTE: PUBLIC for eateries to monitor, and for future use (when user can change their pool)
+      [`${featureName}.actions.signOut`]:            actions.signOut,            // signOut()
+
+      // selectors:
+      [`${featureName}.sel.getUserPool`]:            (appState) => sel.getUser(appState).pool,
+    },
+  },
 
   reducer,
   logic,

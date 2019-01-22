@@ -1,14 +1,14 @@
 import {createFeature}   from 'feature-u';
 import EateryServiceAPI  from './EateryServiceAPI';
 
-/**
- * The **eateryService** feature simply promotes the 'eateryService' use
- * contract, allowing feature-u to validate it's existence (as it is
- * supplied by other features - either real or mocked).
- */
+// feature: eateryService
+//          promote a service API that manages a real-time persistent
+//          "Eateries" DB, through the `eateryService` use contract
+//          (full details in README)
 export default createFeature({
   name: 'eateryService',
 
+  // our public face ...
   fassets: {
     use: [
       ['eateryService', {required: true, type: objectOfTypeEateryServiceAPI}],

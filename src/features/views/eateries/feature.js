@@ -1,36 +1,41 @@
 import {createFeature}  from 'feature-u';
-import name             from './featureName';
-import actions          from './actions'; // TODO: QUERKYNESS of IFormMeta (aggravated by feature-u) ... actions MUST be expanded BEFORE IFormMeta instance (eateryFilterFormMeta)
-import fassets          from './fassets';
+import featureName      from './featureName';
+import actions          from './actions'; // TODO: QUIRKINESS of IFormMeta (aggravated by feature-u) ... actions MUST be expanded BEFORE IFormMeta instance (eateryFilterFormMeta)
 import reducer          from './state';
+import * as sel         from './state';
 import logic            from './logic';
 import route            from './route';
-import appDidStart      from './appDidStart';
+import EateryLeftNavItem  from './comp/EateryLeftNavItem';
 
-/**
- * The **eateries** feature manages and promotes the eateries view
- * ... a list of the pooled (and filtered) restaurants, with the ability
- * to select an eatery through a random spin.  Selected eateries provides
- * the ability to phone, visit their web site, and navigate to them.
- *
- * **State Transition**
- *
- * For a high-level overview of how actions, logic, and reducers
- * interact together to maintain this feature's state, please refer to
- * `docs/StateTransition.txt`.
- *
- * **Screen Flow**
- *
- * You can see a Screen Flow diagram at: `docs/ScreenFlow.png`.
- */
+// feature: eateries
+//          manage and promotes the eateries view (a list of pooled
+//          and filtered) restaurants, with the ability to select an
+//          eatery through a random spin.  Selected eateries provides
+//          the ability to phone, visit their web site, and navigate
+//          to them (full details in README)
 export default createFeature({
-  name,
+  name: featureName,
 
-  fassets,
+  // our public face ...
+  fassets: {
+    define: {
+      [`${featureName}.actions.add`]:     actions.dbPool.add,      // add(eateryId)
+      [`${featureName}.actions.remove`]:  actions.dbPool.remove,   // remove(eateryId)
+
+      [`${featureName}.sel.getDbPool`]:   sel.getDbPool,
+    },
+
+    defineUse: {
+      'leftNavItem.EateryItem': EateryLeftNavItem, // inject our entry into the leftNav
+    }
+  },
 
   reducer,
   logic,
   route,
 
-  appDidStart,
+  // default the app view to be self
+  appDidStart({fassets, appState, dispatch}) {
+    dispatch( fassets.currentView.actions.changeView(featureName) );
+  },
 });

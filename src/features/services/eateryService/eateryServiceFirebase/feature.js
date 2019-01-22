@@ -2,18 +2,16 @@ import {createFeature}       from 'feature-u';
 import featureFlags          from '../../../../util/featureFlags';
 import EateryServiceFirebase from './EateryServiceFirebase';
 
-/**
- * The **eateryServiceFirebase** feature **defines** the **real**
- * 'eateryService' implementation (using the Firebase API).
- * 
- * This service is conditionally promoted when WIFI is available
- * (i.e. **not** mocking).
- */
+// feature: eateryServiceFirebase
+//          defines the real 'eateryService' (via the Firebase API),
+//          conditionally promoted when WIFI is available(i.e. **not**
+//          mocking)
 export default createFeature({
   name:    'eateryServiceFirebase',
 
   enabled: featureFlags.useWIFI,
 
+  // our public face ...
   fassets: {
     defineUse: {
       'eateryService': new EateryServiceFirebase(),

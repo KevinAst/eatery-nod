@@ -2,18 +2,15 @@ import {createFeature}  from 'feature-u';
 import featureFlags     from '../../../../util/featureFlags';
 import AuthServiceMock  from './AuthServiceMock';
 
-/**
- * The **authServiceMock** feature **defines** the **mock**
- * 'authService' implementation.
- * 
- * This service is conditionally promoted when WIFI is NOT available
- * (i.e. mocking).
- */
+// feature: authServiceMock
+//          defines the mock 'authService' implementation,
+//          conditionally promoted when WIFI is NOT available(i.e. mocking)
 export default createFeature({
   name:    'authServiceMock',
 
   enabled: !featureFlags.useWIFI,
 
+  // our public face ...
   fassets: {
     defineUse: {
       'authService': new AuthServiceMock(),

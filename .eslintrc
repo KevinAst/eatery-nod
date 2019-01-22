@@ -3,6 +3,7 @@
   "rules": {
     "react/prop-types":              "off",  // relax react prop-types validation
     "babel/object-curly-spacing":    "off",  // relax spacing inside braces
+    "import/no-duplicates":          "off",  // relax import duplicates ... KJB: sometimes like to import DIFF things this way
     "import/order":                  "off",  // relax import ordering
     "space-in-parens":               "off",  // allow any spacing within parens ... ex: .then( (encodedCredentials) => 'hmmm' )
     "space-infix-ops":               "off",  // allow any infix spacing ... ex: i+1
