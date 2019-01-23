@@ -7,4 +7,3 @@ features _(some of which are "mockable")_:
 - [**deviceService**](deviceService/README.md):        promotes several device related services
 - [**discoveryService**](discoveryService/README.md):  retrieves restaurant information from a geographical data source, emitting Discovery/Eatery objects
 - [**eateryService**](eateryService/README.md):        a persistent "Eateries" DB service, monitoring real-time Eatery DB activity
-- [**firebaseInit**](firebaseInit/README.md):          initialize the eatery-nod firebase DB
