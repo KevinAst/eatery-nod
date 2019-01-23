@@ -9,7 +9,7 @@ accommodate the wide free-format content).
 
 Actions (see: actions.js)                        Logic (see: logic.js)                                          Reducer (see: state.js)
 ==============================================   ============================================================   ===============================
-fassets.device.actions.ready() ..............................................................................   - NONE
+fassets.actions.bootstrapComplete() .........................................................................   - NONE
                                                  startAuthorization:
                                                  ==================
                                                    DISPATCH .autoSignIn()           

@@ -10,41 +10,10 @@ Actions (see: actions.js)                        Logic (see: logic.js)          
 ==============================================   ============================================================   ===============================
 device
 
-  > kickStart device initialization process
- .kickStart() ...............................................................................................   - NONE
-                                                 kickStart
-                                                 =========
-                                                   Administer the "kickStart" initialization process.
-                                                   SEE: logic.js for COMPLETE description
-
-                                                   - dispatch setStatus(statusMsg)
-                                                     ... e.g. 'Waiting for bla bla bla' -or- 'READY'
-
-                                                   - dispatch ready()
-                                                     ... when all kickStarts have completed
-
-                                                   - various client-supplied kickStarts:
-
-                                                     * 'kickStart.fonts'
-                                                       - dispatch guiIsReady()
-
-                                                     * 'kickStart.location'
-                                                       - dispatch setLoc(location)
-
-
   > the full GUI can now be used (i.e. react-native components is now fully initialized)
- .guiIsReady() ...............................................................................................   - device.guiReady = true
+    ... dispatched via the 'bootstrap.fonts' use contract
+ .guiIsReady() ...............................................................................................  - device.guiReady = true
 
   > set device GPS location
- .setLoc(loc) ................................................................................................   - device.loc = action.loc
-
-  > set device status (e.g. 'Waiting for bla bla bla' -or- 'READY'
- .setStatus(statusMsg) .......................................................................................   - device.status = action.statusMsg
-
-
-
-  > the fundamental action that communicates
-    our device is "fully initialized" and "ready for action"
-    ... monitored by down-stream features (e.g. authorization),
-    ... logically starting our app running!
- .ready() ....................................................................................................   - NONE
+    ... dispatched via the 'bootstrap.location' use contract
+ .setLoc(loc) ................................................................................................  - device.loc = action.loc

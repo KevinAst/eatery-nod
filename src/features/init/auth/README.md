@@ -3,8 +3,8 @@
 The **auth** feature promotes complete user authentication.
 It accomplishes the following:
 
- - starts authorization process by monitoring device ready action
-   (`fassets.device.actions.ready`) **(logic)**
+ - starts authorization process by monitoring bootstrap initialization complete
+   (`fassets.actions.bootstrapComplete`) **(logic)**
 
    - interacts with authentication service **(logic)**
 

@@ -16,6 +16,8 @@ The **eatery-nod** application is composed of the following **features**:
     - [**discoveryService**](services/discoveryService/README.md):  retrieves restaurant information from a geographical data source, emitting Discovery/Eatery objects
     - [**eateryService**](services/eateryService/README.md):        a persistent "Eateries" DB service, monitoring real-time Eatery DB activity
     - [**firebaseInit**](services/firebaseInit/README.md):          initialize the eatery-nod firebase DB
+ - [**support**](support/README.md):                a categorized collection of **"Support Utility"** features
+   - [**bootstrap**](support/bootstrap/README.md):  provide critical-path app initialization through the `'bootstrap.*'` use contract
  - [**diag**](diag/README.md):                      a categorized collection of **"Diagnostic Related"** features
    - [**logActions**](diag/logActions/README.md):   logs all dispatched actions and resulting state
    - [**sandbox**](diag/sandbox/README.md):         promotes a variety of interactive tests, used in development, that can easily be disabled

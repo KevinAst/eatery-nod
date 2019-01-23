@@ -7,7 +7,7 @@ import signInFormMeta       from './signInFormMeta';
 import discloseError        from '../../../util/discloseError';
 
 /**
- * Start our authorization process, once the device is ready.
+ * Start our authorization process, once the bootstrap initialization process is complete.
  * 
  * NOTE: We could auto-start our auth process (via feature-u app life cycle handlers),
  *       except our downstream processes are dependent on device.loc, so we wait and
@@ -16,7 +16,7 @@ import discloseError        from '../../../util/discloseError';
 export const startAuthorization = expandWithFassets( (fassets) => createLogic({
 
   name: `${featureName}.startAuthorization`,
-  type: String(fassets.device.actions.ready),
+  type: String(fassets.actions.bootstrapComplete),
   
   process({getState, action}, dispatch, done) {
     dispatch( actions.autoSignIn() );

@@ -9,15 +9,6 @@ import actions            from './actions';
 // ***
 const reducer = slicedReducer(featureName, combineReducers({
 
-  // status: string ... device status - 'Waiting for bla bla bla' -or- 'READY'
-  //                    - VISIBLE in the SplashScreen startup
-  //                      ... via selector: getDeviceStatusMsg(appState)
-  //                    - USED to determine when our device is ready
-  //                      ... via selector: isDeviceReady(appState)
-  status: reducerHash({
-    [actions.setStatus]: (state, action) => action.statusMsg,
-  }, 'Waiting for App to start'), // initialState
-
   // guiReady: boolean ... has GUI been initialized, and ready to use?
   // - The native-base library requires specific fonts to be loaded :-(
   //   * When these fonts are NOT loaded, native-base will continuously
@@ -58,13 +49,6 @@ export default reducer;
                                   /** Our feature state root (via slicedReducer as a single-source-of-truth) */
 const getFeatureState           = (appState) => reducer.getSlicedState(appState);
 const gfs = getFeatureState;      // ... concise alias (used internally)
-
-
-                                  /** Is device ready to run app (based on it's status): boolean */
-export const isDeviceReady      = (appState) => gfs(appState).status === 'READY';
-                                  /** Device status message: string ('Waiting for bla bla bla' -or- 'READY') */
-export const getDeviceStatusMsg = (appState) => gfs(appState).status;
-
 
                                   /** Can FULL GUI be used (e.g. native-base components)?
                                       Needed by a limited few GUI components (that render EARLY), 
