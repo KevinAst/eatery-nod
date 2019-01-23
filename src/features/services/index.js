@@ -1,19 +1,19 @@
-import authService      from './authService';
 import deviceService    from './deviceService';
-import discoveryService from './discoveryService';
+import authService      from './authService';
 import eateryService    from './eateryService';
+import discoveryService from './discoveryService';
 
 /**
  * The **services** directory is a categorized collection of **"Service Related"**
- * features _(some of which are "mockable")_:
- *  - **authService**:       a persistent authentication service (retaining active user)
+ * features _(that are "mockable")_:
  *  - **deviceService**:     promotes several device related services
- *  - **discoveryService**:  retrieves restaurant information from a geographical data source, emitting Discovery/Eatery objects
+ *  - **authService**:       a persistent authentication service (retaining active user)
  *  - **eateryService**:     a persistent "Eateries" DB service, monitoring real-time Eatery DB activity
+ *  - **discoveryService**:  retrieves restaurant information from a geographical data source, emitting Discovery/Eatery objects
  */
 export default [
-  ...authService,
   deviceService,
-  ...discoveryService,
+  ...authService,
   ...eateryService,
+  ...discoveryService,
 ];

@@ -5,7 +5,7 @@ import reducer          from './state';
 import * as sel         from './state';
 
 // feature: currentView
-//          maintain the currentView as a string (full details in README)
+//          maintain the currentView state as a string (full details in README)
 export default createFeature({
   name: featureName,
 

@@ -6,15 +6,15 @@ The **eatery-nod** application is composed of the following **features**:
    - [**device**](init/device/README.md):    initializes the device for use by the app
    - [**auth**](init/auth/README.md):        promotes complete user authentication
  - [**views**](views/README.md):             a categorized collection of **"UI Related"** features
-   - [**leftNav**](views/leftNav/README.md):         promotes the app-specific Drawer/SideBar on the app's left side
-   - [**currentView**](views/currentView/README.md): maintains the currentView with get/set cross-feature communication bindings
    - [**eateries**](views/eateries/README.md):       manages and promotes the eateries view
    - [**discovery**](views/discovery/README.md):     manages and promotes the discovery view
- - [**services**](services/README.md):                              a categorized collection of **"Service Related"** features _(some of which are "mockable")_
-   - [**authService**](services/authService/README.md):            a persistent authentication service (retaining active user)
+   - [**leftNav**](views/leftNav/README.md):         promotes the app-specific Drawer/SideBar on the app's left side
+   - [**currentView**](views/currentView/README.md): maintains the currentView state with get/set cross-feature bindings
+ - [**services**](services/README.md):                             a categorized collection of **"Service Related"** features _(that are "mockable")_
    - [**deviceService**](services/deviceService/README.md):        promotes several device related services
-   - [**discoveryService**](services/discoveryService/README.md):  retrieves restaurant information from a geographical data source, emitting Discovery/Eatery objects
+   - [**authService**](services/authService/README.md):            a persistent authentication service (retaining active user)
    - [**eateryService**](services/eateryService/README.md):        a persistent "Eateries" DB service, monitoring real-time Eatery DB activity
+   - [**discoveryService**](services/discoveryService/README.md):  retrieves restaurant information from a geographical data source, emitting Discovery/Eatery objects
  - [**support**](support/README.md):                a categorized collection of **"Support Utility"** features
    - [**bootstrap**](support/bootstrap/README.md):        provide critical-path app initialization through the `'bootstrap.*'` use contract
    - [**firebaseInit**](support/firebaseInit/README.md): promote a utility function to initialize the eatery-nod firebase DB
