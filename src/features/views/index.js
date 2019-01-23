@@ -4,7 +4,7 @@ import leftNav      from './leftNav';
 import currentView  from './currentView';
 
 /**
- * The **views** directory is a categorized collection of **"UI Related"**
+ * The **views** directory is a collection of **"UI Related"**
  * features.
  *  - **eateries**:     the eateries view UI
  *  - **discovery**:    the discovery view UI

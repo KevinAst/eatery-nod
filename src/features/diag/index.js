@@ -2,7 +2,7 @@ import logActions  from './logActions';
 import sandbox     from './sandbox';
 
 /**
- * The **diag** directory is a categorized collection of
+ * The **diag** directory is a collection of
  * **"Diagnostic Related"** features.
  * 
  *  - **logActions**: logs all dispatched actions and resulting state

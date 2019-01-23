@@ -1,6 +1,6 @@
 # services directory
 
-The **services** directory is a categorized collection of **"Service Related"**
+The **services** directory is a collection of **"Service Related"**
 features _(that are "mockable")_:
 
 - [**deviceService**](deviceService/README.md):        promotes several device related services

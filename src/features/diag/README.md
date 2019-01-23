@@ -1,6 +1,6 @@
 # diag directory
 
-The **diag** directory is a categorized collection of **"Diagnostic Related"**
+The **diag** directory is a collection of **"Diagnostic Related"**
 features.
 
  - [**logActions**](logActions/README.md): logs all dispatched actions and resulting state

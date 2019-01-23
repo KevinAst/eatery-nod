@@ -2,7 +2,7 @@ import device  from './device';
 import auth    from './auth';
 
 /**
- * The **init** directory is a categorized collection of
+ * The **init** directory is a collection of
  * **"Initialization Related"** features.
  * 
  *  - **device**: initializes the device for use by the app

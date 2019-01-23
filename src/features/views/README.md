@@ -1,6 +1,6 @@
 # views directory
 
-The **views** directory is a categorized collection of **"UI Related"**
+The **views** directory is a collection of **"UI Related"**
 features.
 
  - [**eateries**](eateries/README.md):        the eateries view UI

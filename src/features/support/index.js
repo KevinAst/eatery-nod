@@ -2,7 +2,7 @@ import bootstrap  from './bootstrap';
 import firebaseInit     from './firebaseInit';
 
 /**
- * The **support** directory is a categorized collection of
+ * The **support** directory is a collection of
  * **"Support Utility"** features.
  * 
  *  - **bootstrap**:     critical-path app initialization through the `'bootstrap.*'` fassets use contract
