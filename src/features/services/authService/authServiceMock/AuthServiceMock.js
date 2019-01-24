@@ -20,16 +20,21 @@ export default class AuthServiceMock extends AuthServiceAPI {
 
     return new Promise( (resolve, reject) => {
 
-      // ?? stimulate various errors with variations in email/pass
-      // ? return reject( // SAMPLE ONE <<< unexpected condition
-      // ?   new Error(`***ERROR*** ?? Fill In`)
-      // ?     .defineAttemptingToMsg('sign in to eatery-nod')
-      // ? );
-      // ? return reject( // SAMPLE TWO <<< expected condition
-      // ?                new Error(`***ERROR*** Invalid Password`)
-      // ?   .defineUserMsg('Invalid SignIn credentials.') // keep generic ... do NOT expose details to the user (e.g. Invalid Password)
-      // ?   .defineAttemptingToMsg('sign in to eatery-nod')
-      // ? );
+      // stimulate various errors with variations in email/pass
+      if (pass === 'unexpect') { // <<< unexpected condition
+        return reject(
+          new Error(`***ERROR*** Simulated Unexpected Condition`)
+            .defineAttemptingToMsg('sign in to eatery-nod')
+        );
+      }
+
+      if (pass === 'expect') { // <<< expected condition
+        return reject(
+          new Error(`***ERROR*** Invalid Password`) // do NOT expose details to the user (e.g. Invalid Password)
+            .defineUserMsg('Invalid SignIn credentials.') // keep generic
+            .defineAttemptingToMsg('sign in to eatery-nod')
+        );
+      }
 
       // very simple mock ... sign in the supplied user
       this.currentAppUser = new User({
