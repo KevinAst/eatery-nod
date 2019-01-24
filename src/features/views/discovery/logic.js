@@ -11,7 +11,7 @@ import {expandWithFassets}     from 'feature-u';
 export const initialRetrieve = expandWithFassets( (fassets) => createLogic({
 
   name: `${featureName}.initialRetrieve`,
-  type: String(fassets.currentView.actions.changeView),
+  type: String(fassets.actions.changeView),
 
   process({getState, action, fassets}, dispatch, done) {
 
@@ -21,7 +21,7 @@ export const initialRetrieve = expandWithFassets( (fassets) => createLogic({
         sel.getDiscoveries(appState) === null        && // ... discoveries in initial state
         !sel.getInProgress(appState)) {                 // ... no discovery retrieval is in-progress
       // initial retrieval using default filter (located in our app state)
-      const deviceLoc = fassets.device.sel.getDeviceLoc(appState);
+      const deviceLoc = fassets.sel.getDeviceLoc(appState);
       dispatch( actions.retrieve({...sel.getFilter(appState),
                                   loc: [deviceLoc.lat, deviceLoc.lng]}) );
     }
@@ -64,12 +64,12 @@ export const processFilter = createLogic({
     // retrieve using new filter from form
     const appState  = getState();
     const filter    = action.domain;
-    const deviceLoc = fassets.device.sel.getDeviceLoc(appState);
+    const deviceLoc = fassets.sel.getDeviceLoc(appState);
     dispatch( actions.retrieve({...filter, 
                                 loc: [deviceLoc.lat, deviceLoc.lng]}) );
     
     // show our view view
-    dispatch( fassets.currentView.actions.changeView(featureName) );
+    dispatch( fassets.actions.changeView(featureName) );
 
     // close our form filter
     dispatch( actions.filterForm.close() );

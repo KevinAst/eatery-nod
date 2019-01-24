@@ -62,7 +62,7 @@ const SplashScreenWithState = withState({
   mapStateToProps(appState, {fassets}) { // ... fassets available in ownProps (via withFassets() below)
     return {
       // hmmm ... inappropriate coupling: common component <SplashScreen> using app-specific info
-      guiReady: fassets.device.sel.isGuiReady(appState),
+      guiReady: fassets.sel.isGuiReady(appState),
     };
   },
 })(SplashScreen); // NOTE: test withState() BOTH WAYS

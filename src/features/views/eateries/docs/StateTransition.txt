@@ -89,13 +89,12 @@ eateries
 
 
 ** cross-feature-communication: **
-app.auth.actions
-  .userProfileChanged(user) ........................................................................  - NONE
+  fassets.actions.userProfileChanged(user) .........................................................  - NONE
                                            monitorDbPool:
                                            =============
                                              > real-time monitor of eateries DB:
                                              fassets.eateryService.monitorDbEateryPool(action.user.pool,
-                                                                                       fassets.device.sel.getDeviceLoc(getState()),
+                                                                                       fassets.sel.getDeviceLoc(getState()),
                                                                                        monitorCB)
                                              > monitorCB: broadcast changes in our eateries (or the initial population)
                                              DISPATCH actions.dbPool.changed(eateries)

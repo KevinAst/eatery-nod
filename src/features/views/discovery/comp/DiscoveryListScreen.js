@@ -164,8 +164,8 @@ const DiscoveryListScreenWithState = withState({
       inProgress:    sel.getInProgress(appState),
       discoveries:   sel.getDiscoveries(appState),
       nextPageToken: sel.getNextPageToken(appState),
-      eateryPool:    fassets.eateries.sel.getDbPool(appState),
-      curUser:       fassets.curUser(appState),
+      eateryPool:    fassets.sel.getEateryDbPool(appState),
+      curUser:       fassets.sel.curUser(appState),
     };
   },
   mapDispatchToProps(dispatch, {fassets}) { // ... fassets available in ownProps (via withFassets() below)
@@ -173,11 +173,11 @@ const DiscoveryListScreenWithState = withState({
       toggleEateryPool(discovery, eateryPool) {
         if (eateryPool[discovery.id]) { // in pool
           // console.log(`xx delete ${discovery.name} from pool`);
-          dispatch( fassets.eateries.actions.remove(discovery.id) );
+          dispatch( fassets.actions.removeEatery(discovery.id) );
         }
         else { // NOT in pool
           // console.log(`xx add ${discovery.name} to pool`);
-          dispatch( fassets.eateries.actions.add(discovery.id) );
+          dispatch( fassets.actions.addEatery(discovery.id) );
         }
       },
       handleNextPage(nextPageToken) {
@@ -195,6 +195,6 @@ export default DiscoveryListScreenWithFassets = withFassets({
   component: DiscoveryListScreenWithState,
   mapFassetsToProps: {
     fassets:     '.',            // introduce fassets into props via the '.' keyword
-    openLeftNav: 'leftNav.open', // openLeftNav()
+    openLeftNav: 'openLeftNav', // openLeftNav()
   }
 });

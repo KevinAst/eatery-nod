@@ -28,7 +28,7 @@ let curPoolMonitor = {   // current "pool" monitor (initially a placebo)
 export const monitorDbPool = expandWithFassets( (fassets) => createLogic({
 
   name:        `${featureName}.monitorDbPool`,
-  type:        String(fassets.auth.actions.userProfileChanged), // NOTE: action contains: User object (where we obtain the pool)
+  type:        String(fassets.actions.userProfileChanged), // NOTE: action contains: User object (where we obtain the pool)
   warnTimeout: 0, // long-running logic
 
   validate({getState, action, fassets}, allow, reject) {
@@ -59,7 +59,7 @@ export const monitorDbPool = expandWithFassets( (fassets) => createLogic({
     // register our real-time DB listener for the set of eateries in our pool
     fassets.eateryService.monitorDbEateryPool(
       action.user.pool,
-      fassets.device.sel.getDeviceLoc(getState()),
+      fassets.sel.getDeviceLoc(getState()),
       (eateries) => {
 
         // broadcast a notification of a change in our eateries (or the initial population)
@@ -114,7 +114,7 @@ export const processFilter = createLogic({
     //   }
     
     // show our view
-    dispatch( fassets.currentView.actions.changeView(featureName) );
+    dispatch( fassets.actions.changeView(featureName) );
 
     // close eatery form filter
     dispatch( actions.filterForm.close() );

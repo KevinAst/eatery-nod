@@ -100,7 +100,7 @@ const EateryDetailScreenWithState = withState({
   component: EateryDetailScreen,
   mapStateToProps(appState, {fassets}) { // ... fassets available in ownProps (via withFassets() below)
     return {
-      curUser: fassets.curUser(appState),
+      curUser: fassets.sel.curUser(appState),
     };
   },
   mapDispatchToProps(dispatch) {

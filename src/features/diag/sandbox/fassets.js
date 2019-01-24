@@ -216,7 +216,7 @@ export default {
 
 
 function closeSideBar() {
-  fassets.leftNav.close();
+  fassets.closeLeftNav();
 }
 
 // ***

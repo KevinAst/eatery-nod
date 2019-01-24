@@ -105,7 +105,7 @@ const EateriesListScreenWithState = withState({
     return {
       filteredEateries: sel.getFilteredEateries(appState),
       filter:           sel.getListViewFilter(appState),
-      curUser:          fassets.curUser(appState),
+      curUser:          fassets.sel.curUser(appState),
     };
   },
   mapDispatchToProps(dispatch) {
@@ -125,6 +125,6 @@ export default EateriesListScreenWithFassets = withFassets({
   component: EateriesListScreenWithState,
   mapFassetsToProps: {
     fassets:     '.',            // introduce fassets into props via the '.' keyword
-    openLeftNav: 'leftNav.open', // openLeftNav()
+    openLeftNav: 'openLeftNav',  // openLeftNav()
   }
 });

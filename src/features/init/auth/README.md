@@ -22,7 +22,7 @@ It accomplishes the following:
 
  - emits key action that triggers downstream eateries to populate **(logic)**:
    ```
-   fassets.auth.actions.userProfileChanged(user)
+   fassets.actions.userProfileChanged(user)
    ```
 
 ## State Transition

@@ -19,10 +19,10 @@ export default createFeature({
   // our public face ...
   fassets: {
     define: {
-      [`${featureName}.actions.add`]:     actions.dbPool.add,      // add(eateryId)
-      [`${featureName}.actions.remove`]:  actions.dbPool.remove,   // remove(eateryId)
+      'actions.addEatery':     actions.dbPool.add,      // addEatery(eateryId)    ... slight naming variation to original action
+      'actions.removeEatery':  actions.dbPool.remove,   // removeEatery(eateryId) ... slight naming variation to original action
 
-      [`${featureName}.sel.getDbPool`]:   sel.getDbPool,
+      'sel.getEateryDbPool':   sel.getDbPool, // ... slight naming variation to original selector
     },
 
     defineUse: {
@@ -36,6 +36,6 @@ export default createFeature({
 
   // default the app view to be self
   appDidStart({fassets, appState, dispatch}) {
-    dispatch( fassets.currentView.actions.changeView(featureName) );
+    dispatch( fassets.actions.changeView(featureName) );
   },
 });

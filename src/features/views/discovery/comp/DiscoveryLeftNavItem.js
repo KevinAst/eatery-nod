@@ -39,12 +39,12 @@ const DiscoveryLeftNavItemWithState = withState({
   mapDispatchToProps(dispatch, {fassets}) { // ... fassets available in ownProps (via withFassets() below)
     return {
       changeView() {
-        dispatch( fassets.currentView.actions.changeView(featureName) );
-        fassets.leftNav.close();
+        dispatch( fassets.actions.changeView(featureName) );
+        fassets.closeLeftNav();
       },
       handleFilter() {
         dispatch( actions.filterForm.open() );
-        fassets.leftNav.close();
+        fassets.closeLeftNav();
       },
     };
   },

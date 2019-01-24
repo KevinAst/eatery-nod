@@ -50,14 +50,15 @@ export default createFeature({
     define: {
 
       //*** public selectors ***
-                                           // Can FULL GUI be used (e.g. native-base components)?
-                                           // Needed by a limited few GUI components (that render EARLY), 
-                                           // driving a "more primitive content" fallback when GUI is NOT yet initialized
-                                           // ... see: state.js description
-      [`${featureName}.sel.isGuiReady`]:   isGuiReady,
 
-                                           // device location {lat, lng}
-      [`${featureName}.sel.getDeviceLoc`]: getDeviceLoc,
+                          // Can FULL GUI be used (e.g. native-base components)?
+                          // Needed by a limited few GUI components (that render EARLY), 
+                          // driving a "more primitive content" fallback when GUI is NOT yet initialized
+                          // ... see: state.js description
+      'sel.isGuiReady':   isGuiReady,
+
+                          // device location {lat, lng}
+      'sel.getDeviceLoc': getDeviceLoc,
 
     }
   },

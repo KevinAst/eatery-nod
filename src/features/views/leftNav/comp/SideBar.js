@@ -80,13 +80,13 @@ const SideBarWithState = withState({
   component: SideBar,
   mapStateToProps(appState, {fassets}) { // ... fassets available in ownProps (via withFassets() below)
     return {
-      guiReady: fassets.device.sel.isGuiReady(appState),
+      guiReady: fassets.sel.isGuiReady(appState),
     };
   },
   mapDispatchToProps(dispatch, {fassets}) { // ... fassets available in ownProps (via withFassets() below)
     return {
       handleSignOut() {
-        dispatch( fassets.auth.actions.signOut() );
+        dispatch( fassets.actions.signOut() );
         closeSideBar();
       },
     };

@@ -12,9 +12,9 @@ export default createFeature({
   // our public face ...
   fassets: {
     define: {
-      [`${featureName}.actions.changeView`]: actions.changeView, // changeView(viewName)
+      'actions.changeView': actions.changeView, // changeView(viewName)
 
-      [`${featureName}.sel.getView`]: sel.getView, // getView(appState): string
+      'sel.getView': sel.getView, // getView(appState): string
     },
   },
 

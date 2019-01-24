@@ -20,8 +20,8 @@ export default createFeature({
   // our public face ...
   fassets: {
     define: {
-      [`${featureName}.open`]:  openSideBar,  // open():  void ... open  the SideBar
-      [`${featureName}.close`]: closeSideBar, // close(): void ... close the SideBar
+      'openLeftNav':  openSideBar,  // openLeftNav():  void ... open  the SideBar ... slight naming variation to original
+      'closeLeftNav': closeSideBar, // closeLeftNav(): void ... close the SideBar ... slight naming variation to original
     },
     use: [
       ['leftNavItem.*', {required: true, type: fassetValidations.comp}], // expecting: <ListItem/>
