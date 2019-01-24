@@ -3,9 +3,9 @@ import {reducerHash}        from 'astx-redux-util';
 import {expandWithFassets}  from 'feature-u';
 import {slicedReducer}      from 'feature-redux';
 import {createSelector}     from 'reselect';
-import featureName          from './featureName';
+import _auth                from './featureName';
 import signInFormMeta       from './signInFormMeta';
-import actions              from './actions';
+import _authAct             from './actions';
 import User                 from '../../services/authService/User';
 
 // ***
@@ -15,14 +15,14 @@ import User                 from '../../services/authService/User';
 // NOTE: expandWithFassets() is NOT only used for fassets injection,
 //       but ALSO to delay expansion (avoiding circular dependencies
 //       in selector access from signInFormMeta.js)
-const reducer = slicedReducer(featureName, expandWithFassets( (fassets) => combineReducers({
+const reducer = slicedReducer(_auth, expandWithFassets( (fassets) => combineReducers({
 
   // the current User object (serialized to state only) ... can represent empty User - NOT signed in
   user: reducerHash({
-    [actions.signIn.complete]:           (state, action) => action.user.toStruct(),
-    [actions.signIn.checkEmailVerified]: (state, action) => action.user.toStruct(), // containing updated User.emailVerified
-    [actions.userProfileChanged]:        (state, action) => action.user.toStruct(), // pulling in new profile info
-    [actions.signOut]:                   (state, action) => new User().toStruct(),  // an empty User - NOT signed in
+    [_authAct.signIn.complete]:           (state, action) => action.user.toStruct(),
+    [_authAct.signIn.checkEmailVerified]: (state, action) => action.user.toStruct(), // containing updated User.emailVerified
+    [_authAct.userProfileChanged]:        (state, action) => action.user.toStruct(), // pulling in new profile info
+    [_authAct.signOut]:                   (state, action) => new User().toStruct(),  // an empty User - NOT signed in
   }, new User().toStruct()), // initialState (an empty User - NOT signed in)
 
   // SignIn iForm's reducer ... null indicates form is inactive

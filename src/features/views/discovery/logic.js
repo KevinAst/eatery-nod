@@ -1,8 +1,8 @@
 import {createLogic}           from 'redux-logic';
 import discoveryFilterFormMeta from './discoveryFilterFormMeta';
-import actions                 from './actions';
-import featureName             from './featureName';
-import * as sel                from './state';
+import _discoveryAct           from './actions';
+import _discovery              from './featureName';
+import * as _discoverySel      from './state';
 import {expandWithFassets}     from 'feature-u';
 
 /**
@@ -10,20 +10,20 @@ import {expandWithFassets}     from 'feature-u';
  */
 export const initialRetrieve = expandWithFassets( (fassets) => createLogic({
 
-  name: `${featureName}.initialRetrieve`,
+  name: `${_discovery}.initialRetrieve`,
   type: String(fassets.actions.changeView),
 
   process({getState, action, fassets}, dispatch, done) {
 
     const appState = getState();
 
-    if (action.viewName              === featureName && // ... our view
-        sel.getDiscoveries(appState) === null        && // ... discoveries in initial state
-        !sel.getInProgress(appState)) {                 // ... no discovery retrieval is in-progress
+    if (action.viewName                        === _discovery  && // ... our view
+        _discoverySel.getDiscoveries(appState) === null        && // ... discoveries in initial state
+        !_discoverySel.getInProgress(appState)) {                 // ... no discovery retrieval is in-progress
       // initial retrieval using default filter (located in our app state)
       const deviceLoc = fassets.sel.getDeviceLoc(appState);
-      dispatch( actions.retrieve({...sel.getFilter(appState),
-                                  loc: [deviceLoc.lat, deviceLoc.lng]}) );
+      dispatch( _discoveryAct.retrieve({..._discoverySel.getFilter(appState),
+                                        loc: [deviceLoc.lat, deviceLoc.lng]}) );
     }
 
     done();
@@ -38,12 +38,12 @@ export const initialRetrieve = expandWithFassets( (fassets) => createLogic({
  */
 export const defaultFilter = createLogic({
 
-  name: `${featureName}.defaultFilter`,
-  type: String(actions.filterForm.open),
+  name: `${_discovery}.defaultFilter`,
+  type: String(_discoveryAct.filterForm.open),
 
   transform({getState, action, fassets}, next) {
     if (!action.domain) {
-      action.domain = sel.getFilter(getState());
+      action.domain = _discoverySel.getFilter(getState());
     }
     next(action);
   },
@@ -57,22 +57,22 @@ export const defaultFilter = createLogic({
  */
 export const processFilter = createLogic({
 
-  name: `${featureName}.processFilter`,
-  type: String(actions.filterForm.process),
+  name: `${_discovery}.processFilter`,
+  type: String(_discoveryAct.filterForm.process),
   
   process({getState, action, fassets}, dispatch, done) {
     // retrieve using new filter from form
     const appState  = getState();
     const filter    = action.domain;
     const deviceLoc = fassets.sel.getDeviceLoc(appState);
-    dispatch( actions.retrieve({...filter, 
+    dispatch( _discoveryAct.retrieve({...filter, 
                                 loc: [deviceLoc.lat, deviceLoc.lng]}) );
     
     // show our view view
-    dispatch( fassets.actions.changeView(featureName) );
+    dispatch( fassets.actions.changeView(_discovery) );
 
     // close our form filter
-    dispatch( actions.filterForm.close() );
+    dispatch( _discoveryAct.filterForm.close() );
 
     done();
   },
@@ -85,8 +85,8 @@ export const processFilter = createLogic({
  */
 export const retrieve = createLogic({
 
-  name: `${featureName}.retrieve`,
-  type: String(actions.retrieve),
+  name: `${_discovery}.retrieve`,
+  type: String(_discoveryAct.retrieve),
   warnTimeout: 0, // long-running logic ... UNFORTUNATELY GooglePlaces is sometimes EXCRUCIATINGLY SLOW!
 
   process({getState, action, fassets}, dispatch, done) {
@@ -94,12 +94,12 @@ export const retrieve = createLogic({
     fassets.discoveryService.searchDiscoveries(action.filter)
        .then(discoveriesResp => { 
          // console.log(`xx here is our discoveriesResp: `, discoveriesResp);
-         dispatch( actions.retrieve.complete(action.filter, discoveriesResp) );
+         dispatch( _discoveryAct.retrieve.complete(action.filter, discoveriesResp) );
          done();
        })
        .catch(err => {
          console.log(`*** ERROR *** googlePlacesAPI nearBySearch ... ${''+err}`);
-         dispatch( actions.retrieve.fail(err) );
+         dispatch( _discoveryAct.retrieve.fail(err) );
          done();
        });
   },
@@ -113,8 +113,8 @@ export const retrieve = createLogic({
  */
 export const nextPage = createLogic({
 
-  name: `${featureName}.nextPage`,
-  type: String(actions.nextPage),
+  name: `${_discovery}.nextPage`,
+  type: String(_discoveryAct.nextPage),
   warnTimeout: 0, // long-running logic ... UNFORTUNATELY GooglePlaces is sometimes EXCRUCIATINGLY SLOW!
 
   process({getState, action, fassets}, dispatch, done) {
@@ -122,12 +122,12 @@ export const nextPage = createLogic({
     fassets.discoveryService.searchDiscoveriesNextPage(action.pagetoken)
        .then(discoveriesResp => {
          // console.log(`xx here is our discoveriesRes: `, discoveriesResp);
-         dispatch( actions.nextPage.complete(discoveriesResp) );
+         dispatch( _discoveryAct.nextPage.complete(discoveriesResp) );
          done();
        })
        .catch(err => {
          console.log(`*** ERROR *** googlePlacesAPI nearBySearch ... ${''+err}`);
-         dispatch( actions.nextPage.fail(err) );
+         dispatch( _discoveryAct.nextPage.fail(err) );
          done();
        });
   },

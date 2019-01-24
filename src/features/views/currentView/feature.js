@@ -1,20 +1,20 @@
-import {createFeature}  from 'feature-u';
-import featureName      from './featureName';
-import actions          from './actions';
-import reducer          from './state';
-import * as sel         from './state';
+import {createFeature}      from 'feature-u';
+import _currentView         from './featureName';
+import _currentViewAct      from './actions';
+import reducer              from './state';
+import * as _currentViewSel from './state';
 
 // feature: currentView
 //          maintain the currentView state as a string (full details in README)
 export default createFeature({
-  name: featureName,
+  name: _currentView,
 
   // our public face ...
   fassets: {
     define: {
-      'actions.changeView': actions.changeView, // changeView(viewName)
+      'actions.changeView': _currentViewAct.changeView, // changeView(viewName)
 
-      'sel.getView': sel.getView, // getView(appState): string
+      'sel.getView': _currentViewSel.getView, // getView(appState): string
     },
   },
 

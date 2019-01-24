@@ -1,8 +1,8 @@
 import {generateActions} from 'action-u';
-import featureName       from './featureName';
+import _device           from './featureName';
 
 export default generateActions.root({
-  [featureName]: { // prefix all actions with our feature name, guaranteeing they unique app-wide!
+  [_device]: { // prefix all actions with our feature name, guaranteeing they unique app-wide!
 
     guiIsReady: { // actions.guiIsReady(): Action
                   // > the full GUI can now be used (i.e. react-native components is now fully initialized)

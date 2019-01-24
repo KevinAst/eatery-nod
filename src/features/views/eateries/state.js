@@ -3,9 +3,9 @@ import {reducerHash}         from 'astx-redux-util';
 import {expandWithFassets}   from 'feature-u';
 import {slicedReducer}       from 'feature-redux';
 import {createSelector}      from 'reselect';
-import featureName           from './featureName';
+import _eateries             from './featureName';
 import eateryFilterFormMeta  from './eateryFilterFormMeta';
-import actions               from './actions';
+import _eateriesAct          from './actions';
 
 // ***
 // *** Our feature reducer, managing state for our eateries process.
@@ -14,11 +14,11 @@ import actions               from './actions';
 // NOTE: expandWithFassets() is used NOT for app injection,
 //       but RATHER to delay expansion (avoiding circular dependancies
 //       in selector access from eateryFilterFormMeta.js)
-const reducer = slicedReducer(`view.${featureName}`, expandWithFassets( () => combineReducers({
+const reducer = slicedReducer(`view.${_eateries}`, expandWithFassets( () => combineReducers({
 
   // raw eatery entries synced from our realtime DB
   dbPool: reducerHash({
-    [actions.dbPool.changed]: (state, action) => action.eateries,
+    [_eateriesAct.dbPool.changed]: (state, action) => action.eateries,
   }, null), // initialState
 
   listView: combineReducers({
@@ -28,7 +28,7 @@ const reducer = slicedReducer(`view.${featureName}`, expandWithFassets( () => co
 
     // filter used in visualizing listView
     filter: reducerHash({
-      [actions.filterForm.process]: (state, action) => action.domain,
+      [_eateriesAct.filterForm.process]: (state, action) => action.domain,
     }, { // initialState
       distance: null,    // distance in miles (default: null - for any distance)
       sortOrder: 'name', // sortOrder: 'name'/'distance'
@@ -38,14 +38,14 @@ const reducer = slicedReducer(`view.${featureName}`, expandWithFassets( () => co
 
   // selectedEateryId: eateryId ... id of selected eatery to "display details for" (null for none)
   selectedEateryId: reducerHash({
-    [actions.viewDetail]:       (state, action) => action.eateryId,
-    [actions.viewDetail.close]: (state, action) => null,
+    [_eateriesAct.viewDetail]:       (state, action) => action.eateryId,
+    [_eateriesAct.viewDetail.close]: (state, action) => null,
   }, null), // initialState
 
   // spin: string ... msg to display when spin operation is in place, null for spin NOT in place
   spin: reducerHash({
-    [actions.spin]:          (state, action) => action.spinMsg,
-    [actions.spin.complete]: (state, action) => null,
+    [_eateriesAct.spin]:          (state, action) => action.spinMsg,
+    [_eateriesAct.spin.complete]: (state, action) => null,
   }, null), // initialState
 
 }) ) );

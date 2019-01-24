@@ -1,7 +1,7 @@
-import Yup        from 'yup';
-import IFormMeta  from '../../../util/iForms/IFormMeta';
-import actions    from './actions';
-import * as sel   from './state';
+import Yup               from 'yup';
+import IFormMeta         from '../../../util/iForms/IFormMeta';
+import _eateriesAct      from './actions';
+import * as _eateriesSel from './state';
 
 const distanceMsg  = 'Miles should be a positive number (when supplied)';
 const sortOrderMsg = "Sort order should be either 'name' or 'distance'";
@@ -15,6 +15,6 @@ export default IFormMeta({
     sortOrder:  Yup.string().label('Sort').typeError(sortOrderMsg).required().matches(/(name|distance)/, sortOrderMsg),
 
   }),
-  formActionsAccessor: ()         => actions.filterForm,
-  formStateSelector:   (appState) => sel.getFormFilter(appState),
+  formActionsAccessor: ()         => _eateriesAct.filterForm,
+  formStateSelector:   (appState) => _eateriesSel.getFormFilter(appState),
 });

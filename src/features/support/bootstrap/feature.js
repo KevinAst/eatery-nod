@@ -1,7 +1,7 @@
 import {createFeature}       from 'feature-u';
-import featureName           from './featureName';
+import _bootstrap            from './featureName';
 import {isFassetBootstrapFn} from './bootstrapFn';
-import actions               from './actions';
+import _bootstrapAct         from './actions';
 import logic                 from './logic';
 import route                 from './route';
 import reducer               from './state';
@@ -11,7 +11,7 @@ import reducer               from './state';
 //          process that must complete before the app can run, using the
 //          `'bootstrap.*'` fassets use contract (full details in README)
 export default createFeature({
-  name: featureName,
+  name: _bootstrap,
 
   reducer,
   logic,
@@ -33,14 +33,14 @@ export default createFeature({
                                    // the fundamental action, 
                                    // monitored by down-stream features (e.g. authorization),
                                    // logically starting our app running!
-      'actions.bootstrapComplete': actions.complete,
+      'actions.bootstrapComplete': _bootstrapAct.complete, // ... slight naming variation to original action
 
     }
   },
 
   appDidStart({fassets, appState, dispatch}) {
     // dispatch our base bootstrap action, that "kicks off" the app's bootstrap initialization process
-    dispatch( actions() ); // ... this base "actions" is the bootstrap action
+    dispatch( _bootstrapAct() ); // ... this base "actions" is the bootstrap action
   }
 
 });

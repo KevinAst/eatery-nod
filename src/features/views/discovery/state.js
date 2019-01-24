@@ -2,9 +2,9 @@ import {combineReducers}        from 'redux';
 import {reducerHash}            from 'astx-redux-util';
 import {expandWithFassets}      from 'feature-u';
 import {slicedReducer}          from 'feature-redux';
-import featureName              from './featureName';
+import _discovery               from './featureName';
 import discoveryFilterFormMeta  from './discoveryFilterFormMeta';
-import actions                  from './actions';
+import _discoveryAct            from './actions';
 
 // ***
 // *** Our feature reducer, managing state for our discovery process.
@@ -13,19 +13,19 @@ import actions                  from './actions';
 // NOTE: expandWithFassets() is used NOT for app injection,
 //       but RATHER to delay expansion (avoiding circular dependancies
 //       in selector access from discoveryFilterFormMeta.js)
-const reducer = slicedReducer(`view.${featureName}`, expandWithFassets( () => combineReducers({
+const reducer = slicedReducer(`view.${_discovery}`, expandWithFassets( () => combineReducers({
 
   // retrieval in-progress (used by BOTH filtered retrieval, and next page)
   // ... null/'retrieve'/'next'
   inProgress: reducerHash({
 
-    [actions.retrieve]:          (state, action) => 'retrieve',
-    [actions.retrieve.complete]: (state, action) => null,
-    [actions.retrieve.fail]:     (state, action) => null,
+    [_discoveryAct.retrieve]:          (state, action) => 'retrieve',
+    [_discoveryAct.retrieve.complete]: (state, action) => null,
+    [_discoveryAct.retrieve.fail]:     (state, action) => null,
 
-    [actions.nextPage]:          (state, action) => 'next',
-    [actions.nextPage.complete]: (state, action) => null,
-    [actions.nextPage.fail]:     (state, action) => null,
+    [_discoveryAct.nextPage]:          (state, action) => 'next',
+    [_discoveryAct.nextPage.complete]: (state, action) => null,
+    [_discoveryAct.nextPage.fail]:     (state, action) => null,
 
   }, null),  // initialState
 
@@ -34,7 +34,7 @@ const reducer = slicedReducer(`view.${featureName}`, expandWithFassets( () => co
 
   // selection criteria (filter)
   filter: reducerHash({
-    [actions.retrieve.complete]: (state, action) => action.filter,
+    [_discoveryAct.retrieve.complete]: (state, action) => action.filter,
   }, { // initialState
     searchText: '',
     distance:   10,
@@ -43,14 +43,14 @@ const reducer = slicedReducer(`view.${featureName}`, expandWithFassets( () => co
 
   // next page token (for paging)
   nextPageToken: reducerHash({
-    [actions.retrieve.complete]: (state, action) => action.discoveriesResp.pagetoken,
-    [actions.nextPage.complete]: (state, action) => action.discoveriesResp.pagetoken,
+    [_discoveryAct.retrieve.complete]: (state, action) => action.discoveriesResp.pagetoken,
+    [_discoveryAct.nextPage.complete]: (state, action) => action.discoveriesResp.pagetoken,
   }, null), // initialState
 
   // discoveries (data records)
   discoveries: reducerHash({
-    [actions.retrieve.complete]: (state, action) => action.discoveriesResp.discoveries,
-    [actions.nextPage.complete]: (state, action) => [...state, ...action.discoveriesResp.discoveries], // append to state
+    [_discoveryAct.retrieve.complete]: (state, action) => action.discoveriesResp.discoveries,
+    [_discoveryAct.nextPage.complete]: (state, action) => [...state, ...action.discoveriesResp.discoveries], // append to state
   }, null), // initialState
 
 }) ) );

@@ -1,14 +1,14 @@
 import {combineReducers}  from 'redux';
 import {reducerHash}      from 'astx-redux-util';
 import {slicedReducer}    from 'feature-redux';
-import featureName        from './featureName';
-import actions            from './actions';
+import _bootstrap         from './featureName';
+import _bootstrapAct      from './actions';
 
 
 // ***
 // *** Our feature reducer, managing state for the bootstrap process.
 // ***
-const reducer = slicedReducer(featureName, combineReducers({
+const reducer = slicedReducer(_bootstrap, combineReducers({
 
   // status: string ... bootstrap status - 'Waiting for bla bla bla' -or- 'COMPLETE'
   //                    - VISIBLE in the SplashScreen startup
@@ -16,7 +16,7 @@ const reducer = slicedReducer(featureName, combineReducers({
   //                    - USED to determine when our app is ready to start
   //                      ... via selector: isBootstrapComplete(appState)
   status: reducerHash({
-    [actions.setStatus]: (state, action) => action.statusMsg,
+    [_bootstrapAct.setStatus]: (state, action) => action.statusMsg,
   }, 'Waiting for App to start'), // initialState
 
 }) );

@@ -15,11 +15,11 @@ import {Body,
         ListItem,
         Right,
         Text,
-        Title}       from 'native-base';
-import SplashScreen  from '../../../../util/comp/SplashScreen';
-import commonStyles  from '../../commonStyles';
-import actions       from '../actions';
-import * as sel      from '../state';
+        Title}           from 'native-base';
+import SplashScreen      from '../../../../util/comp/SplashScreen';
+import commonStyles      from '../../commonStyles';
+import _eateriesAct      from '../actions';
+import * as _eateriesSel from '../state';
 
 /**
  * EateriesListScreen displaying a set of eateries (possibly filtered).
@@ -103,8 +103,8 @@ const EateriesListScreenWithState = withState({
   component: EateriesListScreen,
   mapStateToProps(appState, {fassets}) { // ... fassets available in ownProps (via withFassets() below)
     return {
-      filteredEateries: sel.getFilteredEateries(appState),
-      filter:           sel.getListViewFilter(appState),
+      filteredEateries: _eateriesSel.getFilteredEateries(appState),
+      filter:           _eateriesSel.getListViewFilter(appState),
       curUser:          fassets.sel.curUser(appState),
     };
   },
@@ -112,10 +112,10 @@ const EateriesListScreenWithState = withState({
     return {
       showDetail(eateryId) {
         //console.log(`xx showDetail for ${eateryId}`);
-        dispatch( actions.viewDetail(eateryId) );
+        dispatch( _eateriesAct.viewDetail(eateryId) );
       },
       handleSpin() {
-        dispatch( actions.spin() );
+        dispatch( _eateriesAct.spin() );
       },
     };
   },

@@ -1,10 +1,10 @@
-import {createFeature}  from 'feature-u';
-import featureName      from './featureName';
-import actions          from './actions'; // TODO: QUIRKINESS of IFormMeta (aggravated by feature-u) ... actions MUST be expanded BEFORE IFormMeta instance (eateryFilterFormMeta)
-import reducer          from './state';
-import * as sel         from './state';
-import logic            from './logic';
-import route            from './route';
+import {createFeature}    from 'feature-u';
+import _eateries          from './featureName';
+import _eateriesAct       from './actions'; // TODO: QUIRKINESS of IFormMeta (aggravated by feature-u) ... actions MUST be expanded BEFORE IFormMeta instance (eateryFilterFormMeta)
+import reducer            from './state';
+import * as _eateriesSel  from './state';
+import logic              from './logic';
+import route              from './route';
 import EateryLeftNavItem  from './comp/EateryLeftNavItem';
 
 // feature: eateries
@@ -14,15 +14,15 @@ import EateryLeftNavItem  from './comp/EateryLeftNavItem';
 //          the ability to phone, visit their web site, and navigate
 //          to them (full details in README)
 export default createFeature({
-  name: featureName,
+  name: _eateries,
 
   // our public face ...
   fassets: {
     define: {
-      'actions.addEatery':     actions.dbPool.add,      // addEatery(eateryId)    ... slight naming variation to original action
-      'actions.removeEatery':  actions.dbPool.remove,   // removeEatery(eateryId) ... slight naming variation to original action
+      'actions.addEatery':     _eateriesAct.dbPool.add,      // addEatery(eateryId)    ... slight naming variation to original action
+      'actions.removeEatery':  _eateriesAct.dbPool.remove,   // removeEatery(eateryId) ... slight naming variation to original action
 
-      'sel.getEateryDbPool':   sel.getDbPool, // ... slight naming variation to original selector
+      'sel.getEateryDbPool':   _eateriesSel.getDbPool, // ... slight naming variation to original selector
     },
 
     defineUse: {
@@ -36,6 +36,6 @@ export default createFeature({
 
   // default the app view to be self
   appDidStart({fassets, appState, dispatch}) {
-    dispatch( fassets.actions.changeView(featureName) );
+    dispatch( fassets.actions.changeView(_eateries) );
   },
 });

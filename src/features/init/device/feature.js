@@ -1,10 +1,10 @@
 import React               from 'react';
 import {createFeature}     from 'feature-u';
-import featureName         from './featureName';
+import _device             from './featureName';
 import platformSetup       from './misc/platformSetup';
 import {createBootstrapFn} from '../../support/bootstrap/bootstrapFn';
 import Notify              from '../../../util/notify';
-import actions             from './actions';
+import _deviceAct          from './actions';
 import reducer,
        {isGuiReady,
         getDeviceLoc}      from './state';
@@ -12,7 +12,7 @@ import reducer,
 // feature: device
 //          initialize the device for use by the app (full details in README)
 export default createFeature({
-  name: featureName,
+  name: _device,
 
   reducer,
 
@@ -25,7 +25,7 @@ export default createFeature({
                                            ({dispatch, fassets}) => {
                                              return fassets.deviceService.loadFonts()
                                                            .then( () => {
-                                                             dispatch( actions.guiIsReady() );
+                                                             dispatch( _deviceAct.guiIsReady() );
                                                            })
                                            }),
 
@@ -33,11 +33,11 @@ export default createFeature({
                                               ({dispatch, fassets}) => {
                                                 return fassets.deviceService.getCurPos()
                                                               .then( (location) => {
-                                                                dispatch( actions.setLoc(location) );
+                                                                dispatch( _deviceAct.setLoc(location) );
                                                               })
                                                               .catch( (err) => {
                                                                 // perform the fallback location ... Glen Carbon IL
-                                                                dispatch( actions.setLoc({lat: 38.752209, lng: -89.986610}) );
+                                                                dispatch( _deviceAct.setLoc({lat: 38.752209, lng: -89.986610}) );
                                               
                                                                 // alter the error to be an expected condition (allowing the bootstrap to complete)
                                                                 throw err.defineUserMsg('A problem was encountered accessing GPS Location\n... falling back to our base location (Glen Carbon, IL)');

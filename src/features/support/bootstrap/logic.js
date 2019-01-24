@@ -1,6 +1,6 @@
 import {createLogic}      from 'redux-logic';
-import featureName        from './featureName';
-import actions            from './actions';
+import _bootstrap         from './featureName';
+import _bootstrapAct      from './actions';
 import discloseError      from '../../../util/discloseError';
 
 /**
@@ -44,8 +44,8 @@ import discloseError      from '../../../util/discloseError';
  */
 export const bootstrap = createLogic({
 
-  name: `${featureName}`, // our featureName IS the module name (bootstrap)
-  type: String(actions),  // our base actions IS the bootstrap() action
+  name: `${_bootstrap}`,        // our featureName IS the module name (bootstrap)
+  type: String(_bootstrapAct),  // our base actions IS the bootstrap() action
   warnTimeout: 0, // long-running process (runs till all bootstrap initialization has completed)
   
   process({getState, action, fassets}, dispatch, done) {
@@ -60,8 +60,8 @@ export const bootstrap = createLogic({
 
     // helper to "wrapup" when all bootstrap initialization has completed
     function wrapup() {
-      dispatch( actions.setStatus('COMPLETE') ); // maintain our status as complete
-      dispatch( actions.complete() );            // the fundamental action that triggers downstream processes
+      dispatch( _bootstrapAct.setStatus('COMPLETE') ); // maintain our status as complete
+      dispatch( _bootstrapAct.complete() );            // the fundamental action that triggers downstream processes
       done();
     }
 
@@ -95,7 +95,7 @@ export const bootstrap = createLogic({
       // ... e.g. 'Waiting for bla bla bla'
       const nextBootstrapFn = bootstrapFns.find( (bootstrapFn) => !bootstrapFn.complete );
       if (nextBootstrapFn) {
-        dispatch( actions.setStatus(nextBootstrapFn.bootstrapWhat) );
+        dispatch( _bootstrapAct.setStatus(nextBootstrapFn.bootstrapWhat) );
       }
 
       // when ALL bootstrapFns have completed, we are done!!!
@@ -113,7 +113,7 @@ export const bootstrap = createLogic({
     // "prime the pump" by setting our status to the FIRST bootstrapFn
     // ... giving user visibility of what is being done
     // ... e.g. 'Waiting for bla bla bla'
-    dispatch( actions.setStatus(bootstrapFns[0].bootstrapWhat) );
+    dispatch( _bootstrapAct.setStatus(bootstrapFns[0].bootstrapWhat) );
     
     // asynchronously kick off each each bootstrapFn process
     // ... via promise

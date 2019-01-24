@@ -1,10 +1,10 @@
 import {generateActions}     from 'action-u';
-import featureName           from './featureName';
+import _eateries             from './featureName';
 import eateryFilterFormMeta  from './eateryFilterFormMeta';
 
 export default generateActions.root({
 
-  [featureName]: { // prefix all actions with our feature name, guaranteeing they unique app-wide!
+  [_eateries]: { // prefix all actions with our feature name, guaranteeing they unique app-wide!
 
 
     dbPool: {

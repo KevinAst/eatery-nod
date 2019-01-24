@@ -1,9 +1,9 @@
 import {generateActions} from 'action-u';
-import featureName       from './featureName';
+import _bootstrap        from './featureName';
 
 export default generateActions.root({
                    // prefix all actions with our feature name, guaranteeing they unique app-wide!
-  [featureName]: { // actions(): Action ... the root IS an action (e.g. bootstrap() action)
+  [_bootstrap]: { // actions(): Action ... the root IS an action (e.g. bootstrap() action)
                    // > start boostrap initialization process
                    actionMeta: {},
 

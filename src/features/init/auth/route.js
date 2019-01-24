@@ -1,8 +1,7 @@
 import React               from 'react';
-import * as sel            from './state';
+import * as _authSel       from './state';
 import {featureRoute, 
         PRIORITY}          from 'feature-router';
-import featureName         from './featureName';
 import SignInVerifyScreen  from './comp/SignInVerifyScreen';
 import SignInScreen        from './comp/SignInScreen';
 import SplashScreen        from '../../../util/comp/SplashScreen';
@@ -17,7 +16,7 @@ export default featureRoute({
 
   content({fassets, appState}) {
 
-    const user = sel.curUser(appState);
+    const user = _authSel.curUser(appState);
 
     // when user is FULLY signedIn/verified
     // ... allow down-stream features to route further (i.e. app-specific screens)
@@ -36,7 +35,7 @@ export default featureRoute({
     // ***
 
     // display interactive SignIn, when form is active (accomplished by our logic)
-    if (sel.isSignInFormActive(appState)) {
+    if (_authSel.isSignInFormActive(appState)) {
       return <SignInScreen/>;
     }
 

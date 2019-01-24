@@ -1,14 +1,14 @@
 import {reducerHash}      from 'astx-redux-util';
 import {slicedReducer}    from 'feature-redux';
-import featureName        from './featureName';
-import actions            from './actions';
+import _currentView       from './featureName';
+import _currentViewAct    from './actions';
 
 // ***
 // *** Our feature reducer, managing our currentView state.
 // ***
 
-const reducer = slicedReducer(`view.${featureName}`, reducerHash({
-  [actions.changeView]: (state, action) => action.viewName,
+const reducer = slicedReducer(`view.${_currentView}`, reducerHash({
+  [_currentViewAct.changeView]: (state, action) => action.viewName,
 }, 'uninitialized') ); // initialState
 
 export default reducer;

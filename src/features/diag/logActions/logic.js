@@ -1,5 +1,5 @@
 import {createLogic}      from 'redux-logic';
-import featureName        from './featureName';
+import _logActions        from './featureName';
 import featureFlags       from '../../../util/featureFlags';
 
 let lastState = null;
@@ -17,7 +17,7 @@ const prettyJson2Str = (obj) => JSON.stringify(obj, '\n', 2);
  */
 export const actionLogger = createLogic({
 
-  name: `${featureName}.actionLogger`,
+  name: `${_logActions}.actionLogger`,
   type: '*', // monitor ALL action types
 
   transform({getState, action}, next) {

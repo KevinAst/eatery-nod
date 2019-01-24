@@ -1,5 +1,5 @@
-import React        from 'react';
-import withState    from '../../../../util/withState';
+import React         from 'react';
+import withState     from '../../../../util/withState';
 import {Body,
         Button,
         Container,
@@ -9,11 +9,11 @@ import {Body,
         Icon,
         Text,
         Title,
-        View}       from 'native-base';
-import PropTypes    from 'prop-types';
-import commonStyles from '../../../views/commonStyles';
-import actions      from '../actions';
-import * as sel     from '../state';
+        View}        from 'native-base';
+import PropTypes     from 'prop-types';
+import commonStyles  from '../../../views/commonStyles';
+import _authAct      from '../actions';
+import * as _authSel from '../state';
 
 
 /**
@@ -92,19 +92,19 @@ export default SignInVerifyScreenWithState = withState({
   component: SignInVerifyScreen,
   mapStateToProps(appState) {
     return {
-      email: sel.curUser(appState).email,
+      email: _authSel.curUser(appState).email,
     };
   },
   mapDispatchToProps(dispatch) {
     return {
       checkEmailVerified() {
-        dispatch( actions.signIn.checkEmailVerified() );
+        dispatch( _authAct.signIn.checkEmailVerified() );
       },
       resendEmailVerification() {
-        dispatch( actions.signIn.resendEmailVerification() );
+        dispatch( _authAct.signIn.resendEmailVerification() );
       },
       signOut() {
-        dispatch( actions.signOut() );
+        dispatch( _authAct.signOut() );
       },
     };
   },

@@ -1,10 +1,10 @@
 import {generateActions}        from 'action-u';
-import featureName              from './featureName';
+import _discovery               from './featureName';
 import discoveryFilterFormMeta  from './discoveryFilterFormMeta';
 
 export default generateActions.root({
 
-  [featureName]: { // prefix all actions with our feature name, guaranteeing they unique app-wide!
+  [_discovery]: { // prefix all actions with our feature name, guaranteeing they unique app-wide!
 
     // inject the standard iForm auto-generated form actions
     // ... open(), fieldChanged(), fieldTouched(), process(), process.reject(), close()

@@ -1,8 +1,8 @@
 import {createLogic}        from 'redux-logic';
 import eateryFilterFormMeta from './eateryFilterFormMeta';
-import featureName          from './featureName';
-import * as sel             from './state';
-import actions              from './actions';
+import _eateries            from './featureName';
+import * as _eateriesSel    from './state';
+import _eateriesAct         from './actions';
 import {expandWithFassets}  from 'feature-u';
 import discloseError        from '../../../util/discloseError';
 
@@ -27,7 +27,7 @@ let curPoolMonitor = {   // current "pool" monitor (initially a placebo)
  */
 export const monitorDbPool = expandWithFassets( (fassets) => createLogic({
 
-  name:        `${featureName}.monitorDbPool`,
+  name:        `${_eateries}.monitorDbPool`,
   type:        String(fassets.actions.userProfileChanged), // NOTE: action contains: User object (where we obtain the pool)
   warnTimeout: 0, // long-running logic
 
@@ -63,7 +63,7 @@ export const monitorDbPool = expandWithFassets( (fassets) => createLogic({
       (eateries) => {
 
         // broadcast a notification of a change in our eateries (or the initial population)
-        dispatch( actions.dbPool.changed(eateries) );
+        dispatch( _eateriesAct.dbPool.changed(eateries) );
 
       });
   },
@@ -77,12 +77,12 @@ export const monitorDbPool = expandWithFassets( (fassets) => createLogic({
  */
 export const defaultFilter = createLogic({
 
-  name: `${featureName}.defaultFilter`,
-  type: String(actions.filterForm.open),
+  name: `${_eateries}.defaultFilter`,
+  type: String(_eateriesAct.filterForm.open),
 
   transform({getState, action, fassets}, next) {
     if (!action.domain) {
-      action.domain = sel.getListViewFilter(getState());
+      action.domain = _eateriesSel.getListViewFilter(getState());
     }
     next(action);
   },
@@ -95,8 +95,8 @@ export const defaultFilter = createLogic({
  */
 export const processFilter = createLogic({
 
-  name: `${featureName}.processFilter`,
-  type: String(actions.filterForm.process),
+  name: `${_eateries}.processFilter`,
+  type: String(_eateriesAct.filterForm.process),
   
   process({getState, action, fassets}, dispatch, done) {
 
@@ -114,10 +114,10 @@ export const processFilter = createLogic({
     //   }
     
     // show our view
-    dispatch( fassets.actions.changeView(featureName) );
+    dispatch( fassets.actions.changeView(_eateries) );
 
     // close eatery form filter
-    dispatch( actions.filterForm.close() );
+    dispatch( _eateriesAct.filterForm.close() );
 
     done();
   },
@@ -127,13 +127,13 @@ export const processFilter = createLogic({
 
 export const spin = createLogic({
 
-  name: `${featureName}.spin`,
-  type: String(actions.spin),
+  name: `${_eateries}.spin`,
+  type: String(_eateriesAct.spin),
 
   transform({getState, action, fassets}, next, reject) {
 
     const appState         = getState();
-    const filteredEateries = sel.getFilteredEateries(appState);
+    const filteredEateries = _eateriesSel.getFilteredEateries(appState);
 
     // supplement action with spinMsg
     action.spinMsg = `... selecting your eatery from ${filteredEateries.length} entries!`;
@@ -145,7 +145,7 @@ export const spin = createLogic({
     setTimeout( () => {
 
       const appState = getState();
-      const filteredEateries  = sel.getFilteredEateries(appState);
+      const filteredEateries  = _eateriesSel.getFilteredEateries(appState);
 
       // algorighm from MDN ... https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math/random
       const min      = Math.ceil(0);                        // min is inclusive (in usage below)
@@ -154,7 +154,7 @@ export const spin = createLogic({
       
       const randomEateryId = filteredEateries[randIndx].id;
 
-      dispatch( actions.spin.complete(randomEateryId) );
+      dispatch( _eateriesAct.spin.complete(randomEateryId) );
       done();
 
     }, 1000);
@@ -165,11 +165,11 @@ export const spin = createLogic({
 
 export const spinComplete = createLogic({
 
-  name: `${featureName}.spinComplete`,
-  type: String(actions.spin.complete),
+  name: `${_eateries}.spinComplete`,
+  type: String(_eateriesAct.spin.complete),
 
   process({getState, action, fassets}, dispatch, done) {
-    dispatch( actions.viewDetail(action.eateryId) );
+    dispatch( _eateriesAct.viewDetail(action.eateryId) );
     done();
   },
 
@@ -178,18 +178,18 @@ export const spinComplete = createLogic({
 
 export const addToPoolPrep = createLogic({
 
-  name: `${featureName}.addToPoolPrep`,
-  type: String(actions.dbPool.add),
+  name: `${_eateries}.addToPoolPrep`,
+  type: String(_eateriesAct.dbPool.add),
 
   process({getState, action, fassets}, dispatch, done) {
 
     fassets.discoveryService.fetchEateryDetail(action.eateryId)
       .then(eatery => {
-        dispatch( actions.dbPool.add.eateryDetail(eatery) );
+        dispatch( _eateriesAct.dbPool.add.eateryDetail(eatery) );
         done();
       })
       .catch(err => {
-        dispatch( actions.dbPool.add.eateryDetail.fail(action.eateryId, err) );
+        dispatch( _eateriesAct.dbPool.add.eateryDetail.fail(action.eateryId, err) );
         done();
       });
   },
@@ -200,8 +200,8 @@ export const addToPoolPrep = createLogic({
 
 export const addToPool = createLogic({
 
-  name: `${featureName}.addToPool`,
-  type: String(actions.dbPool.add.eateryDetail),
+  name: `${_eateries}.addToPool`,
+  type: String(_eateriesAct.dbPool.add.eateryDetail),
 
   transform({getState, action, fassets}, next, reject) {
 
@@ -220,8 +220,8 @@ export const addToPool = createLogic({
 
 export const removeFromPool = createLogic({
 
-  name: `${featureName}.removeFromPool`,
-  type: String(actions.dbPool.remove),
+  name: `${_eateries}.removeFromPool`,
+  type: String(_eateriesAct.dbPool.remove),
 
   transform({getState, action, fassets}, next, reject) {
 

@@ -1,8 +1,7 @@
 import {createLogic}        from 'redux-logic';
 import {expandWithFassets}  from 'feature-u';
-import featureName          from './featureName';
-import actions              from './actions';
-import * as sel             from './state';
+import _auth                from './featureName';
+import _authAct             from './actions';
 import signInFormMeta       from './signInFormMeta';
 import discloseError        from '../../../util/discloseError';
 
@@ -15,11 +14,11 @@ import discloseError        from '../../../util/discloseError';
  */
 export const startAuthorization = expandWithFassets( (fassets) => createLogic({
 
-  name: `${featureName}.startAuthorization`,
+  name: `${_auth}.startAuthorization`,
   type: String(fassets.actions.bootstrapComplete),
   
   process({getState, action}, dispatch, done) {
-    dispatch( actions.autoSignIn() );
+    dispatch( _authAct.autoSignIn() );
     done();
   },
 }));
@@ -30,17 +29,17 @@ export const startAuthorization = expandWithFassets( (fassets) => createLogic({
  */
 export const checkDeviceCredentials = createLogic({
 
-  name: `${featureName}.checkDeviceCredentials`,
-  type: String(actions.autoSignIn),
+  name: `${_auth}.checkDeviceCredentials`,
+  type: String(_authAct.autoSignIn),
 
   process({getState, action, fassets}, dispatch, done) {
     fassets.deviceService.fetchCredentials()
        .then( (encodedCredentials) => {
          if (encodedCredentials) {
-           dispatch( actions.autoSignIn.haveDeviceCredentials(encodedCredentials) );
+           dispatch( _authAct.autoSignIn.haveDeviceCredentials(encodedCredentials) );
          }
          else {
-           dispatch( actions.autoSignIn.noDeviceCredentials() );
+           dispatch( _authAct.autoSignIn.noDeviceCredentials() );
          }
          done();
        })
@@ -50,7 +49,7 @@ export const checkDeviceCredentials = createLogic({
          discloseError({err: err.defineAttemptingToMsg('fetch credentials stored on the device')});
 
          // just manually signIn
-         dispatch( actions.autoSignIn.noDeviceCredentials() );
+         dispatch( _authAct.autoSignIn.noDeviceCredentials() );
 
          done();
        });
@@ -64,12 +63,12 @@ export const checkDeviceCredentials = createLogic({
  */
 export const autoSignIn = createLogic({
 
-  name: `${featureName}.autoSignIn`,
-  type: String(actions.autoSignIn.haveDeviceCredentials),
+  name: `${_auth}.autoSignIn`,
+  type: String(_authAct.autoSignIn.haveDeviceCredentials),
   
   process({getState, action, fassets}, dispatch, done) {
     const {email, pass} = fassets.deviceService.decodeCredentials(action.encodedCredentials);
-    dispatch( actions.signIn(email, pass) );
+    dispatch( _authAct.signIn(email, pass) );
     done();
   },
 
@@ -81,14 +80,14 @@ export const autoSignIn = createLogic({
  */
 export const manualSignIn = createLogic({
 
-  name: `${featureName}.manualSignIn'`,
+  name: `${_auth}.manualSignIn'`,
   type: [
-    String(actions.autoSignIn.noDeviceCredentials),
-    String(actions.signOut),
+    String(_authAct.autoSignIn.noDeviceCredentials),
+    String(_authAct.signOut),
   ],
 
   process({getState, action}, dispatch, done) {
-    dispatch( actions.signIn.open() );
+    dispatch( _authAct.signIn.open() );
     done();
   },
 
@@ -100,11 +99,11 @@ export const manualSignIn = createLogic({
  */
 export const processSignIn = createLogic({
 
-  name: `${featureName}.processSignIn`,
-  type: String(actions.signIn.process),
+  name: `${_auth}.processSignIn`,
+  type: String(_authAct.signIn.process),
   
   process({getState, action}, dispatch, done) {
-    dispatch( actions.signIn(action.values.email, action.values.pass) );
+    dispatch( _authAct.signIn(action.values.email, action.values.pass) );
     done();
   },
 
@@ -116,8 +115,8 @@ export const processSignIn = createLogic({
  */
 export const signIn = createLogic({
 
-  name: `${featureName}.signIn`,
-  type: String(actions.signIn),
+  name: `${_auth}.signIn`,
+  type: String(_authAct.signIn),
   warnTimeout: 0, // long-running logic ... UNFORTUNATELY signin using our firebase service is sometimes EXCRUCIATINGLY SLOW!
 
   process({getState, action, fassets}, dispatch, done) {
@@ -133,7 +132,7 @@ export const signIn = createLogic({
                     });
 
              // communicate a new user is in town
-             dispatch( actions.signIn.complete(user) );
+             dispatch( _authAct.signIn.complete(user) );
              done();
            })
 
@@ -142,7 +141,7 @@ export const signIn = createLogic({
                             showUser: err.isUnexpected()}); // expected errors are shown to the user via the re-direction to the signIn screen (see next step)
 
              // re-direct to SignIn form, prepopulated with appropriate msg
-             dispatch( actions.signIn.open(action, err.formatUserMsg()) ); // NOTE: action is a cheap shortcut to domain (contains email/pass) ... pre-populating sign-in form with last user input
+             dispatch( _authAct.signIn.open(action, err.formatUserMsg()) ); // NOTE: action is a cheap shortcut to domain (contains email/pass) ... pre-populating sign-in form with last user input
 
              done();
            });
@@ -157,14 +156,14 @@ export const signIn = createLogic({
  */
 export const supplementSignInComplete = createLogic({
 
-  name: `${featureName}.supplementSignInComplete`,
-  type: String(actions.signIn.complete),
+  name: `${_auth}.supplementSignInComplete`,
+  type: String(_authAct.signIn.complete),
 
   process({getState, action}, dispatch, done) {
     // NOTE: Currently, this is the only place where userProfileChanged is dispatched.
     //       It stimulates the eateries view to get the ball rolling (displaying the correct pool)
     //       In the future, userProfileChanged is dispatched dynamically, when the user has the ability to change their pool.
-    dispatch( actions.userProfileChanged(action.user) ); // use the same user from our our monitored action!!
+    dispatch( _authAct.userProfileChanged(action.user) ); // use the same user from our our monitored action!!
     done();
   },
 
@@ -176,12 +175,12 @@ export const supplementSignInComplete = createLogic({
  */
 export const signInCleanup = createLogic({
 
-  name: `${featureName}.signInCleanup`,
-  type: String(actions.signIn.complete),
+  name: `${_auth}.signInCleanup`,
+  type: String(_authAct.signIn.complete),
 
   process({getState, action}, dispatch, done) {
     // console.log(`xx logic ${featureName}.signInCleanup: user.status: '${sel.curUser(getState()).getAuthStatus()}'`);
-    dispatch( actions.signIn.close() ); // we are done with our signIn form
+    dispatch( _authAct.signIn.close() ); // we are done with our signIn form
     done();
   },
 
@@ -193,8 +192,8 @@ export const signInCleanup = createLogic({
  */
 export const checkEmailVerified = createLogic({
 
-  name: `${featureName}.checkEmailVerified`,
-  type: String(actions.signIn.checkEmailVerified),
+  name: `${_auth}.checkEmailVerified`,
+  type: String(_authAct.signIn.checkEmailVerified),
 
   transform({getState, action, fassets}, next, reject) {
 
@@ -222,8 +221,8 @@ export const checkEmailVerified = createLogic({
  */
 export const resendEmailVerification = createLogic({
 
-  name: `${featureName}.resendEmailVerification`,
-  type: String(actions.signIn.resendEmailVerification),
+  name: `${_auth}.resendEmailVerification`,
+  type: String(_authAct.signIn.resendEmailVerification),
 
   transform({getState, action, fassets}, next) {
     fassets.authService.resendEmailVerification()
@@ -238,8 +237,8 @@ export const resendEmailVerification = createLogic({
  */
 export const signOut = createLogic({
 
-  name: `${featureName}.signOut`,
-  type: String(actions.signOut),
+  name: `${_auth}.signOut`,
+  type: String(_authAct.signOut),
 
   process({getState, action, fassets}, dispatch, done) {
     fassets.authService.signOut()

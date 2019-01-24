@@ -1,6 +1,6 @@
 import {createFeature}  from 'feature-u';
-import name             from './featureName';
-import actions          from './actions'; // TODO: QUERKYNESS of IFormMeta (aggravated by feature-u) ... actions MUST be expanded BEFORE IFormMeta instance (eateryFilterFormMeta)
+import _discovery       from './featureName';
+import _discoveryAct    from './actions'; // TODO: QUIRKINESS of IFormMeta (aggravated by feature-u) ... actions MUST be expanded BEFORE IFormMeta instance (eateryFilterFormMeta)
 import reducer          from './state';
 import logic            from './logic';
 import route            from './route';
@@ -12,7 +12,7 @@ import DiscoveryLeftNavItem  from './comp/DiscoveryLeftNavItem';
 //          added/removed within the pool by simply
 //          checking/unchecking the discoveries (full details in README)
 export default createFeature({
-  name,
+  name: _discovery,
 
   // our public face ...
   fassets: {

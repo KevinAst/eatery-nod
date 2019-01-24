@@ -18,7 +18,7 @@ import {Body,
         Title,
         View}        from 'native-base';
 import commonStyles  from '../../commonStyles';
-import actions       from '../actions';
+import _eateriesAct  from '../actions';
 
 
 /**
@@ -106,10 +106,10 @@ const EateryDetailScreenWithState = withState({
   mapDispatchToProps(dispatch) {
     return {
       handleClose() {
-        dispatch( actions.viewDetail.close() );
+        dispatch( _eateriesAct.viewDetail.close() );
       },
       handleSpin() {
-        dispatch( actions.spin() );
+        dispatch( _eateriesAct.spin() );
       },
     };
   },

@@ -14,10 +14,10 @@ import {Body,
         Right,
         Spinner,
         Text,
-        Title}       from 'native-base';
-import commonStyles  from '../../commonStyles';
-import actions       from '../actions';
-import * as sel      from '../state';
+        Title}            from 'native-base';
+import commonStyles       from '../../commonStyles';
+import _discoveryAct      from '../actions';
+import * as _discoverySel from '../state';
 
 /**
  * DiscoveryListScreen displaying our discoveries.
@@ -161,9 +161,9 @@ const DiscoveryListScreenWithState = withState({
   component: DiscoveryListScreen,
   mapStateToProps(appState, {fassets}) { // ... fassets available in ownProps (via withFassets() below)
     return {
-      inProgress:    sel.getInProgress(appState),
-      discoveries:   sel.getDiscoveries(appState),
-      nextPageToken: sel.getNextPageToken(appState),
+      inProgress:    _discoverySel.getInProgress(appState),
+      discoveries:   _discoverySel.getDiscoveries(appState),
+      nextPageToken: _discoverySel.getNextPageToken(appState),
       eateryPool:    fassets.sel.getEateryDbPool(appState),
       curUser:       fassets.sel.curUser(appState),
     };
@@ -181,10 +181,10 @@ const DiscoveryListScreenWithState = withState({
         }
       },
       handleNextPage(nextPageToken) {
-        dispatch( actions.nextPage(nextPageToken) );
+        dispatch( _discoveryAct.nextPage(nextPageToken) );
       },
       handleFilterDiscovery() {
-        dispatch( actions.filterForm.open() );
+        dispatch( _discoveryAct.filterForm.open() );
       },
     };
   },

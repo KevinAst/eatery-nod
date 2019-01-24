@@ -1,8 +1,8 @@
 import React           from 'react';
 import {withFassets}   from 'feature-u';
 import withState       from '../../../../util/withState';
-import featureName     from '../featureName';
-import actions         from '../actions';
+import _discovery      from '../featureName';
+import _discoveryAct   from '../actions';
 import {Body,
         Button,
         Icon,
@@ -39,11 +39,11 @@ const DiscoveryLeftNavItemWithState = withState({
   mapDispatchToProps(dispatch, {fassets}) { // ... fassets available in ownProps (via withFassets() below)
     return {
       changeView() {
-        dispatch( fassets.actions.changeView(featureName) );
+        dispatch( fassets.actions.changeView(_discovery) );
         fassets.closeLeftNav();
       },
       handleFilter() {
-        dispatch( actions.filterForm.open() );
+        dispatch( _discoveryAct.filterForm.open() );
         fassets.closeLeftNav();
       },
     };

@@ -1,13 +1,13 @@
 import {combineReducers}  from 'redux';
 import {reducerHash}      from 'astx-redux-util';
 import {slicedReducer}    from 'feature-redux';
-import featureName        from './featureName';
-import actions            from './actions';
+import _device            from './featureName';
+import _deviceAct         from './actions';
 
 // ***
 // *** Our feature reducer, managing state for our device.
 // ***
-const reducer = slicedReducer(featureName, combineReducers({
+const reducer = slicedReducer(_device, combineReducers({
 
   // guiReady: boolean ... has GUI been initialized, and ready to use?
   // - The native-base library requires specific fonts to be loaded :-(
@@ -29,12 +29,12 @@ const reducer = slicedReducer(featureName, combineReducers({
   //   * SplashScreen ... visible during app startup
   //   * SideBar      ... NOT visible during app startup, HOWEVER is injected in our root DOM
   guiReady: reducerHash({
-    [actions.guiIsReady]: (state, action) => true,
+    [_deviceAct.guiIsReady]: (state, action) => true,
   }, false), // initialState
 
   // loc: {lat, lng} ... device GPS location
   loc: reducerHash({
-    [actions.setLoc]: (state, action) => action.loc,
+    [_deviceAct.setLoc]: (state, action) => action.loc,
   }, null), // initialState
 
 }) );

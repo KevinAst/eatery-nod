@@ -1,9 +1,9 @@
 import {generateActions} from 'action-u';
-import featureName       from './featureName';
+import _auth             from './featureName';
 import signInFormMeta    from './signInFormMeta';
 
 export default generateActions.root({
-  [featureName]: { // prefix all actions with our feature name, guaranteeing they unique app-wide!
+  [_auth]: { // prefix all actions with our feature name, guaranteeing they unique app-wide!
 
     autoSignIn: {  // actions.autoSignIn(): Action
                    // > autoSignIn our authorization process
