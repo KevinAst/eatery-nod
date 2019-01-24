@@ -1,4 +1,5 @@
 import 'babel-polyfill'; // required for feature-u es2015+ constructs
+import './util/ErrorExtensionPolyfill';
 import React                 from 'react';
 import Expo                  from 'expo';
 import {LayoutAnimation}     from 'react-native';
@@ -6,8 +7,9 @@ import {launchApp}           from 'feature-u';
 import {createReducerAspect} from 'feature-redux';
 import {createLogicAspect}   from 'feature-redux-logic';
 import {createRouteAspect}   from 'feature-router';
+import features              from './features';
 import SplashScreen          from './util/comp/SplashScreen';
-import features              from './feature'; // the set of features that comprise this application
+import configureEateryNodDiagnostics  from './util/configureEateryNodDiagnostics';
 
 // launch our application, exposing the feature-u Fassets object (facilitating cross-feature-communication)!
 export default launchApp({
@@ -19,11 +21,10 @@ export default launchApp({
 });
 
 
-// accumulate/configure our Aspect plugins
-// ... matching our app's run-time stack
+// accumulate/configure the Aspect plugins matching our app's run-time stack
 function appAspects() {
 
-  // construct our framework run-time stack
+  // define our framework run-time stack
   const reducerAspect = createReducerAspect();
   const logicAspect   = createLogicAspect();
   const routeAspect   = createRouteAspect();
@@ -39,49 +40,9 @@ function appAspects() {
   // ... StateRouter animation hook
   routeAspect.config.componentWillUpdateHook$ = () => LayoutAnimation.configureNext(LayoutAnimation.Presets.spring);
 
-  // configure our app's overall diagnostics
-  configureDiagnostics();
+  // configure our app's overall diagnostics (non-production code)
+  configureEateryNodDiagnostics(reducerAspect, logicAspect, routeAspect);
 
   // beam me up Scotty :-)
   return aspects;
-}
-
-
-//******************************************************************************
-//*** NON Production Diagnostic Code follows ***********************************
-//******************************************************************************
-
-import {diag$}     from './util/diagnosticUtil';
-import logActions  from './feature/logActions'; // enable eatery-nod "logActions" feature
-import sandbox     from './feature/sandbox';    // enable eatery-nod "sandbox" feature (in left-nav)
-import feature_u_integrationTests  from './util/feature-u.integrationTests';
-
-// configure our diagnostics (if any)
-function configureDiagnostics() {
-
-  // --- eatery-nod logging/sandbox ... ------------------------------------------
-  diag$.skip('enable eatery-nod "logActions" feature', () => {
-    logActions.enabled = true;
-  });
-  diag$('enable eatery-nod "sandbox" feature (in left-nav)', () => {
-    sandbox.enabled = true;
-  });
-
-  // --- feature-u logging related ... -------------------------------------------
-  diag$.skip('enable feature-u logging', () => {
-    launchApp.diag.logf.enable();
-  });
-  diag$.skip('show feature-u react elms as object blobs', () => {
-    launchApp.diag.logf.elm2html = (elm) => elm;
-  });
-  diag$.skip('show feature-u react elms as html markup', () => {
-    // NOTE: requires ... import ReactDOMServer from 'react-dom/server';
-    //       UNTESTED: react-native / expo has issues resolving this in node
-    launchApp.diag.logf.elm2html = (elm) => ReactDOMServer.renderToStaticMarkup(elm);
-  });
-
-  // --- feature-u integration tests ... -----------------------------------------
-  diag$.skip('perform feature-u integration tests', () => {
-    feature_u_integrationTests();
-  });
 }

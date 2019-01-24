@@ -28,7 +28,7 @@ import {Button,
  *               params                        modal  (via modal) notes
  *               ===================           ======  =========  ======================================
  * - notify .... (namedArgs)                   either  either     named parameters direct exact features
- * - toast ..... ({msg, duration=3, actions})  NO      bottom     uses duration
+ * - toast ..... ({msg, duration=6, actions})  NO      bottom     uses duration
  * - alert ..... ({msg, actions})              YES     top        injects single OK action
  * - confirm ... ({msg, actions})              YES     top        requires client actions
  * ```
@@ -362,7 +362,7 @@ export function notify(directive) {
  *    })
  * ```
  */
-function toastBase({msg, duration=3, actions, ...unknownArgs}, level) {
+function toastBase({msg, duration=6, actions, ...unknownArgs}, level) {
 
   // validate toast-specific characteristics (other validation done by notify())
   const funcQual = level ? `.${level}` : '';

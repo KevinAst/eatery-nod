@@ -13,21 +13,23 @@ import {Body,
         Text,
         Title}       from 'native-base';
 import PropTypes     from 'prop-types';
-import commonStyles  from '../../feature/commonStyles';
+import commonStyles  from '../../features/views/commonStyles';
 
 
 /**
  * SplashScreen used when there is nothing else to display.
  */
-function SplashScreen({msg, fontsLoaded}) {
+function SplashScreen({msg, guiReady}) {
 
-  // fallback to <Expo.AppLoading/> when fonts have not yet been loaded
+  // fallback to more primitive content when GUI is NOT yet initialized
+  // ... part of the device feature initialization process
   // ... because <Text> uses native-base fonts
-  if (!fontsLoaded) {
-    // console.log('xx <SplashScreen> FONTS NOT LOADED: fallback to <Expo.AppLoading>');
+  if (!guiReady) {
+    // console.log('xx rendering <SplashScreen> GUI NOT READY: fallback to <Expo.AppLoading>');
     return <Expo.AppLoading/>;
   }
 
+  // console.log('xx rendering <SplashScreen> GUI IS READY: using REAL Content');
   return (
     <Container style={commonStyles.container}>
       <Header>
@@ -60,7 +62,7 @@ const SplashScreenWithState = withState({
   mapStateToProps(appState, {fassets}) { // ... fassets available in ownProps (via withFassets() below)
     return {
       // hmmm ... inappropriate coupling: common component <SplashScreen> using app-specific info
-      fontsLoaded: fassets.device.sel.areFontsLoaded(appState),
+      guiReady: fassets.sel.isGuiReady(appState),
     };
   },
 })(SplashScreen); // NOTE: test withState() BOTH WAYS
