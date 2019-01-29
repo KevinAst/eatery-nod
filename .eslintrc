@@ -1,5 +1,8 @@
 {
   "extends": ["expo", "plugin:react/recommended"],
+  "env": {
+    "browser": true, // 1/25/2019 added this to eliminate complaints about setTimeout() not being defined
+  },
   "rules": {
     "react/prop-types":              "off",  // relax react prop-types validation
     "babel/object-curly-spacing":    "off",  // relax spacing inside braces
