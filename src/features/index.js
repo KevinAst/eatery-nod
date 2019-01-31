@@ -1,22 +1,65 @@
-import init        from './init';
-import views       from './views';
-import services    from './services';
-import support     from './support';
-import diag        from './diag';
+import device                        from './init/device/feature';
+import auth                          from './init/auth/feature';
 
-/**
- * The **eatery-nod** application is composed of the following **features**:
- *
- * - **init**:         a collection of **"Initialization Related"** features
- * - **views**:        a collection of **"UI Related"** features
- * - **services**:     a collection of **"Service Related"** features _(some of which are "mockable")_
- * - **support**:      a collection of **"Support Utility"** features
- * - **diag**:         a collection of **"Diagnostic Related"** features
- */
+import eateries                      from './views/eateries/feature';
+import discovery                     from './views/discovery/feature';
+import leftNav                       from './views/leftNav/feature';
+import currentView                   from './views/currentView/feature';
+
+import deviceService                 from './services/deviceService/feature';
+
+import authService                   from './services/authService/feature';
+import authServiceFirebase           from './services/authService/authServiceFirebase/feature';
+import authServiceMock               from './services/authService/authServiceMock/feature';
+
+import eateryService                 from './services/eateryService/feature';
+import eateryServiceFirebase         from './services/eateryService/eateryServiceFirebase/feature';
+import eateryServiceMock             from './services/eateryService/eateryServiceMock/feature';
+
+import discoveryService              from './services/discoveryService/feature';
+import discoveryServiceGooglePlaces  from './services/discoveryService/discoveryServiceGooglePlaces/feature';
+import discoveryServiceMock          from './services/discoveryService/discoveryServiceMock/feature';
+
+import bootstrap                     from './support/bootstrap/feature';
+import firebaseInit                  from './support/firebaseInit/feature';
+
+import logActions                    from './diag/logActions/feature';
+import sandbox                       from './diag/sandbox/feature';
+
+// accumulate ALL features
+// ... see README.md for details
 export default [
-  ...init,
-  ...views,
-  ...services,
-  ...support,
-  ...diag,
+
+  // ... init
+  device,
+  auth,
+
+  // ... views
+  eateries,
+  discovery,
+  leftNav,
+  currentView,
+
+  // ... services
+  deviceService,
+
+  authService,
+  authServiceFirebase,
+  authServiceMock,
+
+  eateryService,
+  eateryServiceFirebase,
+  eateryServiceMock,
+
+  discoveryService,
+  discoveryServiceGooglePlaces,
+  discoveryServiceMock,
+
+  // ... support
+  bootstrap,
+  firebaseInit,
+
+  // ... diag
+  logActions,
+  sandbox,
 ];
