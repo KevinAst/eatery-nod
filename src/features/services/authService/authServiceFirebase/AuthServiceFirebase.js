@@ -82,7 +82,7 @@ export default class AuthServiceFirebase extends AuthServiceAPI {
                 if (err.code) { // expected condition
                   err.defineUserMsg('Invalid SignIn credentials.'); // make generic ... do NOT expose err.code to the user
                 }
-                else { // unexpected conition
+                else { // unexpected condition
                   err.defineAttemptingToMsg('sign in to eatery-nod');
                 }
                 return reject(err);
