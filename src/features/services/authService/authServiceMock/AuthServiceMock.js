@@ -21,14 +21,14 @@ export default class AuthServiceMock extends AuthServiceAPI {
     return new Promise( (resolve, reject) => {
 
       // stimulate various errors with variations in email/pass
-      if (pass === 'unexpect') { // <<< unexpected condition
+      if (pass === 'unexpect') { // ... unexpected condition
         return reject(
           new Error(`***ERROR*** Simulated Unexpected Condition`)
             .defineAttemptingToMsg('sign in to eatery-nod')
         );
       }
 
-      if (pass === 'expect') { // <<< expected condition
+      if (pass === 'expect') { // ... expected condition
         return reject(
           new Error(`***ERROR*** Invalid Password`) // do NOT expose details to the user (e.g. Invalid Password)
             .defineUserMsg('Invalid SignIn credentials.') // keep generic
@@ -36,13 +36,21 @@ export default class AuthServiceMock extends AuthServiceAPI {
         );
       }
 
-      // very simple mock ... sign in the supplied user
+      // define our mock user
       this.currentAppUser = new User({
-        "name": "MockGuy",
-        "email": email,
-        "emailVerified": true,
-        "pool": "mock"
+        "name":          "MockGuy",
+        email,
+        "emailVerified": false,
+        "pool":          "mock"
       });
+
+      // sign in the supplied user
+      if (pass === 'unverify') { // ... simulate user unverified
+        return resolve(this.currentAppUser);
+      }
+
+      // ... all other cases: user is verified
+      this.currentAppUser.emailVerified = true;
       return resolve(this.currentAppUser);
 
     });
@@ -51,14 +59,9 @@ export default class AuthServiceMock extends AuthServiceAPI {
 
   refreshUser() { // ... see AuthServiceAPI
     return new Promise( (resolve, reject) => {
-
-      // very simple mock ... sign in the supplied user
-      this.currentAppUser = new User({
-        "name": "MockGuy",
-        "email": email,
-        "emailVerified": true,
-        "pool": "mock"
-      });
+      // very simple mock ... assume they have now been verified
+      this.currentAppUser = this.currentAppUser.clone();
+      this.currentAppUser.emailVerified = true;
       return resolve(this.currentAppUser);
 
     });

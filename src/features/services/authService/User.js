@@ -45,7 +45,7 @@ export default class User {
     // ... unrecognized named parameter
     const unknownArgKeys = Object.keys(unknownArgs);
     check(unknownArgKeys.length === 0,  `unrecognized named parameter(s): ${unknownArgKeys}`);
-    // ... unrecognized positional parameter (NOTE: when defaulting entire struct, arguents.length is 0)
+    // ... unrecognized positional parameter (NOTE: when defaulting entire struct, arguments.length is 0)
     check(arguments.length === 0 || arguments.length === 1, 'unrecognized positional parameters (only named parameters can be specified)');
 
     // retain supplied state in self
@@ -117,6 +117,15 @@ export default class User {
       emailVerified: this.emailVerified,
       pool:          this.pool,
     };
+  }
+
+  /**
+   * Clone self into a new User object
+   * 
+   * @returns {User} the new cloned User object.
+   */
+  clone() {
+    return new User(this.toStruct());
   }
 
 };

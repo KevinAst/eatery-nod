@@ -4,6 +4,7 @@ import _auth                from './featureName';
 import _authAct             from './actions';
 import signInFormMeta       from './signInFormMeta';
 import discloseError        from '../../../util/discloseError';
+import {toast}              from '../../../util/notify';
 
 /**
  * Start our authorization process, once the bootstrap initialization process is complete.
@@ -197,6 +198,7 @@ export const checkEmailVerified = createLogic({
 
   transform({getState, action, fassets}, next, reject) {
 
+    toast({ msg:`verifying your email: ${fassets.sel.curUser(getState()).email}` });
     // fetch the most up-to-date user
     fassets.authService.refreshUser()
            .then( user => {
@@ -225,6 +227,7 @@ export const resendEmailVerification = createLogic({
   type: String(_authAct.signIn.resendEmailVerification),
 
   transform({getState, action, fassets}, next) {
+    toast({ msg:`resending email to: ${fassets.sel.curUser(getState()).email}` });
     fassets.authService.resendEmailVerification()
     next(action);
   },

@@ -45,7 +45,7 @@ function SideBar({guiReady, handleSignOut, leftNavItems}) {
       </Header>
       <Content>
         <List>
-          {/* pull in leftNav menu items from accross all features */}
+          {/* pull in leftNav menu items from across all features */}
           {leftNavItems.map( (LeftNavItem, indx) => <LeftNavItem key={indx}/> )}
         </List>
       </Content>
@@ -98,7 +98,7 @@ const SideBarWithState = withState({
 // *** inject various fassets (feature assets) into our component
 // ***
 
-export default SideBarWithFassets = withFassets({
+export default withFassets({ // SideBarWithFassets
   component: SideBarWithState,
   mapFassetsToProps: {
     leftNavItems:  'leftNavItem.*', // this is the manifestation of our use contract ... i.e. we use these items
