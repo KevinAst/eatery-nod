@@ -21,30 +21,8 @@ export default class DeviceService {
    * Instantiate the DeviceService service object.
    */
   constructor() {
-
-    // conditionally mock getCurPos(), as directed by featureFlags
-    if (featureFlags.mockGPS) {
-
-      const GlenCarbonIL = {lat: 38.752209, lng: -89.986610};
-      const defaultLoc   = GlenCarbonIL;
-      const mockLoc      = featureFlags.mockGPS.lat ? featureFlags.mockGPS : defaultLoc;
-
-      this.getCurPos = () => { // override method with our mock
-        // console.log(`xx DeviceService.getCurPos() request ... mocked to: `, mockLoc);
-        return new Promise( (resolve, reject) => {
-        //setTimeout(() => { // TEMPORARY: for testing delay just a bit
-
-            // TEMPORARY: for testing, simulate error condition
-            //            ... NOTE: reject() passes error into .catch(), throw does NOT
-            // return reject(new Error('Simulated Error in Expo GPS Location acquisition') );
-
-            // communicate device location
-            return resolve(mockLoc);
-        //}, 10000); // TEMPORARY: for testing delay just a bit
-        });
-      };
-    }
-
+    // conditionally mock various service methods, as directed by featureFlags
+    mock_getCurPos_asNeeded(this);
   }
 
 
@@ -64,7 +42,7 @@ export default class DeviceService {
         //            ... NOTE: reject() passes error into .catch(), throw does NOT
         // return reject( new Error('Simulated Error in Expo Font.loadAsync()') );
 
-        // load needed custome fonts for NativeBase UI
+        // load needed custom fonts for NativeBase UI
         Font.loadAsync({'Roboto':        require('native-base/Fonts/Roboto.ttf'),
                         'Roboto_medium': require('native-base/Fonts/Roboto_medium.ttf'),
                       })
@@ -199,4 +177,32 @@ export default class DeviceService {
     });
   }
 
-};
+}
+
+
+// conditionally mock getCurPos(), as directed by featureFlags
+function mock_getCurPos_asNeeded(deviceService) {
+
+  if (featureFlags.mockGPS) { // ... if requested by featureFlags
+
+    const GlenCarbonIL = {lat: 38.752209, lng: -89.986610};
+    const defaultLoc   = GlenCarbonIL;
+    const mockLoc      = featureFlags.mockGPS.lat ? featureFlags.mockGPS : defaultLoc;
+
+    deviceService.getCurPos = () => { // override method with our mock
+      // console.log(`xx DeviceService.getCurPos() request ... mocked to: `, mockLoc);
+      return new Promise( (resolve, reject) => {
+        //setTimeout(() => { // TEMPORARY: for testing delay just a bit
+
+        // TEMPORARY: for testing, simulate error condition
+        //            ... NOTE: reject() passes error into .catch(), throw does NOT
+        // return reject(new Error('Simulated Error in Expo GPS Location acquisition') );
+
+        // communicate device location
+        return resolve(mockLoc);
+        //}, 10000); // TEMPORARY: for testing delay just a bit
+      });
+    };
+  }
+
+}
