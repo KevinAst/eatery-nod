@@ -68,7 +68,12 @@ export default createFeature({
     platformSetup();
 
     // initialize our notify utility, by injecting it in our component tree root
-    return [React.Children.toArray(curRootAppElm), <Notify key="Notify"/>];
+    return (
+      <React.Fragment>
+        {curRootAppElm}
+        <Notify key="Notify"/>
+      </React.Fragment>
+    );
   },
 
 });
