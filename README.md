@@ -13,7 +13,7 @@ using [Expo](https://expo.io/).
 ### Eatery Pool
 
 The main screen of eatery-nod is the **Eatery Pool** (_please refer to
-the [eateries feature](src/features/views/eateries)_).
+the [eateries feature](src/features/eateries)_).
 
 This visualizes your persistent pool of restaurants to select from
 (the list can optionally be filtered).
@@ -24,13 +24,13 @@ selection.
 The "detailed" view provides direct communication to the establishment
 (phone them, visit their web site, or navigate to their address).
 
-![Screen Flow](src/features/views/eateries/docs/ScreenFlow.png)
+![Screen Flow](src/features/eateries/docs/ScreenFlow.png)
 
 
 ### Discovery
 
 Your pool of eateries is maintained through **Discovery** (_please
-refer to the [discovery feature](src/features/views/discovery)_).
+refer to the [discovery feature](src/features/discovery)_).
 
 You don't have to maintain the details of your pool by hand.  Rather,
 you simply search the restaurants using the **disovery** feature.
@@ -40,13 +40,13 @@ This is the same source that is used when you issue a Google Search
 Within the discovery view, you simply toggle the check next to the
 entry.  **Red** entries are in your pool, **Grey** entries are not.
 
-![Screen Flow](src/features/views/discovery/docs/ScreenFlow.png)
+![Screen Flow](src/features/discovery/docs/ScreenFlow.png)
 
 
 ### Authorization
 
 Authorization is provided through the [auth
-feature](src/features/init/auth), requiring a validated email/password
+feature](src/features/auth), requiring a validated email/password
 before promoting any application screens.
 
-![Screen Flow](src/features/init/auth/docs/ScreenFlow.png)
+![Screen Flow](src/features/auth/docs/ScreenFlow.png)

@@ -1,5 +1,5 @@
 node_modules/**/*
 .expo/*
 npm-debug.*
-src/features/support/firebaseInit/config/firebaseAppConfig.js
-src/features/services/discoveryService/discoveryServiceGooglePlaces/config/googlePlacesApiKey.js
+src/features/util/firebaseInit/config/firebaseAppConfig.js
+src/features/discovery/discoveryService/discoveryServiceGooglePlaces/config/googlePlacesApiKey.js

@@ -1,65 +1,58 @@
-import device                        from './init/device/feature';
-import auth                          from './init/auth/feature';
+import device                        from './device/feature';
+import deviceService                 from './device/deviceService/feature';
 
-import eateries                      from './views/eateries/feature';
-import discovery                     from './views/discovery/feature';
-import leftNav                       from './views/leftNav/feature';
-import currentView                   from './views/currentView/feature';
+import auth                          from './auth/feature';
+import authService                   from './auth/authService/feature';
+import authServiceFirebase           from './auth/authService/authServiceFirebase/feature';
+import authServiceMock               from './auth/authService/authServiceMock/feature';
 
-import deviceService                 from './services/deviceService/feature';
+import eateries                      from './eateries/feature';
+import eateryService                 from './eateries/eateryService/feature';
+import eateryServiceFirebase         from './eateries/eateryService/eateryServiceFirebase/feature';
+import eateryServiceMock             from './eateries/eateryService/eateryServiceMock/feature';
 
-import authService                   from './services/authService/feature';
-import authServiceFirebase           from './services/authService/authServiceFirebase/feature';
-import authServiceMock               from './services/authService/authServiceMock/feature';
+import discovery                     from './discovery/feature';
+import discoveryService              from './discovery/discoveryService/feature';
+import discoveryServiceGooglePlaces  from './discovery/discoveryService/discoveryServiceGooglePlaces/feature';
+import discoveryServiceMock          from './discovery/discoveryService/discoveryServiceMock/feature';
 
-import eateryService                 from './services/eateryService/feature';
-import eateryServiceFirebase         from './services/eateryService/eateryServiceFirebase/feature';
-import eateryServiceMock             from './services/eateryService/eateryServiceMock/feature';
+import leftNav                       from './util/leftNav/feature';
+import currentView                   from './util/currentView/feature';
+import bootstrap                     from './util/bootstrap/feature';
+import firebaseInit                  from './util/firebaseInit/feature';
 
-import discoveryService              from './services/discoveryService/feature';
-import discoveryServiceGooglePlaces  from './services/discoveryService/discoveryServiceGooglePlaces/feature';
-import discoveryServiceMock          from './services/discoveryService/discoveryServiceMock/feature';
-
-import bootstrap                     from './support/bootstrap/feature';
-import firebaseInit                  from './support/firebaseInit/feature';
-
-import logActions                    from './diag/logActions/feature';
-import sandbox                       from './diag/sandbox/feature';
+import logActions                    from './diagnostic/logActions/feature';
+import sandbox                       from './diagnostic/sandbox/feature';
 
 // accumulate ALL features
 // ... see README.md for details
 export default [
 
-  // ... init
   device,
-  auth,
-
-  // ... views
-  eateries,
-  discovery,
-  leftNav,
-  currentView,
-
-  // ... services
   deviceService,
 
+  auth,
   authService,
   authServiceFirebase,
   authServiceMock,
 
+  eateries,
   eateryService,
   eateryServiceFirebase,
   eateryServiceMock,
 
+  discovery,
   discoveryService,
   discoveryServiceGooglePlaces,
   discoveryServiceMock,
 
-  // ... support
+  // ... util
+  leftNav,
+  currentView,
   bootstrap,
   firebaseInit,
 
-  // ... diag
+  // ... diagnostic
   logActions,
   sandbox,
 ];
